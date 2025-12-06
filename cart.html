@@ -1466,7 +1466,7 @@
             
             if (address) {
                 emptyAddress.style.display = 'none';
-                addressDisplay.style.display = 'flex';
+                addressDisplay.style.display = 'block';
                 document.getElementById('addressName').textContent = address.fullName;
                 document.getElementById('addressPhone').textContent = `(${address.phoneNumber})`;
                 document.getElementById('addressText').textContent = `${address.streetAddress}, ${address.location}, ${address.postalCode}`;
