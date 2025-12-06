@@ -366,7 +366,23 @@ function get_system_setting($key, $default = null) {
     
     // Debug logging
     if (in_array($key, ['brevo_api_key', 'brevo_sender_email', 'enable_email_notifications'])) {
-        error_log("get_system_setting('$key') - found: " . ($value !== null ? "YES (length: " . strlen($value) . ")" : "NO") . ", returning: " . ($value !== null ? $value : ($default !== null ? "default: $default" : "null")));
+        $log_value = in_array($key, ['brevo_api_key']) ? '***HIDDEN***' : $value;
+        error_log("get_system_setting('$key') - found: " . ($value !== null ? "YES (length: " . strlen($value) . ", value: $log_value)" : "NO") . ", returning: " . ($value !== null ? $log_value : ($default !== null ? "default: $default" : "null")));
+        
+        // Also check all settings in database for debugging
+        $all_query = "SELECT setting_key, LENGTH(setting_value) as val_len FROM system_settings WHERE setting_key IN ('brevo_api_key', 'brevo_sender_email', 'enable_email_notifications')";
+        $all_result = execute_sql($conn, $all_query);
+        $all_settings = [];
+        if ($GLOBALS['use_postgres']) {
+            while ($row = pg_fetch_assoc($all_result)) {
+                $all_settings[] = $row['setting_key'] . " (len: " . $row['val_len'] . ")";
+            }
+        } else {
+            while ($row = $all_result->fetchArray(SQLITE3_ASSOC)) {
+                $all_settings[] = $row['setting_key'] . " (len: " . $row['val_len'] . ")";
+            }
+        }
+        error_log("All Brevo settings in DB: " . (empty($all_settings) ? "NONE" : implode(", ", $all_settings)));
     }
     
     close_connection($conn);
