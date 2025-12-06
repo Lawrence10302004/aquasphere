@@ -685,10 +685,23 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                // Only show generic error if it's a network/parsing error, not a server error
-                showError('An error occurred. Please try again. Check console for details.');
+                // Check if it's a network error or timeout
+                if (error.message && (error.message.includes('fetch') || error.message.includes('network') || error.message.includes('timeout'))) {
+                    showError('Network error. Please check your connection and try again.');
+                } else {
+                    // Show the proper error message
+                    showError('Invalid or expired verification code. Please try again.');
+                }
                 verifyBtn.disabled = false;
                 verifyBtnText.innerHTML = 'Verify Code';
+                // Clear OTP inputs on error
+                otpInputs.forEach(input => {
+                    input.value = '';
+                    input.classList.remove('filled', 'error');
+                });
+                otpCodeInput.value = '';
+                verifyBtn.disabled = true;
+                otpInputs[0].focus();
             });
         });
         
