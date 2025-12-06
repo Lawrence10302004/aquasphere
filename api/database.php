@@ -43,9 +43,19 @@ if ($GLOBALS['use_postgres']) {
             $pg_query = preg_replace_callback('/\?/', function() use (&$param_count) {
                 return '$' . $param_count++;
             }, $query);
-            return pg_query_params($conn, $pg_query, $params);
+            $result = pg_query_params($conn, $pg_query, $params);
+            if ($result === false) {
+                $error = pg_last_error($conn);
+                error_log("PostgreSQL query error: $error. Query: $pg_query");
+            }
+            return $result;
         } else {
-            return pg_query($conn, $query);
+            $result = pg_query($conn, $query);
+            if ($result === false) {
+                $error = pg_last_error($conn);
+                error_log("PostgreSQL query error: $error. Query: $query");
+            }
+            return $result;
         }
     }
     
@@ -143,7 +153,10 @@ function init_db() {
     )
     ";
     
-    execute_sql($conn, $query);
+    $result = execute_sql($conn, $query);
+    if ($result === false) {
+        error_log("Failed to create users table: " . ($GLOBALS['use_postgres'] ? pg_last_error($conn) : "SQLite error"));
+    }
     
     // Create system_settings table
     $query = "
@@ -157,7 +170,10 @@ function init_db() {
     )
     ";
     
-    execute_sql($conn, $query);
+    $result = execute_sql($conn, $query);
+    if ($result === false) {
+        error_log("Failed to create system_settings table: " . ($GLOBALS['use_postgres'] ? pg_last_error($conn) : "SQLite error"));
+    }
     
     // Create otp_verification table
     $query = "
@@ -177,7 +193,10 @@ function init_db() {
     )
     ";
     
-    execute_sql($conn, $query);
+    $result = execute_sql($conn, $query);
+    if ($result === false) {
+        error_log("Failed to create otp_verification table: " . ($GLOBALS['use_postgres'] ? pg_last_error($conn) : "SQLite error"));
+    }
     
     // Create orders table for water delivery system
     // Note: FOREIGN KEY constraints are handled differently for PostgreSQL vs SQLite
@@ -197,16 +216,22 @@ function init_db() {
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
         ";
-        execute_sql($conn, $query);
+        $result = execute_sql($conn, $query);
+        if ($result === false) {
+            error_log("Failed to create orders table: " . pg_last_error($conn));
+        }
         
         // Add foreign key constraint separately for PostgreSQL (if it doesn't exist)
-        if ($GLOBALS['use_postgres']) {
-            $check_query = "SELECT 1 FROM pg_constraint WHERE conname = 'fk_orders_user_id'";
-            $check_result = execute_sql($conn, $check_query);
+        $check_query = "SELECT 1 FROM pg_constraint WHERE conname = 'fk_orders_user_id'";
+        $check_result = execute_sql($conn, $check_query);
+        if ($check_result !== false) {
             $exists = pg_fetch_assoc($check_result);
             if (!$exists) {
                 $query = "ALTER TABLE orders ADD CONSTRAINT fk_orders_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE";
-                execute_sql($conn, $query);
+                $result = execute_sql($conn, $query);
+                if ($result === false) {
+                    error_log("Failed to add foreign key constraint: " . pg_last_error($conn));
+                }
             }
         }
     } else {
@@ -226,7 +251,10 @@ function init_db() {
             FOREIGN KEY (user_id) REFERENCES users(id)
         )
         ";
-        execute_sql($conn, $query);
+        $result = execute_sql($conn, $query);
+        if ($result === false) {
+            error_log("Failed to create orders table: SQLite error");
+        }
     }
     
     // Create order_items table
@@ -241,16 +269,22 @@ function init_db() {
             subtotal DECIMAL(10,2) NOT NULL
         )
         ";
-        execute_sql($conn, $query);
+        $result = execute_sql($conn, $query);
+        if ($result === false) {
+            error_log("Failed to create order_items table: " . pg_last_error($conn));
+        }
         
         // Add foreign key constraint separately for PostgreSQL (if it doesn't exist)
-        if ($GLOBALS['use_postgres']) {
-            $check_query = "SELECT 1 FROM pg_constraint WHERE conname = 'fk_order_items_order_id'";
-            $check_result = execute_sql($conn, $check_query);
+        $check_query = "SELECT 1 FROM pg_constraint WHERE conname = 'fk_order_items_order_id'";
+        $check_result = execute_sql($conn, $check_query);
+        if ($check_result !== false) {
             $exists = pg_fetch_assoc($check_result);
             if (!$exists) {
                 $query = "ALTER TABLE order_items ADD CONSTRAINT fk_order_items_order_id FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE";
-                execute_sql($conn, $query);
+                $result = execute_sql($conn, $query);
+                if ($result === false) {
+                    error_log("Failed to add foreign key constraint: " . pg_last_error($conn));
+                }
             }
         }
     } else {
@@ -265,19 +299,32 @@ function init_db() {
             FOREIGN KEY (order_id) REFERENCES orders(id)
         )
         ";
-        execute_sql($conn, $query);
+        $result = execute_sql($conn, $query);
+        if ($result === false) {
+            error_log("Failed to create order_items table: SQLite error");
+        }
     }
     
     close_connection($conn);
+    error_log("Database initialization completed. Using: " . ($GLOBALS['use_postgres'] ? "PostgreSQL" : "SQLite"));
 }
 
 /**
  * Get user by username
  */
 function get_user_by_username($username) {
+    // Initialize database first to ensure tables exist
+    init_db();
+    
     $conn = get_db_connection();
     $query = "SELECT * FROM users WHERE username = ?";
     $result = execute_sql($conn, $query, [$username]);
+    
+    if ($result === false) {
+        error_log("Failed to execute query in get_user_by_username");
+        close_connection($conn);
+        return null;
+    }
     
     if ($GLOBALS['use_postgres']) {
         $user = pg_fetch_assoc($result);
@@ -293,9 +340,18 @@ function get_user_by_username($username) {
  * Get user by email
  */
 function get_user_by_email($email) {
+    // Initialize database first to ensure tables exist
+    init_db();
+    
     $conn = get_db_connection();
     $query = "SELECT * FROM users WHERE email = ?";
     $result = execute_sql($conn, $query, [$email]);
+    
+    if ($result === false) {
+        error_log("Failed to execute query in get_user_by_email");
+        close_connection($conn);
+        return null;
+    }
     
     if ($GLOBALS['use_postgres']) {
         $user = pg_fetch_assoc($result);
@@ -354,12 +410,21 @@ function create_user($username, $password, $email, $first_name, $last_name, $gen
  * Get system setting value
  */
 function get_system_setting($key, $default = null) {
+    // Initialize database first to ensure tables exist
+    init_db();
+    
     // Force new connection to avoid stale data
     $conn = get_db_connection();
     
     // Use LIMIT 1 to ensure we only get one result
     $query = "SELECT setting_value FROM system_settings WHERE setting_key = ? LIMIT 1";
     $result = execute_sql($conn, $query, [$key]);
+    
+    if ($result === false) {
+        error_log("Failed to execute query in get_system_setting for key: $key");
+        close_connection($conn);
+        return $default;
+    }
     
     $value = null;
     if ($GLOBALS['use_postgres']) {
