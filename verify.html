@@ -243,7 +243,7 @@
         .resend-link {
             color: #0ea5e9;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 500;
             font-size: 1rem;
             transition: all 0.3s ease;
         }
@@ -253,10 +253,17 @@
             text-decoration: underline;
         }
         
-        .resend-link:disabled {
+        .resend-link:disabled,
+        .resend-link[style*="pointer-events: none"] {
             color: #6c757d;
             cursor: not-allowed;
             opacity: 0.5;
+        }
+        
+        #resendTimer {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
         }
         
         .timer-text {
@@ -444,10 +451,10 @@
             
             <div class="resend-section">
                 <a href="#" class="resend-link" id="resendLink">
-                    <i class="fas fa-redo me-2"></i>
+                    <i class="fas fa-spinner fa-spin me-1" id="resendSpinner" style="display: none;"></i>
                     <span id="resendText">Resend Code</span>
-                    <i class="fas fa-spinner fa-spin me-2" id="resendSpinner" style="display: none;"></i>
                 </a>
+                <span id="resendTimer" class="text-muted"></span>
                 <div class="timer-text">
                     Code expires in <span id="countdown">10:00</span>
                 </div>
@@ -697,9 +704,8 @@
             errorMessage.style.display = 'none';
             successMessage.style.display = 'none';
             
-            // Show loading state immediately
+            // Show loading state immediately (like AnemoCheck)
             resendSpinner.style.display = 'inline-block';
-            resendText.textContent = 'Sending...';
             resendLink.style.pointerEvents = 'none';
             resendLink.style.opacity = '0.7';
             
@@ -787,9 +793,8 @@
                 showError('An error occurred. Please try again.');
             })
             .finally(() => {
-                // Hide loading state
+                // Hide loading state (like AnemoCheck)
                 resendSpinner.style.display = 'none';
-                resendText.textContent = 'Resend Code';
                 resendLink.style.pointerEvents = 'auto';
                 resendLink.style.opacity = '1';
             });
