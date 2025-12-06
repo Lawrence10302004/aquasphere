@@ -35,7 +35,9 @@ if (empty($email)) {
 }
 
 // Check if email has pending registration
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 $pending_email = $_SESSION['pending_email'] ?? '';
 
 if (empty($pending_email) || $pending_email !== $email) {
