@@ -14,6 +14,10 @@ $GLOBALS['db_path'] = $_ENV['DATABASE_PATH'] ?? 'aquasphere.db';
 if ($GLOBALS['use_postgres']) {
     // PostgreSQL connection
     function get_db_connection() {
+        static $connections = [];
+        $conn_key = $_ENV['DATABASE_URL'] ?? ($_ENV['PGHOST'] . $_ENV['PGDATABASE']);
+        
+        // Always create new connection to avoid stale data
         if (!empty($_ENV['DATABASE_URL'])) {
             $conn = pg_connect($_ENV['DATABASE_URL'], PGSQL_CONNECT_FORCE_NEW);
         } else {
@@ -29,8 +33,6 @@ if ($GLOBALS['use_postgres']) {
         if (!$conn) {
             die("PostgreSQL connection failed");
         }
-        // Ensure autocommit is on (default, but explicit)
-        pg_query($conn, "SET autocommit = ON");
         return $conn;
     }
     
@@ -419,6 +421,8 @@ function update_system_setting($key, $value, $user_id = null) {
         
         if ($GLOBALS['use_postgres']) {
             $success = $result !== false && pg_affected_rows($result) > 0;
+            // Explicitly sync to ensure data is written
+            pg_query($conn, "SELECT 1");
         } else {
             $success = $result !== false && $conn->changes() > 0;
         }
@@ -427,6 +431,10 @@ function update_system_setting($key, $value, $user_id = null) {
         $query = "INSERT INTO system_settings (setting_key, setting_value, updated_by) VALUES (?, ?, ?)";
         $result = execute_sql($conn, $query, [$key, $value, $user_id]);
         $success = $result !== false;
+        if ($GLOBALS['use_postgres'] && $success) {
+            // Explicitly sync to ensure data is written
+            pg_query($conn, "SELECT 1");
+        }
     }
     
     // Verify the save was successful - use same connection
