@@ -444,14 +444,23 @@
         .cart-summary-wrapper {
             position: fixed;
             top: 100px;
+            right: calc((100% - 1200px) / 2 + 16px);
             width: calc(33.333% - 1rem);
             max-width: 400px;
+            z-index: 100;
+        }
+        
+        @media (max-width: 1400px) {
+            .cart-summary-wrapper {
+                right: 20px;
+            }
         }
         
         @media (max-width: 991px) {
             .cart-summary-wrapper {
                 position: relative;
                 top: 0;
+                right: 0;
                 width: 100%;
                 max-width: 100%;
             }
@@ -1370,12 +1379,14 @@
             const endIndex = startIndex + itemsPerPage;
             const currentItems = cart.slice(startIndex, endIndex);
             
-            cartItemsList.innerHTML = currentItems.map((item, index) => {
+            // Get the actual index in the full cart array for data-item-id
+            cartItemsList.innerHTML = currentItems.map((item, localIndex) => {
+                const actualIndex = startIndex + localIndex;
                 const subtotal = item.price * item.quantity;
                 const icon = productIcons[item.id] || 'fa-tint';
                 
                 return `
-                    <div class="cart-item" data-item-id="${item.id}">
+                    <div class="cart-item" data-item-id="${item.id}" data-cart-index="${actualIndex}">
                         <div class="item-checkbox">
                             <input type="checkbox" class="item-checkbox-input" checked onchange="updateSummary()">
                         </div>
