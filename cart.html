@@ -439,6 +439,7 @@
             border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             padding: 2rem;
+            width: 100%;
         }
         
         .cart-summary-wrapper {
@@ -448,6 +449,9 @@
             width: calc(33.333% - 1rem);
             max-width: 400px;
             z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
         
         @media (max-width: 1400px) {
@@ -1065,6 +1069,56 @@
             color: #cbd5e1;
             border-color: #e2e8f0;
             cursor: not-allowed;
+        }
+        
+        /* Footer Styles */
+        .footer {
+            background: #0369a1;
+            color: white;
+            padding: 20px 0 15px;
+            margin-top: 4rem;
+        }
+        
+        .footer-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.7rem;
+        }
+        
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        
+        .footer-link:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
         }
         
         @media (max-width: 768px) {
@@ -1761,57 +1815,54 @@
     </script>
     
     <!-- Footer -->
-    <footer class="footer" style="background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%); color: white; padding: 3rem 0 1.5rem; margin-top: 4rem;">
+    <footer id="contact" class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="footer-brand mb-3">
-                        <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 40px; width: auto; margin-right: 10px;">
-                        <span style="font-size: 1.5rem; font-weight: 700;">AquaSphere</span>
-                    </div>
-                    <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.7;">
-                        Delivering pure, refreshing water to your doorstep. Your trusted partner for clean hydration.
+                <div class="col-lg-4 mb-4">
+                    <h4 class="footer-title" style="display: flex; align-items: center;">
+                        <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 40px; margin-right: 10px;">
+                        AquaSphere
+                    </h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.7;">
+                        Your trusted water delivery service. Fast delivery, clean quality water, and reliable service. 
+                        Everything you need for your hydration needs, all in one platform.
                     </p>
                 </div>
                 
                 <div class="col-lg-2 col-md-6 mb-4">
-                    <h5 style="font-weight: 700; margin-bottom: 1rem;">Quick Links</h5>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin-bottom: 0.5rem;"><a href="index.html" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Home</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="dashboard.html" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Products</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="cart.html" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Cart</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="#about" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">About</a></li>
-                    </ul>
+                    <h5 class="footer-title">Quick Links</h5>
+                    <a href="index.html" class="footer-link">Home</a>
+                    <a href="#features" class="footer-link">Features</a>
+                    <a href="#how-it-works" class="footer-link">How It Works</a>
+                    <a href="#contact" class="footer-link">Contact</a>
                 </div>
                 
                 <div class="col-lg-3 col-md-6 mb-4">
-                    <h5 style="font-weight: 700; margin-bottom: 1rem;">Contact Us</h5>
-                    <ul style="list-style: none; padding: 0; color: rgba(255, 255, 255, 0.8);">
-                        <li style="margin-bottom: 0.5rem;"><i class="fas fa-phone me-2"></i> +63 908 123 4567</li>
-                        <li style="margin-bottom: 0.5rem;"><i class="fas fa-envelope me-2"></i> info@aquasphere.com</li>
-                        <li style="margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt me-2"></i> Metro Manila, Philippines</li>
-                    </ul>
+                    <h5 class="footer-title">Features</h5>
+                    <a href="#" class="footer-link">Easy Ordering</a>
+                    <a href="#" class="footer-link">Delivery Tracking</a>
+                    <a href="#" class="footer-link">Payment Options</a>
+                    <a href="#" class="footer-link">Customer Support</a>
                 </div>
                 
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <h5 style="font-weight: 700; margin-bottom: 1rem;">Follow Us</h5>
-                    <div style="display: flex; gap: 1rem;">
-                        <a href="#" style="color: white; font-size: 1.5rem; transition: transform 0.3s;"><i class="fab fa-facebook"></i></a>
-                        <a href="#" style="color: white; font-size: 1.5rem; transition: transform 0.3s;"><i class="fab fa-instagram"></i></a>
-                        <a href="#" style="color: white; font-size: 1.5rem; transition: transform 0.3s;"><i class="fab fa-twitter"></i></a>
-                        <a href="#" style="color: white; font-size: 1.5rem; transition: transform 0.3s;"><i class="fab fa-youtube"></i></a>
+                <div class="col-lg-3 mb-4">
+                    <h5 class="footer-title">Connect With Us</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
                     </div>
+                    <p class="mt-1" style="color: rgba(255, 255, 255, 0.8);">
+                        <i class="fas fa-envelope me-2"></i>support@aquasphere.com
+                    </p>
                 </div>
             </div>
             
-            <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 2rem 0 1rem;">
+            <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 1rem 0 0.8rem;">
             
-            <div class="row">
-                <div class="col-12 text-center">
-                    <p style="color: rgba(255, 255, 255, 0.7); margin: 0;">
-                        &copy; 2025 AquaSphere. All rights reserved.
-                    </p>
-                </div>
+            <div class="text-center" style="color: rgba(255, 255, 255, 0.8); font-size: 0.8rem;">
+                <p>&copy; 2024 AquaSphere. Made with ❤️ for clean water delivery. All rights reserved.</p>
             </div>
         </div>
     </footer>
