@@ -679,9 +679,9 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                showError('An error occurred. Please try again.');
+                showError('An error occurred. Please try again. Check console for details.');
                 verifyBtn.disabled = false;
-                verifyBtnText.innerHTML = '<i class="fas fa-check-circle me-2"></i>Verify Code';
+                verifyBtnText.innerHTML = 'Verify Code';
             });
         });
         
