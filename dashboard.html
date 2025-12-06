@@ -64,9 +64,15 @@
         .nav-link {
             font-weight: 500;
             color: #4a5568 !important;
-            margin: 0 0.5rem;
+            margin: 0 0.25rem;
             transition: all 0.3s ease;
             position: relative;
+            padding: 0.75rem 1.25rem !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            min-width: 50px;
         }
         
         .nav-link::after {
@@ -74,51 +80,56 @@
             position: absolute;
             width: 0;
             height: 3px;
-            bottom: 0;
+            bottom: 8px;
             left: 50%;
             background: linear-gradient(90deg, #0ea5e9, #0369a1);
             transition: all 0.3s ease;
             transform: translateX(-50%);
+            border-radius: 2px;
         }
         
         .nav-link:hover::after,
         .nav-link.active::after {
-            width: 80%;
+            width: 60%;
         }
         
-        .nav-link:hover,
+        .nav-link:hover {
+            color: #0ea5e9 !important;
+            background: rgba(14, 165, 233, 0.1);
+        }
+        
         .nav-link.active {
             color: #0ea5e9 !important;
+            background: rgba(14, 165, 233, 0.1);
+        }
+        
+        .nav-link i {
+            font-size: 1.3rem;
+            display: block;
         }
         
         .cart-badge {
             position: absolute;
-            top: -8px;
-            right: -8px;
+            top: 5px;
+            right: 5px;
             background: #ef4444;
             color: white;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 600;
+            font-size: 0.65rem;
+            font-weight: 700;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
-        .nav-link {
-            padding: 0.5rem 1rem;
-        }
-        
-        .nav-link i {
-            font-size: 1.2rem;
-        }
-        
-        .nav-link[style*="position: relative"] .cart-badge {
-            position: absolute;
-            top: 0;
-            right: 5px;
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
         /* Footer Styles */
