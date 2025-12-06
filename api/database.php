@@ -352,10 +352,14 @@ function create_user($username, $password, $email, $first_name, $last_name, $gen
  * Get system setting value
  */
 function get_system_setting($key, $default = null) {
+    // Force new connection to avoid stale data
     $conn = get_db_connection();
-    $query = "SELECT setting_value FROM system_settings WHERE setting_key = ?";
+    
+    // Use LIMIT 1 to ensure we only get one result
+    $query = "SELECT setting_value FROM system_settings WHERE setting_key = ? LIMIT 1";
     $result = execute_sql($conn, $query, [$key]);
     
+    $value = null;
     if ($GLOBALS['use_postgres']) {
         $row = pg_fetch_assoc($result);
         $value = $row ? $row['setting_value'] : null;

@@ -81,14 +81,19 @@ class BrevoEmailService {
  * Get configured Brevo email service
  */
 function get_brevo_service() {
+    // Force fresh database connection to avoid caching issues
     $api_key = get_system_setting('brevo_api_key');
     $sender_email = get_system_setting('brevo_sender_email');
     $sender_name = get_system_setting('brevo_sender_name', 'AquaSphere');
-    $enable_notifications = get_system_setting('enable_email_notifications', '0') === '1';
+    $enable_notifications = get_system_setting('enable_email_notifications', '0');
+    
+    // Check both '1' and 'true' for compatibility
+    $enable_notifications = ($enable_notifications === '1' || $enable_notifications === 'true' || $enable_notifications === 1 || $enable_notifications === true);
     
     // Debug logging (remove in production)
     error_log("Brevo service check - API key: " . (!empty($api_key) ? "SET (" . strlen($api_key) . " chars)" : "NOT SET"));
     error_log("Brevo service check - Sender email: " . ($sender_email ?: "NOT SET"));
+    error_log("Brevo service check - Enable notifications raw: " . get_system_setting('enable_email_notifications', '0'));
     error_log("Brevo service check - Enable notifications: " . ($enable_notifications ? "YES" : "NO"));
     
     if (!$enable_notifications || !$api_key || !$sender_email) {
@@ -96,6 +101,7 @@ function get_brevo_service() {
         return null;
     }
     
+    error_log("Brevo service initialized successfully");
     return new BrevoEmailService($api_key, $sender_email, $sender_name);
 }
 
