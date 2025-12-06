@@ -254,7 +254,8 @@
             overflow: hidden;
             width: 120px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            flex-wrap: nowrap;
         }
         
         .quantity-controls:hover {
@@ -276,17 +277,31 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background-color 0.2s ease, color 0.2s ease;
             color: #475569;
             font-weight: 600;
             font-size: 1.2rem;
             position: relative;
+            flex-shrink: 0;
+            min-width: 40px;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .quantity-btn.decrease {
             border-right: 1px solid #e2e8f0;
         }
         
-        .quantity-btn:last-of-type {
-            border-right: none;
+        .quantity-btn.increase {
             border-left: 1px solid #e2e8f0;
+        }
+        
+        .quantity-controls:hover .quantity-btn.decrease {
+            border-right-color: #0ea5e9;
+        }
+        
+        .quantity-controls:hover .quantity-btn.increase {
+            border-left-color: #0ea5e9;
         }
         
         .quantity-btn:hover {
@@ -318,12 +333,27 @@
             font-size: 1rem;
             color: #0369a1;
             background: white;
-            padding: 0;
+            padding: 0 5px;
+            min-width: 40px;
+            display: block;
+            -moz-appearance: textfield;
+            margin: 0;
+        }
+        
+        .quantity-controls:hover .quantity-input {
+            border-left-color: #0ea5e9;
+            border-right-color: #0ea5e9;
         }
         
         .quantity-input:focus {
             outline: none;
             background: #f0f9ff;
+            border-bottom: 2px solid #0ea5e9;
+        }
+        
+        .quantity-controls:focus-within .quantity-input {
+            border-left-color: #0ea5e9;
+            border-right-color: #0ea5e9;
         }
         
         .quantity-input::-webkit-inner-spin-button,
@@ -654,9 +684,9 @@
                         </div>
                         <div class="item-quantity">
                             <div class="quantity-controls">
-                                <button class="quantity-btn decrease" onclick="updateQuantity(${item.id}, -1)">−</button>
+                                <button type="button" class="quantity-btn decrease" onclick="updateQuantity(${item.id}, -1)">−</button>
                                 <input type="number" class="quantity-input" id="qty-cart-${item.id}" value="${item.quantity}" min="1" onchange="updateQuantityInput(${item.id})">
-                                <button class="quantity-btn increase" onclick="updateQuantity(${item.id}, 1)">+</button>
+                                <button type="button" class="quantity-btn increase" onclick="updateQuantity(${item.id}, 1)">+</button>
                             </div>
                         </div>
                         <div class="item-subtotal" id="subtotal-${item.id}">
