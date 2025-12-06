@@ -439,15 +439,22 @@
             border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             padding: 2rem;
-            position: sticky;
-            top: 100px;
-            align-self: flex-start;
         }
         
         .cart-summary-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            position: fixed;
+            top: 100px;
+            width: calc(33.333% - 1rem);
+            max-width: 400px;
+        }
+        
+        @media (max-width: 991px) {
+            .cart-summary-wrapper {
+                position: relative;
+                top: 0;
+                width: 100%;
+                max-width: 100%;
+            }
         }
         
         .cart-summary::-webkit-scrollbar {
@@ -1012,6 +1019,45 @@
             }
         }
         
+        /* Pagination */
+        .pagination-container {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f1f5f9;
+        }
+        
+        .pagination {
+            margin: 0;
+        }
+        
+        .pagination .page-link {
+            color: #0ea5e9;
+            border: 2px solid #e2e8f0;
+            padding: 10px 16px;
+            margin: 0 4px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .pagination .page-link:hover {
+            background: #e0f2fe;
+            border-color: #0ea5e9;
+            color: #0ea5e9;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border-color: #0ea5e9;
+            color: white;
+        }
+        
+        .pagination .page-item.disabled .page-link {
+            color: #cbd5e1;
+            border-color: #e2e8f0;
+            cursor: not-allowed;
+        }
+        
         @media (max-width: 768px) {
             .cart-item {
                 flex-wrap: wrap;
@@ -1097,6 +1143,15 @@
                         <!-- Cart Items List -->
                         <div id="cartItemsList">
                             <!-- Items will be dynamically inserted here -->
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div id="paginationContainer" class="pagination-container" style="display: none;">
+                            <nav aria-label="Cart pagination">
+                                <ul class="pagination justify-content-center" id="pagination">
+                                    <!-- Pagination buttons will be dynamically inserted here -->
+                                </ul>
+                            </nav>
                         </div>
                         
                         <!-- Empty Cart State -->
@@ -1267,6 +1322,10 @@
             5: 'fa-hand-holding-water'
         };
         
+        // Pagination variables
+        let currentPage = 1;
+        const itemsPerPage = 3;
+        
         // Load cart from localStorage
         function loadCart() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -1281,6 +1340,7 @@
             if (cart.length === 0) {
                 cartItemsList.innerHTML = '';
                 emptyCart.style.display = 'block';
+                document.getElementById('paginationContainer').style.display = 'none';
                 const itemCountBadge = document.getElementById('itemCount');
                 if (itemCountBadge) {
                     itemCountBadge.textContent = '0 items';
@@ -1297,7 +1357,20 @@
             }
             updateCheckoutButton(); // Check both cart items and address
             
-            cartItemsList.innerHTML = cart.map((item, index) => {
+            // Render pagination
+            renderPagination(cart.length);
+            
+            // Render current page items
+            renderCartItems(cart);
+        }
+        
+        function renderCartItems(cart) {
+            const cartItemsList = document.getElementById('cartItemsList');
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const currentItems = cart.slice(startIndex, endIndex);
+            
+            cartItemsList.innerHTML = currentItems.map((item, index) => {
                 const subtotal = item.price * item.quantity;
                 const icon = productIcons[item.id] || 'fa-tint';
                 
@@ -1331,6 +1404,72 @@
             }).join('');
             
             updateSummary();
+        }
+        
+        function renderPagination(totalItems) {
+            const paginationContainer = document.getElementById('paginationContainer');
+            const pagination = document.getElementById('pagination');
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            
+            if (totalPages <= 1) {
+                paginationContainer.style.display = 'none';
+                return;
+            }
+            
+            paginationContainer.style.display = 'block';
+            
+            let paginationHTML = '';
+            
+            // Previous button
+            paginationHTML += `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage - 1}); return false;">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            `;
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    paginationHTML += `
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="changePage(${i}); return false;">${i}</a>
+                        </li>
+                    `;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    paginationHTML += `
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    `;
+                }
+            }
+            
+            // Next button
+            paginationHTML += `
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage + 1}); return false;">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            `;
+            
+            pagination.innerHTML = paginationHTML;
+        }
+        
+        function changePage(page) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalPages = Math.ceil(cart.length / itemsPerPage);
+            
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            renderCartItems(cart);
+            renderPagination(cart.length);
+            
+            // Scroll to top of cart items
+            document.getElementById('cartItemsList').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         
         // Update quantity
@@ -1609,6 +1748,62 @@
             }
         });
     </script>
+    
+    <!-- Footer -->
+    <footer class="footer" style="background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%); color: white; padding: 3rem 0 1.5rem; margin-top: 4rem;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-brand mb-3">
+                        <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 40px; width: auto; margin-right: 10px;">
+                        <span style="font-size: 1.5rem; font-weight: 700;">AquaSphere</span>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.7;">
+                        Delivering pure, refreshing water to your doorstep. Your trusted partner for clean hydration.
+                    </p>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 style="font-weight: 700; margin-bottom: 1rem;">Quick Links</h5>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.5rem;"><a href="index.html" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Home</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="dashboard.html" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Products</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="cart.html" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Cart</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#about" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">About</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 style="font-weight: 700; margin-bottom: 1rem;">Contact Us</h5>
+                    <ul style="list-style: none; padding: 0; color: rgba(255, 255, 255, 0.8);">
+                        <li style="margin-bottom: 0.5rem;"><i class="fas fa-phone me-2"></i> +63 908 123 4567</li>
+                        <li style="margin-bottom: 0.5rem;"><i class="fas fa-envelope me-2"></i> info@aquasphere.com</li>
+                        <li style="margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt me-2"></i> Metro Manila, Philippines</li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 style="font-weight: 700; margin-bottom: 1rem;">Follow Us</h5>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#" style="color: white; font-size: 1.5rem; transition: transform 0.3s;"><i class="fab fa-facebook"></i></a>
+                        <a href="#" style="color: white; font-size: 1.5rem; transition: transform 0.3s;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="color: white; font-size: 1.5rem; transition: transform 0.3s;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" style="color: white; font-size: 1.5rem; transition: transform 0.3s;"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 2rem 0 1rem;">
+            
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p style="color: rgba(255, 255, 255, 0.7); margin: 0;">
+                        &copy; 2025 AquaSphere. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
 
