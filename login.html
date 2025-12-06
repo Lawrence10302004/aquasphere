@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AquaSphere</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif !important;
+            background: #ffffff;
+            min-height: 100vh;
+            padding-top: 80px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #0ea5e9 !important;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            color: #0369a1 !important;
+            transform: scale(1.05);
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: #4a5568 !important;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: 0;
+            left: 50%;
+            background: linear-gradient(90deg, #0ea5e9, #0369a1);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 80%;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            color: #0ea5e9 !important;
+        }
+        
+        /* Login Card */
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            max-width: 700px;
+            width: 100%;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .login-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0369a1;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .login-subtitle {
+            color: #4a5568;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-size: 1rem;
+        }
+        
+        /* Form Styles */
+        .form-label {
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            padding: 10px 12px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .form-control:focus {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25);
+        }
+        
+        .custom-error {
+            background-color: #fee;
+            color: #c33;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 4px;
+            display: none;
+            border-left: 3px solid #dc3545;
+            font-weight: 500;
+        }
+        
+        .form-control.error {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+        
+        .form-control.success {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+        
+        .btn-login {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.4);
+        }
+        
+        .input-group .btn-outline-secondary {
+            border-left: 0;
+            border-color: #ced4da;
+        }
+        
+        .input-group .btn-outline-secondary:hover {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+        }
+        
+        .form-check-input:checked {
+            background-color: #0ea5e9;
+            border-color: #0ea5e9;
+        }
+        
+        .form-check-label {
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+        
+        .forgot-password-link {
+            color: #0ea5e9;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .forgot-password-link:hover {
+            color: #0284c7;
+            text-decoration: underline;
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+        
+        .register-link a {
+            color: #0ea5e9;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Footer */
+        .footer {
+            background: #0369a1;
+            color: white;
+            padding: 20px 0 15px;
+            margin-top: 40px;
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+        
+        .footer .container-fluid {
+            padding-left: 0;
+            padding-right: 0;
+        }
+        
+        .footer-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.7rem;
+        }
+        
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+        }
+        
+        .footer-link:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .social-icons a {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+        
+        .social-icons a:hover {
+            background: white;
+            color: #0ea5e9;
+            transform: translateY(-5px);
+        }
+        
+        .footer p {
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html" style="display: flex; align-items: center;">
+                <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 45px; margin-right: 10px;">
+                AquaSphere
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#how-it-works">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#contact">Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Form -->
+    <div class="main-content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div class="login-card mx-auto" style="margin-top: 40px;">
+                        <h1 class="login-title">Welcome Back</h1>
+                        <p class="login-subtitle">Sign in to continue ordering clean water</p>
+                        
+                        <form method="post" action="api/login.php" id="loginForm" novalidate>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" 
+                                       placeholder="Enter your username" autocomplete="off" required>
+                                <div class="custom-error" id="username-error">Username is required.</div>
+                                <div class="custom-error" id="auth-error" style="display: none;">Invalid username or password.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password" 
+                                           placeholder="Enter your password" autocomplete="off" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="fas fa-eye" id="passwordIcon"></i>
+                                    </button>
+                                </div>
+                                <div class="custom-error" id="password-error">Password is required.</div>
+                            </div>
+                            
+                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me">
+                                    <label class="form-check-label" for="remember_me">
+                                        Remember me
+                                    </label>
+                                </div>
+                                <a href="#" class="forgot-password-link" onclick="showForgotPassword(); return false;">Forgot Password?</a>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-login">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="register-link">
+                            <p>Don't have an account? <a href="register.html">Register here</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            
+            // Success timers to revert the green glow after 3s
+            const successTimers = {};
+            function markSuccess(fieldName) {
+                const field = document.getElementById(fieldName);
+                if (!field) return;
+                field.classList.remove('error');
+                field.classList.add('success');
+                if (successTimers[fieldName]) clearTimeout(successTimers[fieldName]);
+                successTimers[fieldName] = setTimeout(() => {
+                    field.classList.remove('success');
+                }, 3000);
+            }
+
+            // Required fields
+            const requiredFields = ['username', 'password'];
+            
+            // Function to show error
+            function showError(fieldName, message) {
+                const field = document.getElementById(fieldName);
+                const errorDiv = document.getElementById(fieldName + '-error');
+                
+                if (field && errorDiv) {
+                    field.classList.add('error');
+                    field.classList.remove('success');
+                    errorDiv.textContent = message;
+                    errorDiv.style.display = 'block';
+                }
+            }
+            
+            // Function to hide error
+            function hideError(fieldName) {
+                const field = document.getElementById(fieldName);
+                const errorDiv = document.getElementById(fieldName + '-error');
+                
+                if (field && errorDiv) {
+                    field.classList.remove('error');
+                    errorDiv.style.display = 'none';
+                }
+            }
+            
+            // Function to validate individual field
+            function validateField(fieldName) {
+                const field = document.getElementById(fieldName);
+                if (!field) return true;
+                
+                const value = field.value.trim();
+                
+                if (!value) {
+                    showError(fieldName, getFieldLabel(fieldName) + ' is required.');
+                    return false;
+                }
+                
+                // Additional validations
+                if (fieldName === 'username') {
+                    if (value.length < 4 || value.length > 64) {
+                        showError(fieldName, 'Username must be between 4 and 64 characters long.');
+                        return false;
+                    } else {
+                        hideError(fieldName);
+                        markSuccess(fieldName);
+                    }
+                }
+                
+                if (fieldName === 'password') {
+                    if (value.length < 8) {
+                        showError(fieldName, 'Password must be at least 8 characters.');
+                        return false;
+                    } else {
+                        hideError(fieldName);
+                        markSuccess(fieldName);
+                    }
+                }
+                
+                return true;
+            }
+            
+            // Function to get field label
+            function getFieldLabel(fieldName) {
+                const labels = {
+                    'username': 'Username',
+                    'password': 'Password'
+                };
+                return labels[fieldName] || fieldName;
+            }
+            
+            // Function to validate all fields
+            function validateForm() {
+                let isValid = true;
+                
+                requiredFields.forEach(fieldName => {
+                    if (!validateField(fieldName)) {
+                        isValid = false;
+                    }
+                });
+                
+                return isValid;
+            }
+            
+            // Add event listeners to all required fields
+            requiredFields.forEach(fieldName => {
+                const field = document.getElementById(fieldName);
+                if (field) {
+                    field.addEventListener('blur', () => validateField(fieldName));
+                    field.addEventListener('input', () => {
+                        validateField(fieldName);
+                        // Clear authentication error when user starts typing
+                        const authError = document.getElementById('auth-error');
+                        if (authError) {
+                            authError.style.display = 'none';
+                        }
+                    });
+                }
+            });
+            
+            // Password toggle functionality
+            function togglePasswordVisibility(passwordFieldId, toggleButtonId, iconId) {
+                const passwordField = document.getElementById(passwordFieldId);
+                const toggleButton = document.getElementById(toggleButtonId);
+                const icon = document.getElementById(iconId);
+                
+                if (passwordField && toggleButton && icon) {
+                    toggleButton.addEventListener('click', function() {
+                        if (passwordField.type === 'password') {
+                            passwordField.type = 'text';
+                            icon.classList.remove('fa-eye');
+                            icon.classList.add('fa-eye-slash');
+                        } else {
+                            passwordField.type = 'password';
+                            icon.classList.remove('fa-eye-slash');
+                            icon.classList.add('fa-eye');
+                        }
+                    });
+                }
+            }
+            
+            togglePasswordVisibility('password', 'togglePassword', 'passwordIcon');
+            
+            // Form submission handler
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate form first
+                if (!validateForm()) {
+                    // Scroll to first error
+                    const firstError = form.querySelector('.error');
+                    if (firstError && firstError.scrollIntoView) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    return;
+                }
+                
+                // Submit form
+                const formData = new FormData(form);
+                fetch('api/login.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    // Check if response is ok
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            try {
+                                return JSON.parse(text);
+                            } catch (e) {
+                                throw new Error('Server error: ' + text);
+                            }
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Redirect to dashboard or home
+                        window.location.href = data.redirect || 'dashboard.html';
+                    } else {
+                        // Show error messages
+                        if (data.errors) {
+                            Object.keys(data.errors).forEach(field => {
+                                showError(field, data.errors[field]);
+                            });
+                        } else if (data.message) {
+                            const authError = document.getElementById('auth-error');
+                            if (authError) {
+                                authError.style.display = 'block';
+                                document.getElementById('username').classList.add('error');
+                                document.getElementById('password').classList.add('error');
+                            } else {
+                                alert(data.message);
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred: ' + error.message);
+                });
+            });
+            
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+            
+            // Set active nav link for current page
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === 'login.html' || link.getAttribute('href').includes('login')) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+            
+            // Forgot Password function (placeholder)
+            function showForgotPassword() {
+                alert('Forgot password functionality will be implemented soon.');
+            }
+        });
+    </script>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-3">
+                    <h4 class="footer-title" style="display: flex; align-items: center;">
+                        <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 40px; margin-right: 10px;">
+                        AquaSphere
+                    </h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.7;">
+                        Your trusted water delivery service. Fast delivery, clean quality water, and reliable service. 
+                        Everything you need for your hydration needs, all in one platform.
+                    </p>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-3">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <a href="index.html#home" class="footer-link">Home</a>
+                    <a href="index.html#features" class="footer-link">Features</a>
+                    <a href="index.html#how-it-works" class="footer-link">How It Works</a>
+                    <a href="index.html#contact" class="footer-link">Contact</a>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <h5 class="footer-title">Features</h5>
+                    <a href="#" class="footer-link">Easy Ordering</a>
+                    <a href="#" class="footer-link">Delivery Tracking</a>
+                    <a href="#" class="footer-link">Payment Options</a>
+                    <a href="#" class="footer-link">Customer Support</a>
+                </div>
+                
+                <div class="col-lg-3 mb-3">
+                    <h5 class="footer-title">Connect With Us</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <p class="mt-1" style="color: rgba(255, 255, 255, 0.8);">
+                        <i class="fas fa-envelope me-2"></i>support@aquasphere.com
+                    </p>
+                </div>
+            </div>
+            
+            <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 1rem 0 0.8rem;">
+            
+            <div class="text-center" style="color: rgba(255, 255, 255, 0.8); font-size: 0.8rem;">
+                <p>&copy; 2024 AquaSphere. Made with ❤️ for clean water delivery. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+

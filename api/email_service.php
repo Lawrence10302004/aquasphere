@@ -1,0 +1,188 @@
+<?php
+/**
+ * Email Service for AquaSphere using Brevo (formerly Sendinblue) API
+ */
+
+require_once 'database.php';
+
+class BrevoEmailService {
+    private $api_key;
+    private $sender_email;
+    private $sender_name;
+    private $api_url = "https://api.brevo.com/v3/smtp/email";
+    
+    public function __construct($api_key, $sender_email, $sender_name = "AquaSphere") {
+        $this->api_key = $api_key;
+        $this->sender_email = $sender_email;
+        $this->sender_name = $sender_name;
+    }
+    
+    /**
+     * Send email using Brevo API
+     */
+    public function send_email($to_email, $subject, $html_content, $text_content = null, $to_name = null) {
+        if (!$this->api_key || !$this->sender_email) {
+            return ['success' => false, 'message' => 'Email service not configured'];
+        }
+        
+        $headers = [
+            "accept: application/json",
+            "api-key: " . $this->api_key,
+            "content-type: application/json"
+        ];
+        
+        $data = [
+            "sender" => [
+                "email" => $this->sender_email,
+                "name" => $this->sender_name
+            ],
+            "to" => [
+                [
+                    "email" => $to_email,
+                    "name" => $to_name ? $to_name : explode('@', $to_email)[0]
+                ]
+            ],
+            "subject" => $subject,
+            "htmlContent" => $html_content
+        ];
+        
+        if ($text_content) {
+            $data["textContent"] = $text_content;
+        }
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->api_url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+        
+        if ($error) {
+            return ['success' => false, 'message' => 'CURL Error: ' . $error];
+        }
+        
+        if ($http_code == 201) {
+            $response_data = json_decode($response, true);
+            return ['success' => true, 'message' => 'Email sent successfully', 'message_id' => $response_data['messageId'] ?? null];
+        } else {
+            $error_data = json_decode($response, true);
+            $error_message = $error_data['message'] ?? 'Unknown error';
+            return ['success' => false, 'message' => 'Brevo API Error: ' . $error_message];
+        }
+    }
+}
+
+/**
+ * Get configured Brevo email service
+ */
+function get_brevo_service() {
+    $api_key = get_system_setting('brevo_api_key');
+    $sender_email = get_system_setting('brevo_sender_email');
+    $sender_name = get_system_setting('brevo_sender_name', 'AquaSphere');
+    $enable_notifications = get_system_setting('enable_email_notifications', '0') === '1';
+    
+    if (!$enable_notifications || !$api_key || !$sender_email) {
+        return null;
+    }
+    
+    return new BrevoEmailService($api_key, $sender_email, $sender_name);
+}
+
+/**
+ * Send OTP email using Brevo
+ */
+function send_otp_email_brevo($email, $otp_code, $username) {
+    $brevo_service = get_brevo_service();
+    
+    if (!$brevo_service) {
+        // Development fallback - log the OTP so it can be retrieved from logs
+        error_log("Brevo email service not configured. OTP for $username ($email): $otp_code");
+        // Return false to indicate email was not sent
+        // But we'll still allow registration to proceed in development
+        return false;
+    }
+    
+    $subject = "AquaSphere - Email Verification Code";
+    
+    $html_content = "
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset='UTF-8'>
+        <title>Email Verification</title>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+            .content { padding: 20px; background-color: #f9f9f9; border-radius: 0 0 8px 8px; }
+            .otp-box { background-color: white; padding: 30px; margin: 20px 0; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            .otp-code { font-size: 36px; font-weight: bold; color: #0ea5e9; letter-spacing: 8px; margin: 20px 0; }
+            .warning { background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 20px 0; }
+            .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1>AquaSphere Email Verification</h1>
+            </div>
+            <div class='content'>
+                <h2>Hello $username,</h2>
+                <p>Thank you for registering with AquaSphere! To complete your registration, please use the verification code below:</p>
+                
+                <div class='otp-box'>
+                    <h3>Your Verification Code</h3>
+                    <div class='otp-code'>$otp_code</div>
+                    <p>Enter this code in the verification page to complete your registration.</p>
+                </div>
+                
+                <div class='warning'>
+                    <strong>Important:</strong>
+                    <ul style='margin: 10px 0; padding-left: 20px;'>
+                        <li>This code will expire in 10 minutes</li>
+                        <li>Do not share this code with anyone</li>
+                        <li>If you didn't request this code, please ignore this email</li>
+                    </ul>
+                </div>
+                
+                <p>If you have any questions, please contact our support team.</p>
+            </div>
+            <div class='footer'>
+                <p>This is an automated message from AquaSphere. Please do not reply to this email.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    ";
+    
+    $text_content = "
+    AquaSphere Email Verification
+    
+    Hello $username,
+    
+    Thank you for registering with AquaSphere! To complete your registration, please use the verification code below:
+    
+    Your Verification Code: $otp_code
+    
+    Enter this code in the verification page to complete your registration.
+    
+    Important:
+    - This code will expire in 10 minutes
+    - Do not share this code with anyone
+    - If you didn't request this code, please ignore this email
+    
+    If you have any questions, please contact our support team.
+    
+    This is an automated message from AquaSphere. Please do not reply to this email.
+    ";
+    
+    $result = $brevo_service->send_email($email, $subject, $html_content, $text_content, $username);
+    return $result['success'];
+}
+?>
+

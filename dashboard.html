@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AquaSphere</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif !important;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+        
+        /* Header/Navbar */
+        .main-header {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+        
+        .logo-text h3 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .logo-text p {
+            margin: 0;
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+        
+        .nav-icons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .nav-icon {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-icon:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+        
+        .nav-icon.active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0369a1;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .page-subtitle {
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+        
+        /* Search and Filter Bar */
+        .search-filter-bar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            padding: 12px 45px 12px 15px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box input:focus {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.15);
+        }
+        
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+        
+        /* Product Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        .product-image {
+            height: 200px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-image i {
+            font-size: 5rem;
+            color: rgba(255, 255, 255, 0.9);
+            z-index: 1;
+        }
+        
+        .product-image::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            top: -25%;
+            left: -25%;
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .product-info {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0369a1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-description {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+        
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #f1f5f9;
+        }
+        
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0ea5e9;
+        }
+        
+        .product-price span {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        .btn-add-cart {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border: none;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-add-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
+        }
+        
+        .btn-add-cart:active {
+            transform: translateY(0);
+        }
+        
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .stat-info h4 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0369a1;
+        }
+        
+        .stat-info p {
+            margin: 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        /* Recent Orders Section */
+        .recent-orders {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0369a1;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+        
+        .order-item:hover {
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .order-info h5 {
+            margin: 0;
+            color: #0369a1;
+            font-weight: 600;
+        }
+        
+        .order-info p {
+            margin: 0.25rem 0 0 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        .order-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .status-preparing {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+        
+        .status-delivering {
+            background: #e0e7ff;
+            color: #6366f1;
+        }
+        
+        .status-delivered {
+            background: #d1fae5;
+            color: #059669;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .header-content {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon" style="background: transparent; padding: 0;">
+                        <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 50px; width: auto;">
+                    </div>
+                    <div class="logo-text">
+                        <h3>AquaSphere</h3>
+                        <p>Crystal Clear Water Delivery</p>
+                    </div>
+                </div>
+                <div class="nav-icons">
+                    <a href="dashboard.html" class="nav-icon active" title="Home">
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a href="cart.html" class="nav-icon" title="Shopping Cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge" id="cartCount">0</span>
+                    </a>
+                    <a href="orders.html" class="nav-icon" title="My Orders">
+                        <i class="fas fa-box"></i>
+                    </a>
+                    <a href="profile.html" class="nav-icon" title="Settings">
+                        <i class="fas fa-cog"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <h1 class="page-title">Our Products</h1>
+            <p class="page-subtitle">Pure, refreshing water delivered to your door</p>
+            
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4 id="totalOrders">0</h4>
+                        <p>Total Orders</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4 id="activeDeliveries">0</h4>
+                        <p>Active Deliveries</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4 id="completedOrders">0</h4>
+                        <p>Completed</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search and Filter -->
+            <div class="search-filter-bar">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Search products...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mt-3 mt-md-0">
+                        <select class="form-select" id="filterSelect">
+                            <option value="all">All Products</option>
+                            <option value="refill">Refills</option>
+                            <option value="bottle">Bottles</option>
+                            <option value="gallon">Gallons</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Products Grid -->
+            <div class="products-grid" id="productsGrid">
+                <!-- Product 1: 5-Gallon Refill -->
+                <div class="product-card" data-category="refill gallon">
+                    <div class="product-image">
+                        <i class="fas fa-fill-drip"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">5-Gallon Refill</h3>
+                        <p class="product-description">Refill your existing container with fresh, clean water</p>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                ₱25<span>/refill</span>
+                            </div>
+                            <button class="btn-add-cart" onclick="addToCart(1, '5-Gallon Refill', 25)">
+                                <i class="fas fa-cart-plus"></i>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 2: New 5-Gallon + Container -->
+                <div class="product-card" data-category="gallon">
+                    <div class="product-image">
+                        <i class="fas fa-wine-bottle"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">New 5-Gallon + Container</h3>
+                        <p class="product-description">Includes new gallon container with fresh water</p>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                ₱150<span>/unit</span>
+                            </div>
+                            <button class="btn-add-cart" onclick="addToCart(2, 'New 5-Gallon + Container', 150)">
+                                <i class="fas fa-cart-plus"></i>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 3: 1-Liter Bottle (12-pack) -->
+                <div class="product-card" data-category="bottle">
+                    <div class="product-image">
+                        <i class="fas fa-wine-bottle"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">1-Liter Bottle (12-pack)</h3>
+                        <p class="product-description">Convenient bottles perfect for home and office</p>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                ₱120<span>/pack</span>
+                            </div>
+                            <button class="btn-add-cart" onclick="addToCart(3, '1-Liter Bottle (12-pack)', 120)">
+                                <i class="fas fa-cart-plus"></i>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 4: 500ml Bottle (24-pack) -->
+                <div class="product-card" data-category="bottle">
+                    <div class="product-image">
+                        <i class="fas fa-wine-bottle"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">500ml Bottle (24-pack)</h3>
+                        <p class="product-description">Perfect for on-the-go hydration</p>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                ₱100<span>/pack</span>
+                            </div>
+                            <button class="btn-add-cart" onclick="addToCart(4, '500ml Bottle (24-pack)', 100)">
+                                <i class="fas fa-cart-plus"></i>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 5: Bring Your Jug (Refill) -->
+                <div class="product-card" data-category="refill">
+                    <div class="product-image">
+                        <i class="fas fa-hand-holding-water"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Bring Your Jug (Refill)</h3>
+                        <p class="product-description">Use your own container for eco-friendly refills</p>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                ₱20<span>/refill</span>
+                            </div>
+                            <button class="btn-add-cart" onclick="addToCart(5, 'Bring Your Jug (Refill)', 20)">
+                                <i class="fas fa-cart-plus"></i>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Orders Section -->
+            <div class="recent-orders">
+                <h2 class="section-title">
+                    <i class="fas fa-clock"></i>
+                    Recent Orders
+                </h2>
+                <div id="recentOrdersList">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No recent orders yet. Start ordering to see them here!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Cart functionality
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let cartCount = 0;
+        
+        function updateCartCount() {
+            cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = cartCount;
+        }
+        
+        function addToCart(productId, productName, price) {
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: productName,
+                    price: price,
+                    quantity: 1
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            
+            // Show success feedback
+            showNotification('Product added to cart!', 'success');
+        }
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const productCards = document.querySelectorAll('.product-card');
+            
+            productCards.forEach(card => {
+                const title = card.querySelector('.product-title').textContent.toLowerCase();
+                const description = card.querySelector('.product-description').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+        
+        // Filter functionality
+        document.getElementById('filterSelect').addEventListener('change', function(e) {
+            const filterValue = e.target.value;
+            const productCards = document.querySelectorAll('.product-card');
+            
+            productCards.forEach(card => {
+                if (filterValue === 'all') {
+                    card.style.display = 'flex';
+                } else {
+                    const category = card.getAttribute('data-category');
+                    if (category.includes(filterValue)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        });
+        
+        // Load recent orders (mock data for now)
+        function loadRecentOrders() {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const ordersList = document.getElementById('recentOrdersList');
+            
+            if (orders.length === 0) {
+                ordersList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No recent orders yet. Start ordering to see them here!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            ordersList.innerHTML = orders.slice(0, 5).map(order => `
+                <div class="order-item">
+                    <div class="order-info">
+                        <h5>Order #${order.id}</h5>
+                        <p>${order.items.length} item(s) • ₱${order.total.toFixed(2)}</p>
+                    </div>
+                    <span class="order-status status-${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>
+                </div>
+            `).join('');
+        }
+        
+        // Load stats (mock data for now)
+        function loadStats() {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            document.getElementById('totalOrders').textContent = orders.length;
+            document.getElementById('activeDeliveries').textContent = orders.filter(o => ['pending', 'preparing', 'delivering'].includes(o.status)).length;
+            document.getElementById('completedOrders').textContent = orders.filter(o => o.status === 'delivered').length;
+        }
+        
+        // Notification function
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'}`;
+            notification.style.cssText = 'position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);';
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+                ${message}
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // Initialize
+        updateCartCount();
+        loadRecentOrders();
+        loadStats();
+    </script>
+</body>
+</html>
+

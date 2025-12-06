@@ -1,0 +1,165 @@
+<?php
+/**
+ * Registration Handler for AquaSphere
+ */
+
+header('Content-Type: application/json');
+require_once 'database.php';
+
+// Only allow POST requests
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+    exit;
+}
+
+// Get form data
+$username = trim($_POST['username'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$first_name = trim($_POST['first_name'] ?? '');
+$last_name = trim($_POST['last_name'] ?? '');
+$gender = trim($_POST['gender'] ?? '');
+$birthday = trim($_POST['birthday'] ?? '');
+$password = $_POST['password'] ?? '';
+$confirm_password = $_POST['confirm_password'] ?? '';
+
+// Validation
+$errors = [];
+
+// Username validation
+if (empty($username)) {
+    $errors['username'] = 'Username is required.';
+} elseif (strlen($username) < 4 || strlen($username) > 64) {
+    $errors['username'] = 'Username must be between 4 and 64 characters long.';
+} else {
+    // Check if username exists
+    $existing_user = get_user_by_username($username);
+    if ($existing_user) {
+        $errors['username'] = 'Username already exists.';
+    }
+}
+
+// Email validation
+if (empty($email)) {
+    $errors['email'] = 'Email is required.';
+} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $errors['email'] = 'Please enter a valid email.';
+} else {
+    // Check if email exists
+    $existing_email = get_user_by_email($email);
+    if ($existing_email) {
+        $errors['email'] = 'Email already exists.';
+    }
+}
+
+// First name validation
+if (empty($first_name)) {
+    $errors['first_name'] = 'First name is required.';
+}
+
+// Last name validation
+if (empty($last_name)) {
+    $errors['last_name'] = 'Last name is required.';
+}
+
+// Gender validation
+if (empty($gender)) {
+    $errors['gender'] = 'Gender is required.';
+} elseif (!in_array($gender, ['male', 'female'])) {
+    $errors['gender'] = 'Invalid gender selection.';
+}
+
+// Birthday validation
+if (empty($birthday)) {
+    $errors['birthday'] = 'Birthday is required.';
+}
+
+// Password validation
+if (empty($password)) {
+    $errors['password'] = 'Password is required.';
+} elseif (strlen($password) < 8) {
+    $errors['password'] = 'Password must be at least 8 characters.';
+}
+
+// Confirm password validation
+if (empty($confirm_password)) {
+    $errors['confirm_password'] = 'Password confirmation is required.';
+} elseif ($password !== $confirm_password) {
+    $errors['confirm_password'] = 'Passwords do not match.';
+}
+
+// If there are errors, return them
+if (!empty($errors)) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'errors' => $errors]);
+    exit;
+}
+
+// Generate OTP code (6 digits)
+$otp_code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+
+// Set expiry time (10 minutes from now)
+$expires_at = date('Y-m-d H:i:s', time() + (10 * 60));
+
+// Hash password
+$password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+// Store OTP verification data
+$otp_stored = store_otp_verification(
+    $email,
+    $otp_code,
+    $username,
+    $password_hash,
+    $first_name,
+    $last_name,
+    $gender,
+    $birthday,
+    $expires_at
+);
+
+if (!$otp_stored) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Failed to store verification data. Please try again.']);
+    exit;
+}
+
+// Send OTP email
+require_once 'email_service.php';
+$email_sent = send_otp_email_brevo($email, $otp_code, $username);
+
+// Store email in session for verification page (even if email failed, for development)
+session_start();
+$_SESSION['pending_email'] = $email;
+$_SESSION['pending_username'] = $username;
+
+if ($email_sent) {
+    echo json_encode([
+        'success' => true, 
+        'message' => 'Verification code sent to your email!',
+        'redirect' => 'verify.html'
+    ]);
+} else {
+    // Email service not configured - still allow registration but show OTP in response for development
+    // In production, this should be an error, but for development we'll proceed
+    $is_development = empty(get_system_setting('brevo_api_key'));
+    
+    if ($is_development) {
+        // Development mode: return OTP in response (will be shown on verify page)
+        $_SESSION['dev_otp'] = $otp_code; // Store in session for verify page to display
+        echo json_encode([
+            'success' => true, 
+            'message' => 'Email service not configured. Check server logs for OTP code.',
+            'redirect' => 'verify.html',
+            'dev_mode' => true,
+            'otp' => $otp_code // Include OTP for development
+        ]);
+    } else {
+        http_response_code(500);
+        echo json_encode([
+            'success' => false, 
+            'message' => 'Failed to send verification email. Please try again or contact support.'
+        ]);
+    }
+}
+?>
+

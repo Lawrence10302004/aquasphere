@@ -1,0 +1,104 @@
+<?php
+/**
+ * Save System Settings API
+ */
+
+header('Content-Type: application/json');
+require_once '../database.php';
+
+// Check if user is admin (you should implement proper session/auth check)
+// For now, we'll just save the settings
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+    exit;
+}
+
+$data = json_decode(file_get_contents('php://input'), true);
+
+if (!$data) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Invalid request data']);
+    exit;
+}
+
+$user_id = 1; // TODO: Get from session
+$api_key_saved = false;
+
+// Save all settings
+$settings_to_save = [
+    'brevo_sender_email',
+    'brevo_sender_name',
+    'enable_email_notifications',
+    'site_name',
+    'site_description',
+    'max_users',
+    'session_timeout',
+    'password_min_length',
+    'max_login_attempts',
+    'enable_two_factor'
+];
+
+$saved_settings = [];
+$errors = [];
+
+// Initialize database to ensure table exists
+init_db();
+
+foreach ($settings_to_save as $key) {
+    if (isset($data[$key])) {
+        $result = update_system_setting($key, $data[$key], $user_id);
+        if ($result) {
+            $saved_settings[] = $key;
+            // Verify it was saved
+            $verify = get_system_setting($key);
+            if ($verify !== $data[$key]) {
+                $errors[] = "Setting $key was not saved correctly";
+            }
+        } else {
+            $errors[] = "Failed to save setting: $key";
+        }
+    }
+}
+
+// Handle API key separately (only save if provided)
+if (isset($data['brevo_api_key']) && !empty($data['brevo_api_key']) && $data['brevo_api_key'] !== '***SAVED***') {
+    $result = update_system_setting('brevo_api_key', $data['brevo_api_key'], $user_id);
+    if ($result) {
+        $api_key_saved = true;
+        $saved_settings[] = 'brevo_api_key';
+        // Verify API key was saved (check length, not value for security)
+        $saved_key = get_system_setting('brevo_api_key');
+        if (empty($saved_key) || strlen($saved_key) !== strlen($data['brevo_api_key'])) {
+            $errors[] = "API key was not saved correctly";
+        }
+    } else {
+        $errors[] = "Failed to save API key";
+    }
+}
+
+// Log the save operation
+error_log("Settings saved: " . implode(', ', $saved_settings));
+if (!empty($errors)) {
+    error_log("Settings save errors: " . implode(', ', $errors));
+}
+
+if (empty($errors)) {
+    echo json_encode([
+        'success' => true,
+        'message' => 'Settings saved successfully',
+        'api_key_saved' => $api_key_saved,
+        'saved_count' => count($saved_settings)
+    ]);
+} else {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Some settings may not have been saved correctly',
+        'errors' => $errors,
+        'saved_count' => count($saved_settings)
+    ]);
+}
+?>
+

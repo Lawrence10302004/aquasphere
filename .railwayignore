@@ -1,0 +1,14 @@
+# Ignore files for Railway deployment
+node_modules/
+.git/
+.env
+*.log
+*.db
+*.sqlite
+*.sqlite3
+__pycache__/
+*.pyc
+.DS_Store
+.vscode/
+.idea/
+
