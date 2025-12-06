@@ -38,5 +38,5 @@ EXPOSE 8080
 # Start PHP built-in server (Railway sets PORT env var)
 # Python API is available but optional - can be enabled if needed
 # For now, we'll focus on PHP as the main backend
-CMD php -S 0.0.0.0:\${PORT:-8080} -t .
+CMD sh -c "php -S 0.0.0.0:\${PORT:-8080} -t ."
 
