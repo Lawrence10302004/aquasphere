@@ -646,19 +646,19 @@
                 })
             })
             .then(response => {
-                // Check if response is ok
-                if (!response.ok) {
-                    return response.text().then(text => {
-                        throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
-                    });
-                }
-                // Try to parse as JSON
+                // Always try to parse as JSON, even if response is not OK
                 return response.text().then(text => {
                     try {
-                        return JSON.parse(text);
+                        const data = JSON.parse(text);
+                        // If response is not OK, return the parsed data anyway so we can show the error message
+                        if (!response.ok) {
+                            return data;
+                        }
+                        return data;
                     } catch (e) {
                         console.error('JSON parse error:', e);
                         console.error('Response text:', text);
+                        // If we can't parse JSON, throw an error
                         throw new Error('Invalid JSON response from server: ' + text.substring(0, 100));
                     }
                 });
@@ -670,6 +670,7 @@
                         window.location.href = 'login.html?registered=true';
                     }, 2000);
                 } else {
+                    // Show the error message from the server
                     showError(data.message || 'Invalid or expired verification code. Please try again.');
                     // Clear OTP inputs
                     otpInputs.forEach(input => {
@@ -684,6 +685,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
+                // Only show generic error if it's a network/parsing error, not a server error
                 showError('An error occurred. Please try again. Check console for details.');
                 verifyBtn.disabled = false;
                 verifyBtnText.innerHTML = 'Verify Code';
