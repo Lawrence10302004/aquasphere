@@ -6,10 +6,16 @@ Additional backend functionality
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-import psycopg2
-from psycopg2.extras import RealDictCursor
 import sqlite3
 from datetime import datetime
+
+# Try to import psycopg2, but make it optional
+try:
+    import psycopg2
+    from psycopg2.extras import RealDictCursor
+    PSYCOPG2_AVAILABLE = True
+except ImportError:
+    PSYCOPG2_AVAILABLE = False
 
 app = Flask(__name__)
 CORS(app)
@@ -20,17 +26,17 @@ def get_db_connection():
     # Check for PostgreSQL connection
     database_url = os.environ.get('DATABASE_URL')
     
-    if database_url:
+    if database_url and PSYCOPG2_AVAILABLE:
         # PostgreSQL connection
         return psycopg2.connect(database_url)
     else:
-        # SQLite connection (local development)
+        # SQLite connection (local development or if psycopg2 not available)
         db_path = os.environ.get('DATABASE_PATH', 'aquasphere.db')
         return sqlite3.connect(db_path)
 
 def is_postgres():
     """Check if using PostgreSQL"""
-    return os.environ.get('DATABASE_URL') is not None
+    return os.environ.get('DATABASE_URL') is not None and PSYCOPG2_AVAILABLE
 
 @app.route('/api/python/health', methods=['GET'])
 def health_check():
@@ -62,7 +68,7 @@ def get_orders():
         
         conn = get_db_connection()
         
-        if is_postgres():
+        if is_postgres() and PSYCOPG2_AVAILABLE:
             cursor = conn.cursor(cursor_factory=RealDictCursor)
             cursor.execute("""
                 SELECT o.*, 
@@ -133,7 +139,7 @@ def create_order():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        if is_postgres():
+        if is_postgres() and PSYCOPG2_AVAILABLE:
             cursor.execute("""
                 INSERT INTO orders (user_id, delivery_date, delivery_time, delivery_address, 
                                   total_amount, payment_method, status)
@@ -184,7 +190,7 @@ def update_order_status():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        if is_postgres():
+        if is_postgres() and PSYCOPG2_AVAILABLE:
             cursor.execute("""
                 UPDATE orders 
                 SET status = %s, updated_at = CURRENT_TIMESTAMP

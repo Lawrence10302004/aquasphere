@@ -22,11 +22,12 @@ WORKDIR /app
 # Copy requirements file
 COPY requirements.txt /app/requirements.txt
 
-# Create virtual environment and install packages
+# Create virtual environment and install packages (without psycopg2 to avoid Python 3.13 compatibility issues)
+# Python API will use SQLite or can be extended later
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r /app/requirements.txt
+RUN /opt/venv/bin/pip install --upgrade pip && \
+    /opt/venv/bin/pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy all files
 COPY . .
