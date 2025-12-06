@@ -92,15 +92,6 @@
         /* Main Content */
         .main-content {
             padding: 2rem 0;
-            position: relative;
-        }
-        
-        .main-content .container {
-            position: relative;
-        }
-        
-        .main-content .row {
-            position: relative;
         }
         
         .page-title {
@@ -123,6 +114,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             padding: 2rem;
             margin-bottom: 2rem;
+            margin-right: 420px; /* Space for fixed order summary and delivery address */
         }
         
         .cart-header {
@@ -454,7 +446,7 @@
         .cart-summary-wrapper {
             position: fixed !important;
             top: 100px !important;
-            right: 20px !important;
+            left: calc(66.666% + 2rem) !important; /* Position beside shopping cart with spacing */
             width: 380px !important;
             max-width: 380px !important;
             z-index: 1000 !important;
@@ -462,19 +454,10 @@
             flex-direction: column;
             gap: 1.5rem;
             pointer-events: none;
-            transform: none !important;
+            transform: translateZ(0) !important; /* Force hardware acceleration */
             will-change: auto;
             margin: 0 !important;
             padding: 0 !important;
-        }
-        
-        /* Ensure parent containers don't create new containing block */
-        .main-content,
-        .main-content .container,
-        .main-content .row,
-        .main-content .col-lg-4 {
-            transform: none !important;
-            will-change: auto !important;
         }
         
         .cart-summary-wrapper > * {
@@ -483,8 +466,11 @@
         
         @media (max-width: 1400px) {
             .cart-summary-wrapper {
-                right: 20px !important;
-                width: 380px !important;
+                left: calc(66.666% + 1rem) !important;
+                width: 360px !important;
+            }
+            .cart-container {
+                margin-right: 380px;
             }
         }
         
@@ -492,10 +478,13 @@
             .cart-summary-wrapper {
                 position: relative !important;
                 top: 0 !important;
-                right: 0 !important;
+                left: 0 !important;
                 width: 100% !important;
                 max-width: 100% !important;
                 pointer-events: auto;
+            }
+            .cart-container {
+                margin-right: 0;
             }
         }
         
@@ -1264,9 +1253,13 @@
                     </div>
                 </div>
                 
-                <!-- Cart Summary -->
-                <div class="col-lg-4" style="position: static;">
-                    <div class="cart-summary-wrapper">
+                <!-- Cart Summary - Fixed Position -->
+                <div class="col-lg-4" style="display: none;">
+                    <!-- This column is hidden, wrapper is positioned fixed -->
+                </div>
+                
+                <!-- Fixed Order Summary and Delivery Address -->
+                <div class="cart-summary-wrapper">
                         <div class="cart-summary">
                             <h3 class="summary-title">Order Summary</h3>
                             
