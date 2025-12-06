@@ -107,10 +107,18 @@
             font-weight: 600;
         }
         
-        .nav-link .cart-badge {
-            position: relative;
-            display: inline-block;
-            margin-left: 5px;
+        .nav-link {
+            padding: 0.5rem 1rem;
+        }
+        
+        .nav-link i {
+            font-size: 1.2rem;
+        }
+        
+        .nav-link[style*="position: relative"] .cart-badge {
+            position: absolute;
+            top: 0;
+            right: 5px;
         }
         
         /* Footer Styles */
@@ -501,29 +509,27 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="dashboard.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="orders.html">My Orders</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="profile.html">Profile</a>
-                    </li>
-                </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="cart.html" style="position: relative;">
+                        <a class="nav-link active" href="dashboard.html" title="Home">
+                            <i class="fas fa-home"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html" title="Shopping Cart" style="position: relative;">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="cart-badge" id="cartCount">0</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">Landing Page</a>
+                        <a class="nav-link" href="orders.html" title="My Orders">
+                            <i class="fas fa-box"></i>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="logout(); return false;">Logout</a>
+                        <a class="nav-link" href="profile.html" title="Settings">
+                            <i class="fas fa-cog"></i>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -909,4 +915,5 @@
     </footer>
 </body>
 </html>
+
 
