@@ -92,6 +92,15 @@
         /* Main Content */
         .main-content {
             padding: 2rem 0;
+            position: relative;
+        }
+        
+        .main-content .container {
+            position: relative;
+        }
+        
+        .main-content .row {
+            position: relative;
         }
         
         .page-title {
@@ -443,16 +452,18 @@
         }
         
         .cart-summary-wrapper {
-            position: fixed;
-            top: 100px;
-            right: calc((100% - 1200px) / 2 + 16px);
-            width: calc(33.333% - 1rem);
-            max-width: 400px;
-            z-index: 100;
+            position: fixed !important;
+            top: 100px !important;
+            right: 20px !important;
+            width: 380px !important;
+            max-width: 380px !important;
+            z-index: 1000 !important;
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
             pointer-events: none;
+            transform: none !important;
+            will-change: auto;
         }
         
         .cart-summary-wrapper > * {
@@ -461,17 +472,18 @@
         
         @media (max-width: 1400px) {
             .cart-summary-wrapper {
-                right: 20px;
+                right: 20px !important;
+                width: 380px !important;
             }
         }
         
         @media (max-width: 991px) {
             .cart-summary-wrapper {
-                position: relative;
-                top: 0;
-                right: 0;
-                width: 100%;
-                max-width: 100%;
+                position: relative !important;
+                top: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
                 pointer-events: auto;
             }
         }
@@ -589,6 +601,11 @@
         /* Delivery Address Section */
         .delivery-address-section {
             padding: 0;
+        }
+        
+        .cart-summary-wrapper .cart-summary {
+            width: 100% !important;
+            max-width: 100% !important;
         }
         
         .address-header {
@@ -1237,7 +1254,7 @@
                 </div>
                 
                 <!-- Cart Summary -->
-                <div class="col-lg-4">
+                <div class="col-lg-4" style="position: static;">
                     <div class="cart-summary-wrapper">
                         <div class="cart-summary">
                             <h3 class="summary-title">Order Summary</h3>
