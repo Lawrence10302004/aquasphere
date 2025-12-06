@@ -118,17 +118,25 @@ try {
         // Check if user is admin and redirect accordingly
         $redirect_url = ($user['is_admin'] ?? 0) ? 'admin/dashboard.html' : 'dashboard.html';
         
+        // Clear any output buffer before sending JSON
+        ob_clean();
         echo json_encode([
             'success' => true, 
             'message' => 'Login successful!',
             'redirect' => $redirect_url
         ]);
+        ob_end_flush();
+        exit;
     } else {
         close_connection($conn);
+        ob_clean();
         http_response_code(401);
         echo json_encode(['success' => false, 'message' => 'Invalid username or password.']);
+        ob_end_flush();
+        exit;
     }
 } catch (Exception $e) {
+    ob_clean();
     http_response_code(500);
     $error_message = $e->getMessage();
     if (empty($error_message)) {
@@ -140,6 +148,8 @@ try {
         'file' => $e->getFile(),
         'line' => $e->getLine()
     ]);
+    ob_end_flush();
+    exit;
 }
 ?>
 
