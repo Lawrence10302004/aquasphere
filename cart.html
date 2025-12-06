@@ -199,8 +199,8 @@
             justify-content: center;
             line-height: 1;
             font-size: 1rem;
-            width: 20px;
-            height: 20px;
+            height: 1em;
+            vertical-align: middle;
         }
         
         .btn-continue-shopping:hover {
@@ -1389,9 +1389,8 @@
             document.getElementById('deliveryFee').textContent = `₱${deliveryFee.toFixed(2)}`;
             document.getElementById('total').textContent = `₱${total.toFixed(2)}`;
             
-            // Update checkout button
-            const checkoutBtn = document.getElementById('checkoutBtn');
-            checkoutBtn.disabled = checkboxes.length === 0;
+            // Update checkout button (check both items and address)
+            updateCheckoutButton();
         }
         
         // Toggle select all
@@ -1463,6 +1462,7 @@
             const address = JSON.parse(localStorage.getItem('deliveryAddress'));
             const emptyAddress = document.getElementById('emptyAddress');
             const addressDisplay = document.getElementById('addressDisplay');
+            const checkoutBtn = document.getElementById('checkoutBtn');
             
             if (address) {
                 emptyAddress.style.display = 'none';
@@ -1476,9 +1476,32 @@
                 } else {
                     document.getElementById('defaultBadge').style.display = 'none';
                 }
+                
+                // Enable checkout button if cart has items
+                updateCheckoutButton();
             } else {
                 emptyAddress.style.display = 'block';
                 addressDisplay.style.display = 'none';
+                // Disable checkout button if no address
+                if (checkoutBtn) {
+                    checkoutBtn.disabled = true;
+                }
+            }
+        }
+        
+        function updateCheckoutButton() {
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const address = JSON.parse(localStorage.getItem('deliveryAddress'));
+            const selectedItems = document.querySelectorAll('.item-checkbox-input:checked');
+            
+            if (checkoutBtn) {
+                // Disable if no address or no items selected
+                if (!address || selectedItems.length === 0 || cart.length === 0) {
+                    checkoutBtn.disabled = true;
+                } else {
+                    checkoutBtn.disabled = false;
+                }
             }
         }
         
@@ -1540,6 +1563,7 @@
             
             localStorage.setItem('deliveryAddress', JSON.stringify(address));
             loadAddress();
+            updateCheckoutButton(); // Enable checkout when address is saved
             closeAddressModal();
             showNotification('Delivery address saved successfully!', 'success');
         }
@@ -1551,6 +1575,7 @@
             
             localStorage.removeItem('deliveryAddress');
             loadAddress();
+            updateCheckoutButton(); // Disable checkout when address is deleted
             showNotification('Delivery address deleted successfully!', 'success');
         }
         
