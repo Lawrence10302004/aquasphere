@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - AquaSphere</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Shared Navbar CSS -->
+    <link rel="stylesheet" href="navbar.css">
+    
+    <!-- Preload navbar HTML for faster loading -->
+    <link rel="preload" href="navbar.html" as="document">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif !important;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-top: 70px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+            min-height: calc(100vh - 70px - 200px);
+        }
+        
+        .profile-container {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .profile-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #0ea5e9, #0284c7, #06b6d4, #0891b2, #0ea5e9);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease infinite;
+            z-index: 1;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        .profile-header {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #06b6d4 100%);
+            padding: 2rem 2rem 1.5rem;
+            border-bottom: none;
+            border-radius: 28px 28px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            animation: rotateGradient 15s linear infinite;
+        }
+        
+        @keyframes rotateGradient {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .profile-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+            margin: 0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .profile-header h2::before {
+            content: '👤';
+            font-size: 1.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .profile-body {
+            background: transparent;
+            padding: 2rem 2rem 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .form-group {
+            margin-bottom: 0.75rem;
+            position: relative;
+        }
+        
+        .form-group.error input,
+        .form-group.error select {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+        
+        .form-group input.success,
+        .form-group select.success {
+            border-color: #28a745;
+            background: #f0fdf4;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+        
+        .form-group.error input:focus,
+        .form-group.error select:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12), 0 4px 12px rgba(239, 68, 68, 0.15);
+        }
+        
+        .profile-section {
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        #updateProfileBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #94a3b8 !important;
+        }
+        
+        #updateProfileBtn:disabled:hover {
+            background: #94a3b8 !important;
+            transform: none;
+        }
+        
+        .form-group .error-message {
+            display: none;
+            margin-top: 0.4rem;
+            padding: 0.5rem 0.75rem;
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            color: #991b1b;
+            font-size: 0.85rem;
+            font-weight: 500;
+            position: relative;
+            animation: errorSlideIn 0.3s ease;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+        }
+        
+        .form-group.error .error-message {
+            display: block;
+        }
+        
+        .form-group .error-message::before {
+            content: '⚠️';
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        @keyframes errorSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 0.9rem;
+            letter-spacing: 0.01em;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.12), 0 4px 12px rgba(14, 165, 233, 0.15);
+            background: linear-gradient(to bottom, #ffffff, #f8faff);
+            transform: translateY(-1px);
+        }
+        
+        .form-group.error input:focus,
+        .form-group.error select:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12), 0 4px 12px rgba(239, 68, 68, 0.15);
+        }
+        
+        .form-group input:hover,
+        .form-group select:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-group.error input:hover,
+        .form-group.error select:hover {
+            border-color: #f87171;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+        
+        .profile-footer {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            border-top: 2px solid #f1f5f9;
+            background: linear-gradient(to bottom, #ffffff, #f8fafc);
+            border-radius: 0 0 28px 28px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .btn-cancel {
+            padding: 12px 28px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-cancel:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: #64748b;
+            text-decoration: none;
+        }
+        
+        .btn-submit {
+            padding: 12px 28px;
+            border: none;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: white;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.35);
+        }
+        
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(14, 165, 233, 0.45);
+        }
+        
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+        
+        /* Footer Styles */
+        .footer {
+            background: #0369a1;
+            color: white;
+            padding: 20px 0 15px;
+            margin-top: 40px;
+            width: 100%;
+        }
+        
+        .footer-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.7rem;
+        }
+        
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        
+        .footer-link:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .social-icons a {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .footer p {
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-body {
+                padding: 1.5rem 1.5rem 1rem;
+            }
+            
+            .profile-header {
+                padding: 1.5rem 1.5rem 1rem;
+            }
+            
+            .profile-footer {
+                padding: 1rem 1.5rem;
+                flex-direction: column;
+            }
+            
+            .btn-cancel,
+            .btn-submit {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar Container -->
+    <div id="navbar-container"></div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <h2>Profile</h2>
+                </div>
+                <div class="profile-body">
+                    <form id="profileForm" onsubmit="saveProfile(event)" novalidate>
+                        <div class="profile-section">
+                            <h5 style="color: #0369a1; font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem;">Account Information</h5>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="profileUsername">Username</label>
+                                    <input type="text" id="profileUsername" name="username" placeholder="Choose a username" autocomplete="off" readonly style="background: #f8f9fa; cursor: not-allowed;">
+                                    <small style="color: #64748b; font-size: 0.85rem;">Username cannot be changed</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileEmail">Email</label>
+                                    <input type="email" id="profileEmail" name="email" placeholder="Enter your email" autocomplete="off" required>
+                                    <div class="error-message" id="profileEmail-error" style="display: none;">Email is required.</div>
+                                    <div class="error-message" id="profileEmail-format-error" style="display: none;">Please enter a valid email.</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-section">
+                            <h5 style="color: #0369a1; font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem;">Personal Information</h5>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="profileFirstName">First Name</label>
+                                    <input type="text" id="profileFirstName" name="firstName" placeholder="Enter your first name" autocomplete="off" required>
+                                    <div class="error-message" id="profileFirstName-error" style="display: none;">First Name is required.</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileLastName">Last Name</label>
+                                    <input type="text" id="profileLastName" name="lastName" placeholder="Enter your last name" autocomplete="off" required>
+                                    <div class="error-message" id="profileLastName-error" style="display: none;">Last Name is required.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="profileGender">Gender</label>
+                                    <select id="profileGender" name="gender" autocomplete="off" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                    <div class="error-message" id="profileGender-error" style="display: none;">Please select an item in the list</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileBirthday">Birthday</label>
+                                    <input type="date" id="profileBirthday" name="birthday" autocomplete="off" required>
+                                    <div class="error-message" id="profileBirthday-error" style="display: none;">Date of birth is required.</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-section">
+                            <h5 style="color: #0369a1; font-weight: 600; margin-bottom: 0.5rem; font-size: 1.1rem;">Change Password</h5>
+                            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem; font-style: italic;">
+                                Leave these fields blank if you don't want to change your password.
+                            </p>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="profilePassword">Current Password</label>
+                                    <div style="position: relative;">
+                                        <input type="password" id="profilePassword" name="password" placeholder="Enter your current password" autocomplete="off" minlength="8">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility('profilePassword', this.querySelector('i'))" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; padding: 8px 12px;">
+                                            <i class="fas fa-eye" id="iconProfilePassword"></i>
+                                        </button>
+                                    </div>
+                                    <div class="error-message" id="profilePassword-required" style="display: none;">Password is required.</div>
+                                    <div class="error-message" id="profilePassword-min" style="display: none;">Password must be at least 8 characters.</div>
+                                    <div class="error-message" id="profilePassword-incorrect" style="display: none;">Current password is incorrect.</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileNewPassword">New Password</label>
+                                    <div style="position: relative;">
+                                        <input type="password" id="profileNewPassword" name="newPassword" placeholder="Enter your new password" autocomplete="off" minlength="8">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility('profileNewPassword', this.querySelector('i'))" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; padding: 8px 12px;">
+                                            <i class="fas fa-eye" id="iconProfileNewPassword"></i>
+                                        </button>
+                                    </div>
+                                    <div class="error-message" id="profileNewPassword-required" style="display: none;">Password is required.</div>
+                                    <div class="error-message" id="profileNewPassword-min" style="display: none;">Password must be at least 8 characters.</div>
+                                    <div class="error-message" id="profileNewPassword-same" style="display: none;">You've already used this password before.</div>
+                                    
+                                    <label for="profileConfirmPassword" style="margin-top: 1rem;">Confirm New Password</label>
+                                    <div style="position: relative;">
+                                        <input type="password" id="profileConfirmPassword" name="confirmPassword" placeholder="Confirm your new password" autocomplete="off" minlength="8">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility('profileConfirmPassword', this.querySelector('i'))" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; padding: 8px 12px;">
+                                            <i class="fas fa-eye" id="iconProfileConfirmPassword"></i>
+                                        </button>
+                                    </div>
+                                    <div class="error-message" id="profileConfirmPassword-required" style="display: none;">Password is required.</div>
+                                    <div class="error-message" id="profileConfirmPassword-min" style="display: none;">Password must be at least 8 characters.</div>
+                                    <div class="error-message" id="profileConfirmPassword-same" style="display: none;">You've already used this password before.</div>
+                                    <div class="error-message" id="profileConfirmPassword-mismatch" style="display: none;">Passwords do not match.</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-footer">
+                            <a href="dashboard.html" class="btn-cancel">Cancel</a>
+                            <button type="submit" class="btn-submit" id="updateProfileBtn" disabled>Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-3">
+                    <h4 class="footer-title" style="display: flex; align-items: center;">
+                        <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 40px; margin-right: 10px;">
+                        AquaSphere
+                    </h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.7;">
+                        Your trusted water delivery service. Fast delivery, clean quality water, and reliable service. 
+                        Everything you need for your hydration needs, all in one platform.
+                    </p>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-3">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <a href="dashboard.html" class="footer-link">Home</a>
+                    <a href="orders.html" class="footer-link">My Orders</a>
+                    <a href="profile.html" class="footer-link">Profile</a>
+                    <a href="cart.html" class="footer-link">Cart</a>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <h5 class="footer-title">Features</h5>
+                    <a href="#" class="footer-link">Easy Ordering</a>
+                    <a href="#" class="footer-link">Delivery Tracking</a>
+                    <a href="#" class="footer-link">Payment Options</a>
+                    <a href="#" class="footer-link">Customer Support</a>
+                </div>
+                
+                <div class="col-lg-3 mb-3">
+                    <h5 class="footer-title">Connect With Us</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <p class="mt-1" style="color: rgba(255, 255, 255, 0.8);">
+                        <i class="fas fa-envelope me-2"></i>support@aquasphere.com
+                    </p>
+                </div>
+            </div>
+            
+            <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 1rem 0 0.8rem;">
+            
+            <div class="text-center" style="color: rgba(255, 255, 255, 0.8); font-size: 0.8rem;">
+                <p>&copy; 2024 AquaSphere. Made with ❤️ for clean water delivery. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Navbar JS -->
+    <script src="navbar.js"></script>
+    
+    <script>
+        // Profile validation functions
+        const profileSuccessTimers = {};
+        let isInitialProfileLoad = false;
+        
+        function markProfileSuccess(el, key) {
+            if (!el) return;
+            if (isInitialProfileLoad) {
+                return;
+            }
+            el.classList.remove('error');
+            el.classList.add('success');
+            if (profileSuccessTimers[key]) clearTimeout(profileSuccessTimers[key]);
+            profileSuccessTimers[key] = setTimeout(() => {
+                el.classList.remove('success');
+            }, 3000);
+        }
+        
+        function hideProfileErrors(idBase) {
+            const errors = ['error', 'format-error', 'required', 'min', 'same', 'mismatch', 'incorrect'];
+            errors.forEach(suffix => {
+                const errEl = document.getElementById(idBase + '-' + suffix);
+                if (errEl) errEl.style.display = 'none';
+            });
+        }
+        
+        function markProfileError(el) {
+            if (el) {
+                el.classList.add('error');
+                el.classList.remove('success');
+            }
+        }
+        
+        function markProfileClear(el) {
+            if (el) {
+                el.classList.remove('error');
+            }
+        }
+        
+        // Validate Email
+        function validateProfileEmail() {
+            const emailInput = document.getElementById('profileEmail');
+            if (!emailInput) return true;
+            
+            hideProfileErrors('profileEmail');
+            const v = (emailInput.value || '').trim();
+            
+            if (!v) {
+                const errEl = document.getElementById('profileEmail-error');
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(emailInput);
+                return false;
+            }
+            
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+                const errEl = document.getElementById('profileEmail-format-error');
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(emailInput);
+                return false;
+            }
+            
+            markProfileClear(emailInput);
+            markProfileSuccess(emailInput, 'email');
+            return true;
+        }
+        
+        // Validate First Name
+        function validateProfileFirstName() {
+            const input = document.getElementById('profileFirstName');
+            if (!input) return true;
+            
+            const errEl = document.getElementById('profileFirstName-error');
+            if (errEl) errEl.style.display = 'none';
+            markProfileClear(input);
+            
+            const v = (input.value || '').trim();
+            if (!v) {
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(input);
+                return false;
+            }
+            
+            markProfileSuccess(input, 'firstName');
+            return true;
+        }
+        
+        // Validate Last Name
+        function validateProfileLastName() {
+            const input = document.getElementById('profileLastName');
+            if (!input) return true;
+            
+            const errEl = document.getElementById('profileLastName-error');
+            if (errEl) errEl.style.display = 'none';
+            markProfileClear(input);
+            
+            const v = (input.value || '').trim();
+            if (!v) {
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(input);
+                return false;
+            }
+            
+            markProfileSuccess(input, 'lastName');
+            return true;
+        }
+        
+        // Validate Gender
+        function validateProfileGender() {
+            const input = document.getElementById('profileGender');
+            if (!input) return true;
+            
+            const errEl = document.getElementById('profileGender-error');
+            if (errEl) errEl.style.display = 'none';
+            markProfileClear(input);
+            
+            if (!input.value) {
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(input);
+                return false;
+            }
+            
+            markProfileSuccess(input, 'gender');
+            return true;
+        }
+        
+        // Validate Birthday
+        function validateProfileBirthday() {
+            const input = document.getElementById('profileBirthday');
+            if (!input) return true;
+            
+            const errEl = document.getElementById('profileBirthday-error');
+            if (errEl) errEl.style.display = 'none';
+            markProfileClear(input);
+            
+            const v = (input.value || '').trim();
+            if (!v) {
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(input);
+                return false;
+            }
+            
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            input.max = `${yyyy}-${mm}-${dd}`;
+            
+            markProfileSuccess(input, 'birthday');
+            return true;
+        }
+        
+        // Check if any password field is filled
+        function anyPasswordFilled() {
+            const current = document.getElementById('profilePassword');
+            const newPwd = document.getElementById('profileNewPassword');
+            const confirm = document.getElementById('profileConfirmPassword');
+            return ((current?.value || '').trim() || (newPwd?.value || '').trim() || (confirm?.value || '').trim()) ? true : false;
+        }
+        
+        // Validate Password Field
+        function validateProfilePassword(el, idBase) {
+            if (!el) return true;
+            hideProfileErrors(idBase);
+            if (idBase === 'profilePassword') {
+                const incorrectEl = document.getElementById('profilePassword-incorrect');
+                if (incorrectEl) incorrectEl.style.display = 'none';
+            }
+            const v = (el.value || '').trim();
+            const requireNow = anyPasswordFilled();
+            
+            if (!v) {
+                if (requireNow) {
+                    const req = document.getElementById(idBase + '-required');
+                    if (req) req.style.display = 'block';
+                    markProfileError(el);
+                    return false;
+                } else {
+                    markProfileClear(el);
+                    return true;
+                }
+            }
+            
+            if (v.length < 8) {
+                const min = document.getElementById(idBase + '-min');
+                if (min) min.style.display = 'block';
+                markProfileError(el);
+                return false;
+            }
+            
+            markProfileClear(el);
+            markProfileSuccess(el, idBase);
+            return true;
+        }
+        
+        // Validate Password Same As Current
+        function validatePasswordSameAsCurrent() {
+            const currentEl = document.getElementById('profilePassword');
+            const newEl = document.getElementById('profileNewPassword');
+            const confirmEl = document.getElementById('profileConfirmPassword');
+            
+            const curr = (currentEl?.value || '').trim();
+            const newv = (newEl?.value || '').trim();
+            const conf = (confirmEl?.value || '').trim();
+            let ok = true;
+            const requireNow = anyPasswordFilled();
+            
+            if (requireNow && curr && newv && curr === newv) {
+                const same = document.getElementById('profileNewPassword-same');
+                if (same) same.style.display = 'block';
+                markProfileError(newEl);
+                ok = false;
+            } else {
+                const same = document.getElementById('profileNewPassword-same');
+                if (same) same.style.display = 'none';
+            }
+            
+            if (requireNow && curr && conf && curr === conf) {
+                const same = document.getElementById('profileConfirmPassword-same');
+                if (same) same.style.display = 'block';
+                markProfileError(confirmEl);
+                ok = false;
+            } else {
+                const same = document.getElementById('profileConfirmPassword-same');
+                if (same) same.style.display = 'none';
+            }
+            
+            const mismatchEl = document.getElementById('profileConfirmPassword-mismatch');
+            if (requireNow && newv && conf && newv !== conf) {
+                if (mismatchEl) mismatchEl.style.display = 'block';
+                markProfileError(confirmEl);
+                ok = false;
+            } else {
+                if (mismatchEl) mismatchEl.style.display = 'none';
+            }
+            
+            if (ok && requireNow) {
+                if ((newEl?.value || '').trim().length >= 8) markProfileSuccess(newEl, 'profileNewPassword');
+                if ((confirmEl?.value || '').trim().length >= 8 && newv === conf) markProfileSuccess(confirmEl, 'profileConfirmPassword');
+            }
+            
+            return ok;
+        }
+        
+        // Check Required Fields and Enable/Disable Update Button
+        function checkProfileRequiredFields() {
+            const updateBtn = document.getElementById('updateProfileBtn');
+            if (!updateBtn) return;
+            
+            const requiredFields = ['profileEmail', 'profileFirstName', 'profileLastName', 'profileGender', 'profileBirthday'];
+            let allValid = true;
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    const value = (field.value || '').trim();
+                    if (!value) {
+                        allValid = false;
+                    }
+                }
+            });
+            
+            if (allValid) {
+                allValid = validateProfileEmail();
+            }
+            
+            if (allValid && anyPasswordFilled()) {
+                const currentEl = document.getElementById('profilePassword');
+                const newEl = document.getElementById('profileNewPassword');
+                const confirmEl = document.getElementById('profileConfirmPassword');
+                
+                allValid = validateProfilePassword(currentEl, 'profilePassword') && allValid;
+                allValid = validateProfilePassword(newEl, 'profileNewPassword') && allValid;
+                allValid = validateProfilePassword(confirmEl, 'profileConfirmPassword') && allValid;
+                allValid = validatePasswordSameAsCurrent() && allValid;
+            }
+            
+            if (allValid) {
+                updateBtn.disabled = false;
+                updateBtn.style.opacity = '1';
+                updateBtn.style.cursor = 'pointer';
+            } else {
+                updateBtn.disabled = true;
+                updateBtn.style.opacity = '0.6';
+                updateBtn.style.cursor = 'not-allowed';
+            }
+        }
+        
+        // Setup Profile Validation Event Listeners
+        function setupProfileValidation() {
+            const emailInput = document.getElementById('profileEmail');
+            const firstNameInput = document.getElementById('profileFirstName');
+            const lastNameInput = document.getElementById('profileLastName');
+            const genderInput = document.getElementById('profileGender');
+            const birthdayInput = document.getElementById('profileBirthday');
+            const passwordInput = document.getElementById('profilePassword');
+            const newPasswordInput = document.getElementById('profileNewPassword');
+            const confirmPasswordInput = document.getElementById('profileConfirmPassword');
+            
+            if (emailInput) {
+                emailInput.addEventListener('input', () => {
+                    validateProfileEmail();
+                    checkProfileRequiredFields();
+                });
+                emailInput.addEventListener('blur', () => {
+                    validateProfileEmail();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (firstNameInput) {
+                firstNameInput.addEventListener('input', () => {
+                    validateProfileFirstName();
+                    checkProfileRequiredFields();
+                });
+                firstNameInput.addEventListener('blur', () => {
+                    validateProfileFirstName();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (lastNameInput) {
+                lastNameInput.addEventListener('input', () => {
+                    validateProfileLastName();
+                    checkProfileRequiredFields();
+                });
+                lastNameInput.addEventListener('blur', () => {
+                    validateProfileLastName();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (genderInput) {
+                genderInput.addEventListener('change', () => {
+                    validateProfileGender();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (birthdayInput) {
+                birthdayInput.addEventListener('input', () => {
+                    validateProfileBirthday();
+                    checkProfileRequiredFields();
+                });
+                birthdayInput.addEventListener('blur', () => {
+                    validateProfileBirthday();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (passwordInput) {
+                passwordInput.addEventListener('input', () => {
+                    validateProfilePassword(passwordInput, 'profilePassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+                passwordInput.addEventListener('blur', () => {
+                    validateProfilePassword(passwordInput, 'profilePassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (newPasswordInput) {
+                newPasswordInput.addEventListener('input', () => {
+                    validateProfilePassword(newPasswordInput, 'profileNewPassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+                newPasswordInput.addEventListener('blur', () => {
+                    validateProfilePassword(newPasswordInput, 'profileNewPassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (confirmPasswordInput) {
+                confirmPasswordInput.addEventListener('input', () => {
+                    validateProfilePassword(confirmPasswordInput, 'profileConfirmPassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+                confirmPasswordInput.addEventListener('blur', () => {
+                    validateProfilePassword(confirmPasswordInput, 'profileConfirmPassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+            }
+        }
+        
+        // Toggle Password Visibility
+        function togglePasswordVisibility(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (!input || !icon) return;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        // Show Notification
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'}`;
+            notification.style.cssText = 'position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);';
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+                ${message}
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // Load Profile Data
+        function loadProfileData() {
+            isInitialProfileLoad = true;
+            
+            const form = document.getElementById('profileForm');
+            if (form) {
+                form.style.opacity = '0.5';
+                form.style.pointerEvents = 'none';
+            }
+            
+            fetch('api/get_current_user.php')
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.message || 'Failed to fetch user data');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success && data.user) {
+                        const userData = data.user;
+                        
+                        localStorage.setItem('loggedInUser', JSON.stringify(userData));
+                        localStorage.setItem('userData', JSON.stringify(userData));
+                        
+                        document.getElementById('profileUsername').value = userData.username || '';
+                        document.getElementById('profileEmail').value = userData.email || '';
+                        document.getElementById('profileFirstName').value = userData.firstName || userData.first_name || '';
+                        document.getElementById('profileLastName').value = userData.lastName || userData.last_name || '';
+                        document.getElementById('profileGender').value = userData.gender || '';
+                        
+                        let birthday = userData.birthday || userData.date_of_birth || '';
+                        if (birthday && birthday.includes('/')) {
+                            const parts = birthday.split('/');
+                            if (parts.length === 3) {
+                                birthday = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                            }
+                        }
+                        document.getElementById('profileBirthday').value = birthday;
+                        document.getElementById('profilePassword').value = '';
+                        document.getElementById('profileNewPassword').value = '';
+                        document.getElementById('profileConfirmPassword').value = '';
+                        
+                        const today = new Date();
+                        const yyyy = today.getFullYear();
+                        const mm = String(today.getMonth() + 1).padStart(2, '0');
+                        const dd = String(today.getDate()).padStart(2, '0');
+                        document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
+                        
+                        setupProfileValidation();
+                        checkProfileRequiredFields();
+                        
+                        setTimeout(() => {
+                            isInitialProfileLoad = false;
+                        }, 500);
+                        
+                        if (form) {
+                            form.style.opacity = '1';
+                            form.style.pointerEvents = 'auto';
+                        }
+                    } else {
+                        let userData = JSON.parse(localStorage.getItem('loggedInUser')) || 
+                                      JSON.parse(localStorage.getItem('userData')) || {};
+                        
+                        document.getElementById('profileUsername').value = userData.username || '';
+                        document.getElementById('profileEmail').value = userData.email || '';
+                        document.getElementById('profileFirstName').value = userData.firstName || userData.first_name || '';
+                        document.getElementById('profileLastName').value = userData.lastName || userData.last_name || '';
+                        document.getElementById('profileGender').value = userData.gender || '';
+                        
+                        let birthday = userData.birthday || userData.date_of_birth || '';
+                        if (birthday && birthday.includes('/')) {
+                            const parts = birthday.split('/');
+                            if (parts.length === 3) {
+                                birthday = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                            }
+                        }
+                        document.getElementById('profileBirthday').value = birthday;
+                        document.getElementById('profilePassword').value = '';
+                        document.getElementById('profileNewPassword').value = '';
+                        document.getElementById('profileConfirmPassword').value = '';
+                        
+                        const today = new Date();
+                        const yyyy = today.getFullYear();
+                        const mm = String(today.getMonth() + 1).padStart(2, '0');
+                        const dd = String(today.getDate()).padStart(2, '0');
+                        document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
+                        
+                        setupProfileValidation();
+                        checkProfileRequiredFields();
+                        
+                        setTimeout(() => {
+                            isInitialProfileLoad = false;
+                        }, 500);
+                        
+                        if (form) {
+                            form.style.opacity = '1';
+                            form.style.pointerEvents = 'auto';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                    
+                    let userData = JSON.parse(localStorage.getItem('loggedInUser')) || 
+                                  JSON.parse(localStorage.getItem('userData')) || {};
+                    
+                    document.getElementById('profileUsername').value = userData.username || '';
+                    document.getElementById('profileEmail').value = userData.email || '';
+                    document.getElementById('profileFirstName').value = userData.firstName || userData.first_name || '';
+                    document.getElementById('profileLastName').value = userData.lastName || userData.last_name || '';
+                    document.getElementById('profileGender').value = userData.gender || '';
+                    
+                    let birthday = userData.birthday || userData.date_of_birth || '';
+                    if (birthday && birthday.includes('/')) {
+                        const parts = birthday.split('/');
+                        if (parts.length === 3) {
+                            birthday = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                        }
+                    }
+                    document.getElementById('profileBirthday').value = birthday;
+                    document.getElementById('profilePassword').value = '';
+                    document.getElementById('profileNewPassword').value = '';
+                    document.getElementById('profileConfirmPassword').value = '';
+                    
+                    const today = new Date();
+                    const yyyy = today.getFullYear();
+                    const mm = String(today.getMonth() + 1).padStart(2, '0');
+                    const dd = String(today.getDate()).padStart(2, '0');
+                    document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
+                    
+                    setupProfileValidation();
+                    checkProfileRequiredFields();
+                    
+                    setTimeout(() => {
+                        isInitialProfileLoad = false;
+                    }, 500);
+                    
+                    if (form) {
+                        form.style.opacity = '1';
+                        form.style.pointerEvents = 'auto';
+                    }
+                });
+        }
+        
+        // Save Profile
+        function saveProfile(event) {
+            event.preventDefault();
+            
+            const updateBtn = document.getElementById('updateProfileBtn');
+            if (updateBtn && updateBtn.disabled) {
+                return;
+            }
+            
+            let isValid = true;
+            isValid = validateProfileEmail() && isValid;
+            isValid = validateProfileFirstName() && isValid;
+            isValid = validateProfileLastName() && isValid;
+            isValid = validateProfileGender() && isValid;
+            isValid = validateProfileBirthday() && isValid;
+            
+            if (anyPasswordFilled()) {
+                const currentEl = document.getElementById('profilePassword');
+                const newEl = document.getElementById('profileNewPassword');
+                const confirmEl = document.getElementById('profileConfirmPassword');
+                
+                isValid = validateProfilePassword(currentEl, 'profilePassword') && isValid;
+                isValid = validateProfilePassword(newEl, 'profileNewPassword') && isValid;
+                isValid = validateProfilePassword(confirmEl, 'profileConfirmPassword') && isValid;
+                isValid = validatePasswordSameAsCurrent() && isValid;
+            }
+            
+            if (!isValid) {
+                const firstError = document.querySelector('.form-group.error, input.error, select.error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
+            }
+            
+            const currentPassword = document.getElementById('profilePassword').value.trim();
+            const newPassword = document.getElementById('profileNewPassword').value.trim();
+            const confirmPassword = document.getElementById('profileConfirmPassword').value.trim();
+            
+            if (newPassword || confirmPassword || currentPassword) {
+                if (!currentPassword) {
+                    showNotification('Please enter your current password to change it', 'error');
+                    return;
+                }
+                
+                if (!newPassword) {
+                    showNotification('Please enter a new password', 'error');
+                    return;
+                }
+                
+                if (newPassword.length < 8) {
+                    showNotification('New password must be at least 8 characters', 'error');
+                    return;
+                }
+                
+                if (newPassword !== confirmPassword) {
+                    showNotification('New passwords do not match', 'error');
+                    return;
+                }
+            }
+            
+            const userData = {
+                email: document.getElementById('profileEmail').value.trim(),
+                firstName: document.getElementById('profileFirstName').value.trim(),
+                lastName: document.getElementById('profileLastName').value.trim(),
+                gender: document.getElementById('profileGender').value,
+                birthday: document.getElementById('profileBirthday').value,
+                first_name: document.getElementById('profileFirstName').value.trim(),
+                last_name: document.getElementById('profileLastName').value.trim(),
+                date_of_birth: document.getElementById('profileBirthday').value
+            };
+            
+            if (currentPassword) {
+                userData.password = currentPassword;
+            }
+            if (newPassword) {
+                userData.newPassword = newPassword;
+            }
+            
+            if (updateBtn) {
+                updateBtn.disabled = true;
+                updateBtn.textContent = 'Saving...';
+            }
+            
+            fetch('api/update_profile.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const passwordChanged = newPassword && newPassword.length > 0;
+                    
+                    const updatedUserData = {
+                        username: document.getElementById('profileUsername').value.trim(),
+                        email: userData.email,
+                        firstName: userData.firstName,
+                        lastName: userData.lastName,
+                        first_name: userData.first_name,
+                        last_name: userData.last_name,
+                        gender: userData.gender,
+                        birthday: userData.birthday,
+                        date_of_birth: userData.date_of_birth
+                    };
+                    
+                    localStorage.setItem('userData', JSON.stringify(updatedUserData));
+                    localStorage.setItem('loggedInUser', JSON.stringify(updatedUserData));
+                    sessionStorage.setItem('userData', JSON.stringify(updatedUserData));
+                    
+                    if (typeof loadUserData === 'function') {
+                        loadUserData();
+                    }
+                    
+                    if (passwordChanged) {
+                        showNotification('Password changed successfully! For security reasons, please log in again with your new password.', 'success');
+                        
+                        setTimeout(() => {
+                            localStorage.removeItem('loggedInUser');
+                            sessionStorage.removeItem('userData');
+                            window.location.href = 'login.html';
+                        }, 2000);
+                    } else {
+                        showNotification('Profile updated successfully!', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1500);
+                    }
+                } else {
+                    if (data.errors) {
+                        Object.keys(data.errors).forEach(field => {
+                            const errorMsg = data.errors[field];
+                            
+                            if (field === 'password' && errorMsg.includes('incorrect')) {
+                                const errorEl = document.getElementById('profilePassword-incorrect');
+                                if (errorEl) {
+                                    errorEl.style.display = 'block';
+                                    const passwordInput = document.getElementById('profilePassword');
+                                    if (passwordInput) {
+                                        markProfileError(passwordInput);
+                                        const formGroup = passwordInput.closest('.form-group');
+                                        if (formGroup) {
+                                            formGroup.classList.add('error');
+                                        }
+                                    }
+                                }
+                            } else {
+                                showNotification(errorMsg, 'error');
+                            }
+                        });
+                    } else {
+                        showNotification(data.message || 'Failed to update profile. Please try again.', 'error');
+                    }
+                    
+                    if (updateBtn) {
+                        updateBtn.disabled = false;
+                        updateBtn.textContent = 'Save Changes';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error updating profile:', error);
+                showNotification('An error occurred while updating your profile. Please try again.', 'error');
+                
+                if (updateBtn) {
+                    updateBtn.disabled = false;
+                    updateBtn.textContent = 'Save Changes';
+                }
+            });
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProfileData();
+        });
+    </script>
+</body>
+</html>
+

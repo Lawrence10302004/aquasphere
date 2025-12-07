@@ -1532,8 +1532,8 @@
         // Page-specific functions
         // Open Profile Modal - open modal on current page
         function openProfileModal() {
-            const modal = document.getElementById('profileModal');
-            if (!modal) return;
+            window.location.href = 'profile.html';
+            return;
             
             // Set flag to prevent success states on initial load
             isInitialProfileLoad = true;
