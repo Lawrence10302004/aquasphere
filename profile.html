@@ -52,37 +52,12 @@
             box-shadow: 0 30px 100px rgba(0, 0, 0, 0.15);
         }
         
-        /* Water Wave Animation Background */
-        .hero-carousel::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #06b6d4 100%);
-            opacity: 0.1;
-            z-index: 0;
-            animation: waterWave 8s ease-in-out infinite;
-        }
-        
-        @keyframes waterWave {
-            0%, 100% {
-                transform: translateY(0) scale(1);
-                border-radius: 50% 40% 60% 30%;
-            }
-            25% {
-                transform: translateY(-10px) scale(1.05);
-                border-radius: 40% 60% 30% 50%;
-            }
-            50% {
-                transform: translateY(-5px) scale(1.02);
-                border-radius: 60% 30% 50% 40%;
-            }
-            75% {
-                transform: translateY(-15px) scale(1.03);
-                border-radius: 30% 50% 40% 60%;
-            }
+        /* Carousel Wrapper Container */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
         /* Carousel Wrapper */
@@ -988,21 +963,18 @@
         
         /* Carousel Navigation */
         .carousel-nav {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
             display: flex;
             gap: 0.75rem;
-            z-index: 10;
+            justify-content: center;
+            margin-top: 1.5rem;
         }
         
         .carousel-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            border: 2px solid rgba(14, 165, 233, 0.3);
+            background: rgba(14, 165, 233, 0.3);
+            border: 2px solid rgba(14, 165, 233, 0.5);
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
@@ -1015,73 +987,53 @@
             box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
         }
         
-        .carousel-dot::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: rgba(14, 165, 233, 0.1);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .carousel-dot.active::before {
-            opacity: 1;
-            animation: ripple 1.5s ease-out infinite;
-        }
-        
-        @keyframes ripple {
-            0% {
-                transform: translate(-50%, -50%) scale(0.8);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(2);
-                opacity: 0;
-            }
-        }
-        
-        /* Carousel Navigation Arrows */
+        /* Carousel Navigation Arrows - Outside Container */
         .carousel-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.9);
+            background: white;
             border: 2px solid #0ea5e9;
             color: #0ea5e9;
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 10;
+            z-index: 100;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         
         .carousel-arrow:hover {
             background: #0ea5e9;
             color: white;
             transform: translateY(-50%) scale(1.1);
-            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
         }
         
         .carousel-arrow.prev {
-            left: 15px;
+            left: -60px;
         }
         
         .carousel-arrow.next {
-            right: 15px;
+            right: -60px;
         }
         
         .carousel-arrow:active {
             transform: translateY(-50%) scale(0.95);
+        }
+        
+        @media (max-width: 991px) {
+            .carousel-arrow.prev {
+                left: 10px;
+            }
+            
+            .carousel-arrow.next {
+                right: 10px;
+            }
         }
         
         .address-header i {
@@ -1752,16 +1704,25 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="container">
-            <div class="hero-carousel">
-                <div class="carousel-wrapper" id="carouselWrapper">
-                    <!-- Profile Slide -->
-                    <div class="carousel-slide">
-                        <div class="profile-container">
-                            <div class="profile-header">
-                                <h2>Profile</h2>
-                            </div>
-                            <div class="profile-body">
-                                <form id="profileForm" onsubmit="saveProfile(event)" novalidate>
+            <div class="carousel-container">
+                <!-- Carousel Navigation Arrows - Outside Container -->
+                <button class="carousel-arrow prev" onclick="previousSlide()" aria-label="Previous slide">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-arrow next" onclick="nextSlide()" aria-label="Next slide">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                
+                <div class="hero-carousel">
+                    <div class="carousel-wrapper" id="carouselWrapper">
+                        <!-- Profile Slide -->
+                        <div class="carousel-slide">
+                            <div class="profile-container">
+                                <div class="profile-header">
+                                    <h2>Profile</h2>
+                                </div>
+                                <div class="profile-body">
+                                    <form id="profileForm" onsubmit="saveProfile(event)" novalidate>
                         <div class="profile-section">
                             <h5 style="color: #0369a1; font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem;">Account Information</h5>
                             <div class="form-row">
@@ -1953,18 +1914,11 @@
                                 </button>
                             </div>
                         </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Carousel Navigation Arrows -->
-                <button class="carousel-arrow prev" onclick="previousSlide()" aria-label="Previous slide">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="carousel-arrow next" onclick="nextSlide()" aria-label="Next slide">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
                 
                 <!-- Carousel Dots -->
                 <div class="carousel-nav">
