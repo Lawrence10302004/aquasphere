@@ -971,6 +971,7 @@
         
         // Forgot Password functionality (global scope - available immediately)
         let resetEmail = '';
+        let resetOTPCode = ''; // Store OTP code globally
         let otpTimer = null;
         
         // Forgot Password function (global scope - must be available immediately)
@@ -1091,6 +1092,7 @@
                     });
                     const otpCodeEl = document.getElementById('otpCode');
                     if (otpCodeEl) otpCodeEl.value = '';
+                    resetOTPCode = ''; // Clear stored OTP when modal is closed
                     const otpError = document.getElementById('otp-error');
                     if (otpError) otpError.style.display = 'none';
                     const verifyButton = document.getElementById('verifyButton');
@@ -1223,7 +1225,8 @@
                     
                     const password = document.getElementById('newPassword').value;
                     const confirmPassword = document.getElementById('confirmPassword').value;
-                    const otpCode = document.getElementById('otpCode').value;
+                    // Use stored OTP code or try to get from hidden field
+                    const otpCode = resetOTPCode || document.getElementById('otpCode')?.value || '';
                     
                     document.getElementById('newPassword-error').style.display = 'none';
                     document.getElementById('confirmPassword-error').style.display = 'none';
@@ -1237,6 +1240,12 @@
                             document.getElementById('confirmPassword-error').textContent = 'Confirm password is required.';
                             document.getElementById('confirmPassword-error').style.display = 'block';
                         }
+                        return;
+                    }
+                    
+                    if (!otpCode || otpCode.length !== 6) {
+                        document.getElementById('newPassword-error').textContent = 'Verification code is required. Please verify your OTP again.';
+                        document.getElementById('newPassword-error').style.display = 'block';
                         return;
                     }
                     
@@ -1293,6 +1302,7 @@
                             document.getElementById('newPasswordForm').reset();
                             document.getElementById('otpVerificationForm').reset();
                             resetEmail = '';
+                            resetOTPCode = ''; // Clear OTP code after successful reset
                         } else {
                             const errorMessage = data.error || data.message || 'Failed to reset password. Please try again.';
                             console.error('Reset password error:', errorMessage, data);
@@ -1459,6 +1469,8 @@
                         const data = await response.json();
                         
                         if (data.success) {
+                            // Store the OTP code before closing the modal
+                            resetOTPCode = otpCode;
                             bootstrap.Modal.getInstance(document.getElementById('otpVerificationModal')).hide();
                             const newPasswordModal = new bootstrap.Modal(document.getElementById('newPasswordModal'));
                             newPasswordModal.show();
