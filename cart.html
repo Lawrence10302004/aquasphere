@@ -1395,6 +1395,13 @@
             background: #fef2f2;
         }
         
+        .form-group input.success,
+        .form-group select.success {
+            border-color: #28a745;
+            background: #f0fdf4;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+        
         .form-group.error input:focus,
         .form-group.error select:focus {
             border-color: #ef4444;
@@ -2128,91 +2135,105 @@
             </div>
             <div class="modal-body">
                 <form id="profileForm" onsubmit="saveProfile(event)" novalidate>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="profileUsername">Username</label>
-                            <input type="text" id="profileUsername" name="username" placeholder="Choose a username" autocomplete="off" required>
-                            <div class="error-message">Please fill out this field</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="profileEmail">Email</label>
-                            <input type="email" id="profileEmail" name="email" placeholder="Enter your email" autocomplete="off" required>
-                            <div class="error-message">Please fill out this field</div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="profileFirstName">First Name</label>
-                            <input type="text" id="profileFirstName" name="firstName" placeholder="Enter your first name" autocomplete="off" required>
-                            <div class="error-message">Please fill out this field</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="profileLastName">Last Name</label>
-                            <input type="text" id="profileLastName" name="lastName" placeholder="Enter your last name" autocomplete="off" required>
-                            <div class="error-message">Please fill out this field</div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="profileGender">Gender</label>
-                            <select id="profileGender" name="gender" autocomplete="off" required>
-                                <option value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
-                            </select>
-                            <div class="error-message">Please select an item in the list</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="profileBirthday">Birthday</label>
-                            <input type="date" id="profileBirthday" name="birthday" autocomplete="off" required>
-                            <div class="error-message">Please fill out this field</div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row" style="margin-top: 1rem;">
-                        <div class="form-group full-width">
-                            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem; font-style: italic;">
-                                Leave these fields blank if you don't want to change your password.
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="profilePassword">Password</label>
-                            <div style="position: relative;">
-                                <input type="password" id="profilePassword" name="password" placeholder="Enter your current password" autocomplete="off" minlength="8">
-                                <i class="fas fa-eye" onclick="togglePasswordVisibility('profilePassword', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b;"></i>
+                    <div class="profile-section" style="margin-bottom: 2rem;">
+                        <h5 style="color: #0369a1; font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem;">Account Information</h5>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profileUsername">Username</label>
+                                <input type="text" id="profileUsername" name="username" placeholder="Choose a username" autocomplete="off" readonly style="background: #f8f9fa; cursor: not-allowed;">
+                                <small style="color: #64748b; font-size: 0.85rem;">Username cannot be changed</small>
                             </div>
-                            <div class="error-message">Password must be at least 8 characters</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="profileNewPassword">New Password</label>
-                            <div style="position: relative;">
-                                <input type="password" id="profileNewPassword" name="newPassword" placeholder="Enter your new password" autocomplete="off" minlength="8">
-                                <i class="fas fa-eye" onclick="togglePasswordVisibility('profileNewPassword', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b;"></i>
+                            <div class="form-group">
+                                <label for="profileEmail">Email</label>
+                                <input type="email" id="profileEmail" name="email" placeholder="Enter your email" autocomplete="off" required>
+                                <div class="error-message" id="profileEmail-error" style="display: none;">Email is required.</div>
+                                <div class="error-message" id="profileEmail-format-error" style="display: none;">Please enter a valid email.</div>
                             </div>
-                            <div class="error-message">Password must be at least 8 characters</div>
                         </div>
                     </div>
                     
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="profileConfirmPassword">Confirm New Password</label>
-                            <div style="position: relative;">
-                                <input type="password" id="profileConfirmPassword" name="confirmPassword" placeholder="Confirm your new password" autocomplete="off" minlength="8">
-                                <i class="fas fa-eye" onclick="togglePasswordVisibility('profileConfirmPassword', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b;"></i>
+                    <div class="profile-section" style="margin-bottom: 2rem;">
+                        <h5 style="color: #0369a1; font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem;">Personal Information</h5>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profileFirstName">First Name</label>
+                                <input type="text" id="profileFirstName" name="firstName" placeholder="Enter your first name" autocomplete="off" required>
+                                <div class="error-message" id="profileFirstName-error" style="display: none;">First Name is required.</div>
                             </div>
-                            <div class="error-message">Passwords do not match</div>
+                            <div class="form-group">
+                                <label for="profileLastName">Last Name</label>
+                                <input type="text" id="profileLastName" name="lastName" placeholder="Enter your last name" autocomplete="off" required>
+                                <div class="error-message" id="profileLastName-error" style="display: none;">Last Name is required.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profileGender">Gender</label>
+                                <select id="profileGender" name="gender" autocomplete="off" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <div class="error-message" id="profileGender-error" style="display: none;">Please select an item in the list</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileBirthday">Birthday</label>
+                                <input type="date" id="profileBirthday" name="birthday" autocomplete="off" required>
+                                <div class="error-message" id="profileBirthday-error" style="display: none;">Date of birth is required.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-section" style="margin-bottom: 2rem;">
+                        <h5 style="color: #0369a1; font-weight: 600; margin-bottom: 0.5rem; font-size: 1.1rem;">Change Password</h5>
+                        <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem; font-style: italic;">
+                            Leave these fields blank if you don't want to change your password.
+                        </p>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profilePassword">Current Password</label>
+                                <div style="position: relative;">
+                                    <input type="password" id="profilePassword" name="password" placeholder="Enter your current password" autocomplete="off" minlength="8">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility('profilePassword', this.querySelector('i'))" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; padding: 8px 12px;">
+                                        <i class="fas fa-eye" id="iconProfilePassword"></i>
+                                    </button>
+                                </div>
+                                <div class="error-message" id="profilePassword-required" style="display: none;">Password is required.</div>
+                                <div class="error-message" id="profilePassword-min" style="display: none;">Password must be at least 8 characters.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileNewPassword">New Password</label>
+                                <div style="position: relative;">
+                                    <input type="password" id="profileNewPassword" name="newPassword" placeholder="Enter your new password" autocomplete="off" minlength="8">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility('profileNewPassword', this.querySelector('i'))" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; padding: 8px 12px;">
+                                        <i class="fas fa-eye" id="iconProfileNewPassword"></i>
+                                    </button>
+                                </div>
+                                <div class="error-message" id="profileNewPassword-required" style="display: none;">Password is required.</div>
+                                <div class="error-message" id="profileNewPassword-min" style="display: none;">Password must be at least 8 characters.</div>
+                                <div class="error-message" id="profileNewPassword-same" style="display: none;">You've already used this password before.</div>
+                                
+                                <label for="profileConfirmPassword" style="margin-top: 1rem;">Confirm New Password</label>
+                                <div style="position: relative;">
+                                    <input type="password" id="profileConfirmPassword" name="confirmPassword" placeholder="Confirm your new password" autocomplete="off" minlength="8">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility('profileConfirmPassword', this.querySelector('i'))" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; padding: 8px 12px;">
+                                        <i class="fas fa-eye" id="iconProfileConfirmPassword"></i>
+                                    </button>
+                                </div>
+                                <div class="error-message" id="profileConfirmPassword-required" style="display: none;">Password is required.</div>
+                                <div class="error-message" id="profileConfirmPassword-min" style="display: none;">Password must be at least 8 characters.</div>
+                                <div class="error-message" id="profileConfirmPassword-same" style="display: none;">You've already used this password before.</div>
+                                <div class="error-message" id="profileConfirmPassword-mismatch" style="display: none;">Passwords do not match.</div>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="modal-footer">
                         <button type="button" class="btn-cancel" onclick="closeProfileModal(event)">Cancel</button>
-                        <button type="submit" class="btn-submit">Save Changes</button>
+                        <button type="submit" class="btn-submit" id="updateProfileBtn" disabled>Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -3620,8 +3641,129 @@
             document.getElementById('profileNewPassword').value = '';
             document.getElementById('profileConfirmPassword').value = '';
             
+            // Set max date to today
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
+            
+            // Add event listeners for real-time validation
+            setupProfileValidation();
+            
+            // Initial validation check
+            checkProfileRequiredFields();
+            
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
+        }
+        
+        // Setup Profile Validation Event Listeners
+        function setupProfileValidation() {
+            const emailInput = document.getElementById('profileEmail');
+            const firstNameInput = document.getElementById('profileFirstName');
+            const lastNameInput = document.getElementById('profileLastName');
+            const genderInput = document.getElementById('profileGender');
+            const birthdayInput = document.getElementById('profileBirthday');
+            const passwordInput = document.getElementById('profilePassword');
+            const newPasswordInput = document.getElementById('profileNewPassword');
+            const confirmPasswordInput = document.getElementById('profileConfirmPassword');
+            
+            // Email validation
+            if (emailInput) {
+                emailInput.addEventListener('input', () => {
+                    validateProfileEmail();
+                    checkProfileRequiredFields();
+                });
+                emailInput.addEventListener('blur', () => {
+                    validateProfileEmail();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            // First Name validation
+            if (firstNameInput) {
+                firstNameInput.addEventListener('input', () => {
+                    validateProfileFirstName();
+                    checkProfileRequiredFields();
+                });
+                firstNameInput.addEventListener('blur', () => {
+                    validateProfileFirstName();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            // Last Name validation
+            if (lastNameInput) {
+                lastNameInput.addEventListener('input', () => {
+                    validateProfileLastName();
+                    checkProfileRequiredFields();
+                });
+                lastNameInput.addEventListener('blur', () => {
+                    validateProfileLastName();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            // Gender validation
+            if (genderInput) {
+                genderInput.addEventListener('change', () => {
+                    validateProfileGender();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            // Birthday validation
+            if (birthdayInput) {
+                birthdayInput.addEventListener('input', () => {
+                    validateProfileBirthday();
+                    checkProfileRequiredFields();
+                });
+                birthdayInput.addEventListener('blur', () => {
+                    validateProfileBirthday();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            // Password validation
+            if (passwordInput) {
+                passwordInput.addEventListener('input', () => {
+                    validateProfilePassword(passwordInput, 'profilePassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+                passwordInput.addEventListener('blur', () => {
+                    validateProfilePassword(passwordInput, 'profilePassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (newPasswordInput) {
+                newPasswordInput.addEventListener('input', () => {
+                    validateProfilePassword(newPasswordInput, 'profileNewPassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+                newPasswordInput.addEventListener('blur', () => {
+                    validateProfilePassword(newPasswordInput, 'profileNewPassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (confirmPasswordInput) {
+                confirmPasswordInput.addEventListener('input', () => {
+                    validateProfilePassword(confirmPasswordInput, 'profileConfirmPassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+                confirmPasswordInput.addEventListener('blur', () => {
+                    validateProfilePassword(confirmPasswordInput, 'profileConfirmPassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+            }
         }
         
         // Close Profile Modal
@@ -3655,6 +3797,8 @@
         // Toggle Password Visibility
         function togglePasswordVisibility(inputId, icon) {
             const input = document.getElementById(inputId);
+            if (!input || !icon) return;
+            
             if (input.type === 'password') {
                 input.type = 'text';
                 icon.classList.remove('fa-eye');
@@ -3666,13 +3810,332 @@
             }
         }
         
+        // Profile validation functions (similar to AnemoCheck)
+        const profileSuccessTimers = {};
+        
+        function markProfileSuccess(el, key) {
+            if (!el) return;
+            el.classList.remove('error');
+            el.classList.add('success');
+            if (profileSuccessTimers[key]) clearTimeout(profileSuccessTimers[key]);
+            profileSuccessTimers[key] = setTimeout(() => {
+                el.classList.remove('success');
+            }, 3000);
+        }
+        
+        function hideProfileErrors(idBase) {
+            const errors = ['error', 'format-error', 'required', 'min', 'same', 'mismatch'];
+            errors.forEach(suffix => {
+                const errEl = document.getElementById(idBase + '-' + suffix);
+                if (errEl) errEl.style.display = 'none';
+            });
+        }
+        
+        function markProfileError(el) {
+            if (el) {
+                el.classList.add('error');
+                el.classList.remove('success');
+            }
+        }
+        
+        function markProfileClear(el) {
+            if (el) {
+                el.classList.remove('error');
+            }
+        }
+        
+        // Validate Email
+        function validateProfileEmail() {
+            const emailInput = document.getElementById('profileEmail');
+            if (!emailInput) return true;
+            
+            hideProfileErrors('profileEmail');
+            const v = (emailInput.value || '').trim();
+            
+            if (!v) {
+                const errEl = document.getElementById('profileEmail-error');
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(emailInput);
+                return false;
+            }
+            
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+                const errEl = document.getElementById('profileEmail-format-error');
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(emailInput);
+                return false;
+            }
+            
+            markProfileClear(emailInput);
+            markProfileSuccess(emailInput, 'email');
+            return true;
+        }
+        
+        // Validate First Name
+        function validateProfileFirstName() {
+            const input = document.getElementById('profileFirstName');
+            if (!input) return true;
+            
+            const errEl = document.getElementById('profileFirstName-error');
+            if (errEl) errEl.style.display = 'none';
+            markProfileClear(input);
+            
+            const v = (input.value || '').trim();
+            if (!v) {
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(input);
+                return false;
+            }
+            
+            markProfileSuccess(input, 'firstName');
+            return true;
+        }
+        
+        // Validate Last Name
+        function validateProfileLastName() {
+            const input = document.getElementById('profileLastName');
+            if (!input) return true;
+            
+            const errEl = document.getElementById('profileLastName-error');
+            if (errEl) errEl.style.display = 'none';
+            markProfileClear(input);
+            
+            const v = (input.value || '').trim();
+            if (!v) {
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(input);
+                return false;
+            }
+            
+            markProfileSuccess(input, 'lastName');
+            return true;
+        }
+        
+        // Validate Gender
+        function validateProfileGender() {
+            const input = document.getElementById('profileGender');
+            if (!input) return true;
+            
+            const errEl = document.getElementById('profileGender-error');
+            if (errEl) errEl.style.display = 'none';
+            markProfileClear(input);
+            
+            if (!input.value) {
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(input);
+                return false;
+            }
+            
+            markProfileSuccess(input, 'gender');
+            return true;
+        }
+        
+        // Validate Birthday
+        function validateProfileBirthday() {
+            const input = document.getElementById('profileBirthday');
+            if (!input) return true;
+            
+            const errEl = document.getElementById('profileBirthday-error');
+            if (errEl) errEl.style.display = 'none';
+            markProfileClear(input);
+            
+            const v = (input.value || '').trim();
+            if (!v) {
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(input);
+                return false;
+            }
+            
+            // Set max date to today
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            input.max = `${yyyy}-${mm}-${dd}`;
+            
+            markProfileSuccess(input, 'birthday');
+            return true;
+        }
+        
+        // Check if any password field is filled
+        function anyPasswordFilled() {
+            const current = document.getElementById('profilePassword');
+            const newPwd = document.getElementById('profileNewPassword');
+            const confirm = document.getElementById('profileConfirmPassword');
+            return ((current?.value || '').trim() || (newPwd?.value || '').trim() || (confirm?.value || '').trim()) ? true : false;
+        }
+        
+        // Validate Password Field
+        function validateProfilePassword(el, idBase) {
+            if (!el) return true;
+            hideProfileErrors(idBase);
+            const v = (el.value || '').trim();
+            const requireNow = anyPasswordFilled();
+            
+            if (!v) {
+                if (requireNow) {
+                    const req = document.getElementById(idBase + '-required');
+                    if (req) req.style.display = 'block';
+                    markProfileError(el);
+                    return false;
+                } else {
+                    markProfileClear(el);
+                    return true;
+                }
+            }
+            
+            if (v.length < 8) {
+                const min = document.getElementById(idBase + '-min');
+                if (min) min.style.display = 'block';
+                markProfileError(el);
+                return false;
+            }
+            
+            markProfileClear(el);
+            markProfileSuccess(el, idBase);
+            return true;
+        }
+        
+        // Validate Password Same As Current
+        function validatePasswordSameAsCurrent() {
+            const currentEl = document.getElementById('profilePassword');
+            const newEl = document.getElementById('profileNewPassword');
+            const confirmEl = document.getElementById('profileConfirmPassword');
+            
+            const curr = (currentEl?.value || '').trim();
+            const newv = (newEl?.value || '').trim();
+            const conf = (confirmEl?.value || '').trim();
+            let ok = true;
+            const requireNow = anyPasswordFilled();
+            
+            // Check if new password is same as current
+            if (requireNow && curr && newv && curr === newv) {
+                const same = document.getElementById('profileNewPassword-same');
+                if (same) same.style.display = 'block';
+                markProfileError(newEl);
+                ok = false;
+            } else {
+                const same = document.getElementById('profileNewPassword-same');
+                if (same) same.style.display = 'none';
+            }
+            
+            // Check if confirm password is same as current
+            if (requireNow && curr && conf && curr === conf) {
+                const same = document.getElementById('profileConfirmPassword-same');
+                if (same) same.style.display = 'block';
+                markProfileError(confirmEl);
+                ok = false;
+            } else {
+                const same = document.getElementById('profileConfirmPassword-same');
+                if (same) same.style.display = 'none';
+            }
+            
+            // Check if new and confirm match
+            const mismatchEl = document.getElementById('profileConfirmPassword-mismatch');
+            if (requireNow && newv && conf && newv !== conf) {
+                if (mismatchEl) mismatchEl.style.display = 'block';
+                markProfileError(confirmEl);
+                ok = false;
+            } else {
+                if (mismatchEl) mismatchEl.style.display = 'none';
+            }
+            
+            // Refresh success glow if all good
+            if (ok && requireNow) {
+                if ((newEl?.value || '').trim().length >= 8) markProfileSuccess(newEl, 'profileNewPassword');
+                if ((confirmEl?.value || '').trim().length >= 8 && newv === conf) markProfileSuccess(confirmEl, 'profileConfirmPassword');
+            }
+            
+            return ok;
+        }
+        
+        // Check Required Fields and Enable/Disable Update Button
+        function checkProfileRequiredFields() {
+            const updateBtn = document.getElementById('updateProfileBtn');
+            if (!updateBtn) return;
+            
+            const requiredFields = ['profileEmail', 'profileFirstName', 'profileLastName', 'profileGender', 'profileBirthday'];
+            let allValid = true;
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    const value = (field.value || '').trim();
+                    if (!value) {
+                        allValid = false;
+                    }
+                }
+            });
+            
+            // Validate email format
+            if (allValid) {
+                allValid = validateProfileEmail();
+            }
+            
+            // If passwords are filled, validate them
+            if (allValid && anyPasswordFilled()) {
+                const currentEl = document.getElementById('profilePassword');
+                const newEl = document.getElementById('profileNewPassword');
+                const confirmEl = document.getElementById('profileConfirmPassword');
+                
+                allValid = validateProfilePassword(currentEl, 'profilePassword') && allValid;
+                allValid = validateProfilePassword(newEl, 'profileNewPassword') && allValid;
+                allValid = validateProfilePassword(confirmEl, 'profileConfirmPassword') && allValid;
+                allValid = validatePasswordSameAsCurrent() && allValid;
+            }
+            
+            // Enable/disable button
+            if (allValid) {
+                updateBtn.disabled = false;
+                updateBtn.style.opacity = '1';
+                updateBtn.style.cursor = 'pointer';
+            } else {
+                updateBtn.disabled = true;
+                updateBtn.style.opacity = '0.6';
+                updateBtn.style.cursor = 'not-allowed';
+            }
+        }
+        
         // Save Profile
         function saveProfile(event) {
             event.preventDefault();
             
-            const currentPassword = document.getElementById('profilePassword').value;
-            const newPassword = document.getElementById('profileNewPassword').value;
-            const confirmPassword = document.getElementById('profileConfirmPassword').value;
+            const updateBtn = document.getElementById('updateProfileBtn');
+            if (updateBtn && updateBtn.disabled) {
+                return;
+            }
+            
+            // Validate all required fields
+            let isValid = true;
+            isValid = validateProfileEmail() && isValid;
+            isValid = validateProfileFirstName() && isValid;
+            isValid = validateProfileLastName() && isValid;
+            isValid = validateProfileGender() && isValid;
+            isValid = validateProfileBirthday() && isValid;
+            
+            // Validate passwords if any are filled
+            if (anyPasswordFilled()) {
+                const currentEl = document.getElementById('profilePassword');
+                const newEl = document.getElementById('profileNewPassword');
+                const confirmEl = document.getElementById('profileConfirmPassword');
+                
+                isValid = validateProfilePassword(currentEl, 'profilePassword') && isValid;
+                isValid = validateProfilePassword(newEl, 'profileNewPassword') && isValid;
+                isValid = validateProfilePassword(confirmEl, 'profileConfirmPassword') && isValid;
+                isValid = validatePasswordSameAsCurrent() && isValid;
+            }
+            
+            if (!isValid) {
+                const firstError = document.querySelector('#profileModal .form-group.error, #profileModal input.error, #profileModal select.error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
+            }
+            
+            const currentPassword = document.getElementById('profilePassword').value.trim();
+            const newPassword = document.getElementById('profileNewPassword').value.trim();
+            const confirmPassword = document.getElementById('profileConfirmPassword').value.trim();
             
             // Validate passwords if provided
             if (newPassword || confirmPassword || currentPassword) {
@@ -3695,26 +4158,6 @@
                     showNotification('New passwords do not match', 'error');
                     return;
                 }
-            }
-            
-            // Get the form
-            const form = document.getElementById('profileForm');
-            const fields = form.querySelectorAll('input[required], select[required]');
-            let isValid = true;
-            
-            fields.forEach(field => {
-                validateField(field);
-                if (!field.checkValidity()) {
-                    isValid = false;
-                }
-            });
-            
-            if (!isValid) {
-                const firstError = document.querySelector('#profileModal .form-group.error');
-                if (firstError) {
-                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-                return;
             }
             
             const userData = {
