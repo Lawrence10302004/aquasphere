@@ -644,24 +644,35 @@
                     body: formData
                 })
                 .then(response => {
+                    console.log('Response status:', response.status);
+                    console.log('Response ok:', response.ok);
                     // Always try to parse as JSON first
                     return response.text().then(text => {
+                        console.log('Response text:', text);
                         try {
-                            return JSON.parse(text);
+                            const jsonData = JSON.parse(text);
+                            console.log('Parsed JSON:', jsonData);
+                            return jsonData;
                         } catch (e) {
+                            console.error('JSON parse error:', e);
                             // If not JSON, check response status
                             if (!response.ok) {
                                 throw new Error('Server error: ' + text);
                             }
-                            throw new Error('Invalid response format');
+                            throw new Error('Invalid response format: ' + text);
                         }
                     });
                 })
                 .then(data => {
-                    if (data.success) {
+                    console.log('Login response:', data);
+                    if (data && data.success) {
                         // Redirect to dashboard or home
                         const redirectUrl = data.redirect || 'dashboard.html';
-                        window.location.href = redirectUrl;
+                        console.log('Redirecting to:', redirectUrl);
+                        // Use setTimeout to ensure redirect happens
+                        setTimeout(() => {
+                            window.location.href = redirectUrl;
+                        }, 100);
                     } else {
                         // Show error messages
                         if (data.errors) {
