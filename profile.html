@@ -159,9 +159,9 @@
         
         .form-group input.success,
         .form-group select.success {
-            border-color: #28a745;
-            background: #f0fdf4;
-            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+            border-color: #0ea5e9;
+            background: #f0f9ff;
+            box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25);
         }
         
         .form-group.error input:focus,
@@ -834,6 +834,17 @@
                 opacity: 0.3;
                 transform: scale(1.05);
             }
+        }
+        
+        /* Override Bootstrap success alert colors to blue */
+        .alert-success {
+            background-color: #dbeafe !important;
+            border-color: #0ea5e9 !important;
+            color: #0369a1 !important;
+        }
+        
+        .alert-success i {
+            color: #0ea5e9 !important;
         }
         
         @media (max-width: 768px) {
