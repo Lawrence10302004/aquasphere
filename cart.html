@@ -2125,7 +2125,6 @@
                                     <option value="">Select Gender</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
-                                    <option value="other">Other</option>
                                 </select>
                                 <div class="error-message" id="profileGender-error" style="display: none;">Please select an item in the list</div>
                             </div>
@@ -3603,6 +3602,23 @@
             const modal = document.getElementById('profileModal');
             if (!modal) return;
             
+            // Reset button state
+            const updateBtn = document.getElementById('updateProfileBtn');
+            if (updateBtn) {
+                updateBtn.disabled = false;
+                updateBtn.textContent = 'Save Changes';
+            }
+            
+            // Clear all success and error states from form fields
+            const allFields = modal.querySelectorAll('input, select');
+            allFields.forEach(field => {
+                field.classList.remove('success', 'error');
+                const formGroup = field.closest('.form-group');
+                if (formGroup) {
+                    formGroup.classList.remove('error');
+                }
+            });
+            
             // Show loading state
             const form = document.getElementById('profileForm');
             if (form) {
@@ -3669,6 +3685,16 @@
                         const dd = String(today.getDate()).padStart(2, '0');
                         document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
                         
+                        // Clear all success states again after populating
+                        const allFields = modal.querySelectorAll('input, select');
+                        allFields.forEach(field => {
+                            field.classList.remove('success', 'error');
+                            const formGroup = field.closest('.form-group');
+                            if (formGroup) {
+                                formGroup.classList.remove('error');
+                            }
+                        });
+                        
                         // Add event listeners for real-time validation
                         setupProfileValidation();
                         
@@ -3715,6 +3741,16 @@
                         const dd = String(today.getDate()).padStart(2, '0');
                         document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
                         
+                        // Clear all success states again after populating
+                        const allFields = modal.querySelectorAll('input, select');
+                        allFields.forEach(field => {
+                            field.classList.remove('success', 'error');
+                            const formGroup = field.closest('.form-group');
+                            if (formGroup) {
+                                formGroup.classList.remove('error');
+                            }
+                        });
+                        
                         setupProfileValidation();
                         checkProfileRequiredFields();
                         
@@ -3758,6 +3794,16 @@
                     const mm = String(today.getMonth() + 1).padStart(2, '0');
                     const dd = String(today.getDate()).padStart(2, '0');
                     document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
+                    
+                    // Clear all success states again after populating
+                    const allFields = modal.querySelectorAll('input, select');
+                    allFields.forEach(field => {
+                        field.classList.remove('success', 'error');
+                        const formGroup = field.closest('.form-group');
+                        if (formGroup) {
+                            formGroup.classList.remove('error');
+                        }
+                    });
                     
                     setupProfileValidation();
                     checkProfileRequiredFields();
