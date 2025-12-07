@@ -96,10 +96,16 @@ try {
     
     // Log for debugging
     if ($user) {
-        error_log("Login attempt - Username: " . $username . ", User ID: " . $user['id']);
+        error_log("Login attempt - Username: " . $username . ", User ID: " . $user['id'] . ", Email: " . ($user['email'] ?? 'NOT FOUND'));
         error_log("Login attempt - Stored password hash length: " . strlen($user['password_hash']));
+        error_log("Login attempt - Stored password hash (first 20 chars): " . substr($user['password_hash'], 0, 20));
         $verify_result = password_verify($password, $user['password_hash']);
         error_log("Login attempt - Password verify result: " . ($verify_result ? 'TRUE' : 'FALSE'));
+        
+        // Also try to verify with a test hash to see if password_verify is working
+        $test_hash = password_hash('test', PASSWORD_DEFAULT);
+        $test_verify = password_verify('test', $test_hash);
+        error_log("Login attempt - Test password_verify function: " . ($test_verify ? 'WORKING' : 'BROKEN'));
     } else {
         error_log("Login attempt - User not found for username: " . $username);
     }

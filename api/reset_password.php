@@ -101,7 +101,7 @@ try {
             $user_id = (int)$user_id;
         }
         
-        $query = "SELECT id, password_hash FROM users WHERE id = ?";
+        $query = "SELECT id, username, email, password_hash FROM users WHERE id = ?";
         $result = execute_sql($conn, $query, [$user_id]);
         
         if ($GLOBALS['use_postgres']) {
@@ -109,11 +109,13 @@ try {
         } else {
             $user = $result->fetchArray(SQLITE3_ASSOC);
         }
+        
+        error_log("Password reset - Found user by user_id: ID=" . ($user['id'] ?? 'NOT FOUND') . ", Username=" . ($user['username'] ?? 'NOT FOUND') . ", Email=" . ($user['email'] ?? 'NOT FOUND'));
     }
     
     // Fallback to email if user_id not found or not available
     if (!$user && !empty($email)) {
-        $query = "SELECT id, password_hash FROM users WHERE email = ?";
+        $query = "SELECT id, username, email, password_hash FROM users WHERE email = ?";
         $result = execute_sql($conn, $query, [$email]);
         
         if ($GLOBALS['use_postgres']) {
@@ -124,6 +126,9 @@ try {
         
         if ($user) {
             $user_id = $user['id'];
+            error_log("Password reset - Found user by email: ID=" . $user['id'] . ", Username=" . ($user['username'] ?? 'NOT FOUND') . ", Email=" . ($user['email'] ?? 'NOT FOUND'));
+        } else {
+            error_log("Password reset - User not found by email: " . $email);
         }
     } else if ($user) {
         $user_id = $user['id'];
@@ -153,6 +158,7 @@ try {
     
     // Log for debugging
     error_log("Password reset - User ID: " . $user_id . ", Email: " . $email);
+    error_log("Password reset - Username from user lookup: " . ($user['username'] ?? 'NOT FOUND'));
     error_log("Password reset - New password hash length: " . strlen($new_password_hash));
     
     // Update password
