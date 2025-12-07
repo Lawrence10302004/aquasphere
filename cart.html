@@ -2795,6 +2795,12 @@
             if (modal) {
                 modal.classList.remove('active');
                 document.body.style.overflow = ''; // Restore scrolling
+                
+                // Reset map state when closing
+                const mapPlaceholder = document.getElementById('mapPlaceholder');
+                const mapContainer = document.getElementById('mapContainer');
+                if (mapPlaceholder) mapPlaceholder.style.display = 'flex';
+                if (mapContainer) mapContainer.style.display = 'none';
             }
         }
         
