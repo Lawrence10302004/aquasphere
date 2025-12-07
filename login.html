@@ -703,7 +703,8 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('Login error:', error);
+                    console.error('Error stack:', error.stack);
                     // Show error messages
                     const authError = document.getElementById('auth-error');
                     const usernameField = document.getElementById('username');
