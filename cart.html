@@ -2532,7 +2532,18 @@
                 addressDisplay.style.display = 'block';
                 document.getElementById('addressName').textContent = address.fullName;
                 document.getElementById('addressPhone').textContent = `(${address.phoneNumber})`;
-                document.getElementById('addressText').textContent = `${address.streetAddress}, ${address.location}, ${address.postalCode}`;
+                
+                // Display full address with location breakdown
+                let locationText = '';
+                if (address.barangay && address.city && address.province) {
+                    locationText = `${address.streetAddress}, ${address.barangay}, ${address.city}, ${address.province} ${address.postalCode || ''}`;
+                } else if (address.location) {
+                    // Fallback for old format
+                    locationText = `${address.streetAddress}, ${address.location}, ${address.postalCode || ''}`;
+                } else {
+                    locationText = `${address.streetAddress}, ${address.postalCode || ''}`;
+                }
+                document.getElementById('addressText').textContent = locationText.trim();
                 
                 if (address.isDefault) {
                     document.getElementById('defaultBadge').style.display = 'block';
@@ -2686,6 +2697,7 @@
         // Initialize
         loadCart();
         loadAddress();
+        initializeLocationDropdowns();
         
         // Navbar scroll effect (only shadow, no size changes)
         window.addEventListener('scroll', function() {
