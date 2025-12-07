@@ -625,7 +625,7 @@
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             border: 2px solid #e2e8f0;
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1rem;
             transition: all 0.3s ease;
         }
         
@@ -638,7 +638,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             gap: 1rem;
         }
         
@@ -667,28 +667,28 @@
         
         .address-text {
             color: #475569;
-            line-height: 1.8;
-            font-size: 0.95rem;
+            line-height: 1.6;
+            font-size: 0.9rem;
             background: white;
-            padding: 1rem;
+            padding: 0.75rem;
             border-radius: 8px;
             border-left: 3px solid #0ea5e9;
-            margin-top: 0.75rem;
+            margin-top: 0;
         }
         
         .address-tabs {
             display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            margin-bottom: 1rem;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
             border-bottom: 2px solid #e2e8f0;
         }
         
         .address-tab {
             background: transparent;
             border: none;
-            padding: 0.75rem 1.5rem;
-            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: #64748b;
             cursor: pointer;
@@ -696,7 +696,7 @@
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
         
         .address-tab:hover {
@@ -711,11 +711,11 @@
         }
         
         .address-tab i {
-            font-size: 0.9rem;
+            font-size: 0.75rem;
         }
         
         .address-tab-content-wrapper {
-            min-height: 100px;
+            min-height: 80px;
         }
         
         .address-tab-content {
@@ -732,62 +732,63 @@
         
         .address-coordinates {
             background: white;
-            padding: 1rem;
+            padding: 0.75rem;
             border-radius: 8px;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             border: 1px solid #e2e8f0;
         }
         
         .coordinates-label {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
             font-weight: 600;
             color: #0369a1;
-            margin-bottom: 0.75rem;
-            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
         }
         
         .coordinates-label i {
             color: #0ea5e9;
+            font-size: 0.8rem;
         }
         
         .coordinates-display {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             flex-wrap: wrap;
         }
         
         .coordinate-item {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
         
         .coordinate-label {
             font-weight: 600;
             color: #64748b;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         
         .coordinate-value {
             font-family: 'Courier New', monospace;
             color: #0369a1;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             background: #f0f9ff;
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 4px;
         }
         
         .address-map-container {
             width: 100%;
-            height: 300px;
-            border-radius: 12px;
+            height: 200px;
+            border-radius: 8px;
             overflow: hidden;
             border: 2px solid #e2e8f0;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            margin-top: 1rem;
+            margin-top: 0.5rem;
             position: relative;
         }
         
@@ -805,21 +806,21 @@
         
         .address-map-fullscreen-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 5px;
+            right: 5px;
             background: white;
             border: 2px solid #e2e8f0;
             color: #475569;
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 6px 10px;
+            border-radius: 6px;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             z-index: 1000;
         }
         
@@ -2247,7 +2248,7 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="address-buttons" style="margin-top: 1rem; display: flex; justify-content: flex-end; gap: 0.5rem;">
+                                    <div class="address-buttons" style="margin-top: 0.75rem; display: flex; justify-content: flex-end; gap: 0.5rem;">
                                         <button class="btn-change-address" onclick="openAddressModal()">Change</button>
                                         <button class="btn-delete-address" onclick="deleteAddress()" title="Delete address">
                                             <i class="fas fa-trash"></i>
