@@ -3685,21 +3685,19 @@
                         const dd = String(today.getDate()).padStart(2, '0');
                         document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
                         
-                        // Clear all success states again after populating
-                        const allFields = modal.querySelectorAll('input, select');
-                        allFields.forEach(field => {
-                            field.classList.remove('success', 'error');
-                            const formGroup = field.closest('.form-group');
-                            if (formGroup) {
-                                formGroup.classList.remove('error');
-                            }
-                        });
-                        
                         // Add event listeners for real-time validation
                         setupProfileValidation();
                         
-                        // Initial validation check
+                        // Initial validation check (but don't show success states on initial load)
                         checkProfileRequiredFields();
+                        
+                        // Clear all success states AFTER validation to prevent green borders on open
+                        setTimeout(() => {
+                            const allFields = modal.querySelectorAll('input, select');
+                            allFields.forEach(field => {
+                                field.classList.remove('success');
+                            });
+                        }, 0);
                         
                         // Hide loading state
                         if (form) {
@@ -3741,18 +3739,16 @@
                         const dd = String(today.getDate()).padStart(2, '0');
                         document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
                         
-                        // Clear all success states again after populating
-                        const allFields = modal.querySelectorAll('input, select');
-                        allFields.forEach(field => {
-                            field.classList.remove('success', 'error');
-                            const formGroup = field.closest('.form-group');
-                            if (formGroup) {
-                                formGroup.classList.remove('error');
-                            }
-                        });
-                        
                         setupProfileValidation();
                         checkProfileRequiredFields();
+                        
+                        // Clear all success states AFTER validation to prevent green borders on open
+                        setTimeout(() => {
+                            const allFields = modal.querySelectorAll('input, select');
+                            allFields.forEach(field => {
+                                field.classList.remove('success');
+                            });
+                        }, 0);
                         
                         if (form) {
                             form.style.opacity = '1';
@@ -3795,18 +3791,16 @@
                     const dd = String(today.getDate()).padStart(2, '0');
                     document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
                     
-                    // Clear all success states again after populating
-                    const allFields = modal.querySelectorAll('input, select');
-                    allFields.forEach(field => {
-                        field.classList.remove('success', 'error');
-                        const formGroup = field.closest('.form-group');
-                        if (formGroup) {
-                            formGroup.classList.remove('error');
-                        }
-                    });
-                    
                     setupProfileValidation();
                     checkProfileRequiredFields();
+                    
+                    // Clear all success states AFTER validation to prevent green borders on open
+                    setTimeout(() => {
+                        const allFields = modal.querySelectorAll('input, select');
+                        allFields.forEach(field => {
+                            field.classList.remove('success');
+                        });
+                    }, 0);
                     
                     if (form) {
                         form.style.opacity = '1';
