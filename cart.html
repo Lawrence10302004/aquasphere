@@ -3485,6 +3485,7 @@
         
         // Update location display inputs
         function updateLocationDisplay(lat, lng) {
+            console.log('updateLocationDisplay called with:', lat, lng);
             const latDisplay = document.getElementById('latitudeDisplay');
             const lngDisplay = document.getElementById('longitudeDisplay');
             const locationDisplayGroup = document.getElementById('locationDisplayGroup');
@@ -3495,6 +3496,13 @@
                 lngDisplay.value = lng.toFixed(6);
                 locationDisplayGroup.style.display = 'block';
                 if (locationHint) locationHint.style.display = 'none';
+                console.log('Location display updated:', latDisplay.value, lngDisplay.value);
+            } else {
+                console.error('Location display elements not found:', {
+                    latDisplay: !!latDisplay,
+                    lngDisplay: !!lngDisplay,
+                    locationDisplayGroup: !!locationDisplayGroup
+                });
             }
         }
         
