@@ -2325,10 +2325,10 @@
             }
         }
         
-        // Laguna Location Data Only
+        // Laguna Location Data Only (CALABARZON Region)
         const philippineLocations = {
-            'Laguna': {
-                name: 'Laguna',
+            'CALABARZON': {
+                name: 'IV-A – CALABARZON',
                 provinces: {
                     'Laguna': {
                         cities: {
@@ -2382,7 +2382,7 @@
                 regionSelect.appendChild(option);
             });
             
-            // Auto-select Laguna if it's the only region
+            // Auto-select CALABARZON if it's the only region
             if (Object.keys(philippineLocations).length === 1) {
                 regionSelect.value = Object.keys(philippineLocations)[0];
                 updateProvinces();
