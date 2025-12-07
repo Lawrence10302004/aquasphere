@@ -665,14 +665,12 @@
                 })
                 .then(data => {
                     console.log('Login response:', data);
-                    if (data && data.success) {
+                    if (data && data.success === true) {
                         // Redirect to dashboard or home
                         const redirectUrl = data.redirect || 'dashboard.html';
                         console.log('Redirecting to:', redirectUrl);
-                        // Use setTimeout to ensure redirect happens
-                        setTimeout(() => {
-                            window.location.href = redirectUrl;
-                        }, 100);
+                        // Force redirect immediately
+                        window.location.replace(redirectUrl);
                     } else {
                         // Show error messages
                         if (data.errors) {
@@ -716,6 +714,12 @@
                     }
                     if (usernameField) usernameField.classList.add('error');
                     if (passwordField) passwordField.classList.add('error');
+                    
+                    // If it's a network error but we got a response, try to redirect anyway
+                    if (error.message && error.message.includes('Invalid response format')) {
+                        console.log('Attempting redirect despite parse error...');
+                        window.location.replace('dashboard.html');
+                    }
                 });
             });
             
