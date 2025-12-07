@@ -85,6 +85,36 @@
             color: #0369a1 !important;
         }
         
+        /* Navigation Icons Styles */
+        .nav-link i {
+            font-size: 20.8px;
+            display: block;
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(249, 115, 22, 0.4);
+            min-width: 20px;
+            min-height: 20px;
+            box-sizing: border-box;
+        }
+        
+        .navbar-nav {
+            gap: 0.5rem;
+        }
+        
         /* Hero Section */
         .hero-section {
             background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #06b6d4 100%);
@@ -708,6 +738,23 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto" id="authNav">
+                    <!-- Navigation icons (shown when logged in) -->
+                    <li class="nav-item" id="navHomeItem" style="display: none;">
+                        <a class="nav-link" href="dashboard.html" id="navHome" title="Home">
+                            <i class="fas fa-home"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="navCartItem" style="display: none;">
+                        <a class="nav-link" href="cart.html" id="navCart" title="Shopping Cart" style="position: relative;">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-badge" id="cartCount">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="navOrdersItem" style="display: none;">
+                        <a class="nav-link" href="orders.html" id="navOrders" title="My Orders">
+                            <i class="fas fa-box"></i>
+                        </a>
+                    </li>
                     <!-- Login/Register buttons (shown when not logged in) -->
                     <li class="nav-item" id="loginNavItem">
                         <a class="nav-link" href="login.html">Login</a>
@@ -1063,6 +1110,21 @@
             });
         });
         
+        // Update cart count
+        function updateCartCount() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                const cartCountEl = document.getElementById('cartCount');
+                if (cartCountEl) {
+                    cartCountEl.textContent = totalItems;
+                    cartCountEl.style.display = totalItems > 0 ? 'flex' : 'none';
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
+            }
+        }
+        
         // Check if user is logged in and update navbar
         function checkLoginStatus() {
             fetch('api/get_current_user.php')
@@ -1074,40 +1136,61 @@
                 })
                 .then(data => {
                     if (data.success && data.user) {
-                        // User is logged in - show user dropdown, hide login/register
+                        // User is logged in - show icons and user dropdown, hide login/register
                         const loginNavItem = document.getElementById('loginNavItem');
                         const registerNavItem = document.getElementById('registerNavItem');
                         const userDropdownNavItem = document.getElementById('userDropdownNavItem');
+                        const navHomeItem = document.getElementById('navHomeItem');
+                        const navCartItem = document.getElementById('navCartItem');
+                        const navOrdersItem = document.getElementById('navOrdersItem');
                         const usernameDisplay = document.getElementById('usernameDisplay');
                         
                         if (loginNavItem) loginNavItem.style.display = 'none';
                         if (registerNavItem) registerNavItem.style.display = 'none';
                         if (userDropdownNavItem) userDropdownNavItem.style.display = 'block';
+                        if (navHomeItem) navHomeItem.style.display = 'block';
+                        if (navCartItem) navCartItem.style.display = 'block';
+                        if (navOrdersItem) navOrdersItem.style.display = 'block';
                         if (usernameDisplay) usernameDisplay.textContent = data.user.username || 'User';
                         
                         // Save to localStorage
                         localStorage.setItem('loggedInUser', JSON.stringify(data.user));
                         localStorage.setItem('userData', JSON.stringify(data.user));
+                        
+                        // Update cart count
+                        updateCartCount();
                     } else {
-                        // User is not logged in - show login/register, hide user dropdown
+                        // User is not logged in - show login/register, hide icons and user dropdown
                         const loginNavItem = document.getElementById('loginNavItem');
                         const registerNavItem = document.getElementById('registerNavItem');
                         const userDropdownNavItem = document.getElementById('userDropdownNavItem');
+                        const navHomeItem = document.getElementById('navHomeItem');
+                        const navCartItem = document.getElementById('navCartItem');
+                        const navOrdersItem = document.getElementById('navOrdersItem');
                         
                         if (loginNavItem) loginNavItem.style.display = 'block';
                         if (registerNavItem) registerNavItem.style.display = 'block';
                         if (userDropdownNavItem) userDropdownNavItem.style.display = 'none';
+                        if (navHomeItem) navHomeItem.style.display = 'none';
+                        if (navCartItem) navCartItem.style.display = 'none';
+                        if (navOrdersItem) navOrdersItem.style.display = 'none';
                     }
                 })
                 .catch(error => {
-                    // Not logged in - show login/register
+                    // Not logged in - show login/register, hide icons
                     const loginNavItem = document.getElementById('loginNavItem');
                     const registerNavItem = document.getElementById('registerNavItem');
                     const userDropdownNavItem = document.getElementById('userDropdownNavItem');
+                    const navHomeItem = document.getElementById('navHomeItem');
+                    const navCartItem = document.getElementById('navCartItem');
+                    const navOrdersItem = document.getElementById('navOrdersItem');
                     
                     if (loginNavItem) loginNavItem.style.display = 'block';
                     if (registerNavItem) registerNavItem.style.display = 'block';
                     if (userDropdownNavItem) userDropdownNavItem.style.display = 'none';
+                    if (navHomeItem) navHomeItem.style.display = 'none';
+                    if (navCartItem) navCartItem.style.display = 'none';
+                    if (navOrdersItem) navOrdersItem.style.display = 'none';
                 });
         }
         
