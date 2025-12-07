@@ -1175,7 +1175,7 @@
             border-radius: 28px;
             width: 100%;
             max-width: 720px;
-            max-height: 92vh;
+            max-height: 90vh;
             overflow: hidden;
             box-shadow: 0 30px 100px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
             animation: addressModalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1231,11 +1231,12 @@
         
         .modal-header {
             background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #06b6d4 100%);
-            padding: 2rem 2rem 1.5rem;
+            padding: 1.5rem 2rem 1.25rem;
             border-bottom: none;
             border-radius: 28px 28px 0 0;
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
         }
         
         .modal-header::before {
@@ -1282,10 +1283,10 @@
             background: transparent;
             flex: 1;
             overflow-y: auto;
-            padding: 2rem 2rem 1.5rem;
-            max-height: calc(92vh - 250px);
+            padding: 1.5rem 2rem;
             position: relative;
             z-index: 1;
+            min-height: 0; /* Allow flexbox to shrink */
         }
         
         .modal-body::-webkit-scrollbar {
@@ -1315,24 +1316,73 @@
         
         .form-group {
             margin-bottom: 0.75rem;
+            position: relative;
+        }
+        
+        .form-group.error input,
+        .form-group.error select {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+        
+        .form-group.error input:focus,
+        .form-group.error select:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12), 0 4px 12px rgba(239, 68, 68, 0.15);
+        }
+        
+        .form-group .error-message {
+            display: none;
+            margin-top: 0.4rem;
+            padding: 0.5rem 0.75rem;
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            color: #991b1b;
+            font-size: 0.85rem;
+            font-weight: 500;
+            position: relative;
+            animation: errorSlideIn 0.3s ease;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+        }
+        
+        .form-group.error .error-message {
+            display: block;
+        }
+        
+        .form-group .error-message::before {
+            content: '⚠️';
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        @keyframes errorSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             font-weight: 600;
             color: #0f172a;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             letter-spacing: 0.01em;
         }
         
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 12px 16px;
+            padding: 10px 14px;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             background: white;
             autocomplete: off;
@@ -1348,10 +1398,21 @@
             transform: translateY(-1px);
         }
         
+        .form-group.error input:focus,
+        .form-group.error select:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12), 0 4px 12px rgba(239, 68, 68, 0.15);
+        }
+        
         .form-group input:hover,
         .form-group select:hover {
             border-color: #cbd5e1;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-group.error input:hover,
+        .form-group.error select:hover {
+            border-color: #f87171;
         }
         
         .form-group.full-width {
@@ -1368,7 +1429,7 @@
         
         .map-placeholder {
             width: 100%;
-            height: 120px;
+            height: 100px;
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             border: 2px dashed #0ea5e9;
             border-radius: 16px;
@@ -1442,7 +1503,7 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
         
         .label-section span {
@@ -1486,7 +1547,7 @@
         }
         
         .modal-footer {
-            padding: 1.5rem 2rem;
+            padding: 1.25rem 2rem;
             display: flex;
             justify-content: flex-end;
             gap: 1rem;
@@ -1495,6 +1556,7 @@
             border-radius: 0 0 28px 28px;
             position: relative;
             z-index: 1;
+            flex-shrink: 0;
         }
         
         .btn-cancel {
@@ -1843,54 +1905,62 @@
                 <h2>New Address</h2>
             </div>
             <div class="modal-body">
-                <form id="addressForm" onsubmit="saveAddress(event)">
+                <form id="addressForm" onsubmit="saveAddress(event)" novalidate>
                     <div class="form-row">
                     <div class="form-group">
                         <label for="fullName">Full Name</label>
                         <input type="text" id="fullName" name="fullName" placeholder="Full Name" autocomplete="off" required>
+                        <div class="error-message">Please fill out this field</div>
                     </div>
                     <div class="form-group">
                         <label for="phoneNumber">Phone Number</label>
                         <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" autocomplete="off" required>
+                        <div class="error-message">Please fill out this field</div>
                     </div>
                     </div>
                     
                     <div class="form-group full-width">
                         <label>Region</label>
-                        <select id="region" name="region" autocomplete="off" required onchange="updateProvinces()">
+                        <select id="region" name="region" autocomplete="off" required onchange="updateProvinces(); validateField(this);">
                             <option value="">Select Region</option>
                         </select>
+                        <div class="error-message">Please select an item in the list</div>
                     </div>
                     
                     <div class="form-group full-width">
                         <label>Province</label>
-                        <select id="province" name="province" autocomplete="off" required onchange="updateCities()" disabled>
+                        <select id="province" name="province" autocomplete="off" required onchange="updateCities(); validateField(this);" disabled>
                             <option value="">Select Province</option>
                         </select>
+                        <div class="error-message">Please select an item in the list</div>
                     </div>
                     
                     <div class="form-group full-width">
                         <label>City/Municipality</label>
-                        <select id="city" name="city" autocomplete="off" required onchange="updateBarangays()" disabled>
+                        <select id="city" name="city" autocomplete="off" required onchange="updateBarangays(); validateField(this);" disabled>
                             <option value="">Select City/Municipality</option>
                         </select>
+                        <div class="error-message">Please select an item in the list</div>
                     </div>
                     
                     <div class="form-group full-width">
                         <label>Barangay</label>
-                        <select id="barangay" name="barangay" autocomplete="off" required disabled>
+                        <select id="barangay" name="barangay" autocomplete="off" required onchange="validateField(this);" disabled>
                             <option value="">Select Barangay</option>
                         </select>
+                        <div class="error-message">Please select an item in the list</div>
                     </div>
                     
                     <div class="form-group full-width">
                         <label for="postalCode">Postal Code</label>
                         <input type="text" id="postalCode" name="postalCode" placeholder="Postal Code" autocomplete="off" required>
+                        <div class="error-message">Please fill out this field</div>
                     </div>
                     
                     <div class="form-group full-width">
                         <label for="streetAddress">Street Name, Building, House No.</label>
                         <input type="text" id="streetAddress" name="streetAddress" placeholder="Street Name, Building, House No." autocomplete="off" required>
+                        <div class="error-message">Please fill out this field</div>
                     </div>
                     
                     <div class="form-group full-width">
@@ -2630,8 +2700,44 @@
             button.classList.add('active');
         }
         
+        // Custom validation function
+        function validateField(field) {
+            const formGroup = field.closest('.form-group');
+            if (field.checkValidity()) {
+                formGroup.classList.remove('error');
+            } else {
+                formGroup.classList.add('error');
+            }
+        }
+        
+        // Validate all fields on form submit
+        function validateForm() {
+            const form = document.getElementById('addressForm');
+            const fields = form.querySelectorAll('input[required], select[required]');
+            let isValid = true;
+            
+            fields.forEach(field => {
+                validateField(field);
+                if (!field.checkValidity()) {
+                    isValid = false;
+                }
+            });
+            
+            return isValid;
+        }
+        
         function saveAddress(event) {
             event.preventDefault();
+            
+            // Validate all fields
+            if (!validateForm()) {
+                // Scroll to first error
+                const firstError = document.querySelector('.form-group.error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
+            }
             
             const region = document.getElementById('region').value;
             const province = document.getElementById('province').value;
