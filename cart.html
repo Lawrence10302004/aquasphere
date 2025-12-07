@@ -2546,15 +2546,45 @@
         
         function openAddressModal() {
             const modal = document.getElementById('addressModal');
+            if (!modal) {
+                console.error('Address modal not found');
+                return;
+            }
+            
             const address = JSON.parse(localStorage.getItem('deliveryAddress'));
+            
+            // Initialize location dropdowns first
+            initializeLocationDropdowns();
             
             if (address) {
                 // Populate form with existing address
-                document.getElementById('fullName').value = address.fullName;
-                document.getElementById('phoneNumber').value = address.phoneNumber;
-                document.getElementById('location').value = address.location;
-                document.getElementById('postalCode').value = address.postalCode;
-                document.getElementById('streetAddress').value = address.streetAddress;
+                document.getElementById('fullName').value = address.fullName || '';
+                document.getElementById('phoneNumber').value = address.phoneNumber || '';
+                document.getElementById('postalCode').value = address.postalCode || '';
+                document.getElementById('streetAddress').value = address.streetAddress || '';
+                
+                // Restore location if saved
+                if (address.region) {
+                    document.getElementById('region').value = address.region;
+                    updateProvinces();
+                    setTimeout(() => {
+                        if (address.province) {
+                            document.getElementById('province').value = address.province;
+                            updateCities();
+                            setTimeout(() => {
+                                if (address.city) {
+                                    document.getElementById('city').value = address.city;
+                                    updateBarangays();
+                                    setTimeout(() => {
+                                        if (address.barangay) {
+                                            document.getElementById('barangay').value = address.barangay;
+                                        }
+                                    }, 100);
+                                }
+                            }, 100);
+                        }
+                    }, 100);
+                }
                 
                 // Set label
                 document.querySelectorAll('.label-btn').forEach(btn => {
@@ -2566,13 +2596,22 @@
             } else {
                 // Reset form
                 document.getElementById('addressForm').reset();
+                document.getElementById('region').value = '';
+                document.getElementById('province').innerHTML = '<option value="">Select Province</option>';
+                document.getElementById('province').disabled = true;
+                document.getElementById('city').innerHTML = '<option value="">Select City/Municipality</option>';
+                document.getElementById('city').disabled = true;
+                document.getElementById('barangay').innerHTML = '<option value="">Select Barangay</option>';
+                document.getElementById('barangay').disabled = true;
                 document.querySelectorAll('.label-btn').forEach(btn => {
                     btn.classList.remove('active');
                 });
                 document.querySelector('.label-btn[data-label="home"]').classList.add('active');
             }
             
+            // Show modal
             modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
         }
         
         function closeAddressModal(event) {
