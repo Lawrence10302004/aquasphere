@@ -137,6 +137,10 @@ try {
     // Hash new password
     $new_password_hash = password_hash($new_password, PASSWORD_DEFAULT);
     
+    // Log for debugging
+    error_log("Password reset - User ID: " . $user['id'] . ", Email: " . $email);
+    error_log("Password reset - New password hash length: " . strlen($new_password_hash));
+    
     // Update password
     $updateQuery = "UPDATE users SET password_hash = ? WHERE id = ?";
     
@@ -158,13 +162,28 @@ try {
         
         // Check if any rows were affected
         $rowsAffected = pg_affected_rows($updateResult);
+        error_log("Password reset - Rows affected: " . $rowsAffected);
+        
         if ($rowsAffected === 0) {
+            error_log("Password reset - WARNING: No rows updated for user ID: " . $user['id']);
             close_connection($conn);
             ob_clean();
             http_response_code(500);
             echo json_encode(['success' => false, 'error' => 'Failed to reset password. No rows updated.']);
             ob_end_flush();
             exit;
+        }
+        
+        // Verify the update by fetching the user again
+        $verifyQuery = "SELECT password_hash FROM users WHERE id = $1";
+        $verifyResult = pg_query_params($conn, $verifyQuery, [$user['id']]);
+        if ($verifyResult) {
+            $verifyUser = pg_fetch_assoc($verifyResult);
+            if ($verifyUser && password_verify($new_password, $verifyUser['password_hash'])) {
+                error_log("Password reset - SUCCESS: Password verified after update");
+            } else {
+                error_log("Password reset - ERROR: Password verification failed after update");
+            }
         }
     } else {
         // SQLite
@@ -185,13 +204,29 @@ try {
         
         // Check if any rows were affected
         $rowsAffected = $conn->changes();
+        error_log("Password reset - Rows affected: " . $rowsAffected);
+        
         if ($rowsAffected === 0) {
+            error_log("Password reset - WARNING: No rows updated for user ID: " . $user['id']);
             close_connection($conn);
             ob_clean();
             http_response_code(500);
             echo json_encode(['success' => false, 'error' => 'Failed to reset password. No rows updated.']);
             ob_end_flush();
             exit;
+        }
+        
+        // Verify the update by fetching the user again
+        $verifyStmt = $conn->prepare("SELECT password_hash FROM users WHERE id = ?");
+        $verifyStmt->bindValue(1, $user['id']);
+        $verifyResult = $verifyStmt->execute();
+        if ($verifyResult) {
+            $verifyUser = $verifyResult->fetchArray(SQLITE3_ASSOC);
+            if ($verifyUser && password_verify($new_password, $verifyUser['password_hash'])) {
+                error_log("Password reset - SUCCESS: Password verified after update");
+            } else {
+                error_log("Password reset - ERROR: Password verification failed after update");
+            }
         }
     }
     
