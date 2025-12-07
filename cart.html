@@ -32,6 +32,11 @@
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
             padding: 1rem 0;
             transition: all 0.3s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1050;
         }
         
         .navbar.scrolled {
@@ -92,6 +97,7 @@
         /* Main Content */
         .main-content {
             padding: 2rem 0;
+            margin-top: 80px; /* Space for fixed navbar */
         }
         
         .page-title {
@@ -443,15 +449,17 @@
         }
         
         .cart-summary-wrapper {
-            position: fixed;
-            top: 100px;
-            right: calc((100% - 1200px) / 2 + 1rem);
-            width: calc(33.333% - 1rem);
-            max-width: 400px;
-            z-index: 100;
+            position: fixed !important;
+            top: 100px !important;
+            right: calc((100% - 1200px) / 2 + 1rem) !important;
+            width: calc(33.333% - 1rem) !important;
+            max-width: 400px !important;
+            z-index: 100 !important;
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
+            transform: translateZ(0);
+            will-change: auto;
         }
         
         @media (max-width: 1400px) {
