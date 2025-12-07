@@ -21,7 +21,6 @@ require_once 'database.php';
 $input = json_decode(file_get_contents('php://input'), true);
 $email = trim($input['email'] ?? '');
 $new_password = $input['new_password'] ?? '';
-$otp_code = trim($input['otp_code'] ?? '');
 
 $errors = [];
 
@@ -35,10 +34,6 @@ if (empty($new_password)) {
     $errors['new_password'] = 'Password must be at least 8 characters.';
 }
 
-if (empty($otp_code)) {
-    $errors['otp_code'] = 'Verification code is required.';
-}
-
 if (!empty($errors)) {
     ob_clean();
     http_response_code(400);
@@ -50,14 +45,28 @@ if (!empty($errors)) {
 try {
     $conn = get_db_connection();
     
-    // Verify OTP first
-    $reset_data = verify_password_reset_otp($email, $otp_code);
+    // Check if there's a verified password reset record for this email
+    // (OTP was already verified in the previous step)
+    $query = "
+        SELECT * FROM password_reset 
+        WHERE email = ? AND is_verified = 1 AND expires_at > CURRENT_TIMESTAMP
+        ORDER BY created_at DESC
+        LIMIT 1
+    ";
+    
+    $result = execute_sql($conn, $query, [$email]);
+    
+    if ($GLOBALS['use_postgres']) {
+        $reset_data = pg_fetch_assoc($result);
+    } else {
+        $reset_data = $result->fetchArray(SQLITE3_ASSOC);
+    }
     
     if (!$reset_data) {
         close_connection($conn);
         ob_clean();
         http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'Invalid or expired verification code. Please try again.']);
+        echo json_encode(['success' => false, 'error' => 'Please verify your OTP code first.']);
         ob_end_flush();
         exit;
     }
