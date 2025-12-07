@@ -2283,20 +2283,20 @@
     </div>
     
     <!-- Logout Confirmation Modal -->
-    <div id="logoutConfirmModal" class="delete-confirm-modal" style="display: none;">
-        <div class="delete-confirm-content">
-            <div class="delete-confirm-icon-wrapper">
-                <div class="delete-confirm-icon" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+    <div id="logoutConfirmModal" class="logout-confirm-modal" style="display: none;">
+        <div class="logout-confirm-content">
+            <div class="logout-confirm-icon-wrapper">
+                <div class="logout-confirm-icon">
                     <i class="fas fa-sign-out-alt"></i>
                 </div>
             </div>
-            <div class="delete-confirm-body">
+            <div class="logout-confirm-body">
                 <h3>Confirm Logout</h3>
                 <p id="logoutConfirmMessage">Are you sure you want to logout?</p>
             </div>
-            <div class="delete-confirm-footer">
-                <button type="button" class="btn-confirm-cancel" id="logoutCancelBtn">Cancel</button>
-                <button type="button" class="btn-confirm-delete" id="logoutConfirmBtn" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">Logout</button>
+            <div class="logout-confirm-footer">
+                <button type="button" class="btn-logout-cancel" id="logoutCancelBtn">Cancel</button>
+                <button type="button" class="btn-logout-confirm" id="logoutConfirmBtn">Logout</button>
             </div>
         </div>
     </div>
@@ -4347,8 +4347,8 @@
                 }
             }
             
+            // Prepare data for API
             const userData = {
-                username: document.getElementById('profileUsername').value.trim(),
                 email: document.getElementById('profileEmail').value.trim(),
                 firstName: document.getElementById('profileFirstName').value.trim(),
                 lastName: document.getElementById('profileLastName').value.trim(),
@@ -4359,20 +4359,84 @@
                 date_of_birth: document.getElementById('profileBirthday').value
             };
             
-            // Only update password if provided
+            // Only include password fields if provided
+            if (currentPassword) {
+                userData.password = currentPassword;
+            }
             if (newPassword) {
-                userData.password = newPassword;
-                userData.password_hash = newPassword; // For compatibility
+                userData.newPassword = newPassword;
             }
             
-            // Save to both localStorage keys for compatibility
-            localStorage.setItem('userData', JSON.stringify(userData));
-            localStorage.setItem('loggedInUser', JSON.stringify(userData));
-            sessionStorage.setItem('userData', JSON.stringify(userData));
+            // Disable button during save
+            if (updateBtn) {
+                updateBtn.disabled = true;
+                updateBtn.textContent = 'Saving...';
+            }
             
-            loadUserData();
-            closeProfileModal();
-            showNotification('Profile updated successfully!', 'success');
+            // Save to database via API
+            fetch('api/update_profile.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update localStorage with new data
+                    const updatedUserData = {
+                        username: document.getElementById('profileUsername').value.trim(),
+                        email: userData.email,
+                        firstName: userData.firstName,
+                        lastName: userData.lastName,
+                        first_name: userData.first_name,
+                        last_name: userData.last_name,
+                        gender: userData.gender,
+                        birthday: userData.birthday,
+                        date_of_birth: userData.date_of_birth
+                    };
+                    
+                    localStorage.setItem('userData', JSON.stringify(updatedUserData));
+                    localStorage.setItem('loggedInUser', JSON.stringify(updatedUserData));
+                    sessionStorage.setItem('userData', JSON.stringify(updatedUserData));
+                    
+                    // Reload user data to update navbar
+                    loadUserData();
+                    
+                    // Close modal
+                    closeProfileModal();
+                    
+                    // Show success message
+                    showNotification('Profile updated successfully!', 'success');
+                } else {
+                    // Show error messages
+                    if (data.errors) {
+                        Object.keys(data.errors).forEach(field => {
+                            const errorMsg = data.errors[field];
+                            showNotification(errorMsg, 'error');
+                        });
+                    } else {
+                        showNotification(data.message || 'Failed to update profile. Please try again.', 'error');
+                    }
+                    
+                    // Re-enable button
+                    if (updateBtn) {
+                        updateBtn.disabled = false;
+                        updateBtn.textContent = 'Save Changes';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error updating profile:', error);
+                showNotification('An error occurred while updating your profile. Please try again.', 'error');
+                
+                // Re-enable button
+                if (updateBtn) {
+                    updateBtn.disabled = false;
+                    updateBtn.textContent = 'Save Changes';
+                }
+            });
         }
         
         // Show Logout Confirmation Modal
