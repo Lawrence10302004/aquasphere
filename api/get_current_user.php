@@ -38,8 +38,18 @@ try {
     $conn = get_db_connection();
     $user_id = $_SESSION['user_id'];
     
-    // Get user data from database
-    $query = "SELECT id, username, email, first_name, last_name, gender, date_of_birth, created_at, last_login FROM users WHERE id = ?";
+    // Get user data from database - use COALESCE to handle NULL values
+    $query = "SELECT 
+        id, 
+        username, 
+        COALESCE(email, '') as email, 
+        COALESCE(first_name, '') as first_name, 
+        COALESCE(last_name, '') as last_name, 
+        COALESCE(gender, '') as gender, 
+        date_of_birth, 
+        created_at, 
+        last_login 
+    FROM users WHERE id = ?";
     $result = execute_sql($conn, $query, [$user_id]);
     
     if (!$result) {
