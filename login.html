@@ -868,17 +868,12 @@
                     body: formData
                 })
                 .then(response => {
-                    console.log('Response status:', response.status);
-                    console.log('Response ok:', response.ok);
                     // Always try to parse as JSON first
                     return response.text().then(text => {
-                        console.log('Response text:', text);
                         try {
                             const jsonData = JSON.parse(text);
-                            console.log('Parsed JSON:', jsonData);
                             return jsonData;
                         } catch (e) {
-                            console.error('JSON parse error:', e);
                             // If not JSON, check response status
                             if (!response.ok) {
                                 throw new Error('Server error: ' + text);
@@ -888,11 +883,9 @@
                     });
                 })
                 .then(data => {
-                    console.log('Login response:', data);
                     if (data && data.success === true) {
                         // Redirect to dashboard or home
                         const redirectUrl = data.redirect || 'dashboard.html';
-                        console.log('Redirecting to:', redirectUrl);
                         // Force redirect immediately
                         window.location.replace(redirectUrl);
                     } else {
@@ -925,7 +918,6 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Login error:', error);
                     console.error('Error stack:', error.stack);
                     // Show error messages
                     const authError = document.getElementById('auth-error');
@@ -941,7 +933,6 @@
                     
                     // If it's a network error but we got a response, try to redirect anyway
                     if (error.message && error.message.includes('Invalid response format')) {
-                        console.log('Attempting redirect despite parse error...');
                         window.location.replace('dashboard.html');
                     }
                 });
@@ -976,10 +967,8 @@
         
         // Forgot Password function (global scope - must be available immediately)
         function showForgotPassword() {
-            console.log('showForgotPassword called');
             // Ensure Bootstrap is loaded
             if (typeof bootstrap === 'undefined') {
-                console.error('Bootstrap is not loaded');
                 // Wait a bit and try again
                 setTimeout(() => {
                     if (typeof bootstrap !== 'undefined') {
@@ -1002,7 +991,6 @@
         }
         
         function openForgotPasswordModal() {
-            console.log('openForgotPasswordModal called');
             // Reset the modal first
             const resetEmailEl = document.getElementById('resetEmail');
             const errorDiv = document.getElementById('resetEmail-error');
@@ -1029,9 +1017,7 @@
                             keyboard: true
                         });
                         modal.show();
-                        console.log('Modal shown');
                     } catch (error) {
-                        console.error('Error showing modal:', error);
                         // Fallback: show modal directly
                         modalElement.style.display = 'block';
                         modalElement.classList.add('show');
@@ -1042,7 +1028,6 @@
                         document.body.appendChild(backdrop);
                     }
                 } else {
-                    console.error('Bootstrap Modal not available');
                     // Fallback: show modal directly
                     modalElement.style.display = 'block';
                     modalElement.classList.add('show');
@@ -1052,8 +1037,6 @@
                     backdrop.id = 'modalBackdrop';
                     document.body.appendChild(backdrop);
                 }
-            } else {
-                console.error('Modal element not found');
             }
         }
         
@@ -1185,7 +1168,6 @@
                             errorDiv.style.display = 'block';
                         }
                     } catch (error) {
-                        console.error('Error:', error);
                         if (errorDiv) {
                             errorDiv.textContent = 'An error occurred. Please try again.';
                             errorDiv.style.display = 'block';
@@ -1274,17 +1256,13 @@
                         ]);
                         
                         const responseText = await response.text();
-                        console.log('Reset password response text:', responseText);
                         
                         let data;
                         try {
                             data = JSON.parse(responseText);
                         } catch (parseError) {
-                            console.error('Failed to parse JSON:', parseError);
                             throw new Error('Invalid response from server. Please try again.');
                         }
-                        
-                        console.log('Reset password response:', data);
                         
                         if (data.success) {
                             bootstrap.Modal.getInstance(document.getElementById('newPasswordModal')).hide();
@@ -2067,7 +2045,6 @@
                     createFeedbackContainer('Failed to resend code. Please try again.');
                 }
             } catch (error) {
-                console.error('Error:', error);
                 createFeedbackContainer('An error occurred. Please try again.');
             } finally {
                 resendLink.style.pointerEvents = 'auto';

@@ -120,15 +120,60 @@ try {
     
     // Update password
     $updateQuery = "UPDATE users SET password_hash = ? WHERE id = ?";
-    $updateResult = execute_sql($conn, $updateQuery, [$new_password_hash, $user['id']]);
     
-    if ($updateResult === false) {
-        close_connection($conn);
-        ob_clean();
-        http_response_code(500);
-        echo json_encode(['success' => false, 'error' => 'Failed to reset password. Please try again.']);
-        ob_end_flush();
-        exit;
+    if ($GLOBALS['use_postgres']) {
+        // PostgreSQL
+        $pg_query = "UPDATE users SET password_hash = $1 WHERE id = $2";
+        $updateResult = pg_query_params($conn, $pg_query, [$new_password_hash, $user['id']]);
+        
+        if ($updateResult === false) {
+            $error = pg_last_error($conn);
+            error_log("Password update error: $error");
+            close_connection($conn);
+            ob_clean();
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'Failed to reset password. Please try again.']);
+            ob_end_flush();
+            exit;
+        }
+        
+        // Check if any rows were affected
+        $rowsAffected = pg_affected_rows($updateResult);
+        if ($rowsAffected === 0) {
+            close_connection($conn);
+            ob_clean();
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'Failed to reset password. No rows updated.']);
+            ob_end_flush();
+            exit;
+        }
+    } else {
+        // SQLite
+        $stmt = $conn->prepare($updateQuery);
+        $stmt->bindValue(1, $new_password_hash);
+        $stmt->bindValue(2, $user['id']);
+        $updateResult = $stmt->execute();
+        
+        if ($updateResult === false) {
+            error_log("Password update error: " . $conn->lastErrorMsg());
+            close_connection($conn);
+            ob_clean();
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'Failed to reset password. Please try again.']);
+            ob_end_flush();
+            exit;
+        }
+        
+        // Check if any rows were affected
+        $rowsAffected = $conn->changes();
+        if ($rowsAffected === 0) {
+            close_connection($conn);
+            ob_clean();
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'Failed to reset password. No rows updated.']);
+            ob_end_flush();
+            exit;
+        }
     }
     
     // Clean up the reset record
