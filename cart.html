@@ -1777,10 +1777,18 @@
                             <i class="fas fa-box"></i>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-cog"></i>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="usernameDisplay">User</span>
+                            <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="#" onclick="openProfileModal(); return false;"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="openSettingsModal(); return false;"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout(); return false;"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -2055,6 +2063,101 @@
             <div class="delete-confirm-footer">
                 <button type="button" class="btn-confirm-cancel" id="deleteCancelBtn">Cancel</button>
                 <button type="button" class="btn-confirm-delete" id="deleteConfirmBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal" onclick="closeProfileModal(event)" style="display: none;">
+        <div class="address-modal" onclick="event.stopPropagation()" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>Profile</h2>
+            </div>
+            <div class="modal-body">
+                <form id="profileForm" onsubmit="saveProfile(event)" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="profileUsername">Username</label>
+                            <input type="text" id="profileUsername" name="username" placeholder="Choose a username" autocomplete="off" required>
+                            <div class="error-message">Please fill out this field</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="profileEmail">Email</label>
+                            <input type="email" id="profileEmail" name="email" placeholder="Enter your email" autocomplete="off" required>
+                            <div class="error-message">Please fill out this field</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="profileFirstName">First Name</label>
+                            <input type="text" id="profileFirstName" name="firstName" placeholder="Enter your first name" autocomplete="off" required>
+                            <div class="error-message">Please fill out this field</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="profileLastName">Last Name</label>
+                            <input type="text" id="profileLastName" name="lastName" placeholder="Enter your last name" autocomplete="off" required>
+                            <div class="error-message">Please fill out this field</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="profileGender">Gender</label>
+                            <select id="profileGender" name="gender" autocomplete="off" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="error-message">Please select an item in the list</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="profileBirthday">Birthday</label>
+                            <input type="date" id="profileBirthday" name="birthday" autocomplete="off" required>
+                            <div class="error-message">Please fill out this field</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="profilePassword">Password</label>
+                            <div style="position: relative;">
+                                <input type="password" id="profilePassword" name="password" placeholder="Choose a password (min. 8 ch)" autocomplete="off" minlength="8">
+                                <i class="fas fa-eye" onclick="togglePasswordVisibility('profilePassword', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b;"></i>
+                            </div>
+                            <div class="error-message">Password must be at least 8 characters</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="profileConfirmPassword">Confirm Password</label>
+                            <div style="position: relative;">
+                                <input type="password" id="profileConfirmPassword" name="confirmPassword" placeholder="Confirm your password" autocomplete="off" minlength="8">
+                                <i class="fas fa-eye" onclick="togglePasswordVisibility('profileConfirmPassword', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b;"></i>
+                            </div>
+                            <div class="error-message">Passwords do not match</div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancel" onclick="closeProfileModal(event)">Cancel</button>
+                        <button type="submit" class="btn-submit">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal" onclick="closeSettingsModal(event)" style="display: none;">
+        <div class="address-modal" onclick="event.stopPropagation()" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Settings</h2>
+            </div>
+            <div class="modal-body">
+                <p style="color: #64748b; text-align: center; padding: 2rem 0;">Settings page coming soon...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeSettingsModal(event)">Close</button>
             </div>
         </div>
     </div>
@@ -3224,6 +3327,42 @@
             } else {
                 formGroup.classList.add('error');
             }
+        }
+        
+        // Validate form (generic function for both address and profile forms)
+        function validateForm() {
+            const form = event.target.closest('form');
+            if (!form) return false;
+            
+            const fields = form.querySelectorAll('input[required], select[required]');
+            let isValid = true;
+            
+            fields.forEach(field => {
+                validateField(field);
+                if (!field.checkValidity()) {
+                    isValid = false;
+                }
+            });
+            
+            // Special validation for profile form passwords
+            if (form.id === 'profileForm') {
+                const password = document.getElementById('profilePassword').value;
+                const confirmPassword = document.getElementById('profileConfirmPassword').value;
+                
+                if (password && password.length < 8) {
+                    isValid = false;
+                    const passwordGroup = document.getElementById('profilePassword').closest('.form-group');
+                    passwordGroup.classList.add('error');
+                }
+                
+                if (password && password !== confirmPassword) {
+                    isValid = false;
+                    const confirmPasswordGroup = document.getElementById('profileConfirmPassword').closest('.form-group');
+                    confirmPasswordGroup.classList.add('error');
+                }
+            }
+            
+            return isValid;
         }
         
         // Add event listeners to clear errors on input
