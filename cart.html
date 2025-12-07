@@ -2067,6 +2067,70 @@
                 if (itemCountElement) {
                     itemCountElement.textContent = totalItems === 1 ? '1 item' : totalItems === 0 ? '0 items' : `${totalItems} items`;
                 }
+                
+                // Pre-render cart items immediately to prevent layout shift
+                const cartItemsList = document.getElementById('cartItemsList');
+                const emptyCart = document.getElementById('emptyCart');
+                const paginationContainer = document.getElementById('paginationContainer');
+                
+                if (cartItemsList && cart.length > 0) {
+                    // Product icons mapping (needed for pre-render)
+                    const productIcons = {
+                        1: 'fa-fill-drip',
+                        2: 'fa-tint',
+                        3: 'fa-wine-bottle',
+                        4: 'fa-wine-bottle',
+                        5: 'fa-hand-holding-water'
+                    };
+                    
+                    const itemsPerPage = 3;
+                    const startIndex = 0;
+                    const endIndex = Math.min(itemsPerPage, cart.length);
+                    const currentItems = cart.slice(startIndex, endIndex);
+                    
+                    cartItemsList.innerHTML = currentItems.map((item, localIndex) => {
+                        const actualIndex = startIndex + localIndex;
+                        const subtotal = item.price * item.quantity;
+                        const icon = productIcons[item.id] || 'fa-tint';
+                        
+                        return `
+                            <div class="cart-item" data-item-id="${item.id}" data-cart-index="${actualIndex}">
+                                <div class="item-checkbox">
+                                    <input type="checkbox" class="item-checkbox-input" checked onchange="updateSummary()">
+                                </div>
+                                <div class="item-image">
+                                    <i class="fas ${icon}"></i>
+                                </div>
+                                <div class="item-details">
+                                    <div class="item-name">${item.name}</div>
+                                    <div class="item-price">₱${item.price.toFixed(2)} per unit</div>
+                                </div>
+                                <div class="item-quantity">
+                                    <div class="quantity-controls">
+                                        <button type="button" class="quantity-btn decrease" onclick="updateQuantity(${item.id}, -1)">−</button>
+                                        <input type="number" class="quantity-input" id="qty-cart-${item.id}" value="${item.quantity}" min="1" onchange="updateQuantityInput(${item.id})">
+                                        <button type="button" class="quantity-btn increase" onclick="updateQuantity(${item.id}, 1)">+</button>
+                                    </div>
+                                </div>
+                                <div class="item-subtotal" id="subtotal-${item.id}">
+                                    ₱${subtotal.toFixed(2)}
+                                </div>
+                                <button class="item-remove" onclick="removeItem(${item.id})" title="Remove item">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    if (emptyCart) emptyCart.style.display = 'none';
+                    if (paginationContainer && cart.length > itemsPerPage) {
+                        paginationContainer.style.display = 'block';
+                    }
+                } else if (cartItemsList && cart.length === 0) {
+                    cartItemsList.innerHTML = '';
+                    if (emptyCart) emptyCart.style.display = 'block';
+                    if (paginationContainer) paginationContainer.style.display = 'none';
+                }
             } catch(e) {
                 console.error('Error preloading cart:', e);
             }
@@ -2091,33 +2155,31 @@
             const cartItemsList = document.getElementById('cartItemsList');
             const emptyCart = document.getElementById('emptyCart');
             const itemCount = document.getElementById('itemCount');
-            
-            // Update cart count immediately to prevent layout shift
-            updateCartCount();
             const checkoutBtn = document.getElementById('checkoutBtn');
             
             // Update cart count in navbar
             updateCartCount();
             
             if (cart.length === 0) {
-                cartItemsList.innerHTML = '';
-                emptyCart.style.display = 'block';
-                document.getElementById('paginationContainer').style.display = 'none';
+                if (cartItemsList) cartItemsList.innerHTML = '';
+                if (emptyCart) emptyCart.style.display = 'block';
+                const paginationContainer = document.getElementById('paginationContainer');
+                if (paginationContainer) paginationContainer.style.display = 'none';
                 const itemCountBadge = document.getElementById('itemCount');
                 if (itemCountBadge) {
                     itemCountBadge.textContent = '0 items';
                 }
-                checkoutBtn.disabled = true;
+                if (checkoutBtn) checkoutBtn.disabled = true;
                 updateSummary();
                 return;
             }
             
-            emptyCart.style.display = 'none';
+            if (emptyCart) emptyCart.style.display = 'none';
             const itemCountBadge = document.getElementById('itemCount');
             if (itemCountBadge) {
                 itemCountBadge.textContent = `${cart.length} ${cart.length === 1 ? 'item' : 'items'}`;
             }
-            updateCheckoutButton(); // Check both cart items and address
+            if (checkoutBtn) updateCheckoutButton(); // Check both cart items and address
             
             // Render pagination
             renderPagination(cart.length);
