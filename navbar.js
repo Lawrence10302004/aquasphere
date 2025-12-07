@@ -122,6 +122,9 @@ function updateCartCount() {
     }
 }
 
+// Make updateCartCount available globally so pages can call it
+window.updateCartCount = updateCartCount;
+
 // Load navbar when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', loadNavbar);
