@@ -2729,11 +2729,22 @@
                 return;
             }
             
+            let alertClass = 'alert-success';
+            let iconClass = 'fa-check-circle';
+            
+            if (type === 'error' || type === 'danger') {
+                alertClass = 'alert-danger';
+                iconClass = 'fa-exclamation-circle';
+            } else if (type === 'warning') {
+                alertClass = 'alert-warning';
+                iconClass = 'fa-exclamation-triangle';
+            }
+            
             const notification = document.createElement('div');
-            notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'}`;
+            notification.className = `alert ${alertClass}`;
             notification.style.cssText = 'position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);';
             notification.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+                <i class="fas ${iconClass} me-2"></i>
                 ${message}
             `;
             document.body.appendChild(notification);
@@ -3299,8 +3310,17 @@
                 function(position) {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
+                    const accuracy = position.coords.accuracy; // Accuracy in meters
                     
                     console.log('Location retrieved:', lat, lng);
+                    console.log('Location accuracy:', accuracy, 'meters');
+                    
+                    // Check if accuracy is reasonable (within 1000 meters / 1km)
+                    if (accuracy > 1000) {
+                        console.warn('Location accuracy is low:', accuracy, 'meters. This may not be your exact location.');
+                        // Still use it, but warn the user
+                        showNotification('Location accuracy is limited. The marker may not be exactly at your location. You can drag it to adjust.', 'warning');
+                    }
                     
                     // Ensure map is initialized
                     if (!mapInitialized || !map) {
@@ -3342,9 +3362,9 @@
                     showNotification(errorMsg, 'error');
                 },
                 {
-                    enableHighAccuracy: true,
-                    timeout: 20000, // Increased to 20 seconds for mobile devices
-                    maximumAge: 60000 // Accept cached location if less than 1 minute old
+                    enableHighAccuracy: true, // Request high accuracy GPS
+                    timeout: 30000, // Increased to 30 seconds to allow GPS to get accurate fix
+                    maximumAge: 0 // Force fresh location, don't use cached data
                 }
             );
         }
