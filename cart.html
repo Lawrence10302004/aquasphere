@@ -462,6 +462,14 @@
             padding: 0 !important;
             left: auto !important;
             bottom: auto !important;
+            transform: translateZ(0) !important;
+        }
+        
+        /* Prevent parent from creating containing block */
+        .col-lg-4:has(.cart-summary-wrapper) {
+            position: static !important;
+            transform: none !important;
+            will-change: auto !important;
         }
         
         /* Ensure body and html don't interfere */
@@ -1270,8 +1278,8 @@
         </div>
                 
                 <!-- Cart Summary -->
-                <div class="col-lg-4">
-                    <div class="cart-summary-wrapper">
+                <div class="col-lg-4" style="position: static; transform: none; will-change: auto;">
+                    <div class="cart-summary-wrapper" style="position: fixed !important; top: 100px !important; right: 1rem !important;">
                         <div class="cart-summary">
                             <h3 class="summary-title">Order Summary</h3>
                             
