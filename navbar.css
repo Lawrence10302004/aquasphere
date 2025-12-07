@@ -189,6 +189,9 @@ body {
     font-size: 0.7rem;
     font-weight: 700;
     box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+    min-width: 20px;
+    min-height: 20px;
+    box-sizing: border-box;
 }
 
 
