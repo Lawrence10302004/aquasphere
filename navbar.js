@@ -3,7 +3,7 @@
  * Loads the navbar HTML and initializes it
  */
 
-// Load navbar HTML
+// Load navbar HTML synchronously to prevent lag
 function loadNavbar() {
     const navbarContainer = document.getElementById('navbar-container');
     if (!navbarContainer) {
@@ -11,17 +11,31 @@ function loadNavbar() {
         return;
     }
     
-    fetch('navbar.html')
-        .then(response => response.text())
-        .then(html => {
-            navbarContainer.innerHTML = html;
+    // Use synchronous XMLHttpRequest for immediate loading (no lag)
+    try {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', 'navbar.html', false); // false = synchronous
+        xhr.send(null);
+        
+        if (xhr.status === 200) {
+            navbarContainer.innerHTML = xhr.responseText;
             
-            // Initialize navbar after it's loaded
+            // Initialize navbar immediately after loading
             initializeNavbar();
-        })
-        .catch(error => {
-            console.error('Error loading navbar:', error);
-        });
+        } else {
+            console.error('Failed to load navbar:', xhr.status);
+        }
+    } catch (error) {
+        console.error('Error loading navbar:', error);
+        // Fallback: try async fetch
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(html => {
+                navbarContainer.innerHTML = html;
+                initializeNavbar();
+            })
+            .catch(err => console.error('Fallback navbar load failed:', err));
+    }
 }
 
 // Initialize navbar functionality
@@ -125,10 +139,27 @@ function updateCartCount() {
 // Make updateCartCount available globally so pages can call it
 window.updateCartCount = updateCartCount;
 
-// Load navbar when DOM is ready
+// Load navbar immediately (before DOMContentLoaded to prevent lag)
+// This ensures navbar appears instantly without delay
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadNavbar);
+    // If still loading, wait for DOM but load immediately
+    document.addEventListener('DOMContentLoaded', function() {
+        loadNavbar();
+    });
+    // Also try to load immediately if container exists
+    if (document.getElementById('navbar-container')) {
+        loadNavbar();
+    }
 } else {
+    // DOM already loaded, load immediately
     loadNavbar();
 }
+
+// Also try loading immediately on script execution
+(function() {
+    const container = document.getElementById('navbar-container');
+    if (container && !container.innerHTML.trim()) {
+        loadNavbar();
+    }
+})();
 
