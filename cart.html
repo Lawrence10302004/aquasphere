@@ -2679,6 +2679,27 @@
                 document.querySelector('.label-btn[data-label="home"]').classList.add('active');
             }
             
+            // Add validation listeners
+            const form = document.getElementById('addressForm');
+            if (form) {
+                const fields = form.querySelectorAll('input, select');
+                fields.forEach(field => {
+                    // Remove existing listeners to avoid duplicates
+                    const newField = field.cloneNode(true);
+                    field.parentNode.replaceChild(newField, field);
+                    
+                    // Add new listeners
+                    newField.addEventListener('input', function() {
+                        if (this.checkValidity()) {
+                            validateField(this);
+                        }
+                    });
+                    newField.addEventListener('change', function() {
+                        validateField(this);
+                    });
+                });
+            }
+            
             // Show modal
             modal.classList.add('active');
             document.body.style.overflow = 'hidden'; // Prevent background scrolling
