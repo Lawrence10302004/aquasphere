@@ -1191,17 +1191,6 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="dashboard.html">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="cart.html" style="position: relative;">
-                            Cart
-                            <span class="cart-badge" id="cartCount">0</span>
-                        </a>
-                    </li>
-                </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="dashboard.html">
@@ -1209,9 +1198,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="cart.html" style="position: relative;">
+                        <a class="nav-link active" href="cart.html" style="position: relative;">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-badge" id="cartCount2">0</span>
+                            <span class="cart-badge" id="cartCount">0</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -1599,6 +1588,7 @@
             }
             
             localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount(); // Update navbar count immediately
             loadCart();
         }
         
@@ -1618,6 +1608,7 @@
             if (item) {
                 item.quantity = quantity;
                 localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount(); // Update navbar count immediately
                 loadCart();
             }
         }
@@ -1630,6 +1621,7 @@
             const filteredCart = cart.filter(item => item.id !== productId);
             
             localStorage.setItem('cart', JSON.stringify(filteredCart));
+            updateCartCount(); // Update navbar count immediately
             loadCart();
             showNotification('Item removed from cart', 'success');
         }
@@ -1677,7 +1669,16 @@
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('cartCount').textContent = cartCount;
+            const cartCountElement = document.getElementById('cartCount');
+            if (cartCountElement) {
+                cartCountElement.textContent = cartCount;
+                // Hide badge if count is 0
+                if (cartCount === 0) {
+                    cartCountElement.style.display = 'none';
+                } else {
+                    cartCountElement.style.display = 'flex';
+                }
+            }
         }
         
         // Proceed to checkout
