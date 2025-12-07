@@ -35,11 +35,14 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            min-height: 70px !important;
+            padding: 0.5rem 0 !important;
         }
         
         .navbar.scrolled {
-            padding: 0.5rem 0;
+            padding: 0.5rem 0 !important;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+            min-height: 70px !important;
         }
         
         .navbar-brand {
@@ -84,12 +87,18 @@
             color: #0369a1 !important;
         }
         
+        /* Icon sizing for navbar icons */
+        .nav-link i {
+            font-size: 1.3rem;
+            display: block;
+        }
+        
         /* Cart badge styling for cart page */
         .cart-badge {
             position: absolute;
             top: -5px;
             right: -5px;
-            background: #ef4444;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             color: white;
             border-radius: 50%;
             width: 20px;
@@ -100,7 +109,7 @@
             font-size: 0.7rem;
             font-weight: 700;
             border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
         }
         
         .cart-badge {
@@ -1866,11 +1875,26 @@
             }
         });
         
-        // Ensure navbar has consistent size on page load
+        // Ensure navbar has consistent size on page load and prevent shrinking
         document.addEventListener('DOMContentLoaded', function() {
             const navbar = document.querySelector('.navbar');
-            if (navbar && window.scrollY <= 50) {
-                navbar.classList.remove('scrolled');
+            if (navbar) {
+                // Force consistent height
+                navbar.style.minHeight = '70px';
+                navbar.style.padding = '0.5rem 0';
+                
+                if (window.scrollY <= 50) {
+                    navbar.classList.remove('scrolled');
+                }
+            }
+        });
+        
+        // Prevent navbar size changes during navigation
+        window.addEventListener('pageshow', function(event) {
+            const navbar = document.querySelector('.navbar');
+            if (navbar) {
+                navbar.style.minHeight = '70px';
+                navbar.style.padding = '0.5rem 0';
             }
         });
     </script>

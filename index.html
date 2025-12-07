@@ -36,11 +36,14 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            min-height: 70px !important;
+            padding: 0.5rem 0 !important;
         }
         
         .navbar.scrolled {
-            padding: 0.5rem 0;
+            padding: 0.5rem 0 !important;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+            min-height: 70px !important;
         }
         
         .navbar-brand {
@@ -748,13 +751,36 @@
             offset: 100
         });
         
-        // Navbar scroll effect
+        // Navbar scroll effect - ensure consistent sizing
         window.addEventListener('scroll', function() {
             const navbar = document.querySelector('.navbar');
             if (window.scrollY > 50) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Ensure navbar has consistent size on page load and prevent shrinking
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.querySelector('.navbar');
+            if (navbar) {
+                // Force consistent height
+                navbar.style.minHeight = '70px';
+                navbar.style.padding = '0.5rem 0';
+                
+                if (window.scrollY <= 50) {
+                    navbar.classList.remove('scrolled');
+                }
+            }
+        });
+        
+        // Prevent navbar size changes during navigation
+        window.addEventListener('pageshow', function(event) {
+            const navbar = document.querySelector('.navbar');
+            if (navbar) {
+                navbar.style.minHeight = '70px';
+                navbar.style.padding = '0.5rem 0';
             }
         });
         
