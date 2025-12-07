@@ -167,8 +167,6 @@
             border-radius: 50%;
             width: 20px;
             height: 20px;
-            min-width: 20px;
-            min-height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -176,8 +174,6 @@
             font-weight: 700;
             border: 2px solid white;
             box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
-            /* Prevent layout shift - always reserve space */
-            box-sizing: border-box;
         }
         
         .navbar-toggler {
@@ -2067,70 +2063,6 @@
                 if (itemCountElement) {
                     itemCountElement.textContent = totalItems === 1 ? '1 item' : totalItems === 0 ? '0 items' : `${totalItems} items`;
                 }
-                
-                // Pre-render cart items immediately to prevent layout shift
-                const cartItemsList = document.getElementById('cartItemsList');
-                const emptyCart = document.getElementById('emptyCart');
-                const paginationContainer = document.getElementById('paginationContainer');
-                
-                if (cartItemsList && cart.length > 0) {
-                    // Product icons mapping (needed for pre-render)
-                    const productIcons = {
-                        1: 'fa-fill-drip',
-                        2: 'fa-tint',
-                        3: 'fa-wine-bottle',
-                        4: 'fa-wine-bottle',
-                        5: 'fa-hand-holding-water'
-                    };
-                    
-                    const itemsPerPage = 3;
-                    const startIndex = 0;
-                    const endIndex = Math.min(itemsPerPage, cart.length);
-                    const currentItems = cart.slice(startIndex, endIndex);
-                    
-                    cartItemsList.innerHTML = currentItems.map((item, localIndex) => {
-                        const actualIndex = startIndex + localIndex;
-                        const subtotal = item.price * item.quantity;
-                        const icon = productIcons[item.id] || 'fa-tint';
-                        
-                        return `
-                            <div class="cart-item" data-item-id="${item.id}" data-cart-index="${actualIndex}">
-                                <div class="item-checkbox">
-                                    <input type="checkbox" class="item-checkbox-input" checked onchange="updateSummary()">
-                                </div>
-                                <div class="item-image">
-                                    <i class="fas ${icon}"></i>
-                                </div>
-                                <div class="item-details">
-                                    <div class="item-name">${item.name}</div>
-                                    <div class="item-price">₱${item.price.toFixed(2)} per unit</div>
-                                </div>
-                                <div class="item-quantity">
-                                    <div class="quantity-controls">
-                                        <button type="button" class="quantity-btn decrease" onclick="updateQuantity(${item.id}, -1)">−</button>
-                                        <input type="number" class="quantity-input" id="qty-cart-${item.id}" value="${item.quantity}" min="1" onchange="updateQuantityInput(${item.id})">
-                                        <button type="button" class="quantity-btn increase" onclick="updateQuantity(${item.id}, 1)">+</button>
-                                    </div>
-                                </div>
-                                <div class="item-subtotal" id="subtotal-${item.id}">
-                                    ₱${subtotal.toFixed(2)}
-                                </div>
-                                <button class="item-remove" onclick="removeItem(${item.id})" title="Remove item">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        `;
-                    }).join('');
-                    
-                    if (emptyCart) emptyCart.style.display = 'none';
-                    if (paginationContainer && cart.length > itemsPerPage) {
-                        paginationContainer.style.display = 'block';
-                    }
-                } else if (cartItemsList && cart.length === 0) {
-                    cartItemsList.innerHTML = '';
-                    if (emptyCart) emptyCart.style.display = 'block';
-                    if (paginationContainer) paginationContainer.style.display = 'none';
-                }
             } catch(e) {
                 console.error('Error preloading cart:', e);
             }
@@ -2161,25 +2093,24 @@
             updateCartCount();
             
             if (cart.length === 0) {
-                if (cartItemsList) cartItemsList.innerHTML = '';
-                if (emptyCart) emptyCart.style.display = 'block';
-                const paginationContainer = document.getElementById('paginationContainer');
-                if (paginationContainer) paginationContainer.style.display = 'none';
+                cartItemsList.innerHTML = '';
+                emptyCart.style.display = 'block';
+                document.getElementById('paginationContainer').style.display = 'none';
                 const itemCountBadge = document.getElementById('itemCount');
                 if (itemCountBadge) {
                     itemCountBadge.textContent = '0 items';
                 }
-                if (checkoutBtn) checkoutBtn.disabled = true;
+                checkoutBtn.disabled = true;
                 updateSummary();
                 return;
             }
             
-            if (emptyCart) emptyCart.style.display = 'none';
+            emptyCart.style.display = 'none';
             const itemCountBadge = document.getElementById('itemCount');
             if (itemCountBadge) {
                 itemCountBadge.textContent = `${cart.length} ${cart.length === 1 ? 'item' : 'items'}`;
             }
-            if (checkoutBtn) updateCheckoutButton(); // Check both cart items and address
+            updateCheckoutButton(); // Check both cart items and address
             
             // Render pagination
             renderPagination(cart.length);
@@ -2425,19 +2356,16 @@
         // Update cart count in navbar
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const cartCount = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+            const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
             const cartCountElement = document.getElementById('cartCount');
             if (cartCountElement) {
-                // Use requestAnimationFrame to prevent layout shift
-                requestAnimationFrame(() => {
-                    cartCountElement.textContent = cartCount;
-                    // Hide badge if count is 0
-                    if (cartCount === 0) {
-                        cartCountElement.style.display = 'none';
-                    } else {
-                        cartCountElement.style.display = 'flex';
-                    }
-                });
+                cartCountElement.textContent = cartCount;
+                // Hide badge if count is 0
+                if (cartCount === 0) {
+                    cartCountElement.style.display = 'none';
+                } else {
+                    cartCountElement.style.display = 'flex';
+                }
             }
         }
         
