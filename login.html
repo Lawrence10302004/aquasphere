@@ -918,7 +918,6 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Error stack:', error.stack);
                     // Show error messages
                     const authError = document.getElementById('auth-error');
                     const usernameField = document.getElementById('username');
@@ -1286,7 +1285,7 @@
                             document.getElementById('newPassword-error').style.display = 'block';
                         }
                     } catch (error) {
-                        console.error('Reset password error:', error);
+                        // Removed console.error('Reset password error:', error);
                         let errorMessage = 'An error occurred. Please try again.';
                         if (error.message) {
                             errorMessage = error.message;
@@ -1455,7 +1454,7 @@
                             document.getElementById('otp-error').style.display = 'block';
                         }
                     } catch (error) {
-                        console.error('Error:', error);
+                        // Removed console.error('Error:', error);
                         const otpError = document.getElementById('otp-error');
                         if (otpError) {
                             otpError.textContent = 'An error occurred. Please try again.';
@@ -1498,7 +1497,7 @@
                         createFeedbackContainer('Failed to resend code. Please try again.');
                     }
                 } catch (error) {
-                    console.error('Error:', error);
+                    // Removed console.error('Error:', error);
                     createFeedbackContainer('An error occurred. Please try again.');
                 } finally {
                     resendLink.style.pointerEvents = 'auto';
@@ -1828,12 +1827,12 @@
         </div>
     </div>
                             const errorMessage = data.error || data.message || 'Failed to reset password. Please try again.';
-                            console.error('Reset password error:', errorMessage, data);
+                            // Removed console.error('Reset password error:', errorMessage, data);
                             document.getElementById('newPassword-error').textContent = errorMessage;
                             document.getElementById('newPassword-error').style.display = 'block';
                         }
                     } catch (error) {
-                        console.error('Reset password error:', error);
+                        // Removed console.error('Reset password error:', error);
                         let errorMessage = 'An error occurred. Please try again.';
                         if (error.message) {
                             errorMessage = error.message;
@@ -2002,7 +2001,7 @@
                             document.getElementById('otp-error').style.display = 'block';
                         }
                     } catch (error) {
-                        console.error('Error:', error);
+                        // Removed console.error('Error:', error);
                         const otpError = document.getElementById('otp-error');
                         if (otpError) {
                             otpError.textContent = 'An error occurred. Please try again.';
