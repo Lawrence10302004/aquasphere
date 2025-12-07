@@ -676,6 +676,77 @@
             margin-top: 0.75rem;
         }
         
+        .address-location-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e2e8f0;
+        }
+        
+        .address-coordinates {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .coordinates-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+        
+        .coordinates-label i {
+            color: #0ea5e9;
+        }
+        
+        .coordinates-display {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .coordinate-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .coordinate-label {
+            font-weight: 600;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        .coordinate-value {
+            font-family: 'Courier New', monospace;
+            color: #0369a1;
+            font-weight: 600;
+            font-size: 0.95rem;
+            background: #f0f9ff;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .address-map-container {
+            width: 100%;
+            height: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 1rem;
+        }
+        
+        .address-map {
+            width: 100%;
+            height: 100%;
+        }
+        
         .address-actions {
             display: flex;
             flex-direction: column;
@@ -1579,6 +1650,22 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
+        .map-container.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10000;
+            border-radius: 0;
+            border: none;
+        }
+        
+        .map-container.fullscreen .map-controls {
+            top: 20px;
+            right: 20px;
+        }
+        
         .map-container #map {
             width: 100%;
             height: 100%;
@@ -2022,6 +2109,30 @@
                                         </div>
                                     </div>
                                     <div class="address-text" id="addressText"></div>
+                                    
+                                    <!-- Location Coordinates and Map Section -->
+                                    <div class="address-location-section" id="addressLocationSection" style="display: none;">
+                                        <div class="address-coordinates">
+                                            <div class="coordinates-label">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                                <span>Location Coordinates</span>
+                                            </div>
+                                            <div class="coordinates-display">
+                                                <div class="coordinate-item">
+                                                    <span class="coordinate-label">Latitude:</span>
+                                                    <span class="coordinate-value" id="displayLatitude"></span>
+                                                </div>
+                                                <div class="coordinate-item">
+                                                    <span class="coordinate-label">Longitude:</span>
+                                                    <span class="coordinate-value" id="displayLongitude"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="address-map-container">
+                                            <div id="addressMap" class="address-map"></div>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="address-buttons" style="margin-top: 1rem; display: flex; justify-content: flex-end; gap: 0.5rem;">
                                         <button class="btn-change-address" onclick="openAddressModal()">Change</button>
                                         <button class="btn-delete-address" onclick="deleteAddress()" title="Delete address">
@@ -2115,6 +2226,10 @@
                                 <button type="button" class="btn-map-control" onclick="getCurrentLocation()" title="Use my current location">
                                     <i class="fas fa-crosshairs"></i>
                                     My Location
+                                </button>
+                                <button type="button" class="btn-map-control" onclick="toggleMapFullscreen()" title="Toggle fullscreen">
+                                    <i class="fas fa-expand" id="fullscreenIcon"></i>
+                                    Fullscreen
                                 </button>
                                 <button type="button" class="btn-map-control" onclick="hideMap()" title="Hide map">
                                     <i class="fas fa-times"></i>
@@ -2937,6 +3052,7 @@
             const address = JSON.parse(localStorage.getItem('deliveryAddress'));
             const emptyAddress = document.getElementById('emptyAddress');
             const addressDisplay = document.getElementById('addressDisplay');
+            const addressLocationSection = document.getElementById('addressLocationSection');
             const checkoutBtn = document.getElementById('checkoutBtn');
             
             if (address) {
@@ -2957,6 +3073,31 @@
                 }
                 document.getElementById('addressText').textContent = locationText.trim();
                 
+                // Display coordinates and map if available
+                if (address.latitude && address.longitude) {
+                    const lat = parseFloat(address.latitude);
+                    const lng = parseFloat(address.longitude);
+                    
+                    // Show location section
+                    if (addressLocationSection) {
+                        addressLocationSection.style.display = 'block';
+                    }
+                    
+                    // Display coordinates
+                    document.getElementById('displayLatitude').textContent = lat.toFixed(6);
+                    document.getElementById('displayLongitude').textContent = lng.toFixed(6);
+                    
+                    // Initialize map (wait a bit for DOM to be ready)
+                    setTimeout(() => {
+                        initAddressMap(lat, lng);
+                    }, 300);
+                } else {
+                    // Hide location section if no coordinates
+                    if (addressLocationSection) {
+                        addressLocationSection.style.display = 'none';
+                    }
+                }
+                
                 if (address.isDefault) {
                     document.getElementById('defaultBadge').style.display = 'block';
                 } else {
@@ -2968,6 +3109,9 @@
             } else {
                 emptyAddress.style.display = 'block';
                 addressDisplay.style.display = 'none';
+                if (addressLocationSection) {
+                    addressLocationSection.style.display = 'none';
+                }
                 // Disable checkout button if no address
                 if (checkoutBtn) {
                     checkoutBtn.disabled = true;
@@ -3110,6 +3254,8 @@
         let marker = null;
         let mapInitialized = false;
         let popup = null;
+        let addressMap = null;
+        let addressMarker = null;
         
         // Initialize map
         function initMap() {
@@ -3538,7 +3684,103 @@
             const mapContainer = document.getElementById('mapContainer');
             
             if (mapPlaceholder) mapPlaceholder.style.display = 'flex';
-            if (mapContainer) mapContainer.style.display = 'none';
+            if (mapContainer) {
+                mapContainer.style.display = 'none';
+                mapContainer.classList.remove('fullscreen');
+            }
+        }
+        
+        // Toggle map fullscreen
+        function toggleMapFullscreen() {
+            const mapContainer = document.getElementById('mapContainer');
+            const fullscreenIcon = document.getElementById('fullscreenIcon');
+            
+            if (!mapContainer) return;
+            
+            if (mapContainer.classList.contains('fullscreen')) {
+                // Exit fullscreen
+                mapContainer.classList.remove('fullscreen');
+                if (fullscreenIcon) {
+                    fullscreenIcon.classList.remove('fa-compress');
+                    fullscreenIcon.classList.add('fa-expand');
+                }
+                // Trigger map resize
+                if (map) {
+                    setTimeout(() => {
+                        map.invalidateSize();
+                    }, 100);
+                }
+            } else {
+                // Enter fullscreen
+                mapContainer.classList.add('fullscreen');
+                if (fullscreenIcon) {
+                    fullscreenIcon.classList.remove('fa-expand');
+                    fullscreenIcon.classList.add('fa-compress');
+                }
+                // Trigger map resize
+                if (map) {
+                    setTimeout(() => {
+                        map.invalidateSize();
+                    }, 100);
+                }
+            }
+        }
+        
+        // Initialize address map (for display in delivery address section)
+        function initAddressMap(lat, lng) {
+            const addressMapDiv = document.getElementById('addressMap');
+            if (!addressMapDiv || !isMapReady()) return;
+            
+            // Remove existing map if any
+            if (addressMap) {
+                addressMap.remove();
+                addressMap = null;
+                addressMarker = null;
+            }
+            
+            try {
+                // Initialize Leaflet Map
+                addressMap = L.map(addressMapDiv, {
+                    center: [lat, lng],
+                    zoom: 16,
+                    zoomControl: true
+                });
+                
+                // Add OpenStreetMap tile layer
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    maxZoom: 19
+                }).addTo(addressMap);
+                
+                // Custom marker icon (blue to match theme)
+                const customIcon = L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                });
+                
+                // Add marker
+                addressMarker = L.marker([lat, lng], {
+                    icon: customIcon,
+                    draggable: false
+                }).addTo(addressMap);
+                
+                // Add popup
+                const addressPopup = L.popup().setContent('<div style="padding: 8px;"><strong>Your delivery location</strong></div>');
+                addressMarker.bindPopup(addressPopup).openPopup();
+                
+                // Trigger resize to ensure map renders correctly
+                setTimeout(() => {
+                    if (addressMap) {
+                        addressMap.invalidateSize();
+                    }
+                }, 200);
+            } catch(error) {
+                console.error('Error initializing address map:', error);
+            }
         }
         
         function closeAddressModal(event) {
