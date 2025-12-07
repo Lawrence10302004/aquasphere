@@ -2172,19 +2172,38 @@
                         </div>
                     </div>
                     
+                    <div class="form-row" style="margin-top: 1rem;">
+                        <div class="form-group full-width">
+                            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem; font-style: italic;">
+                                Leave these fields blank if you don't want to change your password.
+                            </p>
+                        </div>
+                    </div>
+                    
                     <div class="form-row">
                         <div class="form-group">
                             <label for="profilePassword">Password</label>
                             <div style="position: relative;">
-                                <input type="password" id="profilePassword" name="password" placeholder="Choose a password (min. 8 ch)" autocomplete="off" minlength="8">
+                                <input type="password" id="profilePassword" name="password" placeholder="Enter your current password" autocomplete="off" minlength="8">
                                 <i class="fas fa-eye" onclick="togglePasswordVisibility('profilePassword', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b;"></i>
                             </div>
                             <div class="error-message">Password must be at least 8 characters</div>
                         </div>
                         <div class="form-group">
-                            <label for="profileConfirmPassword">Confirm Password</label>
+                            <label for="profileNewPassword">New Password</label>
                             <div style="position: relative;">
-                                <input type="password" id="profileConfirmPassword" name="confirmPassword" placeholder="Confirm your password" autocomplete="off" minlength="8">
+                                <input type="password" id="profileNewPassword" name="newPassword" placeholder="Enter your new password" autocomplete="off" minlength="8">
+                                <i class="fas fa-eye" onclick="togglePasswordVisibility('profileNewPassword', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b;"></i>
+                            </div>
+                            <div class="error-message">Password must be at least 8 characters</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="profileConfirmPassword">Confirm New Password</label>
+                            <div style="position: relative;">
+                                <input type="password" id="profileConfirmPassword" name="confirmPassword" placeholder="Confirm your new password" autocomplete="off" minlength="8">
                                 <i class="fas fa-eye" onclick="togglePasswordVisibility('profileConfirmPassword', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b;"></i>
                             </div>
                             <div class="error-message">Passwords do not match</div>
@@ -3542,7 +3561,10 @@
         
         // Load user data
         function loadUserData() {
-            const userData = JSON.parse(localStorage.getItem('userData')) || {};
+            // Try to get logged-in user data first, then fallback to userData
+            const userData = JSON.parse(localStorage.getItem('loggedInUser')) || 
+                           JSON.parse(localStorage.getItem('userData')) || 
+                           JSON.parse(sessionStorage.getItem('userData')) || {};
             const usernameDisplay = document.getElementById('usernameDisplay');
             if (usernameDisplay) {
                 usernameDisplay.textContent = userData.username || 'User';
@@ -3554,16 +3576,29 @@
             const modal = document.getElementById('profileModal');
             if (!modal) return;
             
-            const userData = JSON.parse(localStorage.getItem('userData')) || {};
+            // Try to get logged-in user data first, then fallback to userData
+            let userData = JSON.parse(localStorage.getItem('loggedInUser')) || 
+                          JSON.parse(localStorage.getItem('userData')) || 
+                          JSON.parse(sessionStorage.getItem('userData')) || {};
             
             // Populate form with existing user data
             document.getElementById('profileUsername').value = userData.username || '';
             document.getElementById('profileEmail').value = userData.email || '';
-            document.getElementById('profileFirstName').value = userData.firstName || '';
-            document.getElementById('profileLastName').value = userData.lastName || '';
+            document.getElementById('profileFirstName').value = userData.firstName || userData.first_name || '';
+            document.getElementById('profileLastName').value = userData.lastName || userData.last_name || '';
             document.getElementById('profileGender').value = userData.gender || '';
-            document.getElementById('profileBirthday').value = userData.birthday || '';
+            // Handle date format conversion if needed
+            let birthday = userData.birthday || userData.date_of_birth || '';
+            if (birthday && birthday.includes('/')) {
+                // Convert dd/mm/yyyy to yyyy-mm-dd for date input
+                const parts = birthday.split('/');
+                if (parts.length === 3) {
+                    birthday = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                }
+            }
+            document.getElementById('profileBirthday').value = birthday;
             document.getElementById('profilePassword').value = '';
+            document.getElementById('profileNewPassword').value = '';
             document.getElementById('profileConfirmPassword').value = '';
             
             modal.style.display = 'flex';
