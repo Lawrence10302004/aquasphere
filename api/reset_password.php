@@ -62,14 +62,29 @@ try {
         exit;
     }
     
-    // Get user to check current password
-    $query = "SELECT id, password_hash FROM users WHERE id = ?";
-    $result = execute_sql($conn, $query, [$reset_data['user_id']]);
+    // Get user to check current password - use user_id if available, otherwise use email
+    $user = null;
+    if (!empty($reset_data['user_id'])) {
+        $query = "SELECT id, password_hash FROM users WHERE id = ?";
+        $result = execute_sql($conn, $query, [$reset_data['user_id']]);
+        
+        if ($GLOBALS['use_postgres']) {
+            $user = pg_fetch_assoc($result);
+        } else {
+            $user = $result->fetchArray(SQLITE3_ASSOC);
+        }
+    }
     
-    if ($GLOBALS['use_postgres']) {
-        $user = pg_fetch_assoc($result);
-    } else {
-        $user = $result->fetchArray(SQLITE3_ASSOC);
+    // Fallback to email if user_id not found or not available
+    if (!$user && !empty($email)) {
+        $query = "SELECT id, password_hash FROM users WHERE email = ?";
+        $result = execute_sql($conn, $query, [$email]);
+        
+        if ($GLOBALS['use_postgres']) {
+            $user = pg_fetch_assoc($result);
+        } else {
+            $user = $result->fetchArray(SQLITE3_ASSOC);
+        }
     }
     
     if (!$user) {
@@ -118,9 +133,10 @@ try {
     exit;
     
 } catch (Exception $e) {
+    error_log("Password reset error: " . $e->getMessage());
     ob_clean();
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => 'An error occurred. Please try again.']);
+    echo json_encode(['success' => false, 'error' => 'An error occurred. Please try again.', 'debug' => $e->getMessage()]);
     ob_end_flush();
     exit;
 }
