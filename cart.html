@@ -33,6 +33,7 @@
             min-height: 100vh;
             overflow-x: hidden;
             overflow-y: auto;
+            /* Navbar padding is handled by navbar.css */
         }
         
         /* Main Content */
@@ -4527,42 +4528,7 @@
             }
         });
         
-        // Ensure navbar maintains fixed size and prevent layout shift
-        function fixNavbarSize() {
-            const navbar = document.querySelector('.navbar');
-            if (navbar) {
-                // Set all size properties immediately
-                navbar.style.setProperty('height', '70px', 'important');
-                navbar.style.setProperty('min-height', '70px', 'important');
-                navbar.style.setProperty('max-height', '70px', 'important');
-                navbar.style.setProperty('padding', '0', 'important');
-                navbar.style.setProperty('line-height', '70px', 'important');
-                navbar.style.setProperty('position', 'fixed', 'important');
-                navbar.style.setProperty('top', '0', 'important');
-                navbar.style.setProperty('transition', 'none', 'important');
-            }
-            
-            // Also ensure body padding is set
-            document.body.style.setProperty('padding-top', '70px', 'important');
-        }
-        
-        // Fix navbar size immediately (before DOM is ready)
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', fixNavbarSize);
-        } else {
-            fixNavbarSize();
-        }
-        
-        // Also fix on all other events
-        window.addEventListener('load', fixNavbarSize);
-        window.addEventListener('pageshow', function(e) {
-            fixNavbarSize();
-            // Force reflow to prevent shake
-            void document.body.offsetHeight;
-        });
-        
-        // Fix immediately on script execution
-        fixNavbarSize();
+        // Navbar styling is handled by navbar.css - no JavaScript manipulation needed
     </script>
     
     <!-- Footer -->
