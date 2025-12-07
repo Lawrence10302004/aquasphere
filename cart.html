@@ -3628,14 +3628,47 @@
         
         // Load user data
         function loadUserData() {
-            // Try to get logged-in user data first, then fallback to userData
-            const userData = JSON.parse(localStorage.getItem('loggedInUser')) || 
-                           JSON.parse(localStorage.getItem('userData')) || 
-                           JSON.parse(sessionStorage.getItem('userData')) || {};
-            const usernameDisplay = document.getElementById('usernameDisplay');
-            if (usernameDisplay) {
-                usernameDisplay.textContent = userData.username || 'User';
-            }
+            // Try to fetch from server first, then fallback to localStorage
+            fetch('api/get_current_user.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch user data');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success && data.user) {
+                        const userData = data.user;
+                        // Save to localStorage
+                        localStorage.setItem('loggedInUser', JSON.stringify(userData));
+                        localStorage.setItem('userData', JSON.stringify(userData));
+                        
+                        const usernameDisplay = document.getElementById('usernameDisplay');
+                        if (usernameDisplay) {
+                            usernameDisplay.textContent = userData.username || 'User';
+                        }
+                    } else {
+                        // Fallback to localStorage
+                        const userData = JSON.parse(localStorage.getItem('loggedInUser')) || 
+                                       JSON.parse(localStorage.getItem('userData')) || 
+                                       JSON.parse(sessionStorage.getItem('userData')) || {};
+                        const usernameDisplay = document.getElementById('usernameDisplay');
+                        if (usernameDisplay) {
+                            usernameDisplay.textContent = userData.username || 'User';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading user data:', error);
+                    // Fallback to localStorage
+                    const userData = JSON.parse(localStorage.getItem('loggedInUser')) || 
+                                   JSON.parse(localStorage.getItem('userData')) || 
+                                   JSON.parse(sessionStorage.getItem('userData')) || {};
+                    const usernameDisplay = document.getElementById('usernameDisplay');
+                    if (usernameDisplay) {
+                        usernameDisplay.textContent = userData.username || 'User';
+                    }
+                });
         }
         
         // Open Profile Modal
@@ -3643,46 +3676,157 @@
             const modal = document.getElementById('profileModal');
             if (!modal) return;
             
-            // Try to get logged-in user data first, then fallback to userData
-            let userData = JSON.parse(localStorage.getItem('loggedInUser')) || 
-                          JSON.parse(localStorage.getItem('userData')) || 
-                          JSON.parse(sessionStorage.getItem('userData')) || {};
-            
-            // Populate form with existing user data
-            document.getElementById('profileUsername').value = userData.username || '';
-            document.getElementById('profileEmail').value = userData.email || '';
-            document.getElementById('profileFirstName').value = userData.firstName || userData.first_name || '';
-            document.getElementById('profileLastName').value = userData.lastName || userData.last_name || '';
-            document.getElementById('profileGender').value = userData.gender || '';
-            // Handle date format conversion if needed
-            let birthday = userData.birthday || userData.date_of_birth || '';
-            if (birthday && birthday.includes('/')) {
-                // Convert dd/mm/yyyy to yyyy-mm-dd for date input
-                const parts = birthday.split('/');
-                if (parts.length === 3) {
-                    birthday = `${parts[2]}-${parts[1]}-${parts[0]}`;
-                }
+            // Show loading state
+            const form = document.getElementById('profileForm');
+            if (form) {
+                form.style.opacity = '0.5';
+                form.style.pointerEvents = 'none';
             }
-            document.getElementById('profileBirthday').value = birthday;
-            document.getElementById('profilePassword').value = '';
-            document.getElementById('profileNewPassword').value = '';
-            document.getElementById('profileConfirmPassword').value = '';
             
-            // Set max date to today
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const dd = String(today.getDate()).padStart(2, '0');
-            document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
-            
-            // Add event listeners for real-time validation
-            setupProfileValidation();
-            
-            // Initial validation check
-            checkProfileRequiredFields();
-            
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+            // Fetch user data from server
+            fetch('api/get_current_user.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch user data');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success && data.user) {
+                        const userData = data.user;
+                        
+                        // Save to localStorage for future use
+                        localStorage.setItem('loggedInUser', JSON.stringify(userData));
+                        localStorage.setItem('userData', JSON.stringify(userData));
+                        
+                        // Populate form with user data
+                        document.getElementById('profileUsername').value = userData.username || '';
+                        document.getElementById('profileEmail').value = userData.email || '';
+                        document.getElementById('profileFirstName').value = userData.firstName || userData.first_name || '';
+                        document.getElementById('profileLastName').value = userData.lastName || userData.last_name || '';
+                        document.getElementById('profileGender').value = userData.gender || '';
+                        
+                        // Handle date format conversion if needed
+                        let birthday = userData.birthday || userData.date_of_birth || '';
+                        if (birthday && birthday.includes('/')) {
+                            // Convert dd/mm/yyyy to yyyy-mm-dd for date input
+                            const parts = birthday.split('/');
+                            if (parts.length === 3) {
+                                birthday = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                            }
+                        }
+                        document.getElementById('profileBirthday').value = birthday;
+                        document.getElementById('profilePassword').value = '';
+                        document.getElementById('profileNewPassword').value = '';
+                        document.getElementById('profileConfirmPassword').value = '';
+                        
+                        // Set max date to today
+                        const today = new Date();
+                        const yyyy = today.getFullYear();
+                        const mm = String(today.getMonth() + 1).padStart(2, '0');
+                        const dd = String(today.getDate()).padStart(2, '0');
+                        document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
+                        
+                        // Add event listeners for real-time validation
+                        setupProfileValidation();
+                        
+                        // Initial validation check
+                        checkProfileRequiredFields();
+                        
+                        // Hide loading state
+                        if (form) {
+                            form.style.opacity = '1';
+                            form.style.pointerEvents = 'auto';
+                        }
+                        
+                        modal.style.display = 'flex';
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        // Fallback to localStorage if server fetch fails
+                        let userData = JSON.parse(localStorage.getItem('loggedInUser')) || 
+                                      JSON.parse(localStorage.getItem('userData')) || 
+                                      JSON.parse(sessionStorage.getItem('userData')) || {};
+                        
+                        // Populate form with existing user data
+                        document.getElementById('profileUsername').value = userData.username || '';
+                        document.getElementById('profileEmail').value = userData.email || '';
+                        document.getElementById('profileFirstName').value = userData.firstName || userData.first_name || '';
+                        document.getElementById('profileLastName').value = userData.lastName || userData.last_name || '';
+                        document.getElementById('profileGender').value = userData.gender || '';
+                        
+                        let birthday = userData.birthday || userData.date_of_birth || '';
+                        if (birthday && birthday.includes('/')) {
+                            const parts = birthday.split('/');
+                            if (parts.length === 3) {
+                                birthday = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                            }
+                        }
+                        document.getElementById('profileBirthday').value = birthday;
+                        document.getElementById('profilePassword').value = '';
+                        document.getElementById('profileNewPassword').value = '';
+                        document.getElementById('profileConfirmPassword').value = '';
+                        
+                        const today = new Date();
+                        const yyyy = today.getFullYear();
+                        const mm = String(today.getMonth() + 1).padStart(2, '0');
+                        const dd = String(today.getDate()).padStart(2, '0');
+                        document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
+                        
+                        setupProfileValidation();
+                        checkProfileRequiredFields();
+                        
+                        if (form) {
+                            form.style.opacity = '1';
+                            form.style.pointerEvents = 'auto';
+                        }
+                        
+                        modal.style.display = 'flex';
+                        document.body.style.overflow = 'hidden';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                    
+                    // Fallback to localStorage
+                    let userData = JSON.parse(localStorage.getItem('loggedInUser')) || 
+                                  JSON.parse(localStorage.getItem('userData')) || 
+                                  JSON.parse(sessionStorage.getItem('userData')) || {};
+                    
+                    document.getElementById('profileUsername').value = userData.username || '';
+                    document.getElementById('profileEmail').value = userData.email || '';
+                    document.getElementById('profileFirstName').value = userData.firstName || userData.first_name || '';
+                    document.getElementById('profileLastName').value = userData.lastName || userData.last_name || '';
+                    document.getElementById('profileGender').value = userData.gender || '';
+                    
+                    let birthday = userData.birthday || userData.date_of_birth || '';
+                    if (birthday && birthday.includes('/')) {
+                        const parts = birthday.split('/');
+                        if (parts.length === 3) {
+                            birthday = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                        }
+                    }
+                    document.getElementById('profileBirthday').value = birthday;
+                    document.getElementById('profilePassword').value = '';
+                    document.getElementById('profileNewPassword').value = '';
+                    document.getElementById('profileConfirmPassword').value = '';
+                    
+                    const today = new Date();
+                    const yyyy = today.getFullYear();
+                    const mm = String(today.getMonth() + 1).padStart(2, '0');
+                    const dd = String(today.getDate()).padStart(2, '0');
+                    document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
+                    
+                    setupProfileValidation();
+                    checkProfileRequiredFields();
+                    
+                    if (form) {
+                        form.style.opacity = '1';
+                        form.style.pointerEvents = 'auto';
+                    }
+                    
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
         }
         
         // Setup Profile Validation Event Listeners
