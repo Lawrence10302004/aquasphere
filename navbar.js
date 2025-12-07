@@ -40,13 +40,7 @@ function loadNavbar() {
 
 // Initialize navbar functionality
 function initializeNavbar() {
-    // Navbar styling is handled by navbar.css - no need to force fixed height
-    const navbar = document.querySelector('.navbar');
-    if (navbar) {
-        // Only ensure it's fixed positioned (handled by CSS)
-        navbar.style.setProperty('position', 'fixed', 'important');
-        navbar.style.setProperty('top', '0', 'important');
-    }
+    // Navbar styling is handled by navbar.css - no JavaScript manipulation needed
     
     // Set active nav item based on current page
     const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
