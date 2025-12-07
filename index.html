@@ -430,6 +430,255 @@
                 font-size: 2rem;
             }
         }
+        
+        /* User Dropdown Styles */
+        .nav-item.dropdown .nav-link {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem;
+        }
+        
+        .nav-item.dropdown .nav-link i.fa-user-circle {
+            font-size: 1.3rem;
+            color: #0ea5e9;
+        }
+        
+        .nav-item.dropdown .nav-link #usernameDisplay {
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+        
+        .nav-item.dropdown .nav-link:hover #usernameDisplay {
+            color: #0ea5e9;
+        }
+        
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+        }
+        
+        .dropdown-item {
+            padding: 0.75rem 1.5rem;
+            color: #4a5568;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(14, 165, 233, 0.1);
+            color: #0ea5e9;
+        }
+        
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Logout Confirmation Modal */
+        .logout-confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .logout-confirm-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            max-width: 420px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+            animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: center;
+        }
+        
+        .logout-confirm-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%);
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        .logout-confirm-icon-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 2rem 1rem;
+            position: relative;
+        }
+        
+        .logout-confirm-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.3);
+            position: relative;
+            animation: iconFloat 2s ease-in-out infinite;
+        }
+        
+        .logout-confirm-icon::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            opacity: 0.2;
+            animation: iconPulseBlue 2s ease-in-out infinite;
+        }
+        
+        .logout-confirm-icon i {
+            font-size: 2.5rem;
+            color: #0ea5e9;
+            position: relative;
+            z-index: 1;
+            animation: iconBounce 0.6s ease;
+        }
+        
+        .logout-confirm-body {
+            padding: 1rem 2rem 1.5rem;
+            text-align: center;
+        }
+        
+        .logout-confirm-body h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .logout-confirm-body p {
+            font-size: 1rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .logout-confirm-footer {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem 2rem 2rem;
+            justify-content: center;
+        }
+        
+        .btn-logout-cancel,
+        .btn-logout-confirm {
+            padding: 12px 32px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            outline: none;
+            min-width: 120px;
+        }
+        
+        .btn-logout-cancel {
+            background: #f1f5f9;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .btn-logout-cancel:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+        }
+        
+        .btn-logout-confirm {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+        }
+        
+        .btn-logout-confirm:hover {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+        }
+        
+        .btn-logout-confirm:active {
+            transform: translateY(0);
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes modalScaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+        
+        @keyframes iconPulseBlue {
+            0%, 100% {
+                opacity: 0.2;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes iconBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
     </style>
 </head>
 <body>
@@ -458,12 +707,27 @@
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
+                <ul class="navbar-nav ms-auto" id="authNav">
+                    <!-- Login/Register buttons (shown when not logged in) -->
+                    <li class="nav-item" id="loginNavItem">
                         <a class="nav-link" href="login.html">Login</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="registerNavItem">
                         <a class="nav-link" href="register.html">Register</a>
+                    </li>
+                    <!-- User dropdown (shown when logged in) -->
+                    <li class="nav-item dropdown user-dropdown" id="userDropdownNavItem" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="usernameDisplay">User</span>
+                            <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="#" onclick="openProfileModal(); return false;"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="openSettingsModal(); return false;"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout(); return false;"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -798,6 +1062,141 @@
                 }
             });
         });
+        
+        // Check if user is logged in and update navbar
+        function checkLoginStatus() {
+            fetch('api/get_current_user.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Not logged in');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success && data.user) {
+                        // User is logged in - show user dropdown, hide login/register
+                        const loginNavItem = document.getElementById('loginNavItem');
+                        const registerNavItem = document.getElementById('registerNavItem');
+                        const userDropdownNavItem = document.getElementById('userDropdownNavItem');
+                        const usernameDisplay = document.getElementById('usernameDisplay');
+                        
+                        if (loginNavItem) loginNavItem.style.display = 'none';
+                        if (registerNavItem) registerNavItem.style.display = 'none';
+                        if (userDropdownNavItem) userDropdownNavItem.style.display = 'block';
+                        if (usernameDisplay) usernameDisplay.textContent = data.user.username || 'User';
+                        
+                        // Save to localStorage
+                        localStorage.setItem('loggedInUser', JSON.stringify(data.user));
+                        localStorage.setItem('userData', JSON.stringify(data.user));
+                    } else {
+                        // User is not logged in - show login/register, hide user dropdown
+                        const loginNavItem = document.getElementById('loginNavItem');
+                        const registerNavItem = document.getElementById('registerNavItem');
+                        const userDropdownNavItem = document.getElementById('userDropdownNavItem');
+                        
+                        if (loginNavItem) loginNavItem.style.display = 'block';
+                        if (registerNavItem) registerNavItem.style.display = 'block';
+                        if (userDropdownNavItem) userDropdownNavItem.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    // Not logged in - show login/register
+                    const loginNavItem = document.getElementById('loginNavItem');
+                    const registerNavItem = document.getElementById('registerNavItem');
+                    const userDropdownNavItem = document.getElementById('userDropdownNavItem');
+                    
+                    if (loginNavItem) loginNavItem.style.display = 'block';
+                    if (registerNavItem) registerNavItem.style.display = 'block';
+                    if (userDropdownNavItem) userDropdownNavItem.style.display = 'none';
+                });
+        }
+        
+        // Profile Modal - redirect to cart page
+        function openProfileModal() {
+            window.location.href = 'cart.html#profile';
+        }
+        
+        // Settings Modal - placeholder
+        function openSettingsModal() {
+            alert('Settings feature coming soon!');
+        }
+        
+        // Show Logout Confirmation Modal
+        function showLogoutConfirmModal() {
+            const modal = document.getElementById('logoutConfirmModal');
+            const confirmBtn = document.getElementById('logoutConfirmBtn');
+            const cancelBtn = document.getElementById('logoutCancelBtn');
+            
+            if (!modal) return;
+            
+            modal.style.display = 'flex';
+            
+            // Remove existing event listeners
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+            
+            // Add new event listeners
+            newConfirmBtn.addEventListener('click', function confirmHandler() {
+                modal.style.display = 'none';
+                performLogout();
+                newConfirmBtn.removeEventListener('click', confirmHandler);
+            });
+            
+            newCancelBtn.addEventListener('click', function cancelHandler() {
+                modal.style.display = 'none';
+                newCancelBtn.removeEventListener('click', cancelHandler);
+            });
+        }
+        
+        // Perform Logout
+        function performLogout() {
+            fetch('api/logout.php')
+                .then(response => response.json())
+                .then(data => {
+                    // Clear user session data
+                    localStorage.removeItem('loggedInUser');
+                    sessionStorage.removeItem('userData');
+                    
+                    // Reload page to update navbar
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Logout error:', error);
+                    // Still clear local data and reload
+                    localStorage.removeItem('loggedInUser');
+                    sessionStorage.removeItem('userData');
+                    window.location.reload();
+                });
+        }
+        
+        // Logout
+        function logout() {
+            showLogoutConfirmModal();
+        }
+        
+        // Check login status on page load
+        checkLoginStatus();
     </script>
+    
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutConfirmModal" class="logout-confirm-modal" style="display: none;">
+        <div class="logout-confirm-content">
+            <div class="logout-confirm-icon-wrapper">
+                <div class="logout-confirm-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+            </div>
+            <div class="logout-confirm-body">
+                <h3>Confirm Logout</h3>
+                <p id="logoutConfirmMessage">Are you sure you want to logout?</p>
+            </div>
+            <div class="logout-confirm-footer">
+                <button type="button" class="btn-logout-cancel" id="logoutCancelBtn">Cancel</button>
+                <button type="button" class="btn-logout-confirm" id="logoutConfirmBtn">Logout</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
