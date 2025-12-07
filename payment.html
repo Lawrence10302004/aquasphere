@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Method - AquaSphere</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Shared Navbar CSS -->
+    <link rel="stylesheet" href="navbar.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif !important;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+            flex: 1;
+        }
+        
+        /* Payment Container */
+        .payment-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .payment-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .payment-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #0369a1;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 8px rgba(3, 105, 161, 0.1);
+        }
+        
+        .payment-header p {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin: 0;
+        }
+        
+        /* Payment Card */
+        .payment-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
+            border-radius: 28px;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .payment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #0ea5e9, #0284c7, #06b6d4, #0891b2, #0ea5e9);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease infinite;
+            z-index: 1;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        .payment-card-header {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #06b6d4 100%);
+            padding: 2rem 2rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .payment-card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            animation: rotateGradient 15s linear infinite;
+        }
+        
+        @keyframes rotateGradient {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .payment-card-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+            margin: 0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .payment-card-header h2::before {
+            content: '💳';
+            font-size: 1.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .payment-card-body {
+            padding: 2rem;
+        }
+        
+        /* Payment Methods Grid */
+        .payment-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* Payment Method Card */
+        .payment-method-card {
+            background: white;
+            border: 3px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .payment-method-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, rgba(2, 132, 199, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .payment-method-card:hover {
+            border-color: #0ea5e9;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(14, 165, 233, 0.2);
+        }
+        
+        .payment-method-card:hover::before {
+            opacity: 1;
+        }
+        
+        .payment-method-card.selected {
+            border-color: #0ea5e9;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.25);
+        }
+        
+        .payment-method-card.selected::before {
+            opacity: 1;
+        }
+        
+        .payment-method-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f8f9fa;
+        }
+        
+        .payment-method-card.disabled:hover {
+            transform: none;
+            border-color: #e2e8f0;
+            box-shadow: none;
+        }
+        
+        .payment-method-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .payment-method-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: white;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+        
+        .payment-method-card.disabled .payment-method-icon {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+            box-shadow: 0 4px 12px rgba(148, 163, 184, 0.2);
+        }
+        
+        .payment-method-radio {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #cbd5e1;
+            border-radius: 50%;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method-card.selected .payment-method-radio {
+            border-color: #0ea5e9;
+            background: #0ea5e9;
+        }
+        
+        .payment-method-card.selected .payment-method-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .payment-method-card.disabled .payment-method-radio {
+            border-color: #cbd5e1;
+            background: #f1f5f9;
+        }
+        
+        .payment-method-info {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .payment-method-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .payment-method-card.disabled .payment-method-name {
+            color: #94a3b8;
+        }
+        
+        .payment-method-description {
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+        
+        .payment-method-card.disabled .payment-method-description {
+            color: #cbd5e1;
+        }
+        
+        .coming-soon-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            color: #64748b;
+            padding: 0.4rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Order Summary */
+        .order-summary {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .order-summary h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0369a1;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            font-size: 0.95rem;
+        }
+        
+        .summary-row:not(:last-child) {
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .summary-label {
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        .summary-value {
+            color: #0f172a;
+            font-weight: 600;
+        }
+        
+        .summary-row.total {
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid #e2e8f0;
+        }
+        
+        .summary-row.total .summary-label {
+            font-size: 1.1rem;
+            color: #0369a1;
+            font-weight: 700;
+        }
+        
+        .summary-row.total .summary-value {
+            font-size: 1.5rem;
+            color: #0ea5e9;
+            font-weight: 800;
+        }
+        
+        /* Action Buttons */
+        .payment-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+        }
+        
+        .btn-back {
+            background: white;
+            border: 2px solid #e2e8f0;
+            color: #64748b;
+            padding: 0.875rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-back:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            color: #475569;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-place-order {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border: none;
+            color: white;
+            padding: 0.875rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.3);
+        }
+        
+        .btn-place-order:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.4);
+        }
+        
+        .btn-place-order:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Footer Styles */
+        .footer {
+            background: #0369a1;
+            color: white;
+            padding: 20px 0 15px;
+            margin-top: auto;
+            width: 100%;
+        }
+        
+        .footer-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.7rem;
+        }
+        
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        
+        .footer-link:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        @media (max-width: 768px) {
+            .payment-header h1 {
+                font-size: 2rem;
+            }
+            
+            .payment-methods-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-actions {
+                flex-direction: column;
+            }
+            
+            .btn-back,
+            .btn-place-order {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar Container -->
+    <div id="navbar-container"></div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="payment-container">
+                <!-- Header -->
+                <div class="payment-header">
+                    <h1>Select Payment Method</h1>
+                    <p>Choose your preferred payment option to complete your order</p>
+                </div>
+                
+                <!-- Payment Card -->
+                <div class="payment-card">
+                    <div class="payment-card-header">
+                        <h2>Payment Options</h2>
+                    </div>
+                    <div class="payment-card-body">
+                        <div class="payment-methods-grid">
+                            <!-- Cash on Delivery -->
+                            <div class="payment-method-card" onclick="selectPaymentMethod('cod')" id="paymentMethodCod">
+                                <div class="payment-method-header">
+                                    <div class="payment-method-icon">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    </div>
+                                    <div class="payment-method-radio"></div>
+                                </div>
+                                <div class="payment-method-info">
+                                    <div class="payment-method-name">Cash on Delivery</div>
+                                    <div class="payment-method-description">
+                                        Pay with cash when your order arrives. No need for online payment.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- GCASH -->
+                            <div class="payment-method-card selected" onclick="selectPaymentMethod('gcash')" id="paymentMethodGcash">
+                                <div class="payment-method-header">
+                                    <div class="payment-method-icon" style="background: linear-gradient(135deg, #0070ba, #005ba1);">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <div class="payment-method-radio"></div>
+                                </div>
+                                <div class="payment-method-info">
+                                    <div class="payment-method-name">GCASH</div>
+                                    <div class="payment-method-description">
+                                        Pay securely using your GCASH wallet. Fast and convenient.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Maya (Coming Soon) -->
+                            <div class="payment-method-card disabled" id="paymentMethodMaya">
+                                <div class="payment-method-header">
+                                    <div class="payment-method-icon">
+                                        <i class="fas fa-wallet"></i>
+                                    </div>
+                                    <div class="payment-method-radio"></div>
+                                </div>
+                                <div class="payment-method-info">
+                                    <div class="payment-method-name">Maya</div>
+                                    <div class="payment-method-description">
+                                        Pay using your Maya wallet. Coming soon!
+                                    </div>
+                                    <span class="coming-soon-badge">Coming Soon</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Order Summary -->
+                        <div class="order-summary">
+                            <h3>Order Summary</h3>
+                            <div class="summary-row">
+                                <span class="summary-label">Subtotal</span>
+                                <span class="summary-value" id="orderSubtotal">₱0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Delivery Fee</span>
+                                <span class="summary-value" id="orderDeliveryFee">₱50.00</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span class="summary-label">Total</span>
+                                <span class="summary-value" id="orderTotal">₱0.00</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="payment-actions">
+                            <a href="cart.html" class="btn-back">
+                                <i class="fas fa-arrow-left"></i>
+                                Back to Cart
+                            </a>
+                            <button class="btn-place-order" id="placeOrderBtn" onclick="placeOrder()">
+                                <i class="fas fa-check-circle"></i>
+                                Place Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h4 class="footer-title" style="display: flex; align-items: center;">
+                        <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 40px; margin-right: 10px;">
+                        AquaSphere
+                    </h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.7;">
+                        Your trusted water delivery service. Fast delivery, clean quality water, and reliable service. 
+                        Everything you need for your hydration needs, all in one platform.
+                    </p>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <a href="dashboard.html" class="footer-link">Home</a>
+                    <a href="orders.html" class="footer-link">My Orders</a>
+                    <a href="profile.html" class="footer-link">Profile</a>
+                    <a href="cart.html" class="footer-link">Cart</a>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Features</h5>
+                    <a href="#" class="footer-link">Easy Ordering</a>
+                    <a href="#" class="footer-link">Delivery Tracking</a>
+                    <a href="#" class="footer-link">Payment Options</a>
+                    <a href="#" class="footer-link">Customer Support</a>
+                </div>
+                
+                <div class="col-lg-3 mb-4">
+                    <h5 class="footer-title">Connect With Us</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <p class="mt-1" style="color: rgba(255, 255, 255, 0.8);">
+                        <i class="fas fa-envelope me-2"></i>support@aquasphere.com
+                    </p>
+                </div>
+            </div>
+            
+            <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 1rem 0 0.8rem;">
+            
+            <div class="text-center" style="color: rgba(255, 255, 255, 0.8); font-size: 0.8rem;">
+                <p>&copy; 2024 AquaSphere. Made with ❤️ for clean water delivery. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Navbar JS -->
+    <script src="navbar.js"></script>
+    
+    <script>
+        let selectedPaymentMethod = 'gcash'; // Default to GCASH
+        
+        // Load order summary from checkout items
+        function loadOrderSummary() {
+            const checkoutItems = JSON.parse(localStorage.getItem('checkoutItems')) || [];
+            const deliveryAddress = JSON.parse(localStorage.getItem('deliveryAddress'));
+            
+            if (checkoutItems.length === 0) {
+                // Redirect back to cart if no items
+                window.location.href = 'cart.html';
+                return;
+            }
+            
+            // Calculate subtotal
+            let subtotal = 0;
+            checkoutItems.forEach(item => {
+                subtotal += item.price * item.quantity;
+            });
+            
+            const deliveryFee = subtotal > 0 ? 50 : 0;
+            const total = subtotal + deliveryFee;
+            
+            document.getElementById('orderSubtotal').textContent = `₱${subtotal.toFixed(2)}`;
+            document.getElementById('orderDeliveryFee').textContent = `₱${deliveryFee.toFixed(2)}`;
+            document.getElementById('orderTotal').textContent = `₱${total.toFixed(2)}`;
+        }
+        
+        // Select payment method
+        function selectPaymentMethod(method) {
+            // Don't allow selection of disabled methods
+            if (method === 'maya') {
+                return;
+            }
+            
+            selectedPaymentMethod = method;
+            
+            // Remove selected class from all cards
+            document.querySelectorAll('.payment-method-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked card
+            const selectedCard = document.getElementById(`paymentMethod${method.charAt(0).toUpperCase() + method.slice(1)}`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+            }
+        }
+        
+        // Place order
+        function placeOrder() {
+            const checkoutItems = JSON.parse(localStorage.getItem('checkoutItems')) || [];
+            const deliveryAddress = JSON.parse(localStorage.getItem('deliveryAddress'));
+            
+            if (checkoutItems.length === 0) {
+                showNotification('No items selected for checkout', 'error');
+                return;
+            }
+            
+            if (!deliveryAddress) {
+                showNotification('Please set a delivery address first', 'error');
+                setTimeout(() => {
+                    window.location.href = 'cart.html';
+                }, 2000);
+                return;
+            }
+            
+            // Store payment method
+            const orderData = {
+                items: checkoutItems,
+                address: deliveryAddress,
+                paymentMethod: selectedPaymentMethod,
+                subtotal: calculateSubtotal(checkoutItems),
+                deliveryFee: 50,
+                total: calculateSubtotal(checkoutItems) + 50,
+                orderDate: new Date().toISOString()
+            };
+            
+            // Store order data (you can send this to your backend later)
+            localStorage.setItem('currentOrder', JSON.stringify(orderData));
+            
+            // Show success notification
+            showNotification('Order placed successfully!', 'success');
+            
+            // Redirect to orders page or confirmation page
+            setTimeout(() => {
+                window.location.href = 'orders.html';
+            }, 1500);
+        }
+        
+        // Calculate subtotal
+        function calculateSubtotal(items) {
+            return items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'}`;
+            notification.style.cssText = 'position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);';
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+                ${message}
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrderSummary();
+        });
+    </script>
+</body>
+</html>
+
