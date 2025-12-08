@@ -208,7 +208,7 @@ body {
     border-radius: 50%;
     width: 20px;
     height: 20px;
-    display: flex;
+    display: none; /* Hidden by default, shown when count > 0 */
     align-items: center;
     justify-content: center;
     font-size: 0.7rem;

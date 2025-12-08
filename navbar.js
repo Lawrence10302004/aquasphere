@@ -25,6 +25,9 @@ function loadNavbar() {
             
             // Dispatch event to notify that navbar is loaded
             window.dispatchEvent(new Event('navbarLoaded'));
+            
+            // Update order count after navbar is loaded
+            setTimeout(updateOrderCount, 50);
         } else {
             console.error('Failed to load navbar:', xhr.status);
         }
@@ -39,6 +42,9 @@ function loadNavbar() {
                 
                 // Dispatch event to notify that navbar is loaded
                 window.dispatchEvent(new Event('navbarLoaded'));
+                
+                // Update order count after navbar is loaded
+                setTimeout(updateOrderCount, 50);
             })
             .catch(err => console.error('Fallback navbar load failed:', err));
     }
@@ -74,8 +80,8 @@ function initializeNavbar() {
     // Update cart count
     updateCartCount();
     
-    // Update order count
-    updateOrderCount();
+    // Update order count (with delay to ensure navbar is fully rendered)
+    setTimeout(updateOrderCount, 100);
 }
 
 // Load user data for navbar
@@ -140,6 +146,14 @@ window.updateCartCount = updateCartCount;
 
 // Update order count in navbar
 function updateOrderCount() {
+    // Try to get badge element - retry if not found (navbar might still be loading)
+    const ordersCountEl = document.getElementById('ordersCount');
+    if (!ordersCountEl) {
+        // Retry after a short delay if element doesn't exist yet
+        setTimeout(updateOrderCount, 100);
+        return;
+    }
+    
     // Check if user is logged in
     const userData = JSON.parse(localStorage.getItem('loggedInUser')) || 
                      JSON.parse(localStorage.getItem('userData')) || 
@@ -147,10 +161,7 @@ function updateOrderCount() {
     
     if (!userData || !userData.user_id) {
         // Hide badge if not logged in
-        const ordersCountEl = document.getElementById('ordersCount');
-        if (ordersCountEl) {
-            ordersCountEl.style.display = 'none';
-        }
+        ordersCountEl.style.display = 'none';
         return;
     }
     
@@ -165,27 +176,25 @@ function updateOrderCount() {
         .then(data => {
             if (data.success && data.orders) {
                 const orderCount = data.orders.length;
-                const ordersCountEl = document.getElementById('ordersCount');
-                if (ordersCountEl) {
-                    ordersCountEl.textContent = orderCount;
-                    // Hide badge when count is 0, only show when there are orders
-                    ordersCountEl.style.display = orderCount > 0 ? 'flex' : 'none';
+                const badgeEl = document.getElementById('ordersCount');
+                if (badgeEl) {
+                    badgeEl.textContent = orderCount;
+                    // Show badge when count > 0, hide when 0
+                    badgeEl.style.display = orderCount > 0 ? 'flex' : 'none';
+                    console.log('Order count updated:', orderCount);
                 }
             } else {
-                // Hide badge on error
-                const ordersCountEl = document.getElementById('ordersCount');
-                if (ordersCountEl) {
-                    ordersCountEl.style.display = 'none';
+                // Hide badge if no orders or error in response
+                const badgeEl = document.getElementById('ordersCount');
+                if (badgeEl) {
+                    badgeEl.style.display = 'none';
                 }
             }
         })
         .catch(error => {
             console.error('Error fetching order count:', error);
-            // Hide badge on error
-            const ordersCountEl = document.getElementById('ordersCount');
-            if (ordersCountEl) {
-                ordersCountEl.style.display = 'none';
-            }
+            // Don't hide badge on error - might be temporary network issue
+            // Just log the error
         });
 }
 
