@@ -194,6 +194,101 @@
             border-color: rgba(34, 197, 94, 0.5);
         }
         
+        /* Cancellation approved modal */
+        .cancel-approved-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .cancel-approved-content {
+            background: linear-gradient(135deg, #ffffff 0%, #ecfdf3 100%);
+            border-radius: 20px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            max-width: 420px;
+            width: 90%;
+            padding: 1.5rem 1.75rem;
+            position: relative;
+            overflow: hidden;
+            animation: modalScaleIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .cancel-approved-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #22c55e 0%, #16a34a 50%, #0ea5e9 100%);
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        .cancel-approved-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .cancel-approved-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            color: #16a34a;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.25);
+            animation: iconFloat 2s ease-in-out infinite;
+        }
+        
+        .cancel-approved-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+        }
+        
+        .cancel-approved-body {
+            color: #475569;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        
+        .cancel-approved-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        
+        .cancel-approved-close:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
         .order-status-badge.cancellation_requested {
             background: rgba(251, 191, 36, 0.3);
             border-color: rgba(251, 191, 36, 0.5);
@@ -1297,7 +1392,13 @@
                     }
                 });
                 
-                allOrders = result.orders || [];
+                const fetchedOrders = result.orders || [];
+                
+                // Handle approvals: if a pending cancellation ID no longer appears (or is cancelled), show approved modal
+                handleApprovedCancellations(fetchedOrders);
+                
+                // Filter out cancelled orders so they disappear from My Orders
+                allOrders = fetchedOrders.filter(o => o.status && o.status.toLowerCase() !== 'cancelled');
                 currentPage = 1; // Reset to first page
                 renderOrders();
             } catch (error) {
@@ -1601,6 +1702,76 @@
             return cancellable.includes(status.toLowerCase());
         }
         
+        // Show approved cancellation modal (when admin approves a preparing cancel)
+        let cancelApprovedTimer = null;
+        function showCancellationApprovedModal(message = 'Your cancellation request was approved.') {
+            const modal = document.getElementById('cancelApprovedModal');
+            const body = document.getElementById('cancelApprovedBody');
+            if (!modal || !body) return;
+            
+            body.textContent = message;
+            modal.style.display = 'flex';
+            
+            // Auto close after 4 seconds
+            if (cancelApprovedTimer) clearTimeout(cancelApprovedTimer);
+            cancelApprovedTimer = setTimeout(() => {
+                modal.style.display = 'none';
+            }, 4000);
+        }
+        
+        function closeCancellationApprovedModal() {
+            const modal = document.getElementById('cancelApprovedModal');
+            if (modal) modal.style.display = 'none';
+            if (cancelApprovedTimer) clearTimeout(cancelApprovedTimer);
+        }
+        
+        // Persist pending cancellation requests (for preparing -> approval flow)
+        const PENDING_CANCEL_KEY = 'pendingCancellationOrders';
+        
+        function getPendingCancellationIds() {
+            try {
+                return JSON.parse(localStorage.getItem(PENDING_CANCEL_KEY)) || [];
+            } catch (_) {
+                return [];
+            }
+        }
+        
+        function setPendingCancellationIds(ids) {
+            localStorage.setItem(PENDING_CANCEL_KEY, JSON.stringify(ids));
+        }
+        
+        function addPendingCancellationId(id) {
+            const ids = getPendingCancellationIds();
+            if (!ids.includes(id)) {
+                ids.push(id);
+                setPendingCancellationIds(ids);
+            }
+        }
+        
+        function removePendingCancellationIds(idsToRemove) {
+            const ids = getPendingCancellationIds().filter(id => !idsToRemove.includes(id));
+            setPendingCancellationIds(ids);
+        }
+
+        // Detect approvals: if a pending cancellation ID disappears (or becomes cancelled) show modal
+        function handleApprovedCancellations(fetchedOrders) {
+            const pendingIds = getPendingCancellationIds();
+            if (!pendingIds.length) return;
+            
+            const approvedIds = [];
+            pendingIds.forEach(id => {
+                const found = fetchedOrders.find(o => o.id == id);
+                if (!found || (found.status && found.status.toLowerCase() === 'cancelled')) {
+                    approvedIds.push(id);
+                }
+            });
+            
+            if (approvedIds.length) {
+                showCancellationApprovedModal('Your cancellation request was approved.');
+                removePendingCancellationIds(approvedIds);
+            }
+        }
+        
         // Show cancel order confirmation modal
         function showCancelOrderModal(orderId, currentStatus) {
             const modal = document.getElementById('cancelOrderModal');
@@ -1671,6 +1842,7 @@
                 
                 if (result.success) {
                     if (requiresApproval) {
+                        addPendingCancellationId(orderId);
                         showNotification('Cancellation request submitted. Waiting for admin approval.', 'success');
                     } else {
                         showNotification('Order cancelled successfully', 'success');
@@ -1678,7 +1850,7 @@
                     // Reload orders (will maintain current page if possible)
                     setTimeout(() => {
                         loadOrders();
-                    }, 1000);
+                    }, 500);
                 } else {
                     showNotification(result.message || 'Failed to cancel order', 'error');
                 }
@@ -1955,6 +2127,24 @@
                 <button type="button" class="btn-cancel-order-cancel" id="cancelOrderCancelBtn">No, Keep Order</button>
                 <button type="button" class="btn-cancel-order-confirm" id="cancelOrderConfirmBtn">Yes, Cancel Order</button>
             </div>
+        </div>
+    </div>
+    
+    <!-- Cancellation Approved Modal -->
+    <div id="cancelApprovedModal" class="cancel-approved-modal" onclick="closeCancellationApprovedModal()" style="display: none;">
+        <div class="cancel-approved-content" onclick="event.stopPropagation()">
+            <button class="cancel-approved-close" onclick="closeCancellationApprovedModal()" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="cancel-approved-header">
+                <div class="cancel-approved-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="cancel-approved-title">Cancellation Approved</h3>
+            </div>
+            <p class="cancel-approved-body" id="cancelApprovedBody">
+                Your cancellation request was approved.
+            </p>
         </div>
     </div>
 </body>
