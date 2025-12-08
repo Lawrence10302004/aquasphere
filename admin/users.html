@@ -339,54 +339,61 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editUserForm">
+                    <form id="editUserForm" novalidate autocomplete="off">
                         <input type="hidden" id="editUserId">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="editUsername" class="form-label">Username (read-only)</label>
-                                <input type="text" class="form-control" id="editUsername" readonly>
+                                <input type="text" class="form-control" id="editUsername" readonly autocomplete="off">
                             </div>
                             <div class="col-md-6">
                                 <label for="editEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="editEmail" required>
+                                <input type="email" class="form-control" id="editEmail" required autocomplete="off">
+                                <div class="invalid-feedback d-block" id="editEmailError" style="display:none;"></div>
                             </div>
                             <div class="col-md-6">
                                 <label for="editFirstName" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="editFirstName" required>
+                                <input type="text" class="form-control" id="editFirstName" required autocomplete="off">
+                                <div class="invalid-feedback d-block" id="editFirstNameError" style="display:none;"></div>
                             </div>
                             <div class="col-md-6">
                                 <label for="editLastName" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="editLastName" required>
+                                <input type="text" class="form-control" id="editLastName" required autocomplete="off">
+                                <div class="invalid-feedback d-block" id="editLastNameError" style="display:none;"></div>
                             </div>
                             <div class="col-md-6">
                                 <label for="editGender" class="form-label">Gender</label>
-                                <select class="form-select" id="editGender" required>
+                                <select class="form-select" id="editGender" required autocomplete="off">
                                     <option value="">Select Gender</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
                                 </select>
+                                <div class="invalid-feedback d-block" id="editGenderError" style="display:none;"></div>
                             </div>
                             <div class="col-md-6">
                                 <label for="editDateOfBirth" class="form-label">Birthday</label>
-                                <input type="date" class="form-control" id="editDateOfBirth">
+                                <input type="date" class="form-control" id="editDateOfBirth" autocomplete="off">
+                                <div class="invalid-feedback d-block" id="editDateError" style="display:none;"></div>
                             </div>
                             <div class="col-md-6">
                                 <label for="editNewPassword" class="form-label">New Password (optional)</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="editNewPassword" placeholder="Leave blank to keep current password">
+                                    <input type="password" class="form-control" id="editNewPassword" placeholder="Leave blank to keep current password" autocomplete="new-password">
                                     <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('editNewPassword', this)">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
+                                <div class="invalid-feedback d-block" id="editNewPasswordError" style="display:none;"></div>
                             </div>
                             <div class="col-md-6">
                                 <label for="editConfirmPassword" class="form-label">Confirm New Password</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="editConfirmPassword" placeholder="Re-enter new password">
+                                    <input type="password" class="form-control" id="editConfirmPassword" placeholder="Re-enter new password" autocomplete="new-password">
                                     <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('editConfirmPassword', this)">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
+                                <div class="invalid-feedback d-block" id="editConfirmPasswordError" style="display:none;"></div>
                             </div>
                             <div class="col-12">
                                 <div class="form-check mt-2">
@@ -563,24 +570,64 @@
             const newPassword = document.getElementById('editNewPassword').value.trim();
             const confirmPassword = document.getElementById('editConfirmPassword').value.trim();
             
+            clearFieldErrors();
+            
+            // Basic validations
+            let hasError = false;
+            const email = document.getElementById('editEmail').value.trim();
+            const firstName = document.getElementById('editFirstName').value.trim();
+            const lastName = document.getElementById('editLastName').value.trim();
+            const gender = (document.getElementById('editGender').value || '').toLowerCase();
+            const dateOfBirth = document.getElementById('editDateOfBirth').value;
+            
+            if (!email) {
+                showFieldError('editEmail', 'Email is required.');
+                hasError = true;
+            } else if (!isValidEmail(email)) {
+                showFieldError('editEmail', 'Please enter a valid email.');
+                hasError = true;
+            }
+            
+            if (!firstName) {
+                showFieldError('editFirstName', 'First name is required.');
+                hasError = true;
+            }
+            
+            if (!lastName) {
+                showFieldError('editLastName', 'Last name is required.');
+                hasError = true;
+            }
+            
+            if (!gender) {
+                showFieldError('editGender', 'Gender is required.');
+                hasError = true;
+            }
+            
+            if (!dateOfBirth) {
+                showFieldError('editDate', 'Birthday is required.');
+                hasError = true;
+            }
+            
             if (newPassword || confirmPassword) {
                 if (newPassword.length < 8) {
-                    showNotification('New password must be at least 8 characters.', 'error');
-                    return;
+                    showFieldError('editNewPassword', 'New password must be at least 8 characters.');
+                    hasError = true;
                 }
                 if (newPassword !== confirmPassword) {
-                    showNotification('New password and confirmation do not match.', 'error');
-                    return;
+                    showFieldError('editConfirmPassword', 'New password and confirmation do not match.');
+                    hasError = true;
                 }
             }
             
+            if (hasError) return;
+            
             const data = {
                 user_id: parseInt(userId),
-                first_name: document.getElementById('editFirstName').value,
-                last_name: document.getElementById('editLastName').value,
-                email: document.getElementById('editEmail').value,
-                gender: (document.getElementById('editGender').value || '').toLowerCase(),
-                date_of_birth: document.getElementById('editDateOfBirth').value,
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                gender: gender,
+                date_of_birth: dateOfBirth,
                 is_admin: document.getElementById('editIsAdmin').checked ? 1 : 0,
                 new_password: newPassword
             };
@@ -601,7 +648,11 @@
                     bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
                     loadUsers(currentPage);
                 } else {
-                    showNotification(result.message || 'Failed to update user', 'error');
+                    if (result.message && result.message.toLowerCase().includes('email')) {
+                        showFieldError('editEmail', result.message);
+                    } else {
+                        showNotification(result.message || 'Failed to update user', 'error');
+                    }
                 }
             } catch (error) {
                 console.error('Error updating user:', error);
@@ -683,6 +734,33 @@
                     icon.classList.add('fa-eye');
                 }
             }
+        }
+        
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+        
+        function showFieldError(fieldId, message) {
+            const input = document.getElementById(fieldId);
+            const errorEl = document.getElementById(`${fieldId}Error`);
+            if (input) input.classList.add('is-invalid');
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.style.display = 'block';
+            }
+        }
+        
+        function clearFieldErrors() {
+            const fields = ['editEmail','editFirstName','editLastName','editGender','editDate','editNewPassword','editConfirmPassword'];
+            fields.forEach(id => {
+                const input = document.getElementById(id);
+                const errorEl = document.getElementById(`${id}Error`);
+                if (input) input.classList.remove('is-invalid');
+                if (errorEl) {
+                    errorEl.textContent = '';
+                    errorEl.style.display = 'none';
+                }
+            });
         }
         
         // Show notification
