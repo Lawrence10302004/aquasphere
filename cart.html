@@ -1163,7 +1163,7 @@
             color: #0ea5e9;
             position: relative;
             z-index: 1;
-            animation: iconBounce 0.6s ease;
+            animation: logoutIconBounce 0.6s ease;
         }
         
         .logout-confirm-body {
@@ -1324,15 +1324,24 @@
             transform: translate(-50%, -50%);
             font-size: 2.5rem;
             color: #0ea5e9;
-            animation: iconBounce 1.5s ease-in-out infinite;
+            animation: checkoutIconBounce 1.5s ease-in-out infinite;
         }
         
-        @keyframes iconBounce {
+        @keyframes checkoutIconBounce {
             0%, 100% {
                 transform: translate(-50%, -50%) scale(1);
             }
             50% {
                 transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+        
+        @keyframes logoutIconBounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
             }
         }
         
