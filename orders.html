@@ -1371,6 +1371,7 @@
             const steps = [
                 { label: 'Pending', icon: 'fas fa-clock', class: '' },
                 { label: 'Preparing', icon: 'fas fa-box', class: '' },
+                { label: 'Shipped', icon: 'fas fa-shipping-fast', class: '' },
                 { label: 'Out for Delivery', icon: 'fas fa-truck', class: '' },
                 { label: 'Delivered', icon: 'fas fa-check-circle', class: '' }
             ];
@@ -1378,8 +1379,9 @@
             const statusMap = {
                 'pending': 0,
                 'preparing': 1,
-                'out_for_delivery': 2,
-                'delivered': 3,
+                'shipped': 2,
+                'out_for_delivery': 3,
+                'delivered': 4,
                 'paid': 1,
                 'cancelled': -1
             };

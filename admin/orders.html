@@ -184,6 +184,11 @@
             color: #1e40af;
         }
         
+        .status-badge.shipped {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
         .status-badge.out_for_delivery {
             background: #e9d5ff;
             color: #6b21a8;
@@ -347,6 +352,7 @@
                     <option value="">All Statuses</option>
                     <option value="pending">Pending</option>
                     <option value="preparing">Preparing</option>
+                    <option value="shipped">Shipped</option>
                     <option value="out_for_delivery">Out for Delivery</option>
                     <option value="delivered">Delivered</option>
                     <option value="cancelled">Cancelled</option>
@@ -417,6 +423,7 @@
                             <select class="form-select" id="updateStatus" required>
                                 <option value="pending">Pending</option>
                                 <option value="preparing">Preparing</option>
+                                <option value="shipped">Shipped</option>
                                 <option value="out_for_delivery">Out for Delivery</option>
                                 <option value="delivered">Delivered</option>
                                 <option value="cancelled">Cancelled</option>
