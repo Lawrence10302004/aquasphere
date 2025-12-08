@@ -434,6 +434,147 @@
             box-shadow: none;
         }
         
+        /* Payment Error Modal */
+        .payment-error-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .payment-error-modal.show {
+            opacity: 1;
+        }
+        
+        .payment-error-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
+        
+        .payment-error-container {
+            position: relative;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            z-index: 10001;
+        }
+        
+        .payment-error-modal.show .payment-error-container {
+            transform: scale(1);
+        }
+        
+        .payment-error-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: #64748b;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-error-close:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            transform: rotate(90deg);
+        }
+        
+        .payment-error-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulseError 2s ease infinite;
+        }
+        
+        @keyframes pulseError {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+            }
+        }
+        
+        .payment-error-icon i {
+            font-size: 3.5rem;
+            color: #ef4444;
+        }
+        
+        .payment-error-container h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.75rem;
+        }
+        
+        .payment-error-container p {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .payment-error-btn {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border: none;
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+        
+        .payment-error-btn:hover {
+            background: linear-gradient(135deg, #0284c7, #0ea5e9);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.4);
+        }
+        
+        /* Ensure dropdown appears above other elements */
+        .dropdown-menu {
+            z-index: 1050 !important;
+        }
+        
+        .nav-item.dropdown {
+            z-index: 1051 !important;
+        }
+        
         /* Footer Styles */
         .footer {
             background: #0369a1;
@@ -1056,7 +1197,31 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadOrderSummary();
             handlePaymentRedirect(); // Check if returning from PayMongo
+            
+            // Ensure Bootstrap dropdown is initialized
+            setTimeout(() => {
+                const dropdownElementList = document.querySelectorAll('.dropdown-toggle');
+                if (typeof bootstrap !== 'undefined') {
+                    dropdownElementList.forEach(dropdownToggleEl => {
+                        new bootstrap.Dropdown(dropdownToggleEl);
+                    });
+                }
+            }, 500);
         });
+        
+        // Also check for payment failure on hash change
+        window.addEventListener('hashchange', function() {
+            if (window.location.hash.includes('failed')) {
+                handlePaymentRedirect();
+            }
+        });
+        
+        // Check on page load if hash contains failed
+        if (window.location.hash.includes('failed')) {
+            setTimeout(() => {
+                handlePaymentRedirect();
+            }, 500);
+        }
     </script>
 </body>
 </html>
