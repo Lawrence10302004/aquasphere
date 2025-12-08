@@ -1664,8 +1664,6 @@
         
         // Close payment error modal
         function closePaymentErrorModal() {
-            // Reset flag so modal can be shown again if needed
-            paymentErrorModalShown = false;
             const errorModal = document.getElementById('paymentErrorModal');
             if (errorModal) {
                 // Clear auto-close timer if it exists
@@ -1673,11 +1671,26 @@
                     clearTimeout(errorModal._autoCloseTimer);
                 }
                 
+                // Stop monitoring intervals
+                if (paymentMonitoringInterval) {
+                    clearInterval(paymentMonitoringInterval);
+                    paymentMonitoringInterval = null;
+                }
+                
+                // Clear state one more time to be sure
+                UserState.setPendingOrderId(null);
+                UserState.setPendingCheckoutItems(null);
+                UserState.setPaymentRedirectTime(null);
+                UserState.setPaymongoCheckoutUrl(null);
+                UserState.setPaymentPageUrl(null);
+                
                 errorModal.classList.remove('show');
                 setTimeout(() => {
                     if (errorModal.parentNode) {
                         errorModal.remove();
                     }
+                    // Reset flag before reload
+                    paymentErrorModalShown = false;
                     // Refresh the page to reset the "Processing..." button state
                     window.location.reload();
                 }, 300);
