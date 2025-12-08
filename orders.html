@@ -1420,15 +1420,16 @@
         
         // Render orders with pagination
         function renderOrders() {
-            console.debug('renderOrders page', currentPage, 'total', allOrders.length);
             const ordersList = document.getElementById('ordersList');
             const emptyOrders = document.getElementById('emptyOrders');
             const pagination = document.getElementById('ordersPagination');
             
-            // Check if elements exist before accessing
+            // Ensure elements exist; if not, wait once after DOMContentLoaded
             if (!ordersList || !emptyOrders || !pagination) {
-                console.warn('Order elements not found, waiting for DOM...');
-                setTimeout(renderOrders, 120);
+                if (!window.__ordersDomWaited) {
+                    window.__ordersDomWaited = true;
+                    return setTimeout(renderOrders, 120);
+                }
                 return;
             }
             
@@ -1447,7 +1448,6 @@
             const startIndex = (currentPage - 1) * ordersPerPage;
             const endIndex = startIndex + ordersPerPage;
             const currentOrders = allOrders.slice(startIndex, endIndex);
-            console.debug('renderOrders slice', startIndex, endIndex, 'ids', currentOrders.map(o => o.id));
             
             // Clear and render current page orders
             ordersList.innerHTML = '';
@@ -1526,7 +1526,6 @@
             const targetPage = Math.max(1, Math.min(totalPages, parseInt(page, 10)));
             if (targetPage === currentPage) return;
             
-            console.debug('goToPage', currentPage, '->', targetPage);
             currentPage = targetPage;
             renderOrders();
             
