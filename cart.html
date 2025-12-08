@@ -2279,7 +2279,7 @@
                     </div>
                     <div class="form-group">
                         <label for="phoneNumber">Phone Number</label>
-                        <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" autocomplete="off" required>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" autocomplete="off" pattern="[0-9]*" inputmode="numeric" required>
                         <div class="error-message">Please fill out this field</div>
                     </div>
                     </div>
@@ -3409,6 +3409,9 @@
             // Initialize location dropdowns first
             initializeLocationDropdowns();
             
+            // Re-initialize phone number restriction when modal opens
+            restrictPhoneNumberInput();
+            
             // Reset map state
             mapInitialized = false;
             const mapPlaceholder = document.getElementById('mapPlaceholder');
@@ -3419,7 +3422,9 @@
             if (address) {
                 // Populate form with existing address
                 document.getElementById('fullName').value = address.fullName || '';
-                document.getElementById('phoneNumber').value = address.phoneNumber || '';
+                // Clean phone number to remove any non-numeric characters
+                const phoneNumber = (address.phoneNumber || '').replace(/[^0-9]/g, '');
+                document.getElementById('phoneNumber').value = phoneNumber;
                 document.getElementById('postalCode').value = address.postalCode || '';
                 document.getElementById('streetAddress').value = address.streetAddress || '';
                 
@@ -4114,7 +4119,28 @@
         }
         
         // Add event listeners to clear errors on input
+        // Restrict phone number input to numbers only
+        function restrictPhoneNumberInput() {
+            const phoneInput = document.getElementById('phoneNumber');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    // Remove any non-numeric characters
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                });
+                
+                phoneInput.addEventListener('keypress', function(e) {
+                    // Prevent non-numeric key presses (allow backspace, delete, tab, enter, arrows)
+                    if (!/[0-9]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize phone number restriction
+            restrictPhoneNumberInput();
+            
             const form = document.getElementById('addressForm');
             if (form) {
                 const fields = form.querySelectorAll('input, select');

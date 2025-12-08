@@ -41,7 +41,7 @@ if ($order_id <= 0) {
 }
 
 // Validate status
-$valid_statuses = ['pending', 'preparing', 'out_for_delivery', 'delivered', 'cancelled', 'paid'];
+$valid_statuses = ['pending', 'preparing', 'shipped', 'out_for_delivery', 'delivered', 'cancelled', 'paid'];
 if (!in_array(strtolower($status), $valid_statuses)) {
     echo json_encode(['success' => false, 'message' => 'Invalid status. Valid statuses: ' . implode(', ', $valid_statuses)]);
     exit;
