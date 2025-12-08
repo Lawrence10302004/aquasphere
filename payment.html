@@ -2050,16 +2050,20 @@
         
         // Check on focus (user clicks back to window)
         window.addEventListener('focus', function() {
-            setTimeout(() => {
-                checkPendingPaymentOnLoad();
-                handlePaymentRedirect();
-            }, 100); // Faster response
+            if (!paymentErrorModalShown) {
+                setTimeout(() => {
+                    if (!paymentErrorModalShown) {
+                        checkPendingPaymentOnLoad();
+                        handlePaymentRedirect();
+                    }
+                }, 100); // Faster response
+            }
         });
         
         // Check on pageshow event (handles back/forward navigation)
         window.addEventListener('pageshow', function(event) {
             // If page was loaded from cache (back button), check immediately
-            if (event.persisted) {
+            if (event.persisted && !paymentErrorModalShown) {
                 setTimeout(() => {
                     checkPendingPaymentOnLoad();
                     handlePaymentRedirect();
