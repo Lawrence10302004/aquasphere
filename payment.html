@@ -720,7 +720,7 @@
         }
         
         // Place order
-        function placeOrder() {
+        async function placeOrder() {
             const checkoutItems = JSON.parse(localStorage.getItem('checkoutItems')) || [];
             const deliveryAddress = JSON.parse(localStorage.getItem('deliveryAddress'));
             
@@ -737,27 +737,152 @@
                 return;
             }
             
-            // Store payment method
-            const orderData = {
-                items: checkoutItems,
-                address: deliveryAddress,
-                paymentMethod: selectedPaymentMethod,
-                subtotal: calculateSubtotal(checkoutItems),
-                deliveryFee: 50,
-                total: calculateSubtotal(checkoutItems) + 50,
-                orderDate: new Date().toISOString()
-            };
+            // Get current user ID from session/localStorage
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            const userId = currentUser.id || currentUser.user_id;
             
-            // Store order data (you can send this to your backend later)
-            localStorage.setItem('currentOrder', JSON.stringify(orderData));
+            if (!userId) {
+                showNotification('Please login to place an order', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return;
+            }
             
-            // Show success notification
-            showNotification('Order placed successfully!', 'success');
+            const subtotal = calculateSubtotal(checkoutItems);
+            const deliveryFee = 50;
+            const total = subtotal + deliveryFee;
             
-            // Redirect to orders page or confirmation page
-            setTimeout(() => {
-                window.location.href = 'orders.html';
-            }, 1500);
+            // Disable button during processing
+            const placeOrderBtn = document.getElementById('placeOrderBtn');
+            placeOrderBtn.disabled = true;
+            placeOrderBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            
+            try {
+                // If GCash is selected, create order and redirect to PayMongo
+                if (selectedPaymentMethod === 'gcash') {
+                    // First, create the order in database
+                    const orderResponse = await fetch('api/create_order.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            user_id: userId,
+                            items: checkoutItems.map(item => ({
+                                name: item.name || item.product_name,
+                                price: item.price,
+                                quantity: item.quantity
+                            })),
+                            delivery_address: deliveryAddress,
+                            payment_method: 'GCASH',
+                            delivery_date: null,
+                            delivery_time: null
+                        })
+                    });
+                    
+                    const orderResult = await orderResponse.json();
+                    
+                    if (!orderResult.success) {
+                        throw new Error(orderResult.message || 'Failed to create order');
+                    }
+                    
+                    // Create PayMongo payment source
+                    const redirectUrl = window.location.origin + window.location.pathname;
+                    const paymentResponse = await fetch('api/create_payment.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            amount: total,
+                            order_id: orderResult.order_id,
+                            redirect_url: redirectUrl
+                        })
+                    });
+                    
+                    const paymentResult = await paymentResponse.json();
+                    
+                    if (!paymentResult.success) {
+                        throw new Error(paymentResult.message || 'Failed to create payment');
+                    }
+                    
+                    // Store order ID for later reference
+                    localStorage.setItem('pendingOrderId', orderResult.order_id);
+                    
+                    // Redirect to PayMongo checkout
+                    window.location.href = paymentResult.checkout_url;
+                } else {
+                    // For COD, create order and redirect to orders page
+                    const orderResponse = await fetch('api/create_order.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            user_id: userId,
+                            items: checkoutItems.map(item => ({
+                                name: item.name || item.product_name,
+                                price: item.price,
+                                quantity: item.quantity
+                            })),
+                            delivery_address: deliveryAddress,
+                            payment_method: 'COD',
+                            delivery_date: null,
+                            delivery_time: null
+                        })
+                    });
+                    
+                    const orderResult = await orderResponse.json();
+                    
+                    if (!orderResult.success) {
+                        throw new Error(orderResult.message || 'Failed to create order');
+                    }
+                    
+                    // Clear checkout items
+                    localStorage.removeItem('checkoutItems');
+                    
+                    // Show success notification
+                    showNotification('Order placed successfully!', 'success');
+                    
+                    // Redirect to orders page
+                    setTimeout(() => {
+                        window.location.href = 'orders.html';
+                    }, 1500);
+                }
+            } catch (error) {
+                console.error('Order placement error:', error);
+                showNotification(error.message || 'Failed to place order. Please try again.', 'error');
+                placeOrderBtn.disabled = false;
+                placeOrderBtn.innerHTML = '<i class="fas fa-check-circle"></i> Place Order';
+            }
+        }
+        
+        // Handle PayMongo redirect
+        function handlePaymentRedirect() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+            const orderId = localStorage.getItem('pendingOrderId');
+            
+            if (status && orderId) {
+                if (status === 'success') {
+                    // Clear checkout items
+                    localStorage.removeItem('checkoutItems');
+                    localStorage.removeItem('pendingOrderId');
+                    
+                    showNotification('Payment successful! Your order has been placed.', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'orders.html';
+                    }, 2000);
+                } else if (status === 'failed') {
+                    showNotification('Payment failed. Please try again.', 'error');
+                    localStorage.removeItem('pendingOrderId');
+                    
+                    // Clean URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            }
         }
         
         // Calculate subtotal
@@ -786,6 +911,7 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadOrderSummary();
+            handlePaymentRedirect(); // Check if returning from PayMongo
         });
     </script>
 </body>
