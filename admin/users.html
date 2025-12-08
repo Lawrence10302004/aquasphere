@@ -549,7 +549,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="saveUser()">
+                    <button type="button" class="btn btn-primary" id="saveChangesBtn" onclick="saveUser()" disabled>
                         <i class="fas fa-save me-2"></i>Save Changes
                     </button>
                 </div>
@@ -563,6 +563,7 @@
     <script>
         let currentPage = 1;
         let currentSearch = '';
+        let originalUserData = null;
         
         // Load users
         function loadUsers(page = 1) {
@@ -671,6 +672,109 @@
             paginationEl.innerHTML = html;
         }
         
+        function getCurrentFormData() {
+            return {
+                email: document.getElementById('editEmail').value.trim(),
+                first_name: document.getElementById('editFirstName').value.trim(),
+                last_name: document.getElementById('editLastName').value.trim(),
+                gender: (document.getElementById('editGender').value || '').toLowerCase(),
+                date_of_birth: document.getElementById('editDateOfBirth').value,
+                is_admin: document.getElementById('editIsAdmin').checked ? 1 : 0,
+                new_password: document.getElementById('editNewPassword').value.trim(),
+                confirm_password: document.getElementById('editConfirmPassword').value.trim()
+            };
+        }
+
+        function hasFormChanges() {
+            if (!originalUserData) return false;
+            const current = getCurrentFormData();
+            const trackedFields = ['email','first_name','last_name','gender','date_of_birth','is_admin'];
+            const baseChanged = trackedFields.some(key => current[key] !== originalUserData[key]);
+            const passwordChanged = !!(current.new_password || current.confirm_password);
+            return baseChanged || passwordChanged;
+        }
+
+        function runLiveValidation(showErrors = true) {
+            const fieldsToValidate = ['editEmail','editFirstName','editLastName','editGender','editDateOfBirth','editNewPassword','editConfirmPassword'];
+            let hasError = false;
+
+            fieldsToValidate.forEach(id => {
+                const fieldHasError = validateField(id, showErrors);
+                if (fieldHasError) hasError = true;
+            });
+
+            return hasError;
+        }
+
+        function validateField(fieldId, showError = true) {
+            if (showError) {
+                hideFieldError(fieldId);
+            }
+            const value = (document.getElementById(fieldId)?.value || '').trim();
+            let message = '';
+
+            switch (fieldId) {
+                case 'editEmail':
+                    if (!value) message = 'Email is required.';
+                    else if (!isValidEmail(value)) message = 'Please enter a valid email.';
+                    break;
+                case 'editFirstName':
+                    if (!value) message = 'First Name is required.';
+                    break;
+                case 'editLastName':
+                    if (!value) message = 'Last Name is required.';
+                    break;
+                case 'editGender':
+                    if (!value) message = 'Gender is required.';
+                    break;
+                case 'editDateOfBirth':
+                    if (!value) message = 'Birthday is required.';
+                    break;
+                case 'editNewPassword':
+                    if (value && value.length < 8) {
+                        message = 'Password must be at least 8 characters.';
+                    }
+                    break;
+                case 'editConfirmPassword': {
+                    const newPassword = document.getElementById('editNewPassword').value.trim();
+                    if (newPassword && !value) {
+                        message = 'Please confirm the new password.';
+                    } else if ((newPassword || value) && newPassword !== value) {
+                        message = 'Passwords do not match.';
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+
+            if (message && showError) {
+                showFieldError(fieldId, message);
+            }
+
+            return Boolean(message);
+        }
+
+        function hideFieldError(fieldId) {
+            const input = document.getElementById(fieldId);
+            const errorEl = document.getElementById(`${fieldId}Error`);
+            if (input) input.classList.remove('is-invalid');
+            if (errorEl) {
+                errorEl.textContent = '';
+                errorEl.classList.remove('field-error');
+                errorEl.style.display = 'none';
+            }
+        }
+
+        function setSaveButtonState() {
+            const btn = document.getElementById('saveChangesBtn');
+            if (!btn) return;
+            const hasErrors = runLiveValidation(false);
+            const hasChanges = hasFormChanges();
+            btn.disabled = hasErrors || !hasChanges;
+            btn.classList.toggle('disabled', btn.disabled);
+        }
+
         // Edit user
         async function editUser(userId) {
             // Fetch user details
@@ -701,6 +805,8 @@
             document.getElementById('editIsAdmin').checked = user.is_admin == 1;
             document.getElementById('editNewPassword').value = '';
             document.getElementById('editConfirmPassword').value = '';
+            originalUserData = getCurrentFormData();
+            setSaveButtonState();
             
             // Show modal
             const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
@@ -709,60 +815,25 @@
         
         // Save user
         async function saveUser() {
+            const hasErrors = runLiveValidation(true);
+            if (hasErrors) {
+                setSaveButtonState();
+                return;
+            }
+
+            if (!hasFormChanges()) {
+                showNotification('No changes detected to save.', 'error');
+                setSaveButtonState();
+                return;
+            }
+
             const userId = document.getElementById('editUserId').value;
             const newPassword = document.getElementById('editNewPassword').value.trim();
-            const confirmPassword = document.getElementById('editConfirmPassword').value.trim();
-            
-            clearFieldErrors();
-            
-            // Basic validations
-            let hasError = false;
             const email = document.getElementById('editEmail').value.trim();
             const firstName = document.getElementById('editFirstName').value.trim();
             const lastName = document.getElementById('editLastName').value.trim();
             const gender = (document.getElementById('editGender').value || '').toLowerCase();
             const dateOfBirth = document.getElementById('editDateOfBirth').value;
-            
-            if (!email) {
-                showFieldError('editEmail', 'Email is required.');
-                hasError = true;
-            } else if (!isValidEmail(email)) {
-                showFieldError('editEmail', 'Please enter a valid email.');
-                hasError = true;
-            }
-            
-            if (!firstName) {
-                showFieldError('editFirstName', 'First Name is required.');
-                hasError = true;
-            }
-            
-            if (!lastName) {
-                showFieldError('editLastName', 'Last Name is required.');
-                hasError = true;
-            }
-            
-            if (!gender) {
-                showFieldError('editGender', 'Gender is required.');
-                hasError = true;
-            }
-            
-            if (!dateOfBirth) {
-                showFieldError('editDateOfBirth', 'Birthday is required.');
-                hasError = true;
-            }
-            
-            if (newPassword || confirmPassword) {
-                if (newPassword.length < 8) {
-                    showFieldError('editNewPassword', 'Password must be at least 8 characters.');
-                    hasError = true;
-                }
-                if (newPassword !== confirmPassword) {
-                    showFieldError('editConfirmPassword', 'Passwords do not match.');
-                    hasError = true;
-                }
-            }
-            
-            if (hasError) return;
             
             const data = {
                 user_id: parseInt(userId),
@@ -929,16 +1000,7 @@
         
         function clearFieldErrors() {
             const fields = ['editEmail','editFirstName','editLastName','editGender','editDateOfBirth','editNewPassword','editConfirmPassword'];
-            fields.forEach(id => {
-                const input = document.getElementById(id);
-                const errorEl = document.getElementById(`${id}Error`);
-                if (input) input.classList.remove('is-invalid');
-                if (errorEl) {
-                    errorEl.textContent = '';
-                    errorEl.classList.remove('field-error');
-                    errorEl.style.display = 'none';
-                }
-            });
+            fields.forEach(id => hideFieldError(id));
         }
         
         // Show notification
@@ -966,29 +1028,22 @@
             }
         });
         
-        // Clear field errors on input/blur (live feedback)
-        ['editEmail','editFirstName','editLastName','editGender','editDateOfBirth','editNewPassword','editConfirmPassword'].forEach(id => {
+        // Live validation and change tracking for the modal form
+        function handleFieldChange(fieldId) {
+            validateField(fieldId, true);
+            // Keep password confirmation in sync while typing
+            if (fieldId === 'editNewPassword' || fieldId === 'editConfirmPassword') {
+                const otherId = fieldId === 'editNewPassword' ? 'editConfirmPassword' : 'editNewPassword';
+                validateField(otherId, true);
+            }
+            setSaveButtonState();
+        }
+
+        ['editEmail','editFirstName','editLastName','editGender','editDateOfBirth','editNewPassword','editConfirmPassword','editIsAdmin'].forEach(id => {
             const el = document.getElementById(id);
             if (!el) return;
-            el.addEventListener('input', () => {
-                const errorEl = document.getElementById(`${id}Error`);
-                if (el.value && errorEl) {
-                    errorEl.textContent = '';
-                    errorEl.classList.remove('field-error');
-                    errorEl.style.display = 'none';
-                    el.classList.remove('is-invalid');
-                }
-            });
-            el.addEventListener('blur', () => {
-                if (!el.value.trim()) return;
-                const errorEl = document.getElementById(`${id}Error`);
-                if (errorEl) {
-                    errorEl.textContent = '';
-                    errorEl.classList.remove('field-error');
-                    errorEl.style.display = 'none';
-                    el.classList.remove('is-invalid');
-                }
-            });
+            el.addEventListener('input', () => handleFieldChange(id));
+            el.addEventListener('blur', () => handleFieldChange(id));
         });
 
         // Auto-search on input with debounce
