@@ -40,6 +40,7 @@ $email = trim($input['email'] ?? '');
 $gender = trim($input['gender'] ?? '');
 $date_of_birth = trim($input['date_of_birth'] ?? '');
 $is_admin = isset($input['is_admin']) ? intval($input['is_admin']) : null;
+$new_password = trim($input['new_password'] ?? '');
 
 if ($user_id <= 0) {
     echo json_encode(['success' => false, 'message' => 'Valid user_id is required']);
@@ -114,6 +115,16 @@ if (!empty($date_of_birth)) {
 if ($is_admin !== null) {
     $update_fields[] = "is_admin = ?";
     $update_params[] = $is_admin;
+}
+
+if (!empty($new_password)) {
+    if (strlen($new_password) < 8) {
+        close_connection($conn);
+        echo json_encode(['success' => false, 'message' => 'New password must be at least 8 characters.']);
+        exit;
+    }
+    $update_fields[] = "password_hash = ?";
+    $update_params[] = password_hash($new_password, PASSWORD_DEFAULT);
 }
 
 if (empty($update_fields)) {
