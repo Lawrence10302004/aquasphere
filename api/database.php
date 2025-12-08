@@ -9,6 +9,13 @@ $GLOBALS['use_postgres'] = !empty($_ENV['DATABASE_URL']) ||
                (!empty($_ENV['PGHOST']) && !empty($_ENV['PGDATABASE']) && 
                 !empty($_ENV['PGUSER']) && !empty($_ENV['PGPASSWORD']));
 
+// If running on Railway (or other deployed env) and Postgres is not configured, fail fast to avoid ephemeral SQLite
+$is_prod_env = !empty($_ENV['RAILWAY_ENVIRONMENT']) || !empty($_ENV['RAILWAY_STATIC_URL']) || !empty($_ENV['RAILWAY_PROJECT_ID']);
+if ($is_prod_env && !$GLOBALS['use_postgres']) {
+    http_response_code(500);
+    die("Database configuration error: PostgreSQL is required in production. Please set DATABASE_URL (or PGHOST/PGDATABASE/PGUSER/PGPASSWORD).");
+}
+
 $GLOBALS['db_path'] = $_ENV['DATABASE_PATH'] ?? 'aquasphere.db';
 
 if ($GLOBALS['use_postgres']) {
