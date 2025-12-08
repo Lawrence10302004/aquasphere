@@ -1193,20 +1193,43 @@
             }, 3000);
         }
         
+        // Initialize dropdown after navbar loads
+        function initializeDropdown() {
+            // Wait for navbar to load
+            const checkNavbar = setInterval(() => {
+                const dropdownToggle = document.querySelector('#userDropdown');
+                if (dropdownToggle && typeof bootstrap !== 'undefined') {
+                    try {
+                        // Initialize dropdown if not already initialized
+                        if (!dropdownToggle.getAttribute('data-bs-toggle')) {
+                            dropdownToggle.setAttribute('data-bs-toggle', 'dropdown');
+                        }
+                        
+                        // Create Bootstrap dropdown instance
+                        const dropdown = new bootstrap.Dropdown(dropdownToggle);
+                        clearInterval(checkNavbar);
+                    } catch (error) {
+                        console.log('Dropdown initialization:', error);
+                    }
+                }
+            }, 100);
+            
+            // Stop checking after 5 seconds
+            setTimeout(() => clearInterval(checkNavbar), 5000);
+        }
+        
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadOrderSummary();
             handlePaymentRedirect(); // Check if returning from PayMongo
             
-            // Ensure Bootstrap dropdown is initialized
+            // Initialize dropdown after navbar loads
+            initializeDropdown();
+            
+            // Also try after a delay to ensure navbar is fully loaded
             setTimeout(() => {
-                const dropdownElementList = document.querySelectorAll('.dropdown-toggle');
-                if (typeof bootstrap !== 'undefined') {
-                    dropdownElementList.forEach(dropdownToggleEl => {
-                        new bootstrap.Dropdown(dropdownToggleEl);
-                    });
-                }
-            }, 500);
+                initializeDropdown();
+            }, 1000);
         });
         
         // Also check for payment failure on hash change
@@ -1222,6 +1245,11 @@
                 handlePaymentRedirect();
             }, 500);
         }
+        
+        // Listen for navbar load event if available
+        window.addEventListener('navbarLoaded', function() {
+            initializeDropdown();
+        });
     </script>
 </body>
 </html>

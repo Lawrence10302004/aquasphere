@@ -22,6 +22,9 @@ function loadNavbar() {
             
             // Initialize navbar immediately after loading
             initializeNavbar();
+            
+            // Dispatch event to notify that navbar is loaded
+            window.dispatchEvent(new Event('navbarLoaded'));
         } else {
             console.error('Failed to load navbar:', xhr.status);
         }
@@ -33,6 +36,9 @@ function loadNavbar() {
             .then(html => {
                 navbarContainer.innerHTML = html;
                 initializeNavbar();
+                
+                // Dispatch event to notify that navbar is loaded
+                window.dispatchEvent(new Event('navbarLoaded'));
             })
             .catch(err => console.error('Fallback navbar load failed:', err));
     }

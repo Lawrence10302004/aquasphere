@@ -2633,6 +2633,9 @@
         let currentPage = 1;
         const itemsPerPage = 4;
         
+        // Track selected items across all pages
+        let selectedItems = new Set(JSON.parse(localStorage.getItem('selectedCartItems') || '[]'));
+        
         // Load cart from localStorage
         function loadCart() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -2682,11 +2685,12 @@
                 const actualIndex = startIndex + localIndex;
                 const subtotal = item.price * item.quantity;
                 const icon = productIcons[item.id] || 'fa-tint';
+                const isChecked = selectedItems.has(item.id);
                 
                 return `
                     <div class="cart-item" data-item-id="${item.id}" data-cart-index="${actualIndex}">
                         <div class="item-checkbox">
-                            <input type="checkbox" class="item-checkbox-input" checked onchange="updateSummary()">
+                            <input type="checkbox" class="item-checkbox-input" ${isChecked ? 'checked' : ''} onchange="toggleItemSelection(${item.id}, this.checked)">
                         </div>
                         <div class="item-image">
                             <i class="fas ${icon}"></i>
@@ -2833,17 +2837,14 @@
             }, 'Remove this item from cart?');
         }
         
-        // Update summary
+        // Update summary (works across all pages)
         function updateSummary() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const checkboxes = document.querySelectorAll('.item-checkbox-input:checked');
             
+            // Calculate subtotal from all selected items (not just visible ones)
             let subtotal = 0;
-            checkboxes.forEach(checkbox => {
-                const cartItem = checkbox.closest('.cart-item');
-                const itemId = parseInt(cartItem.getAttribute('data-item-id'));
+            selectedItems.forEach(itemId => {
                 const item = cart.find(i => i.id === itemId);
-                
                 if (item) {
                     subtotal += item.price * item.quantity;
                 }
