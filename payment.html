@@ -1180,6 +1180,9 @@
         // Flag to prevent multiple modals from showing
         let paymentErrorModalShown = false;
         
+        // Variable to store payment monitoring interval (if needed)
+        let paymentMonitoringInterval = null;
+        
         // Load order summary from checkout items
         async function loadOrderSummary() {
             await UserState.loadState();
@@ -1554,8 +1557,8 @@
             UserState.setPaymongoCheckoutUrl(null);
             UserState.setPaymentPageUrl(null);
             
-            // Stop any monitoring intervals
-            if (paymentMonitoringInterval) {
+            // Stop any monitoring intervals (if they exist)
+            if (typeof paymentMonitoringInterval !== 'undefined' && paymentMonitoringInterval) {
                 clearInterval(paymentMonitoringInterval);
                 paymentMonitoringInterval = null;
             }
