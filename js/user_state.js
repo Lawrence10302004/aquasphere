@@ -21,7 +21,11 @@ const UserState = {
                     // Hydrate localStorage from server (for compatibility)
                     if (data.cart) localStorage.setItem('cart', JSON.stringify(data.cart));
                     if (data.delivery_address !== undefined) {
-                        localStorage.setItem('deliveryAddress', JSON.stringify(data.delivery_address));
+                        if (data.delivery_address === null) {
+                            localStorage.removeItem('deliveryAddress');
+                        } else {
+                            localStorage.setItem('deliveryAddress', JSON.stringify(data.delivery_address));
+                        }
                     }
                     if (data.selected_cart_items) {
                         localStorage.setItem('selectedCartItems', JSON.stringify(data.selected_cart_items));
@@ -49,6 +53,10 @@ const UserState = {
                     }
                     return data;
                 }
+            } else if (resp.status === 401) {
+                // User not logged in - don't overwrite localStorage, just use it
+                console.log('User not logged in, using localStorage only');
+                return null;
             }
         } catch (e) {
             console.warn('Failed to load state from server, using localStorage:', e);
@@ -142,11 +150,17 @@ const UserState = {
 
         // Save to server (async, don't block)
         try {
-            await fetch('api/user_state_save.php', {
+            const resp = await fetch('api/user_state_save.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(stateUpdates)
             });
+            if (!resp.ok && resp.status === 401) {
+                // User not logged in - localStorage only mode is fine
+                console.log('User not logged in, state saved to localStorage only');
+            } else if (!resp.ok) {
+                console.warn('Failed to save state to server:', resp.status);
+            }
         } catch (e) {
             console.warn('Failed to save state to server (will retry on next change):', e);
         }
@@ -183,7 +197,15 @@ const UserState = {
     getPendingCancellationOrders: () => JSON.parse(localStorage.getItem('pendingCancellationOrders') || '[]'),
 
     // Convenience setters (update both localStorage and server)
-    setCart: (cart) => UserState.debouncedSave({ cart }),
+    setCart: (cart, immediate = false) => {
+        if (immediate) {
+            // Save immediately (for deletions, critical operations)
+            UserState.saveState({ cart });
+        } else {
+            // Debounced save (for frequent updates like quantity changes)
+            UserState.debouncedSave({ cart });
+        }
+    },
     setDeliveryAddress: (address) => UserState.saveState({ delivery_address: address }),
     setSelectedCartItems: (items) => UserState.debouncedSave({ selected_cart_items: Array.isArray(items) ? items : Array.from(items) }),
     setCheckoutItems: (items) => UserState.saveState({ checkout_items: items }),

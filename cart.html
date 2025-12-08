@@ -2856,11 +2856,12 @@
         
         // Remove item
         function removeItem(productId) {
-            showDeleteConfirmModal(() => {
+            showDeleteConfirmModal(async () => {
                 const cart = UserState.getCart();
                 const filteredCart = cart.filter(item => item.id !== productId);
                 
-                UserState.setCart(filteredCart);
+                // Save immediately (not debounced) for deletions
+                await UserState.setCart(filteredCart, true);
                 updateCartCount(); // Update navbar count immediately
                 loadCart();
                 showNotification('Item removed from cart', 'success');
@@ -2974,10 +2975,11 @@
                 return;
             }
             
-            showDeleteConfirmModal(() => {
+            showDeleteConfirmModal(async () => {
                 // Remove all selected items from cart
                 const updatedCart = cart.filter(item => !selectedItems.has(item.id));
-                UserState.setCart(updatedCart);
+                // Save immediately (not debounced) for deletions
+                await UserState.setCart(updatedCart, true);
                 
                 // Clear selection
                 selectedItems.clear();
@@ -5290,8 +5292,15 @@
         
         // Initialize
         (async () => {
-            await UserState.loadState();
-            selectedItems = new Set(UserState.getSelectedCartItems());
+            const serverState = await UserState.loadState();
+            // Only sync from server if user is logged in and we got data
+            // Otherwise, use localStorage (which might have local changes)
+            if (serverState && serverState.success) {
+                selectedItems = new Set(UserState.getSelectedCartItems());
+            } else {
+                // User not logged in or server unavailable - use localStorage
+                selectedItems = new Set(JSON.parse(localStorage.getItem('selectedCartItems') || '[]'));
+            }
             loadCart();
             loadAddress();
             initializeLocationDropdowns();
