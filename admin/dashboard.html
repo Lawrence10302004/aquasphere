@@ -444,12 +444,14 @@
                 'paid': '#22c55e'
             };
             
+            const totalOrders = Object.values(statusCounts).reduce((sum, count) => sum + count, 0);
+            
             tbody.innerHTML = Object.keys(statusCounts).map(status => {
                 const count = statusCounts[status];
                 const label = statusLabels[status] || status;
                 const color = statusColors[status] || '#6b7280';
-                const percentage = data.stats.total_orders > 0 
-                    ? ((count / data.stats.total_orders) * 100).toFixed(1) 
+                const percentage = totalOrders > 0 
+                    ? ((count / totalOrders) * 100).toFixed(1) 
                     : 0;
                 
                 return `
