@@ -1607,6 +1607,25 @@
             initializeDropdown();
         });
     </script>
+    
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutConfirmModal" class="logout-confirm-modal" style="display: none;">
+        <div class="logout-confirm-content">
+            <div class="logout-confirm-icon-wrapper">
+                <div class="logout-confirm-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+            </div>
+            <div class="logout-confirm-body">
+                <h3>Confirm Logout</h3>
+                <p id="logoutConfirmMessage">Are you sure you want to logout?</p>
+            </div>
+            <div class="logout-confirm-footer">
+                <button type="button" class="btn-logout-cancel" id="logoutCancelBtn">Cancel</button>
+                <button type="button" class="btn-logout-confirm" id="logoutConfirmBtn">Logout</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 
