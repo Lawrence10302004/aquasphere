@@ -1601,6 +1601,102 @@
             return cancellable.includes(status.toLowerCase());
         }
         
+        // Show cancel order confirmation modal
+        function showCancelOrderModal(orderId, currentStatus) {
+            const modal = document.getElementById('cancelOrderModal');
+            const confirmBtn = document.getElementById('cancelOrderConfirmBtn');
+            const cancelBtn = document.getElementById('cancelOrderCancelBtn');
+            const modalMessage = document.getElementById('cancelOrderMessage');
+            
+            if (!modal) return;
+            
+            // Update message based on status
+            const requiresApproval = currentStatus === 'preparing';
+            if (requiresApproval) {
+                modalMessage.innerHTML = `
+                    <p>This order is currently being prepared. Cancellation requires admin approval.</p>
+                    <p style="margin-top: 0.5rem; color: #f59e0b; font-weight: 600;">
+                        <i class="fas fa-info-circle"></i> Your cancellation request will be reviewed by our team.
+                    </p>
+                `;
+            } else {
+                modalMessage.innerHTML = '<p>Are you sure you want to cancel this order? This action cannot be undone.</p>';
+            }
+            
+            // Store order ID and approval requirement
+            modal.dataset.orderId = orderId;
+            modal.dataset.requiresApproval = requiresApproval;
+            
+            // Lock body scroll
+            lockBodyScroll();
+            
+            // Show modal
+            modal.style.display = 'flex';
+            
+            // Remove existing event listeners
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+            
+            // Add new event listeners
+            newConfirmBtn.addEventListener('click', function confirmHandler() {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+                performCancelOrder(orderId, requiresApproval);
+                newConfirmBtn.removeEventListener('click', confirmHandler);
+            });
+            
+            newCancelBtn.addEventListener('click', function cancelHandler() {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+                newCancelBtn.removeEventListener('click', cancelHandler);
+            });
+        }
+        
+        // Perform cancel order
+        async function performCancelOrder(orderId, requiresApproval) {
+            try {
+                const response = await fetch('api/cancel_order.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        order_id: orderId
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (requiresApproval) {
+                        showNotification('Cancellation request submitted. Waiting for admin approval.', 'success');
+                    } else {
+                        showNotification('Order cancelled successfully', 'success');
+                    }
+                    // Reload orders (will maintain current page if possible)
+                    setTimeout(() => {
+                        loadOrders();
+                    }, 1000);
+                } else {
+                    showNotification(result.message || 'Failed to cancel order', 'error');
+                }
+            } catch (error) {
+                console.error('Error cancelling order:', error);
+                showNotification('Failed to cancel order. Please try again.', 'error');
+            }
+        }
+        
+        // Close cancel order modal
+        function closeCancelOrderModal(event) {
+            if (event && event.target.id !== 'cancelOrderModal' && !event.target.closest('.cancel-order-content')) return;
+            const modal = document.getElementById('cancelOrderModal');
+            if (modal) {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+            }
+        }
         
         // Format date
         function formatDate(dateString) {
