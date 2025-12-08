@@ -826,8 +826,9 @@
                         throw new Error(errorMsg);
                     }
                     
-                    // Store order ID for later reference
+                    // Store order ID and checkout items for later reference
                     localStorage.setItem('pendingOrderId', orderResult.order_id);
+                    localStorage.setItem('pendingCheckoutItems', JSON.stringify(checkoutItems));
                     
                     // Redirect to PayMongo checkout
                     window.location.href = paymentResult.checkout_url;
@@ -858,6 +859,9 @@
                         throw new Error(orderResult.message || 'Failed to create order');
                     }
                     
+                    // Remove ordered items from cart
+                    removeOrderedItemsFromCart(checkoutItems);
+                    
                     // Clear checkout items
                     localStorage.removeItem('checkoutItems');
                     
@@ -885,9 +889,18 @@
             
             if (status && orderId) {
                 if (status === 'success') {
-                    // Clear checkout items
+                    // Get checkout items that were ordered
+                    const pendingCheckoutItems = JSON.parse(localStorage.getItem('pendingCheckoutItems') || '[]');
+                    
+                    // Remove ordered items from cart
+                    if (pendingCheckoutItems.length > 0) {
+                        removeOrderedItemsFromCart(pendingCheckoutItems);
+                    }
+                    
+                    // Clear checkout items and pending data
                     localStorage.removeItem('checkoutItems');
                     localStorage.removeItem('pendingOrderId');
+                    localStorage.removeItem('pendingCheckoutItems');
                     
                     showNotification('Payment successful! Your order has been placed.', 'success');
                     
@@ -907,6 +920,53 @@
         // Calculate subtotal
         function calculateSubtotal(items) {
             return items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        }
+        
+        // Remove ordered items from cart
+        function removeOrderedItemsFromCart(orderedItems) {
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                
+                // Create a map of ordered items by ID for quick lookup
+                const orderedMap = new Map();
+                orderedItems.forEach(item => {
+                    const key = item.id;
+                    if (orderedMap.has(key)) {
+                        orderedMap.set(key, orderedMap.get(key) + item.quantity);
+                    } else {
+                        orderedMap.set(key, item.quantity);
+                    }
+                });
+                
+                // Remove items from cart
+                const updatedCart = cart.filter(cartItem => {
+                    const orderedQty = orderedMap.get(cartItem.id) || 0;
+                    
+                    if (orderedQty > 0) {
+                        // Reduce quantity or remove item
+                        if (cartItem.quantity > orderedQty) {
+                            cartItem.quantity -= orderedQty;
+                            return true; // Keep item with reduced quantity
+                        } else {
+                            return false; // Remove item completely
+                        }
+                    }
+                    
+                    return true; // Keep item if not ordered
+                });
+                
+                // Update cart in localStorage
+                localStorage.setItem('cart', JSON.stringify(updatedCart));
+                
+                // Update cart count in navbar if available
+                if (typeof updateCartCount === 'function') {
+                    updateCartCount();
+                }
+                
+                console.log('Removed ordered items from cart');
+            } catch (error) {
+                console.error('Error removing items from cart:', error);
+            }
         }
         
         // Show notification
