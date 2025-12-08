@@ -1343,6 +1343,10 @@
                     // Store the payment page URL for redirect back
                     UserState.setPaymentPageUrl(window.location.href);
                     
+                    // Store flag in sessionStorage to detect PayMongo redirect
+                    sessionStorage.setItem('paymongo_redirect', 'true');
+                    sessionStorage.setItem('paymongo_redirect_time', Date.now().toString());
+                    
                     // Redirect to PayMongo checkout
                     window.location.href = paymentResult.checkout_url;
                 } else {
@@ -1415,8 +1419,17 @@
             const urlHash = window.location.hash;
             const status = urlParams.get('status') || (urlHash.includes('failed') ? 'failed' : null);
             
+            // Check sessionStorage for PayMongo redirect flag
+            const paymongoRedirect = sessionStorage.getItem('paymongo_redirect') === 'true';
+            const paymongoRedirectTime = parseInt(sessionStorage.getItem('paymongo_redirect_time') || '0');
+            const timeSinceRedirect = Date.now() - paymongoRedirectTime;
+            
             // Handle success case FIRST - before checking referrer
             if (status === 'success') {
+                // Clear PayMongo redirect flag
+                sessionStorage.removeItem('paymongo_redirect');
+                sessionStorage.removeItem('paymongo_redirect_time');
+                
                 await UserState.loadState();
                 const pendingCheckoutItems = UserState.getPendingCheckoutItems() || [];
                 
@@ -1451,6 +1464,9 @@
             
             // Check for failed payment in URL params (PayMongo redirects with ?status=failed)
             if (status === 'failed' || urlHash.includes('failed')) {
+                // Clear PayMongo redirect flag
+                sessionStorage.removeItem('paymongo_redirect');
+                sessionStorage.removeItem('paymongo_redirect_time');
                 showPaymentErrorModal();
                 // Clean URL
                 window.history.replaceState({}, document.title, window.location.pathname);
@@ -1465,17 +1481,25 @@
             
             // Check if coming from PayMongo (user clicked fail/back)
             // Multiple conditions to detect failed payment:
-            // 1. Referrer indicates PayMongo
-            // 2. OR there's a pending order but no success status (payment was initiated but failed)
-            const isFromPayMongo = referrer && (
+            // 1. SessionStorage flag indicates PayMongo redirect (most reliable)
+            // 2. Referrer indicates PayMongo
+            // 3. OR there's a pending order but no success status (payment was initiated but failed)
+            const isFromPayMongo = paymongoRedirect || (referrer && (
                 referrer.includes('paymongo.com') || 
                 referrer.includes('secure-authentication') ||
                 referrer.includes('paymongo')
-            );
+            ));
             
-            if (isFromPayMongo || (pendingOrderId && !status)) {
+            // Show error modal if:
+            // - Coming from PayMongo (via sessionStorage or referrer) AND no success status
+            // - OR there's a pending order but no success status
+            // - AND redirect happened within last 5 minutes (to avoid stale flags)
+            if ((isFromPayMongo && !status) || (pendingOrderId && !status && timeSinceRedirect < 300000)) {
+                // Clear PayMongo redirect flag
+                sessionStorage.removeItem('paymongo_redirect');
+                sessionStorage.removeItem('paymongo_redirect_time');
+                
                 // User came from PayMongo but no success status = payment failed/cancelled
-                // OR there's a pending payment that wasn't completed
                 showPaymentErrorModal();
                 return;
             }
@@ -1581,6 +1605,10 @@
                 UserState.setPaymentRedirectTime(null);
                 UserState.setPaymongoCheckoutUrl(null);
                 UserState.setPaymentPageUrl(null);
+                
+                // Clear PayMongo redirect flag
+                sessionStorage.removeItem('paymongo_redirect');
+                sessionStorage.removeItem('paymongo_redirect_time');
                 
                 errorModal.classList.remove('show');
                 setTimeout(() => {
