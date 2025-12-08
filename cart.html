@@ -33,6 +33,8 @@
             min-height: 100vh;
             overflow-x: hidden;
             scrollbar-gutter: stable;
+            display: flex;
+            flex-direction: column;
             /* Navbar padding is handled by navbar.css */
         }
         
@@ -40,6 +42,7 @@
         .main-content {
             padding: 2rem 0;
             padding-top: 1rem; /* Reduced since body already has padding-top */
+            flex: 1;
         }
         
         .page-title {
@@ -2014,7 +2017,8 @@
             background: #0369a1;
             color: white;
             padding: 20px 0 15px;
-            margin-top: 4rem;
+            margin-top: auto;
+            width: 100%;
         }
         
         .footer-title {
