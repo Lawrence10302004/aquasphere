@@ -5,6 +5,9 @@
  */
 
 header('Content-Type: application/json');
+
+// Load environment variables from .env file
+require_once 'load_env.php';
 require_once 'database.php';
 
 // Get webhook signature from header
@@ -63,7 +66,15 @@ if (isset($payload_data['data']['type']) && $payload_data['data']['type'] === 's
             
             if ($order) {
                 // Create payment intent to charge the source
-                $paymongo_secret_key = $_ENV['PAYMONGO_SECRET_KEY'] ?? 'sk_test_xxxxxxxxxxxxx';
+                $paymongo_secret_key = $_ENV['PAYMONGO_SECRET_KEY'] ?? getenv('PAYMONGO_SECRET_KEY');
+                
+                if (!$paymongo_secret_key) {
+                    error_log("PayMongo secret key not configured in webhook handler");
+                    close_connection($conn);
+                    http_response_code(200); // Still return 200 to acknowledge webhook
+                    echo json_encode(['received' => true, 'error' => 'PayMongo key not configured']);
+                    exit;
+                }
                 $paymongo_api_url = 'https://api.paymongo.com/v1';
                 
                 $payment_data = [

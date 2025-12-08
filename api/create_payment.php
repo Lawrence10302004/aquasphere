@@ -9,6 +9,8 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
+// Load environment variables from .env file
+require_once 'load_env.php';
 require_once 'database.php';
 
 // Only allow POST requests
@@ -37,8 +39,16 @@ if (!$redirect_url) {
 }
 
 // PayMongo API Configuration
-// Use sandbox keys for testing
-$paymongo_secret_key = $_ENV['PAYMONGO_SECRET_KEY'] ?? 'sk_test_xxxxxxxxxxxxx'; // Replace with your PayMongo secret key
+// Load from environment variable (set in .env file or server environment)
+$paymongo_secret_key = $_ENV['PAYMONGO_SECRET_KEY'] ?? getenv('PAYMONGO_SECRET_KEY');
+
+if (!$paymongo_secret_key) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'PayMongo secret key not configured. Please set PAYMONGO_SECRET_KEY in environment variables or .env file.'
+    ]);
+    exit;
+}
 $paymongo_api_url = 'https://api.paymongo.com/v1';
 
 // Determine if using sandbox or live

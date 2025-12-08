@@ -20,13 +20,27 @@ PayMongo is integrated to handle GCash payments. The system uses PayMongo's sand
 Add your PayMongo secret key to your environment variables:
 
 **For Local Development:**
-- Create a `.env` file in the project root (or set in your system environment)
-- Add: `PAYMONGO_SECRET_KEY=sk_test_your_secret_key_here`
+1. Create a `.env` file in the project root (same directory as `api/` folder)
+2. Add the following line (replace with your actual secret key):
+   ```
+   PAYMONGO_SECRET_KEY=sk_test_your_secret_key_here
+   ```
+3. The `.env` file is already in `.gitignore` so it won't be committed to git
+4. The system will automatically load this file when API endpoints are called
 
 **For Railway/Production:**
-- Go to your Railway project settings
-- Add environment variable: `PAYMONGO_SECRET_KEY`
-- Set value to your PayMongo secret key
+1. Go to your Railway project settings
+2. Navigate to **Variables** tab
+3. Click **New Variable**
+4. Name: `PAYMONGO_SECRET_KEY`
+5. Value: Your PayMongo secret key from the dashboard
+6. Click **Add**
+
+**Important Security Notes:**
+- Never commit your `.env` file to git (it's already in `.gitignore`)
+- Never share your secret key publicly
+- Use sandbox keys (`sk_test_...`) for testing
+- Use live keys (`sk_live_...`) only in production
 
 ### 3. Set Up Webhook (Optional but Recommended)
 
