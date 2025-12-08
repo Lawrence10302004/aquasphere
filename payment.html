@@ -1372,6 +1372,11 @@
                     // Clear checkout items
                     UserState.setCheckoutItems([]);
                     
+                    // Update order count badge
+                    if (typeof updateOrderCount === 'function') {
+                        updateOrderCount();
+                    }
+                    
                     // Show success notification
                     showNotification('Order placed successfully!', 'success');
                     
@@ -1399,23 +1404,7 @@
             const urlHash = window.location.hash;
             const status = urlParams.get('status') || (urlHash.includes('failed') ? 'failed' : null);
             
-            // Check for failed payment in URL params (PayMongo redirects with ?status=failed)
-            if (status === 'failed' || urlHash.includes('failed')) {
-                showPaymentErrorModal();
-                // Clean URL
-                window.history.replaceState({}, document.title, window.location.pathname);
-                return;
-            }
-            
-            // Check if coming from PayMongo (user clicked fail/back)
-            const referrer = document.referrer;
-            if (referrer && (referrer.includes('paymongo.com') || referrer.includes('secure-authentication'))) {
-                // User came from PayMongo but no success status = payment failed/cancelled
-                showPaymentErrorModal();
-                return;
-            }
-            
-            // Handle success case
+            // Handle success case FIRST - before checking referrer
             if (status === 'success') {
                 await UserState.loadState();
                 const pendingCheckoutItems = UserState.getPendingCheckoutItems() || [];
@@ -1431,11 +1420,34 @@
                 UserState.setPendingCheckoutItems(null);
                 UserState.setPaymentRedirectTime(null);
                 
+                // Update order count badge
+                if (typeof updateOrderCount === 'function') {
+                    updateOrderCount();
+                }
+                
                 showNotification('Payment successful! Your order has been placed.', 'success');
                 
                 setTimeout(() => {
                     window.location.href = 'orders.html';
                 }, 2000);
+                return;
+            }
+            
+            // Check for failed payment in URL params (PayMongo redirects with ?status=failed)
+            if (status === 'failed' || urlHash.includes('failed')) {
+                showPaymentErrorModal();
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+                return;
+            }
+            
+            // Check if coming from PayMongo (user clicked fail/back)
+            // Only check referrer if no success status (already handled above)
+            const referrer = document.referrer;
+            if (referrer && (referrer.includes('paymongo.com') || referrer.includes('secure-authentication'))) {
+                // User came from PayMongo but no success status = payment failed/cancelled
+                showPaymentErrorModal();
+                return;
             }
         }
         
