@@ -1468,6 +1468,13 @@
                 return;
             }
             
+            // Reset "Processing..." button state
+            const placeOrderBtn = document.getElementById('placeOrderBtn');
+            if (placeOrderBtn) {
+                placeOrderBtn.disabled = false;
+                placeOrderBtn.innerHTML = '<i class="fas fa-check-circle"></i> Place Order';
+            }
+            
             // Clear state IMMEDIATELY (synchronously) before showing modal
             UserState.setPendingOrderId(null);
             UserState.setPendingCheckoutItems(null);
@@ -1512,7 +1519,7 @@
             `;
             document.body.appendChild(errorModal);
             
-            // Show modal with animation
+            // Show modal with animation (centered)
             setTimeout(() => {
                 errorModal.style.display = 'flex';
                 setTimeout(() => {
