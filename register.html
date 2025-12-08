@@ -39,7 +39,7 @@
             flex: 1;
             display: flex;
             align-items: center;
-            padding: 60px 0 80px;
+            padding: 60px 0 120px; /* provide visible space above footer */
         }
         
         /* Navbar Styles */
@@ -103,7 +103,7 @@
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
             padding: 2rem;
-            max-width: 520px;
+            max-width: 900px;
             width: 100%;
             border: 1px solid #e2e8f0;
         }
@@ -316,80 +316,88 @@
     <div class="main-content">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-6 col-md-8">
+                <div class="col-lg-8 col-md-10">
                     <div class="register-card mx-auto" style="margin-top: 40px;">
                     <h1 class="register-title">Create Account</h1>
                     <p class="register-subtitle">Join AquaSphere and start ordering clean water</p>
                     
                     <form method="post" action="api/register.php" id="registerForm" novalidate>
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" 
-                                   placeholder="Enter your username" autocomplete="off" required>
-                            <div class="custom-error" id="username-error">Username is required.</div>
-                            <div class="custom-error" id="username-unique-error" style="display: none;">Username already exists.</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" 
-                                   placeholder="Enter your email" autocomplete="off" required>
-                            <div class="custom-error" id="email-error">Email is required.</div>
-                            <div class="custom-error" id="email-unique-error" style="display: none;">Email already exists.</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="first_name" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" 
-                                   placeholder="Enter your first name" autocomplete="off" required>
-                            <div class="custom-error" id="first_name-error">First name is required.</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="last_name" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" 
-                                   placeholder="Enter your last name" autocomplete="off" required>
-                            <div class="custom-error" id="last_name-error">Last name is required.</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="gender" class="form-label">Gender</label>
-                            <select class="form-select" id="gender" name="gender" required>
-                                <option value="" disabled selected>Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                            </select>
-                            <div class="custom-error" id="gender-error">Gender is required.</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="birthday" class="form-label">Birthday</label>
-                            <input type="date" class="form-control" id="birthday" name="birthday" required>
-                            <div class="custom-error" id="birthday-error">Birthday is required.</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <div class="input-group">
-                                <input type="password" class="form-control" id="password" name="password" 
-                                       placeholder="Enter your password" autocomplete="off" required>
-                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                    <i class="fas fa-eye" id="passwordIcon"></i>
-                                </button>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" 
+                                       placeholder="Choose a username" autocomplete="off" required>
+                                <div class="custom-error" id="username-error">Username is required.</div>
+                                <div class="custom-error" id="username-unique-error" style="display: none;">Username already exists.</div>
                             </div>
-                            <div class="custom-error" id="password-error">Password is required.</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="confirm_password" class="form-label">Confirm Password</label>
-                            <div class="input-group">
-                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
-                                       placeholder="Confirm your password" autocomplete="off" required>
-                                <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
-                                    <i class="fas fa-eye" id="confirmPasswordIcon"></i>
-                                </button>
+                            
+                            <div class="col-md-6 mb-2">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       placeholder="Enter your email" autocomplete="off" required>
+                                <div class="custom-error" id="email-error">Email is required.</div>
+                                <div class="custom-error" id="email-unique-error" style="display: none;">Email already exists.</div>
                             </div>
-                            <div class="custom-error" id="confirm_password-error">Password confirmation is required.</div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label for="first_name" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" 
+                                       placeholder="Enter your first name" autocomplete="off" required>
+                                <div class="custom-error" id="first_name-error">First name is required.</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-2">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" 
+                                       placeholder="Enter your last name" autocomplete="off" required>
+                                <div class="custom-error" id="last_name-error">Last name is required.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label for="gender" class="form-label">Gender</label>
+                                <select class="form-select" id="gender" name="gender" required>
+                                    <option value="" disabled selected>Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                                <div class="custom-error" id="gender-error">Gender is required.</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-2">
+                                <label for="birthday" class="form-label">Birthday</label>
+                                <input type="date" class="form-control" id="birthday" name="birthday" required>
+                                <div class="custom-error" id="birthday-error">Birthday is required.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password" 
+                                           placeholder="Choose a password (min. 8 characters)" autocomplete="off" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="fas fa-eye" id="passwordIcon"></i>
+                                    </button>
+                                </div>
+                                <div class="custom-error" id="password-error">Password is required.</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-2">
+                                <label for="confirm_password" class="form-label">Confirm Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
+                                           placeholder="Confirm your password" autocomplete="off" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                                        <i class="fas fa-eye" id="confirmPasswordIcon"></i>
+                                    </button>
+                                </div>
+                                <div class="custom-error" id="confirm_password-error">Password confirmation is required.</div>
+                            </div>
                         </div>
                         
                         <div class="d-grid gap-2 mt-3">
