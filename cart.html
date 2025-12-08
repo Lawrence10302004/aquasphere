@@ -2696,7 +2696,6 @@
             
             // Update select all state after rendering
             updateSelectAllState();
-            queuePersistState();
         }
         
         // Clear selection when cart is empty
@@ -4237,8 +4236,7 @@
                 longitude: longitude || null
             };
             
-            localStorage.setItem('deliveryAddress', JSON.stringify(address));
-            queuePersistState();
+            UserState.setDeliveryAddress(address);
             loadAddress();
             updateCheckoutButton(); // Enable checkout when address is saved
             closeAddressModal();
@@ -4247,8 +4245,7 @@
         
         function deleteAddress() {
             showDeleteConfirmModal(() => {
-                localStorage.removeItem('deliveryAddress');
-                queuePersistState();
+                UserState.setDeliveryAddress(null);
                 loadAddress();
                 updateCheckoutButton(); // Disable checkout when address is deleted
                 showNotification('Delivery address deleted successfully!', 'success');
