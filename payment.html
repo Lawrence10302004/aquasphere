@@ -1404,18 +1404,29 @@
             // Check if user returned from PayMongo without success status
             // This handles cases where PayMongo doesn't redirect properly
             if (orderId && paymentRedirectTime && !status) {
+                const referrer = document.referrer;
+                
+                // IMMEDIATELY show error if coming from PayMongo (no delay)
+                if (referrer.includes('paymongo.com') || referrer.includes('secure-authentication')) {
+                    showPaymentErrorModal();
+                    localStorage.removeItem('pendingOrderId');
+                    localStorage.removeItem('pendingCheckoutItems');
+                    localStorage.removeItem('paymentRedirectTime');
+                    localStorage.removeItem('paymongoCheckoutUrl');
+                    localStorage.removeItem('paymentPageUrl');
+                    return;
+                }
+                
+                // If more than 3 seconds have passed and no success status, assume failure
                 const timeSinceRedirect = Date.now() - parseInt(paymentRedirectTime);
-                // If more than 5 seconds have passed and no success status, assume failure
-                if (timeSinceRedirect > 5000) {
-                    // Check if we're coming from PayMongo domain (user manually navigated back)
-                    const referrer = document.referrer;
-                    if (referrer.includes('paymongo.com') || referrer.includes('secure-authentication')) {
-                        showPaymentErrorModal();
-                        localStorage.removeItem('pendingOrderId');
-                        localStorage.removeItem('pendingCheckoutItems');
-                        localStorage.removeItem('paymentRedirectTime');
-                        return;
-                    }
+                if (timeSinceRedirect > 3000) {
+                    showPaymentErrorModal();
+                    localStorage.removeItem('pendingOrderId');
+                    localStorage.removeItem('pendingCheckoutItems');
+                    localStorage.removeItem('paymentRedirectTime');
+                    localStorage.removeItem('paymongoCheckoutUrl');
+                    localStorage.removeItem('paymentPageUrl');
+                    return;
                 }
             }
             
@@ -1478,20 +1489,25 @@
                         return;
                     }
                     
-                    // If no success status and enough time has passed (3+ seconds)
-                    if (!currentStatus && !currentHash.includes('success') && elapsed > 3000) {
-                        const referrer = document.referrer;
+                    // Check referrer immediately (no delay if from PayMongo)
+                    const referrer = document.referrer;
+                    if (referrer.includes('paymongo.com') || 
+                        referrer.includes('secure-authentication')) {
                         
-                        // Show error if:
-                        // 1. Coming from PayMongo
-                        // 2. No referrer (direct navigation/typed URL)
-                        // 3. Enough time passed (10+ seconds = definitely expired)
-                        if (referrer.includes('paymongo.com') || 
-                            referrer.includes('secure-authentication') ||
-                            !referrer || 
-                            referrer === '' ||
-                            elapsed > 10000) {
-                            
+                        clearInterval(checkInterval);
+                        showPaymentErrorModal();
+                        localStorage.removeItem('pendingOrderId');
+                        localStorage.removeItem('pendingCheckoutItems');
+                        localStorage.removeItem('paymentRedirectTime');
+                        localStorage.removeItem('paymongoCheckoutUrl');
+                        localStorage.removeItem('paymentPageUrl');
+                        return;
+                    }
+                    
+                    // If no success status and enough time has passed (2+ seconds)
+                    if (!currentStatus && !currentHash.includes('success') && elapsed > 2000) {
+                        // Show error if no referrer or enough time passed
+                        if (!referrer || referrer === '' || elapsed > 10000) {
                             clearInterval(checkInterval);
                             showPaymentErrorModal();
                             localStorage.removeItem('pendingOrderId');
@@ -1524,26 +1540,42 @@
                     !currentStatus && 
                     !currentHash.includes('success')) {
                     
-                    // If more than 2 seconds have passed, check for failure
-                    if (timeSinceRedirect > 2000) {
-                        const referrer = document.referrer;
+                    const referrer = document.referrer;
+                    
+                    // IMMEDIATELY show error modal if coming from PayMongo (no delay)
+                    if (referrer.includes('paymongo.com') || 
+                        referrer.includes('secure-authentication')) {
                         
-                        // Show error modal automatically if:
-                        // 1. Coming from PayMongo domain (definite indicator)
-                        // 2. Enough time has passed (15+ seconds = definitely expired)
-                        if ((referrer.includes('paymongo.com') || 
-                             referrer.includes('secure-authentication')) ||
-                            timeSinceRedirect > 15000) {
-                            
-                            // Show error modal immediately
-                            showPaymentErrorModal();
-                            localStorage.removeItem('pendingOrderId');
-                            localStorage.removeItem('pendingCheckoutItems');
-                            localStorage.removeItem('paymentRedirectTime');
-                            localStorage.removeItem('paymongoCheckoutUrl');
-                            localStorage.removeItem('paymentPageUrl');
-                            return true; // Indicate we handled it
-                        }
+                        // Show error modal immediately - user clearly came from PayMongo
+                        showPaymentErrorModal();
+                        localStorage.removeItem('pendingOrderId');
+                        localStorage.removeItem('pendingCheckoutItems');
+                        localStorage.removeItem('paymentRedirectTime');
+                        localStorage.removeItem('paymongoCheckoutUrl');
+                        localStorage.removeItem('paymentPageUrl');
+                        return true; // Indicate we handled it
+                    }
+                    
+                    // If more than 1 second has passed and no referrer (direct navigation), also show
+                    if (timeSinceRedirect > 1000 && (!referrer || referrer === '')) {
+                        showPaymentErrorModal();
+                        localStorage.removeItem('pendingOrderId');
+                        localStorage.removeItem('pendingCheckoutItems');
+                        localStorage.removeItem('paymentRedirectTime');
+                        localStorage.removeItem('paymongoCheckoutUrl');
+                        localStorage.removeItem('paymentPageUrl');
+                        return true;
+                    }
+                    
+                    // If enough time has passed (15+ seconds = definitely expired)
+                    if (timeSinceRedirect > 15000) {
+                        showPaymentErrorModal();
+                        localStorage.removeItem('pendingOrderId');
+                        localStorage.removeItem('pendingCheckoutItems');
+                        localStorage.removeItem('paymentRedirectTime');
+                        localStorage.removeItem('paymongoCheckoutUrl');
+                        localStorage.removeItem('paymentPageUrl');
+                        return true;
                     }
                 }
             }
