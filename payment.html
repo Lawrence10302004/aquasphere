@@ -1171,6 +1171,10 @@
     <script>
         let selectedPaymentMethod = 'gcash'; // Default to GCASH
         
+        // Flag to prevent multiple modals from showing
+        let paymentErrorModalShown = false;
+        let paymentMonitoringInterval = null;
+        
         // Load order summary from checkout items
         async function loadOrderSummary() {
             await UserState.loadState();
@@ -1387,6 +1391,11 @@
         
         // Handle PayMongo redirect
         async function handlePaymentRedirect() {
+            // Don't check if modal already shown
+            if (paymentErrorModalShown) {
+                return;
+            }
+            
             await UserState.loadState();
             const urlParams = new URLSearchParams(window.location.search);
             const urlHash = window.location.hash;
@@ -1397,9 +1406,6 @@
             // Check for failed payment in URL hash or query params
             if (urlHash.includes('failed') || urlParams.get('status') === 'failed') {
                 showPaymentErrorModal();
-                UserState.setPendingOrderId(null);
-                UserState.setPendingCheckoutItems(null);
-                UserState.setPaymentRedirectTime(null);
                 
                 // Clean URL
                 window.history.replaceState({}, document.title, window.location.pathname);
@@ -1414,11 +1420,6 @@
                 // IMMEDIATELY show error if coming from PayMongo (no delay)
                 if (referrer.includes('paymongo.com') || referrer.includes('secure-authentication')) {
                     showPaymentErrorModal();
-                    UserState.setPendingOrderId(null);
-                    UserState.setPendingCheckoutItems(null);
-                    UserState.setPaymentRedirectTime(null);
-                    UserState.setPaymongoCheckoutUrl(null);
-                    UserState.setPaymentPageUrl(null);
                     return;
                 }
                 
@@ -1426,11 +1427,6 @@
                 const timeSinceRedirect = Date.now() - parseInt(paymentRedirectTime);
                 if (timeSinceRedirect > 3000) {
                     showPaymentErrorModal();
-                    UserState.setPendingOrderId(null);
-                    UserState.setPendingCheckoutItems(null);
-                    UserState.setPaymentRedirectTime(null);
-                    UserState.setPaymongoCheckoutUrl(null);
-                    UserState.setPaymentPageUrl(null);
                     return;
                 }
             }
@@ -1458,9 +1454,6 @@
                     }, 2000);
                 } else if (status === 'failed') {
                     showPaymentErrorModal();
-                    UserState.setPendingOrderId(null);
-                    UserState.setPendingCheckoutItems(null);
-                    UserState.setPaymentRedirectTime(null);
                     
                     // Clean URL
                     window.history.replaceState({}, document.title, window.location.pathname);
@@ -1470,13 +1463,24 @@
         
         // Monitor for manual navigation back from PayMongo - runs continuously
         async function monitorPaymentReturn() {
+            // Don't start monitoring if modal already shown
+            if (paymentErrorModalShown) {
+                return;
+            }
+            
             await UserState.loadState();
             const orderId = UserState.getPendingOrderId();
             const paymentRedirectTime = UserState.getPaymentRedirectTime();
             
             if (orderId && paymentRedirectTime) {
                 // Check every 1 second for faster detection
-                const checkInterval = setInterval(() => {
+                paymentMonitoringInterval = setInterval(() => {
+                    // Stop if modal already shown
+                    if (paymentErrorModalShown) {
+                        clearInterval(paymentMonitoringInterval);
+                        paymentMonitoringInterval = null;
+                        return;
+                    }
                     const currentStatus = new URLSearchParams(window.location.search).get('status');
                     const currentHash = window.location.hash;
                     const elapsed = Date.now() - parseInt(paymentRedirectTime);
@@ -1488,7 +1492,8 @@
                     
                     // If success, clear everything
                     if (currentStatus === 'success' || currentHash.includes('success')) {
-                        clearInterval(checkInterval);
+                        clearInterval(paymentMonitoringInterval);
+                        paymentMonitoringInterval = null;
                         UserState.setPaymentRedirectTime(null);
                         UserState.setPaymongoCheckoutUrl(null);
                         UserState.setPaymentPageUrl(null);
@@ -1500,13 +1505,9 @@
                     if (referrer.includes('paymongo.com') || 
                         referrer.includes('secure-authentication')) {
                         
-                        clearInterval(checkInterval);
+                        clearInterval(paymentMonitoringInterval);
+                        paymentMonitoringInterval = null;
                         showPaymentErrorModal();
-                        UserState.setPendingOrderId(null);
-                        UserState.setPendingCheckoutItems(null);
-                        UserState.setPaymentRedirectTime(null);
-                        UserState.setPaymongoCheckoutUrl(null);
-                        UserState.setPaymentPageUrl(null);
                         return;
                     }
                     
@@ -1514,24 +1515,30 @@
                     if (!currentStatus && !currentHash.includes('success') && elapsed > 2000) {
                         // Show error if no referrer or enough time passed
                         if (!referrer || referrer === '' || elapsed > 10000) {
-                            clearInterval(checkInterval);
+                            clearInterval(paymentMonitoringInterval);
+                            paymentMonitoringInterval = null;
                             showPaymentErrorModal();
-                            UserState.setPendingOrderId(null);
-                            UserState.setPendingCheckoutItems(null);
-                            UserState.setPaymentRedirectTime(null);
-                            UserState.setPaymongoCheckoutUrl(null);
-                            UserState.setPaymentPageUrl(null);
                         }
                     }
                 }, 1000); // Check every second
                 
                 // Stop checking after 2 minutes
-                setTimeout(() => clearInterval(checkInterval), 120000);
+                setTimeout(() => {
+                    if (paymentMonitoringInterval) {
+                        clearInterval(paymentMonitoringInterval);
+                        paymentMonitoringInterval = null;
+                    }
+                }, 120000);
             }
         }
         
         // Check if user manually navigated to payment page with pending order
         async function checkPendingPaymentOnLoad() {
+            // Don't check if modal already shown
+            if (paymentErrorModalShown) {
+                return false;
+            }
+            
             await UserState.loadState();
             const orderId = UserState.getPendingOrderId();
             const paymentRedirectTime = UserState.getPaymentRedirectTime();
@@ -1555,22 +1562,12 @@
                         
                         // Show error modal immediately - user clearly came from PayMongo
                         showPaymentErrorModal();
-                        UserState.setPendingOrderId(null);
-                        UserState.setPendingCheckoutItems(null);
-                        UserState.setPaymentRedirectTime(null);
-                        UserState.setPaymongoCheckoutUrl(null);
-                        UserState.setPaymentPageUrl(null);
                         return true; // Indicate we handled it
                     }
                     
                     // If more than 1 second has passed and no referrer (direct navigation), also show
                     if (timeSinceRedirect > 1000 && (!referrer || referrer === '')) {
                         showPaymentErrorModal();
-                        UserState.setPendingOrderId(null);
-                        UserState.setPendingCheckoutItems(null);
-                        UserState.setPaymentRedirectTime(null);
-                        UserState.setPaymongoCheckoutUrl(null);
-                        UserState.setPaymentPageUrl(null);
                         return true;
                     }
                     
@@ -1591,6 +1588,27 @@
         
         // Show payment error modal
         function showPaymentErrorModal() {
+            // Prevent multiple modals
+            if (paymentErrorModalShown) {
+                return;
+            }
+            
+            // Clear state IMMEDIATELY (synchronously) before showing modal
+            UserState.setPendingOrderId(null);
+            UserState.setPendingCheckoutItems(null);
+            UserState.setPaymentRedirectTime(null);
+            UserState.setPaymongoCheckoutUrl(null);
+            UserState.setPaymentPageUrl(null);
+            
+            // Stop any monitoring intervals
+            if (paymentMonitoringInterval) {
+                clearInterval(paymentMonitoringInterval);
+                paymentMonitoringInterval = null;
+            }
+            
+            // Set flag to prevent multiple modals
+            paymentErrorModalShown = true;
+            
             // Remove any existing modal first
             const existingModal = document.getElementById('paymentErrorModal');
             if (existingModal) {
@@ -1646,6 +1664,8 @@
         
         // Close payment error modal
         function closePaymentErrorModal() {
+            // Reset flag so modal can be shown again if needed
+            paymentErrorModalShown = false;
             const errorModal = document.getElementById('paymentErrorModal');
             if (errorModal) {
                 // Clear auto-close timer if it exists
@@ -1932,19 +1952,9 @@
                         if (document.readyState === 'loading') {
                             document.addEventListener('DOMContentLoaded', function() {
                                 showPaymentErrorModal();
-                                UserState.setPendingOrderId(null);
-                                UserState.setPendingCheckoutItems(null);
-                                UserState.setPaymentRedirectTime(null);
-                                UserState.setPaymongoCheckoutUrl(null);
-                                UserState.setPaymentPageUrl(null);
                             });
                         } else {
                             showPaymentErrorModal();
-                            UserState.setPendingOrderId(null);
-                            UserState.setPendingCheckoutItems(null);
-                            UserState.setPaymentRedirectTime(null);
-                            UserState.setPaymongoCheckoutUrl(null);
-                            UserState.setPaymentPageUrl(null);
                         }
                     }
                 }
