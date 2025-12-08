@@ -1410,6 +1410,8 @@
                 // Preserve the currently viewed order if still present
                 const currentId = allOrders[currentIndex]?.id;
                 allOrders = cleaned;
+                // Share with navbar to avoid duplicate fetch for badge
+                window.__ordersCache = allOrders;
                 if (currentId) {
                     const foundIndex = allOrders.findIndex(o => o.id === currentId);
                     if (foundIndex >= 0) currentIndex = foundIndex;
@@ -2055,8 +2057,19 @@
                 loadOrders();
             }, 100);
             
-            // Auto-refresh every 30 seconds to update tracking
-            setInterval(loadOrders, 30000);
+            // Auto-refresh every 60 seconds to update tracking (reduced load)
+            let refreshTimer = setInterval(loadOrders, 60000);
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    if (refreshTimer) {
+                        clearInterval(refreshTimer);
+                        refreshTimer = null;
+                    }
+                } else if (!refreshTimer) {
+                    refreshTimer = setInterval(loadOrders, 60000);
+                    loadOrders();
+                }
+            });
         });
     </script>
     
