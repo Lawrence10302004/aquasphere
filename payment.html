@@ -1165,13 +1165,17 @@
     <!-- Navbar JS -->
     <script src="navbar.js"></script>
     
+    <!-- User State Management -->
+    <script src="js/user_state.js"></script>
+    
     <script>
         let selectedPaymentMethod = 'gcash'; // Default to GCASH
         
         // Load order summary from checkout items
-        function loadOrderSummary() {
-            const checkoutItems = JSON.parse(localStorage.getItem('checkoutItems')) || [];
-            const deliveryAddress = JSON.parse(localStorage.getItem('deliveryAddress'));
+        async function loadOrderSummary() {
+            await UserState.loadState();
+            const checkoutItems = UserState.getCheckoutItems();
+            const deliveryAddress = UserState.getDeliveryAddress();
             
             if (checkoutItems.length === 0) {
                 // Redirect back to cart if no items
@@ -1216,8 +1220,8 @@
         
         // Place order
         async function placeOrder() {
-            const checkoutItems = JSON.parse(localStorage.getItem('checkoutItems')) || [];
-            const deliveryAddress = JSON.parse(localStorage.getItem('deliveryAddress'));
+            const checkoutItems = UserState.getCheckoutItems();
+            const deliveryAddress = UserState.getDeliveryAddress();
             
             if (checkoutItems.length === 0) {
                 showNotification('No items selected for checkout', 'error');
@@ -1322,13 +1326,13 @@
                     }
                     
                     // Store order ID and checkout items for later reference
-                    localStorage.setItem('pendingOrderId', orderResult.order_id);
-                    localStorage.setItem('pendingCheckoutItems', JSON.stringify(checkoutItems));
-                    localStorage.setItem('paymentRedirectTime', Date.now().toString());
-                    localStorage.setItem('paymongoCheckoutUrl', paymentResult.checkout_url);
+                    UserState.setPendingOrderId(orderResult.order_id);
+                    UserState.setPendingCheckoutItems(checkoutItems);
+                    UserState.setPaymentRedirectTime(Date.now().toString());
+                    UserState.setPaymongoCheckoutUrl(paymentResult.checkout_url);
                     
                     // Store the payment page URL for redirect back
-                    localStorage.setItem('paymentPageUrl', window.location.href);
+                    UserState.setPaymentPageUrl(window.location.href);
                     
                     // Redirect to PayMongo checkout
                     window.location.href = paymentResult.checkout_url;
@@ -1363,7 +1367,7 @@
                     removeOrderedItemsFromCart(checkoutItems);
                     
                     // Clear checkout items
-                    localStorage.removeItem('checkoutItems');
+                    UserState.setCheckoutItems([]);
                     
                     // Show success notification
                     showNotification('Order placed successfully!', 'success');
@@ -1382,19 +1386,20 @@
         }
         
         // Handle PayMongo redirect
-        function handlePaymentRedirect() {
+        async function handlePaymentRedirect() {
+            await UserState.loadState();
             const urlParams = new URLSearchParams(window.location.search);
             const urlHash = window.location.hash;
             const status = urlParams.get('status') || (urlHash.includes('failed') ? 'failed' : null);
-            const orderId = localStorage.getItem('pendingOrderId');
-            const paymentRedirectTime = localStorage.getItem('paymentRedirectTime');
+            const orderId = UserState.getPendingOrderId();
+            const paymentRedirectTime = UserState.getPaymentRedirectTime();
             
             // Check for failed payment in URL hash or query params
             if (urlHash.includes('failed') || urlParams.get('status') === 'failed') {
                 showPaymentErrorModal();
-                localStorage.removeItem('pendingOrderId');
-                localStorage.removeItem('pendingCheckoutItems');
-                localStorage.removeItem('paymentRedirectTime');
+                UserState.setPendingOrderId(null);
+                UserState.setPendingCheckoutItems(null);
+                UserState.setPaymentRedirectTime(null);
                 
                 // Clean URL
                 window.history.replaceState({}, document.title, window.location.pathname);
@@ -1409,11 +1414,11 @@
                 // IMMEDIATELY show error if coming from PayMongo (no delay)
                 if (referrer.includes('paymongo.com') || referrer.includes('secure-authentication')) {
                     showPaymentErrorModal();
-                    localStorage.removeItem('pendingOrderId');
-                    localStorage.removeItem('pendingCheckoutItems');
-                    localStorage.removeItem('paymentRedirectTime');
-                    localStorage.removeItem('paymongoCheckoutUrl');
-                    localStorage.removeItem('paymentPageUrl');
+                    UserState.setPendingOrderId(null);
+                    UserState.setPendingCheckoutItems(null);
+                    UserState.setPaymentRedirectTime(null);
+                    UserState.setPaymongoCheckoutUrl(null);
+                    UserState.setPaymentPageUrl(null);
                     return;
                 }
                 
@@ -1421,11 +1426,11 @@
                 const timeSinceRedirect = Date.now() - parseInt(paymentRedirectTime);
                 if (timeSinceRedirect > 3000) {
                     showPaymentErrorModal();
-                    localStorage.removeItem('pendingOrderId');
-                    localStorage.removeItem('pendingCheckoutItems');
-                    localStorage.removeItem('paymentRedirectTime');
-                    localStorage.removeItem('paymongoCheckoutUrl');
-                    localStorage.removeItem('paymentPageUrl');
+                    UserState.setPendingOrderId(null);
+                    UserState.setPendingCheckoutItems(null);
+                    UserState.setPaymentRedirectTime(null);
+                    UserState.setPaymongoCheckoutUrl(null);
+                    UserState.setPaymentPageUrl(null);
                     return;
                 }
             }
@@ -1433,7 +1438,7 @@
             if (status && orderId) {
                 if (status === 'success') {
                     // Get checkout items that were ordered
-                    const pendingCheckoutItems = JSON.parse(localStorage.getItem('pendingCheckoutItems') || '[]');
+                    const pendingCheckoutItems = UserState.getPendingCheckoutItems() || [];
                     
                     // Remove ordered items from cart
                     if (pendingCheckoutItems.length > 0) {
@@ -1441,10 +1446,10 @@
                     }
                     
                     // Clear checkout items and pending data
-                    localStorage.removeItem('checkoutItems');
-                    localStorage.removeItem('pendingOrderId');
-                    localStorage.removeItem('pendingCheckoutItems');
-                    localStorage.removeItem('paymentRedirectTime');
+                    UserState.setCheckoutItems([]);
+                    UserState.setPendingOrderId(null);
+                    UserState.setPendingCheckoutItems(null);
+                    UserState.setPaymentRedirectTime(null);
                     
                     showNotification('Payment successful! Your order has been placed.', 'success');
                     
@@ -1453,9 +1458,9 @@
                     }, 2000);
                 } else if (status === 'failed') {
                     showPaymentErrorModal();
-                    localStorage.removeItem('pendingOrderId');
-                    localStorage.removeItem('pendingCheckoutItems');
-                    localStorage.removeItem('paymentRedirectTime');
+                    UserState.setPendingOrderId(null);
+                    UserState.setPendingCheckoutItems(null);
+                    UserState.setPaymentRedirectTime(null);
                     
                     // Clean URL
                     window.history.replaceState({}, document.title, window.location.pathname);
@@ -1464,9 +1469,10 @@
         }
         
         // Monitor for manual navigation back from PayMongo - runs continuously
-        function monitorPaymentReturn() {
-            const orderId = localStorage.getItem('pendingOrderId');
-            const paymentRedirectTime = localStorage.getItem('paymentRedirectTime');
+        async function monitorPaymentReturn() {
+            await UserState.loadState();
+            const orderId = UserState.getPendingOrderId();
+            const paymentRedirectTime = UserState.getPaymentRedirectTime();
             
             if (orderId && paymentRedirectTime) {
                 // Check every 1 second for faster detection
@@ -1483,9 +1489,9 @@
                     // If success, clear everything
                     if (currentStatus === 'success' || currentHash.includes('success')) {
                         clearInterval(checkInterval);
-                        localStorage.removeItem('paymentRedirectTime');
-                        localStorage.removeItem('paymongoCheckoutUrl');
-                        localStorage.removeItem('paymentPageUrl');
+                        UserState.setPaymentRedirectTime(null);
+                        UserState.setPaymongoCheckoutUrl(null);
+                        UserState.setPaymentPageUrl(null);
                         return;
                     }
                     
@@ -1496,11 +1502,11 @@
                         
                         clearInterval(checkInterval);
                         showPaymentErrorModal();
-                        localStorage.removeItem('pendingOrderId');
-                        localStorage.removeItem('pendingCheckoutItems');
-                        localStorage.removeItem('paymentRedirectTime');
-                        localStorage.removeItem('paymongoCheckoutUrl');
-                        localStorage.removeItem('paymentPageUrl');
+                        UserState.setPendingOrderId(null);
+                        UserState.setPendingCheckoutItems(null);
+                        UserState.setPaymentRedirectTime(null);
+                        UserState.setPaymongoCheckoutUrl(null);
+                        UserState.setPaymentPageUrl(null);
                         return;
                     }
                     
@@ -1510,11 +1516,11 @@
                         if (!referrer || referrer === '' || elapsed > 10000) {
                             clearInterval(checkInterval);
                             showPaymentErrorModal();
-                            localStorage.removeItem('pendingOrderId');
-                            localStorage.removeItem('pendingCheckoutItems');
-                            localStorage.removeItem('paymentRedirectTime');
-                            localStorage.removeItem('paymongoCheckoutUrl');
-                            localStorage.removeItem('paymentPageUrl');
+                            UserState.setPendingOrderId(null);
+                            UserState.setPendingCheckoutItems(null);
+                            UserState.setPaymentRedirectTime(null);
+                            UserState.setPaymongoCheckoutUrl(null);
+                            UserState.setPaymentPageUrl(null);
                         }
                     }
                 }, 1000); // Check every second
@@ -1525,10 +1531,11 @@
         }
         
         // Check if user manually navigated to payment page with pending order
-        function checkPendingPaymentOnLoad() {
-            const orderId = localStorage.getItem('pendingOrderId');
-            const paymentRedirectTime = localStorage.getItem('paymentRedirectTime');
-            const paymongoUrl = localStorage.getItem('paymongoCheckoutUrl');
+        async function checkPendingPaymentOnLoad() {
+            await UserState.loadState();
+            const orderId = UserState.getPendingOrderId();
+            const paymentRedirectTime = UserState.getPaymentRedirectTime();
+            const paymongoUrl = UserState.getPaymongoCheckoutUrl();
             
             if (orderId && paymentRedirectTime && paymongoUrl) {
                 const timeSinceRedirect = Date.now() - parseInt(paymentRedirectTime);
@@ -1548,22 +1555,22 @@
                         
                         // Show error modal immediately - user clearly came from PayMongo
                         showPaymentErrorModal();
-                        localStorage.removeItem('pendingOrderId');
-                        localStorage.removeItem('pendingCheckoutItems');
-                        localStorage.removeItem('paymentRedirectTime');
-                        localStorage.removeItem('paymongoCheckoutUrl');
-                        localStorage.removeItem('paymentPageUrl');
+                        UserState.setPendingOrderId(null);
+                        UserState.setPendingCheckoutItems(null);
+                        UserState.setPaymentRedirectTime(null);
+                        UserState.setPaymongoCheckoutUrl(null);
+                        UserState.setPaymentPageUrl(null);
                         return true; // Indicate we handled it
                     }
                     
                     // If more than 1 second has passed and no referrer (direct navigation), also show
                     if (timeSinceRedirect > 1000 && (!referrer || referrer === '')) {
                         showPaymentErrorModal();
-                        localStorage.removeItem('pendingOrderId');
-                        localStorage.removeItem('pendingCheckoutItems');
-                        localStorage.removeItem('paymentRedirectTime');
-                        localStorage.removeItem('paymongoCheckoutUrl');
-                        localStorage.removeItem('paymentPageUrl');
+                        UserState.setPendingOrderId(null);
+                        UserState.setPendingCheckoutItems(null);
+                        UserState.setPaymentRedirectTime(null);
+                        UserState.setPaymongoCheckoutUrl(null);
+                        UserState.setPaymentPageUrl(null);
                         return true;
                     }
                     
@@ -1803,7 +1810,7 @@
         // Remove ordered items from cart
         function removeOrderedItemsFromCart(orderedItems) {
             try {
-                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const cart = UserState.getCart();
                 
                 // Create a map of ordered items by ID for quick lookup
                 const orderedMap = new Map();
@@ -1833,8 +1840,8 @@
                     return true; // Keep item if not ordered
                 });
                 
-                // Update cart in localStorage
-                localStorage.setItem('cart', JSON.stringify(updatedCart));
+                // Update cart in server
+                UserState.setCart(updatedCart);
                 
                 // Update cart count in navbar if available
                 if (typeof updateCartCount === 'function') {
@@ -1891,9 +1898,10 @@
         }
         
         // Run immediate check as soon as script loads (before DOM ready)
-        (function immediateCheck() {
-            const orderId = localStorage.getItem('pendingOrderId');
-            const paymentRedirectTime = localStorage.getItem('paymentRedirectTime');
+        (async function immediateCheck() {
+            await UserState.loadState();
+            const orderId = UserState.getPendingOrderId();
+            const paymentRedirectTime = UserState.getPaymentRedirectTime();
             
             if (orderId && paymentRedirectTime) {
                 const timeSinceRedirect = Date.now() - parseInt(paymentRedirectTime);
@@ -1924,19 +1932,19 @@
                         if (document.readyState === 'loading') {
                             document.addEventListener('DOMContentLoaded', function() {
                                 showPaymentErrorModal();
-                                localStorage.removeItem('pendingOrderId');
-                                localStorage.removeItem('pendingCheckoutItems');
-                                localStorage.removeItem('paymentRedirectTime');
-                                localStorage.removeItem('paymongoCheckoutUrl');
-                                localStorage.removeItem('paymentPageUrl');
+                                UserState.setPendingOrderId(null);
+                                UserState.setPendingCheckoutItems(null);
+                                UserState.setPaymentRedirectTime(null);
+                                UserState.setPaymongoCheckoutUrl(null);
+                                UserState.setPaymentPageUrl(null);
                             });
                         } else {
                             showPaymentErrorModal();
-                            localStorage.removeItem('pendingOrderId');
-                            localStorage.removeItem('pendingCheckoutItems');
-                            localStorage.removeItem('paymentRedirectTime');
-                            localStorage.removeItem('paymongoCheckoutUrl');
-                            localStorage.removeItem('paymentPageUrl');
+                            UserState.setPendingOrderId(null);
+                            UserState.setPendingCheckoutItems(null);
+                            UserState.setPaymentRedirectTime(null);
+                            UserState.setPaymongoCheckoutUrl(null);
+                            UserState.setPaymentPageUrl(null);
                         }
                     }
                 }

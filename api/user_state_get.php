@@ -1,6 +1,6 @@
 <?php
 /**
- * Get persisted user state (cart, delivery address)
+ * Get persisted user state (all localStorage-equivalent data)
  */
 
 header('Content-Type: application/json');
@@ -30,11 +30,25 @@ $user_id = $_SESSION['user_id'];
 init_db();
 $conn = get_db_connection();
 
-$query = "SELECT saved_cart, delivery_address FROM users WHERE id = ?";
+$query = "SELECT saved_cart, delivery_address, selected_cart_items, checkout_items, 
+                 pending_order_id, pending_checkout_items, payment_redirect_time, 
+                 paymongo_checkout_url, payment_page_url, pending_cancellation_orders 
+          FROM users WHERE id = ?";
 $result = execute_sql($conn, $query, [$user_id]);
 
-$saved_cart = [];
-$delivery_address = null;
+// Default values
+$state = [
+    'cart' => [],
+    'delivery_address' => null,
+    'selected_cart_items' => [],
+    'checkout_items' => [],
+    'pending_order_id' => null,
+    'pending_checkout_items' => null,
+    'payment_redirect_time' => null,
+    'paymongo_checkout_url' => null,
+    'payment_page_url' => null,
+    'pending_cancellation_orders' => []
+];
 
 if ($result !== false) {
     if ($GLOBALS['use_postgres']) {
@@ -43,13 +57,30 @@ if ($result !== false) {
         $row = $result->fetchArray(SQLITE3_ASSOC);
     }
     if ($row) {
-        if (!empty($row['saved_cart'])) {
-            $decoded = json_decode($row['saved_cart'], true);
-            if (is_array($decoded)) $saved_cart = $decoded;
-        }
-        if (!empty($row['delivery_address'])) {
-            $decodedAddr = json_decode($row['delivery_address'], true);
-            if ($decodedAddr !== null) $delivery_address = $decodedAddr;
+        // Map database columns to response keys
+        $field_map = [
+            'saved_cart' => 'cart',
+            'delivery_address' => 'delivery_address',
+            'selected_cart_items' => 'selected_cart_items',
+            'checkout_items' => 'checkout_items',
+            'pending_order_id' => 'pending_order_id',
+            'pending_checkout_items' => 'pending_checkout_items',
+            'payment_redirect_time' => 'payment_redirect_time',
+            'paymongo_checkout_url' => 'paymongo_checkout_url',
+            'payment_page_url' => 'payment_page_url',
+            'pending_cancellation_orders' => 'pending_cancellation_orders'
+        ];
+        
+        foreach ($field_map as $db_col => $response_key) {
+            if (isset($row[$db_col]) && !empty($row[$db_col])) {
+                $decoded = json_decode($row[$db_col], true);
+                if ($decoded !== null) {
+                    $state[$response_key] = $decoded;
+                } else {
+                    // If JSON decode fails, try as string (for simple values)
+                    $state[$response_key] = $row[$db_col];
+                }
+            }
         }
     }
 }
@@ -58,8 +89,7 @@ close_connection($conn);
 
 echo json_encode([
     'success' => true,
-    'cart' => $saved_cart,
-    'delivery_address' => $delivery_address
+    ...$state
 ]);
 ?>
 

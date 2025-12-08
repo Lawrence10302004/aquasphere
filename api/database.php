@@ -165,14 +165,32 @@ function init_db() {
         error_log("Failed to create users table: " . ($GLOBALS['use_postgres'] ? pg_last_error($conn) : "SQLite error"));
     }
     
-    // Ensure persistence columns exist for carts and addresses
+    // Ensure persistence columns exist for all user state (carts, addresses, checkout, payment, etc.)
     if ($GLOBALS['use_postgres']) {
         execute_sql($conn, "ALTER TABLE users ADD COLUMN IF NOT EXISTS saved_cart JSONB");
         execute_sql($conn, "ALTER TABLE users ADD COLUMN IF NOT EXISTS delivery_address JSONB");
+        execute_sql($conn, "ALTER TABLE users ADD COLUMN IF NOT EXISTS selected_cart_items JSONB");
+        execute_sql($conn, "ALTER TABLE users ADD COLUMN IF NOT EXISTS checkout_items JSONB");
+        execute_sql($conn, "ALTER TABLE users ADD COLUMN IF NOT EXISTS pending_order_id TEXT");
+        execute_sql($conn, "ALTER TABLE users ADD COLUMN IF NOT EXISTS pending_checkout_items JSONB");
+        execute_sql($conn, "ALTER TABLE users ADD COLUMN IF NOT EXISTS payment_redirect_time TEXT");
+        execute_sql($conn, "ALTER TABLE users ADD COLUMN IF NOT EXISTS paymongo_checkout_url TEXT");
+        execute_sql($conn, "ALTER TABLE users ADD COLUMN IF NOT EXISTS payment_page_url TEXT");
+        execute_sql($conn, "ALTER TABLE users ADD COLUMN IF NOT EXISTS pending_cancellation_orders JSONB");
+        execute_sql($conn, "ALTER TABLE users ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
     } else {
         // SQLite: add columns if missing (ignore errors if they exist)
         @execute_sql($conn, "ALTER TABLE users ADD COLUMN saved_cart TEXT");
         @execute_sql($conn, "ALTER TABLE users ADD COLUMN delivery_address TEXT");
+        @execute_sql($conn, "ALTER TABLE users ADD COLUMN selected_cart_items TEXT");
+        @execute_sql($conn, "ALTER TABLE users ADD COLUMN checkout_items TEXT");
+        @execute_sql($conn, "ALTER TABLE users ADD COLUMN pending_order_id TEXT");
+        @execute_sql($conn, "ALTER TABLE users ADD COLUMN pending_checkout_items TEXT");
+        @execute_sql($conn, "ALTER TABLE users ADD COLUMN payment_redirect_time TEXT");
+        @execute_sql($conn, "ALTER TABLE users ADD COLUMN paymongo_checkout_url TEXT");
+        @execute_sql($conn, "ALTER TABLE users ADD COLUMN payment_page_url TEXT");
+        @execute_sql($conn, "ALTER TABLE users ADD COLUMN pending_cancellation_orders TEXT");
+        @execute_sql($conn, "ALTER TABLE users ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
     }
     
     // Create system_settings table

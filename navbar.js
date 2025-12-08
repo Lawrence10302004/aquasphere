@@ -105,8 +105,15 @@ function loadUserData() {
 }
 
 // Update cart count in navbar
-function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+async function updateCartCount() {
+    // Use UserState if available, otherwise fallback to localStorage
+    let cart = [];
+    if (typeof UserState !== 'undefined') {
+        await UserState.loadState();
+        cart = UserState.getCart();
+    } else {
+        cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    }
     const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
     const cartCountEl = document.getElementById('cartCount');
     if (cartCountEl) {

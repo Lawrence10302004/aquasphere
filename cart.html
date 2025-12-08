@@ -2589,6 +2589,9 @@
     <!-- Shared Navbar JS - Load early to prevent lag -->
     <script src="navbar.js"></script>
     
+    <!-- User State Management -->
+    <script src="js/user_state.js"></script>
+    
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -2608,9 +2611,11 @@
             return typeof L !== 'undefined';
         }
         // Preload cart data immediately to prevent layout shifts
-        (function() {
+        (async function() {
             try {
-                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                // Load state from server first, then use localStorage (which is synced)
+                await UserState.loadState();
+                const cart = UserState.getCart();
                 const cartCount = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
                 const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
                 
@@ -2648,36 +2653,12 @@
         let currentPage = 1;
         const itemsPerPage = 4;
         
-        // Track selected items across all pages
-        let selectedItems = new Set(JSON.parse(localStorage.getItem('selectedCartItems') || '[]'));
+        // Track selected items across all pages (will be hydrated from server)
+        let selectedItems = new Set(UserState.getSelectedCartItems());
         
-        // Debounced server persistence
-        let persistTimer = null;
-        function queuePersistState() {
-            if (persistTimer) clearTimeout(persistTimer);
-            persistTimer = setTimeout(persistStateToServer, 700);
-        }
-
-        async function persistStateToServer() {
-            try {
-                const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                const address = JSON.parse(localStorage.getItem('deliveryAddress') || 'null');
-                await fetch('api/user_state_save.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        cart,
-                        delivery_address: address
-                    })
-                });
-            } catch (e) {
-                console.warn('Persist state failed (will retry later on next change)', e);
-            }
-        }
-
-        // Load cart from localStorage (after server sync)
+        // Load cart from server state (with localStorage fallback)
         function loadCart() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cart = UserState.getCart();
             const cartItemsList = document.getElementById('cartItemsList');
             const emptyCart = document.getElementById('emptyCart');
             const itemCount = document.getElementById('itemCount');
@@ -2721,7 +2702,7 @@
         // Clear selection when cart is empty
         function clearSelection() {
             selectedItems.clear();
-            localStorage.removeItem('selectedCartItems');
+            UserState.setSelectedCartItems([]);
         }
         
         function renderCartItems(cart) {
@@ -2822,7 +2803,7 @@
         }
         
         function changePage(page) {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cart = UserState.getCart();
             const totalPages = Math.ceil(cart.length / itemsPerPage);
             
             if (page < 1 || page > totalPages) return;
@@ -2837,7 +2818,7 @@
         
         // Update quantity
         function updateQuantity(productId, change) {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cart = UserState.getCart();
             const item = cart.find(i => i.id === productId);
             
             if (!item) return;
@@ -2848,8 +2829,7 @@
                 item.quantity = 1;
             }
             
-            localStorage.setItem('cart', JSON.stringify(cart));
-            queuePersistState();
+            UserState.setCart(cart);
             updateCartCount(); // Update navbar count immediately
             loadCart();
         }
@@ -2864,12 +2844,12 @@
                 return;
             }
             
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cart = UserState.getCart();
             const item = cart.find(i => i.id === productId);
             
             if (item) {
                 item.quantity = quantity;
-                localStorage.setItem('cart', JSON.stringify(cart));
+                UserState.setCart(cart);
                 updateCartCount(); // Update navbar count immediately
                 loadCart();
             }
@@ -2878,10 +2858,10 @@
         // Remove item
         function removeItem(productId) {
             showDeleteConfirmModal(() => {
-                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const cart = UserState.getCart();
                 const filteredCart = cart.filter(item => item.id !== productId);
                 
-                localStorage.setItem('cart', JSON.stringify(filteredCart));
+                UserState.setCart(filteredCart);
                 updateCartCount(); // Update navbar count immediately
                 loadCart();
                 showNotification('Item removed from cart', 'success');
@@ -2890,7 +2870,7 @@
         
         // Update summary (works across all pages)
         function updateSummary() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cart = UserState.getCart();
             
             // Calculate subtotal from all selected items (not just visible ones)
             let subtotal = 0;
@@ -2920,8 +2900,8 @@
                 selectedItems.delete(itemId);
             }
             
-            // Save to localStorage
-            localStorage.setItem('selectedCartItems', JSON.stringify(Array.from(selectedItems)));
+            // Save to server
+            UserState.setSelectedCartItems(selectedItems);
             
             updateSummary();
             updateSelectAllState();
@@ -2929,7 +2909,7 @@
         
         // Update select all checkbox state
         function updateSelectAllState() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cart = UserState.getCart();
             const selectAll = document.getElementById('selectAll');
             const deleteAllBtn = document.getElementById('deleteAllBtn');
             
@@ -2961,7 +2941,7 @@
         // Toggle select all (works across all pages)
         function toggleSelectAll() {
             const selectAll = document.getElementById('selectAll');
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cart = UserState.getCart();
             
             if (selectAll.checked) {
                 // Select all items across all pages
@@ -2973,8 +2953,8 @@
                 selectedItems.clear();
             }
             
-            // Save to localStorage
-            localStorage.setItem('selectedCartItems', JSON.stringify(Array.from(selectedItems)));
+            // Save to server
+            UserState.setSelectedCartItems(selectedItems);
             
             // Update visible checkboxes
             document.querySelectorAll('.item-checkbox-input').forEach(checkbox => {
@@ -2987,7 +2967,7 @@
         
         // Delete all selected items (works across all pages)
         function deleteAllSelected() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cart = UserState.getCart();
             const selectedCount = selectedItems.size;
             
             if (selectedCount === 0) {
@@ -2998,11 +2978,11 @@
             showDeleteConfirmModal(() => {
                 // Remove all selected items from cart
                 const updatedCart = cart.filter(item => !selectedItems.has(item.id));
-                localStorage.setItem('cart', JSON.stringify(updatedCart));
+                UserState.setCart(updatedCart);
                 
                 // Clear selection
                 selectedItems.clear();
-                localStorage.removeItem('selectedCartItems');
+                UserState.setSelectedCartItems([]);
                 
                 // Uncheck select all
                 document.getElementById('selectAll').checked = false;
@@ -3024,7 +3004,7 @@
         
         // Update cart count in navbar
         function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cart = UserState.getCart();
             const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
             const cartCountElement = document.getElementById('cartCount');
             if (cartCountElement) {
@@ -3040,7 +3020,7 @@
         
         // Proceed to checkout
         function proceedToCheckout() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cart = UserState.getCart();
             const checkoutItems = [];
             
             // Get all selected items (across all pages)
@@ -3057,7 +3037,7 @@
             }
             
             // Store selected items for checkout
-            localStorage.setItem('checkoutItems', JSON.stringify(checkoutItems));
+            UserState.setCheckoutItems(checkoutItems);
             
             // Show checkout loading modal
             showCheckoutLoading();
@@ -3280,7 +3260,7 @@
         
         // Address Management
         function loadAddress() {
-            const address = JSON.parse(localStorage.getItem('deliveryAddress'));
+            const address = UserState.getDeliveryAddress();
             const emptyAddress = document.getElementById('emptyAddress');
             const addressDisplay = document.getElementById('addressDisplay');
             const addressTabs = document.getElementById('addressTabs');
@@ -3424,8 +3404,8 @@
         
         function updateCheckoutButton() {
             const checkoutBtn = document.getElementById('checkoutBtn');
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const address = JSON.parse(localStorage.getItem('deliveryAddress'));
+            const cart = UserState.getCart();
+            const address = UserState.getDeliveryAddress();
             const selectedItems = document.querySelectorAll('.item-checkbox-input:checked');
             
             if (checkoutBtn) {
@@ -3445,7 +3425,7 @@
                 return;
             }
             
-            const address = JSON.parse(localStorage.getItem('deliveryAddress'));
+            const address = UserState.getDeliveryAddress();
             
             // Initialize location dropdowns first
             initializeLocationDropdowns();
@@ -3598,7 +3578,7 @@
                         const defaultCenter = [14.1500, 121.3167];
                         
                         // Check if we have saved coordinates
-                        const address = JSON.parse(localStorage.getItem('deliveryAddress'));
+                        const address = UserState.getDeliveryAddress();
                         let center = defaultCenter;
                         let zoom = 13;
                         
@@ -5311,27 +5291,10 @@
             showLogoutConfirmModal();
         }
         
-        async function hydrateStateFromServer() {
-            try {
-                const resp = await fetch('api/user_state_get.php');
-                if (!resp.ok) return;
-                const data = await resp.json();
-                if (data && data.success) {
-                    if (Array.isArray(data.cart)) {
-                        localStorage.setItem('cart', JSON.stringify(data.cart));
-                    }
-                    if (data.delivery_address !== undefined) {
-                        localStorage.setItem('deliveryAddress', JSON.stringify(data.delivery_address));
-                    }
-                }
-            } catch (e) {
-                console.warn('Unable to hydrate state from server, using local storage', e);
-            }
-        }
-
         // Initialize
         (async () => {
-            await hydrateStateFromServer();
+            await UserState.loadState();
+            selectedItems = new Set(UserState.getSelectedCartItems());
             loadCart();
             loadAddress();
             initializeLocationDropdowns();
