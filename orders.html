@@ -1509,18 +1509,15 @@
             `;
             paginationList.appendChild(nextItem);
             
-            // Bind click handlers to each button (including newly created ones)
-            paginationList.querySelectorAll('button[data-page]').forEach(btn => {
-                if (btn.dataset.bound) return;
-                btn.dataset.bound = 'true';
-                btn.addEventListener('click', (event) => {
-                    event.preventDefault();
-                    if (btn.disabled) return;
-                    const page = parseInt(btn.dataset.page, 10);
-                    if (!isFinite(page)) return;
-                    goToPage(page);
-                });
-            });
+            // Delegate click handling for all buttons
+            paginationList.onclick = (event) => {
+                const btn = event.target.closest('button[data-page]');
+                if (!btn || btn.disabled) return;
+                event.preventDefault();
+                const page = Number(btn.dataset.page);
+                if (!Number.isFinite(page)) return;
+                goToPage(page);
+            };
         }
         
         // Go to specific page
