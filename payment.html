@@ -1407,6 +1407,11 @@
                 return;
             }
             
+            // Load state to check for pending payment
+            await UserState.loadState();
+            const orderId = UserState.getPendingOrderId();
+            const paymentRedirectTime = UserState.getPaymentRedirectTime();
+            
             // Check if coming from PayMongo (user clicked fail/back)
             const referrer = document.referrer;
             if (referrer && (referrer.includes('paymongo.com') || referrer.includes('secure-authentication'))) {
@@ -1415,9 +1420,22 @@
                 return;
             }
             
+            // Also check if there's a pending payment and user returned to payment page
+            // This handles cases where referrer might not be set correctly
+            if (orderId && paymentRedirectTime && !status && window.location.pathname.includes('payment.html')) {
+                const timeSinceRedirect = Date.now() - parseInt(paymentRedirectTime);
+                // If payment was initiated more than 2 seconds ago and no success status
+                // and referrer suggests PayMongo, show error modal
+                if (timeSinceRedirect > 2000) {
+                    if (referrer && (referrer.includes('paymongo.com') || referrer.includes('secure-authentication'))) {
+                        showPaymentErrorModal();
+                        return;
+                    }
+                }
+            }
+            
             // Handle success case
             if (status === 'success') {
-                await UserState.loadState();
                 const pendingCheckoutItems = UserState.getPendingCheckoutItems() || [];
                 
                 // Remove ordered items from cart
