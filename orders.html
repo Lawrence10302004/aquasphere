@@ -1477,47 +1477,24 @@
             }
             
             pagination.style.display = 'block';
-            paginationList.innerHTML = '';
-            
-            // Previous button
-            const prevItem = document.createElement('li');
             const prevDisabled = currentPage === 1;
-            prevItem.className = `page-item ${prevDisabled ? 'disabled' : ''}`;
-            prevItem.innerHTML = `
-                <button class="page-link" type="button" data-page="${currentPage - 1}" ${prevDisabled ? 'disabled' : ''}>
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-            `;
-            paginationList.appendChild(prevItem);
-            
-            // Label "Order X of Y"
-            const labelItem = document.createElement('li');
-            labelItem.className = 'page-item disabled';
-            labelItem.innerHTML = `
-                <span class="page-link" style="pointer-events: none;">Order ${currentPage} of ${totalPages}</span>
-            `;
-            paginationList.appendChild(labelItem);
-            
-            // Next button
-            const nextItem = document.createElement('li');
             const nextDisabled = currentPage === totalPages;
-            nextItem.className = `page-item ${nextDisabled ? 'disabled' : ''}`;
-            nextItem.innerHTML = `
-                <button class="page-link" type="button" data-page="${currentPage + 1}" ${nextDisabled ? 'disabled' : ''}>
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            `;
-            paginationList.appendChild(nextItem);
             
-            // Delegate click handling for all buttons
-            paginationList.onclick = (event) => {
-                const btn = event.target.closest('button[data-page]');
-                if (!btn || btn.disabled) return;
-                event.preventDefault();
-                const page = Number(btn.dataset.page);
-                if (!Number.isFinite(page)) return;
-                goToPage(page);
-            };
+            paginationList.innerHTML = `
+                <li class="page-item ${prevDisabled ? 'disabled' : ''}">
+                    <button class="page-link" type="button" onclick="goToPage(${currentPage - 1})" ${prevDisabled ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link" style="pointer-events: none;">Order ${currentPage} of ${totalPages}</span>
+                </li>
+                <li class="page-item ${nextDisabled ? 'disabled' : ''}">
+                    <button class="page-link" type="button" onclick="goToPage(${currentPage + 1})" ${nextDisabled ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </li>
+            `;
         }
         
         // Go to specific page
