@@ -411,7 +411,7 @@
 
         <div class="content-card">
             <div class="search-bar">
-                <input type="text" class="form-control" id="searchInput" placeholder="Search by username, email, or name...">
+                <input type="text" class="form-control" id="searchInput" placeholder="Search by username, email, or name..." autocomplete="off">
                 <button class="btn btn-primary" onclick="loadUsers()">
                     <i class="fas fa-search"></i> Search
                 </button>
@@ -688,6 +688,8 @@
                 return;
             }
             
+            clearFieldErrors();
+            
             // Populate form
             document.getElementById('editUserId').value = user.id;
             document.getElementById('editUsername').value = user.username || '';
@@ -962,6 +964,31 @@
             if (e.key === 'Enter') {
                 loadUsers(1);
             }
+        });
+        
+        // Clear field errors on input/blur (live feedback)
+        ['editEmail','editFirstName','editLastName','editGender','editDateOfBirth','editNewPassword','editConfirmPassword'].forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener('input', () => {
+                const errorEl = document.getElementById(`${id}Error`);
+                if (el.value && errorEl) {
+                    errorEl.textContent = '';
+                    errorEl.classList.remove('field-error');
+                    errorEl.style.display = 'none';
+                    el.classList.remove('is-invalid');
+                }
+            });
+            el.addEventListener('blur', () => {
+                if (!el.value.trim()) return;
+                const errorEl = document.getElementById(`${id}Error`);
+                if (errorEl) {
+                    errorEl.textContent = '';
+                    errorEl.classList.remove('field-error');
+                    errorEl.style.display = 'none';
+                    el.classList.remove('is-invalid');
+                }
+            });
         });
 
         // Auto-search on input with debounce
