@@ -295,6 +295,49 @@
             box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25);
         }
 
+        /* Order details modal */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+        }
+        .detail-card {
+            background: #f8fbff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px 12px;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .detail-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #64748b;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        .detail-value {
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.4;
+        }
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 16px 0 8px;
+        }
+        .address-block {
+            white-space: pre-wrap;
+            margin: 0;
+            font-family: inherit;
+            color: #0f172a;
+            line-height: 1.5;
+        }
+
         /* Update status modal styling */
         .update-modal {
             border-radius: 16px;
@@ -633,48 +676,48 @@
             }
             
             const address = order.delivery_address;
-            const addressText = address ? (typeof address === 'string' ? address : JSON.stringify(address, null, 2)) : 'N/A';
+            const addressText = formatAddress(address);
             
             const subtotal = order.items.reduce((sum, item) => sum + parseFloat(item.subtotal), 0);
             const deliveryFee = parseFloat(order.total_amount) - subtotal;
             
             document.getElementById('modalOrderId').textContent = order.id;
             document.getElementById('orderDetailsContent').innerHTML = `
-                <div class="order-details">
-                    <div class="order-details-item">
-                        <span><strong>Customer:</strong></span>
-                        <span>${escapeHtml(order.username || 'N/A')} (${escapeHtml(order.email || 'N/A')})</span>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <div class="detail-label">Customer</div>
+                        <div class="detail-value">${escapeHtml(order.username || 'N/A')}<br><small class="text-muted">${escapeHtml(order.email || 'N/A')}</small></div>
                     </div>
-                    <div class="order-details-item">
-                        <span><strong>Order Date:</strong></span>
-                        <span>${formatDate(order.order_date)}</span>
+                    <div class="detail-card">
+                        <div class="detail-label">Order Date</div>
+                        <div class="detail-value">${formatDate(order.order_date)}</div>
                     </div>
-                    <div class="order-details-item">
-                        <span><strong>Delivery Date:</strong></span>
-                        <span>${order.delivery_date ? formatDate(order.delivery_date) : 'N/A'}</span>
+                    <div class="detail-card">
+                        <div class="detail-label">Delivery Date</div>
+                        <div class="detail-value">${order.delivery_date ? formatDate(order.delivery_date) : 'N/A'}</div>
                     </div>
-                    <div class="order-details-item">
-                        <span><strong>Delivery Time:</strong></span>
-                        <span>${order.delivery_time || 'N/A'}</span>
+                    <div class="detail-card">
+                        <div class="detail-label">Delivery Time</div>
+                        <div class="detail-value">${order.delivery_time || 'N/A'}</div>
                     </div>
-                    <div class="order-details-item">
-                        <span><strong>Payment Method:</strong></span>
-                        <span>${escapeHtml(order.payment_method || 'COD')}</span>
+                    <div class="detail-card">
+                        <div class="detail-label">Payment Method</div>
+                        <div class="detail-value">${escapeHtml(order.payment_method || 'COD')}</div>
                     </div>
-                    <div class="order-details-item">
-                        <span><strong>Status:</strong></span>
-                        <span class="status-badge ${order.status.toLowerCase()}">${order.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
+                    <div class="detail-card">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value"><span class="status-badge ${order.status.toLowerCase()}">${order.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</span></div>
                     </div>
                 </div>
                 
-                <h6 class="mt-3 mb-2"><i class="fas fa-map-marker-alt me-2"></i>Delivery Address</h6>
-                <div class="order-details">
-                    <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">${escapeHtml(addressText)}</pre>
+                <h6 class="section-title"><i class="fas fa-map-marker-alt me-2"></i>Delivery Address</h6>
+                <div class="detail-card">
+                    <p class="address-block">${escapeHtml(addressText)}</p>
                 </div>
                 
-                <h6 class="mt-3 mb-2"><i class="fas fa-box me-2"></i>Order Items</h6>
+                <h6 class="section-title"><i class="fas fa-box me-2"></i>Order Items</h6>
                 <div class="table-responsive">
-                    <table class="table table-sm">
+                    <table class="table table-sm mb-0">
                         <thead>
                             <tr>
                                 <th>Product</th>
@@ -774,6 +817,40 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        // Format delivery address nicely
+        function formatAddress(address) {
+            if (!address) return 'N/A';
+            if (typeof address === 'string') return address;
+            try {
+                const parts = [];
+                const fullName = address.fullName || address.name || '';
+                const phone = address.phoneNumber || address.phone || '';
+                const street = address.streetAddress || address.address || address.location || '';
+                const barangay = address.barangay || '';
+                const city = address.city || '';
+                const province = address.province || '';
+                const region = address.region || '';
+                const postal = address.postalCode || '';
+                
+                if (fullName) parts.push(fullName);
+                if (phone) parts.push(`Phone: ${phone}`);
+                
+                const line1 = [street, barangay].filter(Boolean).join(', ');
+                if (line1) parts.push(line1);
+                
+                const line2 = [city, province].filter(Boolean).join(', ');
+                if (line2) parts.push(line2);
+                
+                const line3 = [region, postal].filter(Boolean).join(' ');
+                if (line3.trim()) parts.push(line3.trim());
+                
+                if (address.label) parts.push(`Label: ${address.label}`);
+                return parts.filter(Boolean).join('\n');
+            } catch (_) {
+                return 'N/A';
+            }
         }
         
         // Show notification
