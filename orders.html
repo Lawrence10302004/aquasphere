@@ -899,10 +899,10 @@
         
         @keyframes iconBounce {
             0%, 100% {
-                transform: translate(-50%, -50%) scale(1);
+                transform: scale(1);
             }
             50% {
-                transform: translate(-50%, -50%) scale(1.1);
+                transform: scale(1.1);
             }
         }
         
@@ -1090,9 +1090,16 @@
                 
                 // Check if response is ok
                 if (!response.ok) {
-                    // If 401, user is not logged in
+                    // If 401, user is not logged in - don't show error, just return silently
                     if (response.status === 401) {
-                        console.log('User not logged in');
+                        console.log('User not logged in, skipping order load');
+                        // Clear any existing error notifications
+                        const existingNotifications = document.querySelectorAll('.alert-danger');
+                        existingNotifications.forEach(notif => {
+                            if (notif.textContent.includes('Failed to load orders') || notif.textContent.includes('load orders')) {
+                                notif.remove();
+                            }
+                        });
                         return;
                     }
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -1134,7 +1141,8 @@
             } catch (error) {
                 console.error('Error loading orders:', error);
                 // Only show notification for actual errors, not network issues that might be temporary
-                if (error.message && !error.message.includes('fetch')) {
+                // Also don't show if it's a 401 (handled above)
+                if (error.message && !error.message.includes('fetch') && !error.message.includes('401')) {
                     showNotification('Failed to load orders. Please try again.', 'error');
                 }
             }
@@ -1145,6 +1153,12 @@
             const ordersList = document.getElementById('ordersList');
             const emptyOrders = document.getElementById('emptyOrders');
             const pagination = document.getElementById('ordersPagination');
+            
+            // Check if elements exist before accessing
+            if (!ordersList || !emptyOrders || !pagination) {
+                console.warn('Order elements not found, waiting for DOM...');
+                return;
+            }
             
             if (allOrders.length === 0) {
                 emptyOrders.style.display = 'block';
@@ -1177,6 +1191,12 @@
         function renderPagination(totalPages) {
             const pagination = document.getElementById('ordersPagination');
             const paginationList = document.getElementById('paginationList');
+            
+            // Check if elements exist
+            if (!pagination || !paginationList) {
+                console.warn('Pagination elements not found');
+                return;
+            }
             
             if (totalPages <= 1) {
                 pagination.style.display = 'none';
@@ -1639,7 +1659,10 @@
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            loadOrders();
+            // Wait a bit for DOM to fully render before loading orders
+            setTimeout(() => {
+                loadOrders();
+            }, 100);
             
             // Auto-refresh every 30 seconds to update tracking
             setInterval(loadOrders, 30000);
