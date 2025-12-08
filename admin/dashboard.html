@@ -282,46 +282,96 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Revenue Cards -->
+        <div class="row mb-4">
+            <div class="col-md-6 mb-4">
+                <div class="stats-card success">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3 id="total-revenue">₱0.00</h3>
+                    <p>Total Revenue</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="stats-card warning">
+                    <i class="fas fa-chart-line"></i>
+                    <h3 id="today-revenue">₱0.00</h3>
+                    <p>Today's Revenue</p>
+                </div>
+            </div>
+        </div>
 
-        <!-- Recent Activity -->
+        <!-- Orders by Status and Recent Orders -->
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-6">
                 <div class="content-card">
-                    <h5><i class="fas fa-clock me-2"></i>Recent Activity</h5>
+                    <h5><i class="fas fa-chart-pie me-2"></i>Orders by Status</h5>
+                    <div id="statusChart" style="min-height: 300px;">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <tbody id="statusTableBody">
+                                    <tr><td class="text-center text-muted">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="content-card">
+                    <h5><i class="fas fa-clock me-2"></i>Recent Orders</h5>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>User</th>
-                                    <th>Action</th>
-                                    <th>Time</th>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
                                 </tr>
                             </thead>
-                            <tbody id="recent-activity">
+                            <tbody id="recent-orders">
                                 <tr>
-                                    <td colspan="3" class="text-center text-muted">Loading...</td>
+                                    <td colspan="5" class="text-center text-muted">Loading...</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            
-            <div class="col-lg-4">
+        </div>
+        
+        <!-- System Status -->
+        <div class="row mt-4">
+            <div class="col-lg-12">
                 <div class="content-card">
                     <h5><i class="fas fa-info-circle me-2"></i>System Status</h5>
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span>System Health</span>
-                            <span class="badge bg-success">Online</span>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span><i class="fas fa-server me-2"></i>System Health</span>
+                                <span class="badge bg-success">Online</span>
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span>Database</span>
-                            <span class="badge bg-success" id="db-status">Connected</span>
+                        <div class="col-md-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span><i class="fas fa-database me-2"></i>Database</span>
+                                <span class="badge bg-success" id="db-status">Connected</span>
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span>Email Service</span>
-                            <span class="badge" id="email-status">Unknown</span>
+                        <div class="col-md-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span><i class="fas fa-envelope me-2"></i>Email Service</span>
+                                <span class="badge" id="email-status">Unknown</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span><i class="fas fa-credit-card me-2"></i>Payment Gateway</span>
+                                <span class="badge bg-success" id="payment-status">PayMongo</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -338,19 +388,34 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    document.getElementById('total-users').textContent = data.stats.total_users || 0;
-                    document.getElementById('total-orders').textContent = data.stats.total_orders || 0;
-                    document.getElementById('pending-deliveries').textContent = data.stats.pending_deliveries || 0;
-                    document.getElementById('today-orders').textContent = data.stats.today_orders || 0;
+                    const stats = data.stats;
+                    
+                    // Update stat cards
+                    document.getElementById('total-users').textContent = stats.total_users || 0;
+                    document.getElementById('total-orders').textContent = stats.total_orders || 0;
+                    document.getElementById('pending-deliveries').textContent = stats.pending_deliveries || 0;
+                    document.getElementById('today-orders').textContent = stats.today_orders || 0;
+                    document.getElementById('total-revenue').textContent = `₱${(stats.total_revenue || 0).toFixed(2)}`;
+                    document.getElementById('today-revenue').textContent = `₱${(stats.today_revenue || 0).toFixed(2)}`;
                     
                     // Update email status
                     const emailStatus = document.getElementById('email-status');
-                    if (data.stats.email_configured) {
+                    if (stats.email_configured) {
                         emailStatus.textContent = 'Configured';
                         emailStatus.className = 'badge bg-success';
                     } else {
                         emailStatus.textContent = 'Not Configured';
                         emailStatus.className = 'badge bg-warning';
+                    }
+                    
+                    // Display orders by status
+                    if (stats.status_counts) {
+                        displayStatusChart(stats.status_counts);
+                    }
+                    
+                    // Display recent orders
+                    if (stats.recent_orders) {
+                        displayRecentOrders(stats.recent_orders);
                     }
                 }
             })
@@ -358,28 +423,108 @@
                 console.error('Error loading stats:', error);
             });
         
-        // Load recent activity
-        fetch('../api/admin/activity.php')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const tbody = document.getElementById('recent-activity');
-                    if (data.activities && data.activities.length > 0) {
-                        tbody.innerHTML = data.activities.map(activity => `
-                            <tr>
-                                <td>${activity.username || 'System'}</td>
-                                <td>${activity.action}</td>
-                                <td>${activity.time}</td>
-                            </tr>
-                        `).join('');
-                    } else {
-                        tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">No recent activity</td></tr>';
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error loading activity:', error);
+        // Display status chart
+        function displayStatusChart(statusCounts) {
+            const tbody = document.getElementById('statusTableBody');
+            const statusLabels = {
+                'pending': 'Pending',
+                'preparing': 'Preparing',
+                'out_for_delivery': 'Out for Delivery',
+                'delivered': 'Delivered',
+                'cancelled': 'Cancelled',
+                'paid': 'Paid'
+            };
+            
+            const statusColors = {
+                'pending': '#fbbf24',
+                'preparing': '#3b82f6',
+                'out_for_delivery': '#8b5cf6',
+                'delivered': '#22c55e',
+                'cancelled': '#ef4444',
+                'paid': '#22c55e'
+            };
+            
+            tbody.innerHTML = Object.keys(statusCounts).map(status => {
+                const count = statusCounts[status];
+                const label = statusLabels[status] || status;
+                const color = statusColors[status] || '#6b7280';
+                const percentage = data.stats.total_orders > 0 
+                    ? ((count / data.stats.total_orders) * 100).toFixed(1) 
+                    : 0;
+                
+                return `
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div style="width: 12px; height: 12px; background: ${color}; border-radius: 50%; margin-right: 10px;"></div>
+                                <span><strong>${label}</strong></span>
+                            </div>
+                        </td>
+                        <td class="text-end">
+                            <strong>${count}</strong>
+                            <small class="text-muted ms-2">(${percentage}%)</small>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // Display recent orders
+        function displayRecentOrders(orders) {
+            const tbody = document.getElementById('recent-orders');
+            
+            if (orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No recent orders</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = orders.map(order => {
+                const status = order.status.toLowerCase();
+                const statusLabel = order.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+                
+                return `
+                    <tr>
+                        <td><a href="orders.html" style="color: #0ea5e9; text-decoration: none;"><strong>#${order.id}</strong></a></td>
+                        <td>${escapeHtml(order.username || 'N/A')}</td>
+                        <td><strong>₱${parseFloat(order.total_amount).toFixed(2)}</strong></td>
+                        <td><span class="badge bg-${getStatusColor(status)}">${statusLabel}</span></td>
+                        <td>${formatDate(order.order_date)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // Get status color
+        function getStatusColor(status) {
+            const colors = {
+                'pending': 'warning',
+                'preparing': 'info',
+                'out_for_delivery': 'primary',
+                'delivered': 'success',
+                'cancelled': 'danger',
+                'paid': 'success'
+            };
+            return colors[status] || 'secondary';
+        }
+        
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
             });
+        }
+        
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
     </script>
 </body>
 </html>
