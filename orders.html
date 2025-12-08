@@ -1417,6 +1417,11 @@
                     totalPages = Math.max(1, Math.ceil(currentOrders.length / ordersPerPage));
                 }
 
+                // If this page filtered down to zero (e.g., was a cancelled order), try to advance to next page when available
+                if (currentOrders.length === 0 && currentPage < totalPages) {
+                    return loadOrders(currentPage + 1);
+                }
+
                 renderOrders();
             } catch (error) {
                 console.error('Error loading orders:', error);
