@@ -1410,8 +1410,11 @@
         
         // Handle PayMongo redirect - Check URL params and referrer once
         async function handlePaymentRedirect() {
+            console.log('handlePaymentRedirect called');
+            
             // Prevent multiple checks
             if (paymentErrorModalShown) {
+                console.log('Modal already shown, skipping');
                 return;
             }
             
@@ -1419,10 +1422,18 @@
             const urlHash = window.location.hash;
             const status = urlParams.get('status') || (urlHash.includes('failed') ? 'failed' : null);
             
+            console.log('URL status:', status);
+            console.log('URL params:', window.location.search);
+            console.log('URL hash:', window.location.hash);
+            console.log('Referrer:', document.referrer);
+            
             // Check sessionStorage for PayMongo redirect flag
             const paymongoRedirect = sessionStorage.getItem('paymongo_redirect') === 'true';
             const paymongoRedirectTime = parseInt(sessionStorage.getItem('paymongo_redirect_time') || '0');
             const timeSinceRedirect = Date.now() - paymongoRedirectTime;
+            
+            console.log('PayMongo redirect flag:', paymongoRedirect);
+            console.log('Time since redirect:', timeSinceRedirect, 'ms');
             
             // Handle success case FIRST - before checking referrer
             if (status === 'success') {
@@ -1490,11 +1501,23 @@
                 referrer.includes('paymongo')
             ));
             
+            console.log('isFromPayMongo:', isFromPayMongo);
+            console.log('pendingOrderId:', pendingOrderId);
+            console.log('timeSinceRedirect:', timeSinceRedirect, 'ms');
+            
             // Show error modal if:
-            // - Coming from PayMongo (via sessionStorage or referrer) AND no success status
+            // - SessionStorage flag exists (most reliable - user went to PayMongo)
+            // - OR coming from PayMongo (via referrer) AND no success status
             // - OR there's a pending order but no success status
-            // - AND redirect happened within last 5 minutes (to avoid stale flags)
-            if ((isFromPayMongo && !status) || (pendingOrderId && !status && timeSinceRedirect < 300000)) {
+            // Don't check time limit for sessionStorage flag - it's reliable
+            const shouldShowModal = paymongoRedirect || 
+                                   (isFromPayMongo && !status) || 
+                                   (pendingOrderId && !status);
+            
+            console.log('shouldShowModal:', shouldShowModal);
+            
+            if (shouldShowModal) {
+                console.log('Showing payment error modal');
                 // Clear PayMongo redirect flag
                 sessionStorage.removeItem('paymongo_redirect');
                 sessionStorage.removeItem('paymongo_redirect_time');
@@ -1502,13 +1525,18 @@
                 // User came from PayMongo but no success status = payment failed/cancelled
                 showPaymentErrorModal();
                 return;
+            } else {
+                console.log('Conditions not met for showing modal');
             }
         }
         
         // Show payment error modal
         function showPaymentErrorModal() {
+            console.log('showPaymentErrorModal called');
+            
             // Prevent multiple modals
             if (paymentErrorModalShown) {
+                console.log('Modal already shown, returning');
                 return;
             }
             
@@ -1564,12 +1592,16 @@
             document.body.appendChild(errorModal);
             
             // Show modal with animation (centered)
+            console.log('Modal created, showing in 100ms');
             setTimeout(() => {
+                console.log('Setting modal display to flex');
                 errorModal.style.display = 'flex';
                 errorModal.style.alignItems = 'center';
                 errorModal.style.justifyContent = 'center';
                 setTimeout(() => {
+                    console.log('Adding show class to modal');
                     errorModal.classList.add('show');
+                    console.log('Modal should now be visible');
                 }, 10);
             }, 100);
             
