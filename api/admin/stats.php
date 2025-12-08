@@ -32,7 +32,7 @@ if ($GLOBALS['use_postgres']) {
 }
 
 // Pending deliveries
-$query = "SELECT COUNT(*) as count FROM orders WHERE status IN ('pending', 'preparing', 'delivering')";
+$query = "SELECT COUNT(*) as count FROM orders WHERE status IN ('pending', 'preparing', 'shipped', 'out_for_delivery')";
 $result = execute_sql($conn, $query);
 if ($GLOBALS['use_postgres']) {
     $row = pg_fetch_assoc($result);
@@ -77,7 +77,7 @@ if ($GLOBALS['use_postgres']) {
 
 // Orders by status
 $status_counts = [];
-$statuses = ['pending', 'preparing', 'out_for_delivery', 'delivered', 'cancelled', 'paid'];
+$statuses = ['pending', 'preparing', 'shipped', 'out_for_delivery', 'delivered', 'cancelled', 'paid'];
 foreach ($statuses as $status) {
     $query = "SELECT COUNT(*) as count FROM orders WHERE status = ?";
     $result = execute_sql($conn, $query, [$status]);
