@@ -61,8 +61,8 @@ if (!$order) {
     exit;
 }
 
-// Check if order can be cancelled (only pending, preparing, or paid status)
-$cancellable_statuses = ['pending', 'preparing', 'paid'];
+// Check if order can be cancelled (only pending or preparing status)
+$cancellable_statuses = ['pending', 'preparing'];
 if (!in_array(strtolower($order['status']), $cancellable_statuses)) {
     close_connection($conn);
     echo json_encode([
@@ -72,9 +72,13 @@ if (!in_array(strtolower($order['status']), $cancellable_statuses)) {
     exit;
 }
 
-// Update order status to cancelled
-$update_query = "UPDATE orders SET status = 'cancelled', updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?";
-$result = execute_sql($conn, $update_query, [$order_id, $user_id]);
+// If status is 'preparing', set to 'cancellation_requested' (requires admin approval)
+// If status is 'pending', cancel immediately
+$new_status = (strtolower($order['status']) === 'preparing') ? 'cancellation_requested' : 'cancelled';
+
+// Update order status
+$update_query = "UPDATE orders SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?";
+$result = execute_sql($conn, $update_query, [$new_status, $order_id, $user_id]);
 
 if ($result === false) {
     close_connection($conn);
@@ -84,9 +88,14 @@ if ($result === false) {
 
 close_connection($conn);
 
+$message = ($new_status === 'cancellation_requested') 
+    ? 'Cancellation request submitted. Waiting for admin approval.'
+    : 'Order cancelled successfully';
+
 echo json_encode([
     'success' => true,
-    'message' => 'Order cancelled successfully'
+    'message' => $message,
+    'requires_approval' => ($new_status === 'cancellation_requested')
 ]);
 ?>
 

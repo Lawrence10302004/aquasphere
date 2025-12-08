@@ -194,6 +194,11 @@
             border-color: rgba(34, 197, 94, 0.5);
         }
         
+        .order-status-badge.cancellation_requested {
+            background: rgba(251, 191, 36, 0.3);
+            border-color: rgba(251, 191, 36, 0.5);
+        }
+        
         .order-body {
             padding: 1.25rem 1.5rem;
         }
@@ -1295,7 +1300,11 @@
             card.className = 'order-card';
             
             const status = order.status.toLowerCase();
-            const statusLabel = status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+            let statusLabel = status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+            // Special handling for cancellation_requested
+            if (status === 'cancellation_requested') {
+                statusLabel = 'Waiting for Approval';
+            }
             
             // Calculate subtotal from items
             const subtotal = order.items.reduce((sum, item) => sum + parseFloat(item.subtotal), 0);
@@ -1373,8 +1382,13 @@
                     
                     <!-- Order Actions -->
                     <div class="order-actions">
-                        ${canCancelOrder(status) ? `
-                            <button class="btn-cancel" onclick="cancelOrder(${order.id})">
+                        ${status === 'cancellation_requested' ? `
+                            <div style="display: flex; align-items: center; gap: 0.5rem; color: #f59e0b; font-weight: 600; font-size: 0.9rem;">
+                                <i class="fas fa-clock" style="animation: pulse 2s ease infinite;"></i>
+                                Waiting for admin approval
+                            </div>
+                        ` : canCancelOrder(status) ? `
+                            <button class="btn-cancel" onclick="showCancelOrderModal(${order.id}, '${status}')">
                                 <i class="fas fa-times-circle"></i>
                                 Cancel Order
                             </button>
@@ -1426,7 +1440,7 @@
         
         // Check if order can be cancelled
         function canCancelOrder(status) {
-            const cancellable = ['pending', 'preparing', 'paid'];
+            const cancellable = ['pending', 'preparing'];
             return cancellable.includes(status.toLowerCase());
         }
         
@@ -1699,6 +1713,27 @@
             <div class="logout-confirm-footer">
                 <button type="button" class="btn-logout-cancel" id="logoutCancelBtn">Cancel</button>
                 <button type="button" class="btn-logout-confirm" id="logoutConfirmBtn">Logout</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cancel Order Confirmation Modal -->
+    <div id="cancelOrderModal" class="cancel-order-modal" onclick="closeCancelOrderModal(event)" style="display: none;">
+        <div class="cancel-order-content" onclick="event.stopPropagation()">
+            <div class="cancel-order-icon-wrapper">
+                <div class="cancel-order-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+            </div>
+            <div class="cancel-order-body">
+                <h3>Cancel Order</h3>
+                <div id="cancelOrderMessage">
+                    <p>Are you sure you want to cancel this order? This action cannot be undone.</p>
+                </div>
+            </div>
+            <div class="cancel-order-footer">
+                <button type="button" class="btn-cancel-order-cancel" id="cancelOrderCancelBtn">No, Keep Order</button>
+                <button type="button" class="btn-cancel-order-confirm" id="cancelOrderConfirmBtn">Yes, Cancel Order</button>
             </div>
         </div>
     </div>
