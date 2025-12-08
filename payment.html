@@ -1661,6 +1661,59 @@
             setTimeout(() => clearInterval(checkNavbar), 5000);
         }
         
+        // Run immediate check as soon as script loads (before DOM ready)
+        (function immediateCheck() {
+            const orderId = localStorage.getItem('pendingOrderId');
+            const paymentRedirectTime = localStorage.getItem('paymentRedirectTime');
+            
+            if (orderId && paymentRedirectTime) {
+                const timeSinceRedirect = Date.now() - parseInt(paymentRedirectTime);
+                const currentStatus = new URLSearchParams(window.location.search).get('status');
+                
+                // If on payment page, no success status, and enough time passed
+                if (window.location.pathname.includes('payment.html') && 
+                    !currentStatus && 
+                    timeSinceRedirect > 3000) {
+                    
+                    const referrer = document.referrer;
+                    console.log('Payment check:', {
+                        orderId,
+                        timeSinceRedirect,
+                        referrer,
+                        currentStatus,
+                        url: window.location.href
+                    });
+                    
+                    // If conditions are met, show error immediately
+                    if (referrer.includes('paymongo.com') || 
+                        referrer.includes('secure-authentication') ||
+                        !referrer || 
+                        referrer === '' ||
+                        timeSinceRedirect > 10000) {
+                        
+                        // Wait for DOM to be ready, then show modal
+                        if (document.readyState === 'loading') {
+                            document.addEventListener('DOMContentLoaded', function() {
+                                showPaymentErrorModal();
+                                localStorage.removeItem('pendingOrderId');
+                                localStorage.removeItem('pendingCheckoutItems');
+                                localStorage.removeItem('paymentRedirectTime');
+                                localStorage.removeItem('paymongoCheckoutUrl');
+                                localStorage.removeItem('paymentPageUrl');
+                            });
+                        } else {
+                            showPaymentErrorModal();
+                            localStorage.removeItem('pendingOrderId');
+                            localStorage.removeItem('pendingCheckoutItems');
+                            localStorage.removeItem('paymentRedirectTime');
+                            localStorage.removeItem('paymongoCheckoutUrl');
+                            localStorage.removeItem('paymentPageUrl');
+                        }
+                    }
+                }
+            }
+        })();
+        
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadOrderSummary();
@@ -1680,7 +1733,7 @@
                     handlePaymentRedirect();
                 }
                 checkPendingPaymentOnLoad();
-            }, 500);
+            }, 300);
             
             // More aggressive check after 1 second
             setTimeout(() => {
