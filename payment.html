@@ -2007,21 +2007,25 @@
                 handlePaymentRedirect();
             }
             
-            // Also check after a short delay to catch any late redirects
+            // Also check after a short delay to catch any late redirects (only if not already handled)
             setTimeout(() => {
-                if (!handled) {
+                if (!handled && !paymentErrorModalShown) {
                     handlePaymentRedirect();
+                    checkPendingPaymentOnLoad();
                 }
-                checkPendingPaymentOnLoad();
             }, 300);
             
-            // More aggressive check after 1 second
+            // More aggressive check after 1 second (only if not already handled)
             setTimeout(() => {
-                checkPendingPaymentOnLoad();
+                if (!paymentErrorModalShown) {
+                    checkPendingPaymentOnLoad();
+                }
             }, 1000);
             
-            // Start monitoring for manual return from PayMongo
-            monitorPaymentReturn();
+            // Start monitoring for manual return from PayMongo (only if not already handled)
+            if (!paymentErrorModalShown) {
+                monitorPaymentReturn();
+            }
             
             // Initialize dropdown after navbar loads
             initializeDropdown();
@@ -2034,10 +2038,12 @@
         
         // Also check when page becomes visible (user switches back to tab)
         document.addEventListener('visibilitychange', function() {
-            if (!document.hidden) {
+            if (!document.hidden && !paymentErrorModalShown) {
                 setTimeout(() => {
-                    checkPendingPaymentOnLoad();
-                    handlePaymentRedirect();
+                    if (!paymentErrorModalShown) {
+                        checkPendingPaymentOnLoad();
+                        handlePaymentRedirect();
+                    }
                 }, 100); // Faster response
             }
         });
