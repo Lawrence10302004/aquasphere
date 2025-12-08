@@ -1398,7 +1398,14 @@
                 handleApprovedCancellations(fetchedOrders);
                 
                 // Exclude fully cancelled orders so they disappear from My Orders
-                allOrders = (fetchedOrders || []).filter(o => (o.status || '').toLowerCase() !== 'cancelled');
+                allOrders = (fetchedOrders || [])
+                    .filter(o => (o.status || '').toLowerCase() !== 'cancelled')
+                    // Sort newest first for consistent carousel navigation
+                    .sort((a, b) => {
+                        const dateA = new Date(a.order_date || a.created_at || 0).getTime();
+                        const dateB = new Date(b.order_date || b.created_at || 0).getTime();
+                        return dateB - dateA;
+                    });
                 currentPage = 1; // Reset to first page
                 renderOrders();
             } catch (error) {
@@ -1413,6 +1420,7 @@
         
         // Render orders with pagination
         function renderOrders() {
+            console.debug('renderOrders page', currentPage, 'total', allOrders.length);
             const ordersList = document.getElementById('ordersList');
             const emptyOrders = document.getElementById('emptyOrders');
             const pagination = document.getElementById('ordersPagination');
@@ -1439,6 +1447,7 @@
             const startIndex = (currentPage - 1) * ordersPerPage;
             const endIndex = startIndex + ordersPerPage;
             const currentOrders = allOrders.slice(startIndex, endIndex);
+            console.debug('renderOrders slice', startIndex, endIndex, 'ids', currentOrders.map(o => o.id));
             
             // Clear and render current page orders
             ordersList.innerHTML = '';
@@ -1520,6 +1529,7 @@
             const targetPage = Math.max(1, Math.min(totalPages, parseInt(page, 10)));
             if (targetPage === currentPage) return;
             
+            console.debug('goToPage', currentPage, '->', targetPage);
             currentPage = targetPage;
             renderOrders();
             
