@@ -146,7 +146,8 @@ error_log("PayMongo API Response - HTTP Code: " . $http_code);
 error_log("PayMongo API Response - Body: " . $response);
 error_log("PayMongo API Response - Parsed: " . json_encode($response_data));
 
-if ($http_code === 201 && isset($response_data['data']['attributes']['redirect']['checkout_url'])) {
+// PayMongo returns 200 for successful source creation (not 201)
+if (($http_code === 200 || $http_code === 201) && isset($response_data['data']['attributes']['redirect']['checkout_url'])) {
     // Success - return checkout URL
     $checkout_url = $response_data['data']['attributes']['redirect']['checkout_url'];
     $source_id = $response_data['data']['id'];
