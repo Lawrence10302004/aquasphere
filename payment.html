@@ -2065,8 +2065,10 @@
             // If page was loaded from cache (back button), check immediately
             if (event.persisted && !paymentErrorModalShown) {
                 setTimeout(() => {
-                    checkPendingPaymentOnLoad();
-                    handlePaymentRedirect();
+                    if (!paymentErrorModalShown) {
+                        checkPendingPaymentOnLoad();
+                        handlePaymentRedirect();
+                    }
                 }, 100);
             }
         });
