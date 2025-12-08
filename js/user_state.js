@@ -48,6 +48,12 @@ const UserState = {
                     if (data.payment_page_url) {
                         localStorage.setItem('paymentPageUrl', data.payment_page_url);
                     }
+                    if (data.paymongo_source_id) {
+                        localStorage.setItem('paymongoSourceId', data.paymongo_source_id);
+                    }
+                    if (data.pending_order_data) {
+                        localStorage.setItem('pendingOrderData', data.pending_order_data);
+                    }
                     if (data.pending_cancellation_orders) {
                         localStorage.setItem('pendingCancellationOrders', JSON.stringify(data.pending_cancellation_orders));
                     }
@@ -74,6 +80,8 @@ const UserState = {
             payment_redirect_time: localStorage.getItem('paymentRedirectTime') || null,
             paymongo_checkout_url: localStorage.getItem('paymongoCheckoutUrl') || null,
             payment_page_url: localStorage.getItem('paymentPageUrl') || null,
+            paymongo_source_id: localStorage.getItem('paymongoSourceId') || null,
+            pending_order_data: localStorage.getItem('pendingOrderData') || null,
             pending_cancellation_orders: JSON.parse(localStorage.getItem('pendingCancellationOrders') || '[]')
         };
     },
@@ -138,6 +146,20 @@ const UserState = {
                 localStorage.removeItem('paymentPageUrl');
             } else {
                 localStorage.setItem('paymentPageUrl', stateUpdates.payment_page_url);
+            }
+        }
+        if (stateUpdates.paymongo_source_id !== undefined) {
+            if (stateUpdates.paymongo_source_id === null) {
+                localStorage.removeItem('paymongoSourceId');
+            } else {
+                localStorage.setItem('paymongoSourceId', stateUpdates.paymongo_source_id);
+            }
+        }
+        if (stateUpdates.pending_order_data !== undefined) {
+            if (stateUpdates.pending_order_data === null) {
+                localStorage.removeItem('pendingOrderData');
+            } else {
+                localStorage.setItem('pendingOrderData', stateUpdates.pending_order_data);
             }
         }
         if (stateUpdates.pending_cancellation_orders !== undefined) {
@@ -214,6 +236,10 @@ const UserState = {
     setPaymentRedirectTime: (time) => UserState.saveState({ payment_redirect_time: time }),
     setPaymongoCheckoutUrl: (url) => UserState.saveState({ paymongo_checkout_url: url }),
     setPaymentPageUrl: (url) => UserState.saveState({ payment_page_url: url }),
+    setPaymongoSourceId: (id) => UserState.saveState({ paymongo_source_id: id }),
+    getPaymongoSourceId: () => localStorage.getItem('paymongoSourceId') || null,
+    setPendingOrderData: (data) => UserState.saveState({ pending_order_data: data }),
+    getPendingOrderData: () => localStorage.getItem('pendingOrderData') || null,
     setPendingCancellationOrders: (orders) => UserState.saveState({ pending_cancellation_orders: orders }),
 
     // Clear all state
@@ -227,6 +253,8 @@ const UserState = {
         localStorage.removeItem('paymentRedirectTime');
         localStorage.removeItem('paymongoCheckoutUrl');
         localStorage.removeItem('paymentPageUrl');
+        localStorage.removeItem('paymongoSourceId');
+        localStorage.removeItem('pendingOrderData');
         localStorage.removeItem('pendingCancellationOrders');
         
         await UserState.saveState({
@@ -239,6 +267,8 @@ const UserState = {
             payment_redirect_time: null,
             paymongo_checkout_url: null,
             payment_page_url: null,
+            paymongo_source_id: null,
+            pending_order_data: null,
             pending_cancellation_orders: []
         });
     }

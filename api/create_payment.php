@@ -27,6 +27,49 @@ $input = json_decode(file_get_contents('php://input'), true);
 $amount = floatval($input['amount'] ?? 0);
 $order_id = $input['order_id'] ?? null;
 $redirect_url = $input['redirect_url'] ?? null;
+$link_order = $input['link_order'] ?? false; // If true, just link existing order to source_id
+$source_id = $input['source_id'] ?? null;
+
+// If linking order, handle that separately
+if ($link_order && $order_id && $source_id) {
+    $conn = get_db_connection();
+    init_db();
+    
+    // Check if paymongo_source_id column exists
+    $check_column_query = $GLOBALS['use_postgres'] 
+        ? "SELECT column_name FROM information_schema.columns WHERE table_name='orders' AND column_name='paymongo_source_id'"
+        : "PRAGMA table_info(orders)";
+    
+    $column_check = execute_sql($conn, $check_column_query);
+    $column_exists = false;
+    
+    if ($GLOBALS['use_postgres']) {
+        $column_exists = pg_fetch_assoc($column_check) !== false;
+    } else {
+        while ($row = $column_check->fetchArray(SQLITE3_ASSOC)) {
+            if ($row['name'] === 'paymongo_source_id') {
+                $column_exists = true;
+                break;
+            }
+        }
+    }
+    
+    if (!$column_exists) {
+        $alter_query = "ALTER TABLE orders ADD COLUMN paymongo_source_id " . get_text_type();
+        execute_sql($conn, $alter_query);
+    }
+    
+    // Update order with payment source ID
+    $update_query = "UPDATE orders SET paymongo_source_id = ? WHERE id = ?";
+    execute_sql($conn, $update_query, [$source_id, $order_id]);
+    close_connection($conn);
+    
+    echo json_encode([
+        'success' => true,
+        'message' => 'Order linked to payment source'
+    ]);
+    exit;
+}
 
 if ($amount <= 0) {
     echo json_encode(['success' => false, 'message' => 'Invalid amount']);

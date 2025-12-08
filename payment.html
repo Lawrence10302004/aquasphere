@@ -1277,35 +1277,28 @@
             placeOrderBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
             
             try {
-                // If GCash is selected, create order and redirect to PayMongo
+                // If GCash is selected, create PayMongo payment source first (don't create order yet)
                 if (selectedPaymentMethod === 'gcash') {
-                    // First, create the order in database
-                    const orderResponse = await fetch('api/create_order.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            user_id: userId,
-                            items: checkoutItems.map(item => ({
-                                name: item.name || item.product_name,
-                                price: item.price,
-                                quantity: item.quantity
-                            })),
-                            delivery_address: deliveryAddress,
-                            payment_method: 'GCASH',
-                            delivery_date: null,
-                            delivery_time: null
-                        })
-                    });
+                    // Store order data temporarily (will create order after successful payment)
+                    const pendingOrderData = {
+                        user_id: userId,
+                        items: checkoutItems.map(item => ({
+                            name: item.name || item.product_name,
+                            price: item.price,
+                            quantity: item.quantity
+                        })),
+                        delivery_address: deliveryAddress,
+                        payment_method: 'GCASH',
+                        delivery_date: null,
+                        delivery_time: null,
+                        total_amount: total
+                    };
                     
-                    const orderResult = await orderResponse.json();
+                    // Store pending order data in UserState
+                    UserState.setPendingCheckoutItems(checkoutItems);
+                    UserState.setPaymentRedirectTime(Date.now().toString());
                     
-                    if (!orderResult.success) {
-                        throw new Error(orderResult.message || 'Failed to create order');
-                    }
-                    
-                    // Create PayMongo payment source
+                    // Create PayMongo payment source (without order_id - order will be created after payment)
                     const redirectUrl = window.location.origin + window.location.pathname;
                     const paymentResponse = await fetch('api/create_payment.php', {
                         method: 'POST',
@@ -1314,7 +1307,7 @@
                         },
                         body: JSON.stringify({
                             amount: total,
-                            order_id: orderResult.order_id,
+                            order_id: null, // Don't create order yet
                             redirect_url: redirectUrl
                         })
                     });
@@ -1337,11 +1330,11 @@
                         throw new Error(errorMsg);
                     }
                     
-                    // Store order ID and checkout items for later reference
-                    UserState.setPendingOrderId(orderResult.order_id);
-                    UserState.setPendingCheckoutItems(checkoutItems);
-                    UserState.setPaymentRedirectTime(Date.now().toString());
+                    // Store payment source ID and checkout items for later reference
+                    UserState.setPendingOrderId(null); // No order ID yet
+                    UserState.setPaymongoSourceId(paymentResult.source_id);
                     UserState.setPaymongoCheckoutUrl(paymentResult.checkout_url);
+                    UserState.setPendingOrderData(JSON.stringify(pendingOrderData));
                     
                     // Store the payment page URL for redirect back
                     UserState.setPaymentPageUrl(window.location.href);
@@ -1446,6 +1439,41 @@
                 
                 await UserState.loadState();
                 const pendingCheckoutItems = UserState.getPendingCheckoutItems() || [];
+                const pendingOrderData = UserState.getPendingOrderData();
+                const paymongoSourceId = UserState.getPaymongoSourceId();
+                
+                // Create order now that payment is successful
+                if (pendingOrderData) {
+                    try {
+                        const orderData = JSON.parse(pendingOrderData);
+                        const orderResponse = await fetch('api/create_order.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(orderData)
+                        });
+                        
+                        const orderResult = await orderResponse.json();
+                        
+                        if (orderResult.success && paymongoSourceId) {
+                            // Link order with PayMongo source ID
+                            await fetch('api/create_payment.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    link_order: true,
+                                    order_id: orderResult.order_id,
+                                    source_id: paymongoSourceId
+                                })
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error creating order after payment:', error);
+                    }
+                }
                     
                     // Remove ordered items from cart
                     if (pendingCheckoutItems.length > 0) {
@@ -1457,6 +1485,8 @@
                 UserState.setPendingOrderId(null);
                 UserState.setPendingCheckoutItems(null);
                 UserState.setPaymentRedirectTime(null);
+                UserState.setPaymongoSourceId(null);
+                UserState.setPendingOrderData(null);
                 
                 // Clear orders cache to force fresh fetch
                 window.__ordersCache = null;
