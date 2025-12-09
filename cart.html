@@ -4240,6 +4240,22 @@
             }
         }
 
+        // Restrict full name to letters, spaces, apostrophes, and hyphens (no digits)
+        function restrictFullNameInput() {
+            const fullNameInput = document.getElementById('fullName');
+            if (fullNameInput) {
+                const sanitize = (el) => {
+                    const before = el.value;
+                    el.value = before.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ' -]/g, '');
+                };
+                fullNameInput.addEventListener('input', () => sanitize(fullNameInput));
+                fullNameInput.addEventListener('keypress', (e) => {
+                    const allowed = /[A-Za-zÀ-ÖØ-öø-ÿ' -]/.test(e.key) || ['Backspace','Delete','Tab','Enter','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key);
+                    if (!allowed) e.preventDefault();
+                });
+            }
+        }
+
         function formatPhonePrefill(digitsOnly) {
             if (!digitsOnly) return '';
             if (digitsOnly.startsWith('63')) {
@@ -4258,6 +4274,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize phone number restriction
             restrictPhoneNumberInput();
+            restrictFullNameInput();
             
             const form = document.getElementById('addressForm');
             if (form) {
