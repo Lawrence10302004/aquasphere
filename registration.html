@@ -420,8 +420,31 @@
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('registerForm');
             const birthdayInput = document.getElementById('birthday');
+            const firstNameInput = document.getElementById('first_name');
+            const lastNameInput = document.getElementById('last_name');
             
             const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
+            const nameSanitizeRegex = /[^A-Za-zÀ-ÖØ-öø-ÿ' -]/g;
+
+            function sanitizeNameInput(input) {
+                if (!input) return;
+                const start = input.selectionStart;
+                const end = input.selectionEnd;
+                const before = input.value;
+                input.value = before.replace(nameSanitizeRegex, '');
+                const delta = before.length - input.value.length;
+                if (delta !== 0 && start !== null && end !== null) {
+                    const pos = Math.max(start - delta, 0);
+                    input.setSelectionRange(pos, pos);
+                }
+            }
+
+            if (firstNameInput) {
+                firstNameInput.addEventListener('input', () => sanitizeNameInput(firstNameInput));
+            }
+            if (lastNameInput) {
+                lastNameInput.addEventListener('input', () => sanitizeNameInput(lastNameInput));
+            }
 
             // Set birthday max to 18 years ago
             if (birthdayInput) {

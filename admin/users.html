@@ -713,6 +713,20 @@
             const value = (document.getElementById(fieldId)?.value || '').trim();
             let message = '';
             const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
+            const nameSanitizeRegex = /[^A-Za-zÀ-ÖØ-öø-ÿ' -]/g;
+
+            const inputEl = document.getElementById(fieldId);
+            if (inputEl && (fieldId === 'editFirstName' || fieldId === 'editLastName')) {
+                const before = inputEl.value;
+                const start = inputEl.selectionStart;
+                const end = inputEl.selectionEnd;
+                inputEl.value = before.replace(nameSanitizeRegex, '');
+                const delta = before.length - inputEl.value.length;
+                if (delta !== 0 && start !== null && end !== null) {
+                    const pos = Math.max(start - delta, 0);
+                    inputEl.setSelectionRange(pos, pos);
+                }
+            }
 
             switch (fieldId) {
                 case 'editEmail':

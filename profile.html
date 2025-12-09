@@ -1475,6 +1475,20 @@
         let isInitialProfileLoad = false;
         let originalProfileData = {}; // Store original values to detect changes
         const profileNameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
+        const profileNameSanitizeRegex = /[^A-Za-zÀ-ÖØ-öø-ÿ' -]/g;
+
+        function sanitizeProfileNameInput(input) {
+            if (!input) return;
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const before = input.value;
+            input.value = before.replace(profileNameSanitizeRegex, '');
+            const delta = before.length - input.value.length;
+            if (delta !== 0 && start !== null && end !== null) {
+                const pos = Math.max(start - delta, 0);
+                input.setSelectionRange(pos, pos);
+            }
+        }
         
         function markProfileSuccess(el, key) {
             if (!el) return;
@@ -1541,6 +1555,7 @@
         function validateProfileFirstName() {
             const input = document.getElementById('profileFirstName');
             if (!input) return true;
+            sanitizeProfileNameInput(input);
             
             const errEl = document.getElementById('profileFirstName-error');
             if (errEl) errEl.style.display = 'none';
@@ -1572,6 +1587,7 @@
         function validateProfileLastName() {
             const input = document.getElementById('profileLastName');
             if (!input) return true;
+            sanitizeProfileNameInput(input);
             
             const errEl = document.getElementById('profileLastName-error');
             if (errEl) errEl.style.display = 'none';
