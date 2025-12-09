@@ -150,6 +150,208 @@
             right: -5px;
         }
         
+        /* Orders icon specific styling for badge positioning */
+        #navOrders {
+            position: relative;
+        }
+        
+        #navOrders i {
+            position: relative;
+        }
+        
+        .orders-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: none; /* Hidden by default, shown when count > 0 */
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.4);
+            min-width: 20px;
+            min-height: 20px;
+            box-sizing: border-box;
+            z-index: 1001;
+            pointer-events: none;
+        }
+        
+        /* Ensure badge is positioned relative to the orders icon */
+        #navOrders .orders-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+        
+        /* Notifications */
+        #navNotifications {
+            position: relative;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 800;
+            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.35);
+            min-width: 18px;
+            min-height: 18px;
+            box-sizing: border-box;
+            z-index: 1001;
+            pointer-events: none;
+        }
+        
+        .notification-menu {
+            width: 320px;
+            padding: 0;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        
+        .notification-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        .notification-header i {
+            color: #0ea5e9;
+        }
+        
+        .notification-header .btn-clear {
+            border: none;
+            background: rgba(14, 165, 233, 0.08);
+            color: #0ea5e9;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-header .btn-clear:hover {
+            background: rgba(14, 165, 233, 0.15);
+        }
+        
+        .notification-item {
+            padding: 0.75rem 1rem;
+            display: grid;
+            grid-template-columns: 44px 1fr;
+            gap: 0.75rem;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-item:hover {
+            background: rgba(14, 165, 233, 0.06);
+        }
+        
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+        
+        .notification-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+        
+        .notification-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #0f172a;
+            margin: 0;
+        }
+        
+        .notification-desc {
+            font-size: 0.9rem;
+            color: #475569;
+            margin: 2px 0 0 0;
+        }
+        
+        .notification-meta {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+        
+        .notification-empty {
+            padding: 1.25rem;
+            text-align: center;
+            color: #94a3b8;
+        }
+        
+        .notification-empty i {
+            font-size: 1.4rem;
+            margin-bottom: 0.25rem;
+            color: #cbd5e1;
+        }
+        
+        .notification-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .notification-pagination button {
+            border: none;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
+            transition: all 0.2s ease;
+        }
+        
+        .notification-pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        .notification-pagination button:hover:not(:disabled) {
+            transform: translateY(-1px);
+        }
+        
+        .notification-pagination span {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 0.9rem;
+        }
+        
         .navbar-nav {
             gap: 0.5rem;
         }
@@ -1122,9 +1324,37 @@
                         </a>
                     </li>
                     <li class="nav-item" id="navOrdersItem" style="display: none;">
-                        <a class="nav-link" href="orders.html" id="navOrders" title="My Orders">
+                        <a class="nav-link" href="orders.html" id="navOrders" title="My Orders" style="position: relative;">
                             <i class="fas fa-box"></i>
+                            <span class="orders-badge" id="ordersCount">0</span>
                         </a>
+                    </li>
+                    <li class="nav-item dropdown" id="navNotificationsWrapper" style="display: none;">
+                        <a class="nav-link" href="#" id="navNotifications" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications" style="position: relative;">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notificationCount">0</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="navNotifications">
+                            <li class="notification-header">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fas fa-bell"></i>
+                                    <span>Notifications</span>
+                                </div>
+                                <button class="btn-clear" id="notifClearBtn" type="button" onclick="clearNotificationBadge()">Clear</button>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li id="notificationList">
+                                <div class="notification-empty">
+                                    <i class="fas fa-inbox"></i>
+                                    <p>No notifications yet.</p>
+                                </div>
+                            </li>
+                            <li class="notification-pagination">
+                                <button type="button" id="notifPrevBtn" onclick="paginateNotifications(-1)">Prev</button>
+                                <span id="notifPageInfo">Page 1 of 1</span>
+                                <button type="button" id="notifNextBtn" onclick="paginateNotifications(1)">Next</button>
+                            </li>
+                        </ul>
                     </li>
                     <!-- Login/Register buttons (shown when not logged in) -->
                     <li class="nav-item" id="loginNavItem">
@@ -1418,6 +1648,10 @@
     <!-- AOS Animation Library -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
+    <!-- User State and Navbar Scripts -->
+    <script src="js/user_state.js"></script>
+    <script src="navbar.js"></script>
+    
     <script>
         // Initialize AOS
         AOS.init({
@@ -1510,6 +1744,7 @@
                         const navHomeItem = document.getElementById('navHomeItem');
                         const navCartItem = document.getElementById('navCartItem');
                         const navOrdersItem = document.getElementById('navOrdersItem');
+                        const navNotificationsWrapper = document.getElementById('navNotificationsWrapper');
                         const usernameDisplay = document.getElementById('usernameDisplay');
                         
                         if (loginNavItem) loginNavItem.style.display = 'none';
@@ -1518,6 +1753,7 @@
                         if (navHomeItem) navHomeItem.style.display = 'block';
                         if (navCartItem) navCartItem.style.display = 'block';
                         if (navOrdersItem) navOrdersItem.style.display = 'block';
+                        if (navNotificationsWrapper) navNotificationsWrapper.style.display = 'block';
                         if (usernameDisplay) usernameDisplay.textContent = data.user.username || 'User';
                         
                         // Save to localStorage
@@ -1534,6 +1770,7 @@
                         const navHomeItem = document.getElementById('navHomeItem');
                         const navCartItem = document.getElementById('navCartItem');
                         const navOrdersItem = document.getElementById('navOrdersItem');
+                        const navNotificationsWrapper = document.getElementById('navNotificationsWrapper');
                         
                         if (loginNavItem) loginNavItem.style.display = 'block';
                         if (registerNavItem) registerNavItem.style.display = 'block';
@@ -1541,6 +1778,7 @@
                         if (navHomeItem) navHomeItem.style.display = 'none';
                         if (navCartItem) navCartItem.style.display = 'none';
                         if (navOrdersItem) navOrdersItem.style.display = 'none';
+                        if (navNotificationsWrapper) navNotificationsWrapper.style.display = 'none';
                     }
                 })
                 .catch(error => {
