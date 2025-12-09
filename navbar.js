@@ -278,7 +278,7 @@ function loadNotifications(force = false) {
     const wrapper = document.getElementById('navNotificationsWrapper');
     if (!list || !wrapper) return;
 
-    fetch('api/get_orders.php?limit=200')
+    fetch('api/get_notifications.php?limit=200')
         .then(resp => {
             if (!resp.ok) {
                 if (resp.status === 401) {
@@ -292,35 +292,33 @@ function loadNotifications(force = false) {
         .then(data => {
             if (!data) return;
 
-            if (!data.success || !Array.isArray(data.orders)) {
+            if (!data.success || !Array.isArray(data.notifications)) {
                 list.innerHTML = `
                     <div class="notification-empty">
                         <i class="fas fa-inbox"></i>
                         <p>No notifications yet.</p>
                     </div>`;
-                clearNotificationBadge();
+                if (badge) {
+                    badge.style.display = 'none';
+                    badge.textContent = '0';
+                }
                 return;
             }
 
-            const orders = data.orders.slice().sort((a, b) => {
-                const da = new Date(a.order_date || a.created_at || 0).getTime();
-                const db = new Date(b.order_date || b.created_at || 0).getTime();
-                return db - da;
-            });
-
             const clearedAt = parseInt(localStorage.getItem(NOTIF_CLEARED_KEY) || '0', 10) || 0;
             const notifications = [];
-            orders.forEach(order => {
-                const msg = getNotificationMessage(order);
+            data.notifications.forEach(row => {
+                const msg = getNotificationMessage({
+                    status: row.status,
+                    payment_method: row.payment_method
+                });
                 if (msg) {
-                    const updatedTs = parseToManilaDate(order.updated_at || order.order_date || order.created_at || '').getTime() || 0;
-                    if (clearedAt && updatedTs <= clearedAt) {
-                        return;
-                    }
+                    const ts = parseToManilaDate(row.created_at || '').getTime() || 0;
+                    if (clearedAt && ts <= clearedAt) return;
                     notifications.push({
                         ...msg,
-                        orderId: order.id,
-                        when: order.order_date || order.created_at || ''
+                        orderId: row.order_id,
+                        when: row.created_at
                     });
                 }
             });
@@ -330,7 +328,8 @@ function loadNotifications(force = false) {
             renderNotificationPage();
 
             if (badge) {
-                const totalCount = notifications.length;
+                // Use total from API (all notifications), badge shows total count
+                const totalCount = data.pagination?.total ?? notifications.length;
                 badge.textContent = totalCount;
                 badge.style.display = totalCount > 0 ? 'flex' : 'none';
             }

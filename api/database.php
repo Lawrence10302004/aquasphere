@@ -309,6 +309,58 @@ function init_db() {
             error_log("Failed to create orders table: SQLite error");
         }
     }
+
+    // Create order_status_history table to track status changes
+    if ($GLOBALS['use_postgres']) {
+        $query = "
+        CREATE TABLE IF NOT EXISTS order_status_history (
+            id " . get_id_type() . ",
+            order_id " . get_integer_type() . " NOT NULL,
+            user_id " . get_integer_type() . " NOT NULL,
+            status " . get_text_type() . " NOT NULL,
+            payment_method " . get_text_type() . ",
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+        ";
+        $result = execute_sql($conn, $query);
+        if ($result === false) {
+            error_log("Failed to create order_status_history table: " . pg_last_error($conn));
+        }
+        // Add FK constraints if missing
+        $check_query = "SELECT 1 FROM pg_constraint WHERE conname = 'fk_order_status_history_order_id'";
+        $check_result = execute_sql($conn, $check_query);
+        if ($check_result !== false) {
+            $exists = pg_fetch_assoc($check_result);
+            if (!$exists) {
+                execute_sql($conn, "ALTER TABLE order_status_history ADD CONSTRAINT fk_order_status_history_order_id FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE");
+            }
+        }
+        $check_query = "SELECT 1 FROM pg_constraint WHERE conname = 'fk_order_status_history_user_id'";
+        $check_result = execute_sql($conn, $check_query);
+        if ($check_result !== false) {
+            $exists = pg_fetch_assoc($check_result);
+            if (!$exists) {
+                execute_sql($conn, "ALTER TABLE order_status_history ADD CONSTRAINT fk_order_status_history_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE");
+            }
+        }
+    } else {
+        $query = "
+        CREATE TABLE IF NOT EXISTS order_status_history (
+            id " . get_id_type() . ",
+            order_id " . get_integer_type() . " NOT NULL,
+            user_id " . get_integer_type() . " NOT NULL,
+            status " . get_text_type() . " NOT NULL,
+            payment_method " . get_text_type() . ",
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (order_id) REFERENCES orders(id),
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+        ";
+        $result = execute_sql($conn, $query);
+        if ($result === false) {
+            error_log("Failed to create order_status_history table: SQLite error");
+        }
+    }
     
     // Create order_items table
     if ($GLOBALS['use_postgres']) {

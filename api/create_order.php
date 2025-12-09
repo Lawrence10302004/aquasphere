@@ -118,6 +118,13 @@ foreach ($items as $item) {
     ]);
 }
 
+// Insert initial "pending" status into history
+$history_query = "INSERT INTO order_status_history (order_id, user_id, status, payment_method, created_at) VALUES (?, ?, 'pending', ?, CURRENT_TIMESTAMP)";
+$history_result = execute_sql($conn, $history_query, [$order_id, $user_id, $payment_method]);
+if ($history_result === false) {
+    error_log("Failed to insert order status history: " . ($GLOBALS['use_postgres'] ? pg_last_error($conn) : "SQLite error"));
+}
+
 close_connection($conn);
 
 echo json_encode([

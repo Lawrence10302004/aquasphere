@@ -1281,15 +1281,15 @@
                 if (selectedPaymentMethod === 'gcash') {
                     // Store order data temporarily (will create order after successful payment)
                     const pendingOrderData = {
-                        user_id: userId,
-                        items: checkoutItems.map(item => ({
-                            name: item.name || item.product_name,
-                            price: item.price,
-                            quantity: item.quantity
-                        })),
-                        delivery_address: deliveryAddress,
-                        payment_method: 'GCASH',
-                        delivery_date: null,
+                            user_id: userId,
+                            items: checkoutItems.map(item => ({
+                                name: item.name || item.product_name,
+                                price: item.price,
+                                quantity: item.quantity
+                            })),
+                            delivery_address: deliveryAddress,
+                            payment_method: 'GCASH',
+                            delivery_date: null,
                         delivery_time: null,
                         total_amount: total
                     };
@@ -1551,8 +1551,8 @@
                 sessionStorage.removeItem('paymongo_redirect_time');
                 
                 // User came from PayMongo but no success status = payment failed/cancelled
-                showPaymentErrorModal();
-                return;
+                        showPaymentErrorModal();
+                        return;
             } else {
                 console.log('Conditions not met for showing modal');
                 

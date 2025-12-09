@@ -52,16 +52,16 @@ init_db();
 $conn = get_db_connection();
 
 // Check if order exists
-$check_query = "SELECT id FROM orders WHERE id = ?";
+$check_query = "SELECT id, user_id, payment_method FROM orders WHERE id = ?";
 $check_result = execute_sql($conn, $check_query, [$order_id]);
 
 if ($GLOBALS['use_postgres']) {
-    $order_exists = pg_fetch_assoc($check_result) !== false;
+    $order_row = pg_fetch_assoc($check_result);
 } else {
-    $order_exists = $check_result->fetchArray(SQLITE3_ASSOC) !== false;
+    $order_row = $check_result->fetchArray(SQLITE3_ASSOC);
 }
 
-if (!$order_exists) {
+if (!$order_row) {
     close_connection($conn);
     echo json_encode(['success' => false, 'message' => 'Order not found']);
     exit;
@@ -75,6 +75,14 @@ if ($result === false) {
     close_connection($conn);
     echo json_encode(['success' => false, 'message' => 'Failed to update order status']);
     exit;
+}
+
+// Insert status history
+$history_query = "INSERT INTO order_status_history (order_id, user_id, status, payment_method, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)";
+$history_result = execute_sql($conn, $history_query, [$order_id, $order_row['user_id'], $status, $order_row['payment_method']]);
+if ($history_result === false) {
+    error_log("Failed to insert order status history: " . ($GLOBALS['use_postgres'] ? pg_last_error($conn) : "SQLite error"));
+    // Don't fail the whole request if history insert fails, but log it
 }
 
 close_connection($conn);
