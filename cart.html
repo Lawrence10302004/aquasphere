@@ -3918,16 +3918,8 @@
             }
         }
         
-        let lastGeocodeLat = null;
-        let lastGeocodeLng = null;
-
         async function autoFillAddressFromCoords(lat, lng) {
             try {
-                // Throttle duplicate lookups
-                if (lastGeocodeLat === lat && lastGeocodeLng === lng) return;
-                lastGeocodeLat = lat;
-                lastGeocodeLng = lng;
-
                 const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`);
                 if (!resp.ok) return;
                 const data = await resp.json();
