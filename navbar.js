@@ -21,6 +21,13 @@ async function loadNavbar() {
         window.dispatchEvent(new Event('navbarLoaded'));
         setTimeout(updateOrderCount, 50);
         setTimeout(loadNotifications, 120);
+
+        // Refresh notifications when dropdown is opened
+        document.addEventListener('shown.bs.dropdown', (event) => {
+            if (event.target && event.target.id === 'navNotifications') {
+                loadNotifications(true);
+            }
+        });
     } catch (error) {
         console.error('Error loading navbar:', error);
     }
@@ -263,7 +270,7 @@ function getNotificationMessage(order) {
     return null;
 }
 
-function loadNotifications() {
+function loadNotifications(force = false) {
     const badge = document.getElementById('notificationCount');
     const list = document.getElementById('notificationList');
     const wrapper = document.getElementById('navNotificationsWrapper');
@@ -316,9 +323,7 @@ function loadNotifications() {
             renderNotificationPage();
 
             if (badge) {
-                const totalCount = (data.pagination && data.pagination.total !== undefined)
-                    ? data.pagination.total
-                    : notifications.length;
+                const totalCount = notifications.length;
                 badge.textContent = totalCount;
                 badge.style.display = totalCount > 0 ? 'flex' : 'none';
             }
@@ -382,8 +387,8 @@ function renderNotificationPage() {
 
 function formatNotifTime(ts) {
     if (!ts) return '';
-    const date = new Date(ts);
-    const formatted = date.toLocaleString('en-PH', {
+    const parsed = parseToManilaDate(ts);
+    const formatted = parsed.toLocaleString('en-PH', {
         timeZone: 'Asia/Manila',
         month: 'short',
         day: 'numeric',
@@ -393,6 +398,16 @@ function formatNotifTime(ts) {
         hour12: true
     });
     return ` • ${formatted}`;
+}
+
+function parseToManilaDate(ts) {
+    // Normalize to treat timestamp as UTC then render Asia/Manila
+    if (typeof ts === 'number') return new Date(ts);
+    let iso = ts;
+    if (ts && typeof ts === 'string' && !ts.includes('T')) {
+        iso = ts.replace(' ', 'T') + 'Z';
+    }
+    return new Date(iso);
 }
 
 // Prevent dropdown from closing when paginating/clearing
