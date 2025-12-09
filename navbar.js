@@ -205,6 +205,7 @@ window.updateOrderCount = updateOrderCount;
 let __notifData = [];
 let __notifPage = 1;
 const __notifPageSize = 4;
+const NOTIF_CLEARED_KEY = 'notifClearedAt';
 
 function clearNotificationBadge() {
     const badge = document.getElementById('notificationCount');
@@ -215,6 +216,7 @@ function clearNotificationBadge() {
     __notifData = [];
     __notifPage = 1;
     renderNotificationPage();
+    localStorage.setItem(NOTIF_CLEARED_KEY, Date.now().toString());
 }
 
 function getNotificationMessage(order) {
@@ -306,10 +308,15 @@ function loadNotifications(force = false) {
                 return db - da;
             });
 
+            const clearedAt = parseInt(localStorage.getItem(NOTIF_CLEARED_KEY) || '0', 10) || 0;
             const notifications = [];
             orders.forEach(order => {
                 const msg = getNotificationMessage(order);
                 if (msg) {
+                    const updatedTs = parseToManilaDate(order.updated_at || order.order_date || order.created_at || '').getTime() || 0;
+                    if (clearedAt && updatedTs <= clearedAt) {
+                        return;
+                    }
                     notifications.push({
                         ...msg,
                         orderId: order.id,
