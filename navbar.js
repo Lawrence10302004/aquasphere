@@ -195,6 +195,10 @@ function updateOrderCount() {
 window.updateOrderCount = updateOrderCount;
 
 // ---------------- Notifications ----------------
+let __notifData = [];
+let __notifPage = 1;
+const __notifPageSize = 4;
+
 function clearNotificationBadge() {
     const badge = document.getElementById('notificationCount');
     if (badge) {
@@ -304,29 +308,9 @@ function loadNotifications() {
                 }
             });
 
-            if (notifications.length === 0) {
-                list.innerHTML = `
-                    <div class="notification-empty">
-                        <i class="fas fa-inbox"></i>
-                        <p>No notifications yet.</p>
-                    </div>`;
-                clearNotificationBadge();
-                return;
-            }
-
-            const latest = notifications.slice(0, 6);
-            list.innerHTML = latest.map(n => `
-                <div class="notification-item">
-                    <div class="notification-icon" style="background:${n.color};">
-                        <i class="${n.icon}"></i>
-                    </div>
-                    <div class="notification-content">
-                        <div class="notification-title">${n.title}</div>
-                        <p class="notification-desc">${n.desc}</p>
-                        <div class="notification-meta">Order #${n.orderId}${n.when ? ' • ' + new Date(n.when).toLocaleString() : ''}</div>
-                    </div>
-                </div>
-            `).join('');
+            __notifData = notifications;
+            __notifPage = 1;
+            renderNotificationPage();
 
             if (badge) {
                 badge.textContent = notifications.length;
@@ -336,6 +320,73 @@ function loadNotifications() {
         .catch(err => {
             console.error('Notifications error:', err);
         });
+}
+
+function paginateNotifications(delta) {
+    const totalPages = Math.max(1, Math.ceil((__notifData || []).length / __notifPageSize));
+    const nextPage = Math.min(totalPages, Math.max(1, __notifPage + delta));
+    if (nextPage === __notifPage) return;
+    __notifPage = nextPage;
+    renderNotificationPage();
+}
+
+function renderNotificationPage() {
+    const list = document.getElementById('notificationList');
+    const pageInfo = document.getElementById('notifPageInfo');
+    const prevBtn = document.getElementById('notifPrevBtn');
+    const nextBtn = document.getElementById('notifNextBtn');
+    if (!list) return;
+
+    if (!__notifData || __notifData.length === 0) {
+        list.innerHTML = `
+            <div class="notification-empty">
+                <i class="fas fa-inbox"></i>
+                <p>No notifications yet.</p>
+            </div>`;
+        if (pageInfo) pageInfo.textContent = 'Page 1 of 1';
+        if (prevBtn) prevBtn.disabled = true;
+        if (nextBtn) nextBtn.disabled = true;
+        return;
+    }
+
+    const totalPages = Math.max(1, Math.ceil(__notifData.length / __notifPageSize));
+    __notifPage = Math.min(__notifPage, totalPages);
+    const start = (__notifPage - 1) * __notifPageSize;
+    const current = __notifData.slice(start, start + __notifPageSize);
+
+    list.innerHTML = current.map(n => `
+        <div class="notification-item">
+            <div class="notification-icon" style="background:${n.color};">
+                <i class="${n.icon}"></i>
+            </div>
+            <div class="notification-content">
+                <div>
+                    <div class="notification-title">${n.title}</div>
+                    <p class="notification-desc">${n.desc}</p>
+                    <div class="notification-meta">Order #${n.orderId}${formatNotifTime(n.when)}</div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    if (pageInfo) pageInfo.textContent = `Page ${__notifPage} of ${totalPages}`;
+    if (prevBtn) prevBtn.disabled = __notifPage <= 1;
+    if (nextBtn) nextBtn.disabled = __notifPage >= totalPages;
+}
+
+function formatNotifTime(ts) {
+    if (!ts) return '';
+    const date = new Date(ts);
+    const formatted = date.toLocaleString('en-PH', {
+        timeZone: 'Asia/Manila',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
+    return ` • ${formatted}`;
 }
 
 // Load navbar immediately (before DOMContentLoaded to prevent lag)
