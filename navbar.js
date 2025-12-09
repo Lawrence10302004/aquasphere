@@ -201,6 +201,11 @@ function updateOrderCount() {
 // Make updateOrderCount available globally so pages can call it
 window.updateOrderCount = updateOrderCount;
 
+// Make notification functions available globally
+window.loadNotifications = loadNotifications;
+window.clearNotificationBadge = clearNotificationBadge;
+window.paginateNotifications = paginateNotifications;
+
 // ---------------- Notifications ----------------
 let __notifData = [];
 let __notifPage = 1;

@@ -1726,6 +1726,19 @@
             }
         }
         
+        // Update navbar badges (orders and notifications)
+        function updateNavbarBadges() {
+            // Update order count and notifications (with delay to ensure navbar is rendered)
+            setTimeout(() => {
+                if (typeof window.updateOrderCount === 'function') {
+                    window.updateOrderCount();
+                }
+                if (typeof window.loadNotifications === 'function') {
+                    window.loadNotifications();
+                }
+            }, 300);
+        }
+        
         // Check if user is logged in and update navbar
         function checkLoginStatus() {
             fetch('api/get_current_user.php')
@@ -1762,6 +1775,11 @@
                         
                         // Update cart count
                         updateCartCount();
+                        
+                        // Update order count and notifications (with delay to ensure navbar.js is loaded)
+                        setTimeout(() => {
+                            updateNavbarBadges();
+                        }, 500);
                     } else {
                         // User is not logged in - show login/register, hide icons and user dropdown
                         const loginNavItem = document.getElementById('loginNavItem');
@@ -1797,6 +1815,16 @@
                     if (navCartItem) navCartItem.style.display = 'none';
                     if (navOrdersItem) navOrdersItem.style.display = 'none';
                 });
+            
+            // Update badges after checking login status
+            updateNavbarBadges();
+        }
+        
+        // Also update badges when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', updateNavbarBadges);
+        } else {
+            updateNavbarBadges();
         }
         
         // Profile Modal - redirect to cart page
