@@ -2379,6 +2379,10 @@
                             <div style="display: flex; gap: 0.5rem;">
                                 <input type="text" id="latitudeDisplay" class="form-control" placeholder="Latitude" readonly style="background: #f8f9fa; cursor: not-allowed;">
                                 <input type="text" id="longitudeDisplay" class="form-control" placeholder="Longitude" readonly style="background: #f8f9fa; cursor: not-allowed;">
+                                <button type="button" class="btn-map-control" onclick="refreshAddressFromPin()" title="Use pin to fill address" style="white-space: nowrap; padding: 10px 16px;">
+                                    <i class="fas fa-sync-alt"></i>
+                                    Use Pin
+                                </button>
                                 <button type="button" class="btn-map-control" onclick="clearLocation()" title="Clear location" style="white-space: nowrap; padding: 10px 16px;">
                                     <i class="fas fa-times"></i>
                                     Clear
@@ -3997,6 +4001,15 @@
                     locationDisplayGroup: !!locationDisplayGroup
                 });
             }
+        }
+
+        function refreshAddressFromPin() {
+            if (!marker) {
+                showNotification('Place the pin on the map first.', 'warning');
+                return;
+            }
+            const pos = marker.getLatLng();
+            autoFillAddressFromCoords(pos.lat, pos.lng);
         }
         
         // Clear location
