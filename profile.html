@@ -1256,8 +1256,11 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="profileUsername">Username</label>
-                                    <input type="text" id="profileUsername" name="username" placeholder="Choose a username" autocomplete="off" readonly style="background: #f8f9fa; cursor: not-allowed;">
-                                    <small style="color: #64748b; font-size: 0.85rem;">Username cannot be changed</small>
+                                    <input type="text" id="profileUsername" name="username" placeholder="Choose a username" autocomplete="off" required>
+                                    <div class="error-message" id="profileUsername-error" style="display: none;">Username is required.</div>
+                                    <div class="error-message" id="profileUsername-length-error" style="display: none;">Username must be between 4 and 64 characters long.</div>
+                                    <div class="error-message" id="profileUsername-unique-error" style="display: none;">Username already exists.</div>
+                                    <small style="color: #64748b; font-size: 0.85rem;">Usernames must be 4-64 characters.</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="profileEmail">Email</label>
@@ -1270,15 +1273,15 @@
                         
                         <div class="profile-section">
                             <h5 style="color: #0369a1; font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem;">Personal Information</h5>
-                            <div class="form-row">
+                                <div class="form-row">
                                 <div class="form-group">
                                     <label for="profileFirstName">First Name</label>
-                                    <input type="text" id="profileFirstName" name="firstName" placeholder="Enter your first name" autocomplete="off" required>
+                                    <input type="text" id="profileFirstName" name="firstName" placeholder="Enter your first name" autocomplete="off" required disabled style="background: #f8f9fa; cursor: not-allowed;">
                                     <div class="error-message" id="profileFirstName-error" style="display: none;">First Name is required.</div>
                                 </div>
                                 <div class="form-group">
                                     <label for="profileLastName">Last Name</label>
-                                    <input type="text" id="profileLastName" name="lastName" placeholder="Enter your last name" autocomplete="off" required>
+                                    <input type="text" id="profileLastName" name="lastName" placeholder="Enter your last name" autocomplete="off" required disabled style="background: #f8f9fa; cursor: not-allowed;">
                                     <div class="error-message" id="profileLastName-error" style="display: none;">Last Name is required.</div>
                                 </div>
                             </div>
@@ -1286,7 +1289,7 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="profileGender">Gender</label>
-                                    <select id="profileGender" name="gender" autocomplete="off" required>
+                                    <select id="profileGender" name="gender" autocomplete="off" required disabled style="background: #f8f9fa; cursor: not-allowed;">
                                         <option value="">Select Gender</option>
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
@@ -1295,7 +1298,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="profileBirthday">Birthday</label>
-                                    <input type="date" id="profileBirthday" name="birthday" autocomplete="off" required>
+                                    <input type="date" id="profileBirthday" name="birthday" autocomplete="off" required disabled style="background: #f8f9fa; cursor: not-allowed;">
                                     <div class="error-message" id="profileBirthday-error" style="display: none;">Date of birth is required.</div>
                                 </div>
                             </div>
@@ -1527,6 +1530,35 @@
             }
         }
         
+        // Validate Username (same rules as registration: 4-64 chars, unique)
+        function validateProfileUsername() {
+            const input = document.getElementById('profileUsername');
+            if (!input) return true;
+            
+            hideProfileErrors('profileUsername');
+            const v = (input.value || '').trim();
+            
+            if (!v) {
+                const err = document.getElementById('profileUsername-error');
+                if (err) err.style.display = 'block';
+                markProfileError(input);
+                return false;
+            }
+            
+            if (v.length < 4 || v.length > 64) {
+                const err = document.getElementById('profileUsername-length-error');
+                if (err) err.style.display = 'block';
+                markProfileError(input);
+                return false;
+            }
+            
+            markProfileClear(input);
+            markProfileSuccess(input, 'username');
+            return true;
+        }
+        
+        let usernameDebounce;
+        
         // Validate Email
         function validateProfileEmail() {
             const emailInput = document.getElementById('profileEmail');
@@ -1681,6 +1713,28 @@
             return true;
         }
         
+        async function checkProfileUsernameAvailability(value) {
+            const uniqueErr = document.getElementById('profileUsername-unique-error');
+            const input = document.getElementById('profileUsername');
+            if (uniqueErr) uniqueErr.style.display = 'none';
+            if (!value || value.length < 4) return;
+            try {
+                const resp = await fetch(`api/check_username.php?username=${encodeURIComponent(value)}`);
+                const data = await resp.json();
+                if (data && data.success) {
+                    if (data.exists) {
+                        if (uniqueErr) uniqueErr.style.display = 'block';
+                        markProfileError(input);
+                    } else {
+                        if (uniqueErr) uniqueErr.style.display = 'none';
+                        if (value.length >= 4) markProfileSuccess(input, 'username');
+                    }
+                }
+            } catch (e) {
+                // ignore network errors for UX
+            }
+        }
+        
         // Check if any password field is filled
         function anyPasswordFilled() {
             const current = document.getElementById('profilePassword');
@@ -1790,7 +1844,7 @@
             const updateBtn = document.getElementById('updateProfileBtn');
             if (!updateBtn) return;
             
-            const requiredFields = ['profileEmail', 'profileFirstName', 'profileLastName', 'profileGender', 'profileBirthday'];
+            const requiredFields = ['profileUsername', 'profileEmail', 'profileFirstName', 'profileLastName', 'profileGender', 'profileBirthday'];
             let allValid = true;
             
             requiredFields.forEach(fieldId => {
@@ -1820,6 +1874,7 @@
             
             // Check if there are any changes from original values
             if (allValid && typeof originalProfileData !== 'undefined' && Object.keys(originalProfileData).length > 0) {
+                const currentUsername = (document.getElementById('profileUsername').value || '').trim();
                 const currentEmail = (document.getElementById('profileEmail').value || '').trim();
                 const currentFirstName = (document.getElementById('profileFirstName').value || '').trim();
                 const currentLastName = (document.getElementById('profileLastName').value || '').trim();
@@ -1829,6 +1884,7 @@
                 
                 // Check if any field has changed
                 const hasChanges = 
+                    currentUsername !== originalProfileData.username ||
                     currentEmail !== originalProfileData.email ||
                     currentFirstName !== originalProfileData.firstName ||
                     currentLastName !== originalProfileData.lastName ||
@@ -1855,6 +1911,7 @@
         
         // Setup Profile Validation Event Listeners
         function setupProfileValidation() {
+            const usernameInput = document.getElementById('profileUsername');
             const emailInput = document.getElementById('profileEmail');
             const firstNameInput = document.getElementById('profileFirstName');
             const lastNameInput = document.getElementById('profileLastName');
@@ -1863,6 +1920,28 @@
             const passwordInput = document.getElementById('profilePassword');
             const newPasswordInput = document.getElementById('profileNewPassword');
             const confirmPasswordInput = document.getElementById('profileConfirmPassword');
+            
+            if (usernameInput) {
+                usernameInput.addEventListener('input', () => {
+                    validateProfileUsername();
+                    const uniqueErr = document.getElementById('profileUsername-unique-error');
+                    if (uniqueErr) uniqueErr.style.display = 'none';
+                    clearTimeout(usernameDebounce);
+                    const v = usernameInput.value.trim();
+                    if (v.length >= 4) {
+                        usernameDebounce = setTimeout(() => checkProfileUsernameAvailability(v), 350);
+                    }
+                    checkProfileRequiredFields();
+                });
+                usernameInput.addEventListener('blur', () => {
+                    validateProfileUsername();
+                    const v = usernameInput.value.trim();
+                    if (v.length >= 4) {
+                        checkProfileUsernameAvailability(v);
+                    }
+                    checkProfileRequiredFields();
+                });
+            }
             
             if (emailInput) {
                 emailInput.addEventListener('input', () => {
@@ -2035,6 +2114,7 @@
                         
                         // Store original values to detect changes
                         originalProfileData = {
+                            username: userData.username || '',
                             email: userData.email || '',
                             firstName: userData.firstName || userData.first_name || '',
                             lastName: userData.lastName || userData.last_name || '',
@@ -2083,6 +2163,7 @@
                         
                         // Store original values to detect changes
                         originalProfileData = {
+                            username: userData.username || '',
                             email: userData.email || '',
                             firstName: userData.firstName || userData.first_name || '',
                             lastName: userData.lastName || userData.last_name || '',
@@ -2135,6 +2216,7 @@
                     
                     // Store original values to detect changes
                     originalProfileData = {
+                        username: userData.username || '',
                         email: userData.email || '',
                         firstName: userData.firstName || userData.first_name || '',
                         lastName: userData.lastName || userData.last_name || '',
@@ -2172,6 +2254,7 @@
             }
             
             let isValid = true;
+            isValid = validateProfileUsername() && isValid;
             isValid = validateProfileEmail() && isValid;
             isValid = validateProfileFirstName() && isValid;
             isValid = validateProfileLastName() && isValid;
@@ -2224,6 +2307,7 @@
             }
             
             const userData = {
+                username: document.getElementById('profileUsername').value.trim(),
                 email: document.getElementById('profileEmail').value.trim(),
                 firstName: document.getElementById('profileFirstName').value.trim(),
                 lastName: document.getElementById('profileLastName').value.trim(),
@@ -2303,7 +2387,19 @@
                         Object.keys(data.errors).forEach(field => {
                             const errorMsg = data.errors[field];
                             
-                            if (field === 'password' && errorMsg.includes('incorrect')) {
+                            if (field === 'username') {
+                                const errEl = document.getElementById('profileUsername-length-error');
+                                const uniqueEl = document.getElementById('profileUsername-unique-error');
+                                const input = document.getElementById('profileUsername');
+                                if (errorMsg.toLowerCase().includes('exists') && uniqueEl) {
+                                    uniqueEl.style.display = 'block';
+                                } else if (errEl) {
+                                    errEl.textContent = errorMsg;
+                                    errEl.style.display = 'block';
+                                }
+                                markProfileError(input);
+                                showNotification(errorMsg, 'error');
+                            } else if (field === 'password' && errorMsg.includes('incorrect')) {
                                 const errorEl = document.getElementById('profilePassword-incorrect');
                                 if (errorEl) {
                                     errorEl.style.display = 'block';

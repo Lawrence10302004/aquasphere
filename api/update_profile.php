@@ -65,6 +65,7 @@ try {
     $user_id = $_SESSION['user_id'];
     
     // Get form data
+    $username = trim($data['username'] ?? '');
     $email = trim($data['email'] ?? '');
     $first_name = trim($data['firstName'] ?? $data['first_name'] ?? '');
     $last_name = trim($data['lastName'] ?? $data['last_name'] ?? '');
@@ -75,6 +76,25 @@ try {
     
     // Validation
     $errors = [];
+    
+    if (empty($username)) {
+        $errors['username'] = 'Username is required.';
+    } elseif (strlen($username) < 4 || strlen($username) > 64) {
+        $errors['username'] = 'Username must be between 4 and 64 characters long.';
+    } else {
+        // Check username uniqueness (excluding current user)
+        $query = "SELECT id FROM users WHERE username = ? AND id <> ?";
+        $result = execute_sql($conn, $query, [$username, $user_id]);
+        $exists = false;
+        if ($GLOBALS['use_postgres']) {
+            $exists = pg_num_rows($result) > 0;
+        } else {
+            $exists = ($result && $result->fetchArray());
+        }
+        if ($exists) {
+            $errors['username'] = 'Username already exists.';
+        }
+    }
     
     if (empty($email)) {
         $errors['email'] = 'Email is required.';
@@ -162,6 +182,9 @@ try {
     // Build update query
     $update_fields = [];
     $update_params = [];
+    
+    $update_fields[] = "username = ?";
+    $update_params[] = $username;
     
     $update_fields[] = "email = ?";
     $update_params[] = $email;
