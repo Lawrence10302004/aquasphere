@@ -274,15 +274,15 @@
             <div class="col-md-3 mb-4">
                 <div class="stats-card info">
                     <i class="fas fa-truck"></i>
-                    <h3 id="pending-deliveries">0</h3>
-                    <p>Pending Deliveries</p>
+                    <h3 id="active-deliveries">0</h3>
+                    <p>Active Deliveries</p>
                 </div>
             </div>
             <div class="col-md-3 mb-4">
                 <div class="stats-card warning">
-                    <i class="fas fa-calendar-alt"></i>
-                    <h3 id="today-orders">0</h3>
-                    <p>Today's Orders</p>
+                    <i class="fas fa-check-circle"></i>
+                    <h3 id="completed-orders">0</h3>
+                    <p>Completed</p>
                 </div>
             </div>
         </div>
@@ -338,7 +338,7 @@
                             </thead>
                             <tbody id="recent-orders">
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted">Loading...</td>
+                                    <td colspan="5" class="text-center text-muted" style="padding: 40px 20px;">Loading...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -415,8 +415,8 @@
                     // Update stat cards
                     document.getElementById('total-users').textContent = stats.total_users || 0;
                     document.getElementById('total-orders').textContent = stats.total_orders || 0;
-                    document.getElementById('pending-deliveries').textContent = stats.pending_deliveries || 0;
-                    document.getElementById('today-orders').textContent = stats.today_orders || 0;
+                    document.getElementById('active-deliveries').textContent = stats.active_deliveries || 0;
+                    document.getElementById('completed-orders').textContent = stats.completed_orders || 0;
                     document.getElementById('total-revenue').textContent = `₱${(stats.total_revenue || 0).toFixed(2)}`;
                     document.getElementById('today-revenue').textContent = `₱${(stats.today_revenue || 0).toFixed(2)}`;
                     
@@ -508,7 +508,14 @@
             const total = recentOrdersData.length;
             
             if (total === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No recent orders</td></tr>';
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center text-muted" style="padding: 60px 20px;">
+                            <i class="fas fa-inbox" style="font-size: 3rem; color: #d1d5db; margin-bottom: 15px; display: block;"></i>
+                            <p style="margin: 0; font-size: 1rem;">No recent orders yet. Start ordering to see them here!</p>
+                        </td>
+                    </tr>
+                `;
                 toggleRecentPagination(false);
                 return;
             }
