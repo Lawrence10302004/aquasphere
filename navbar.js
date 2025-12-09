@@ -205,6 +205,9 @@ function clearNotificationBadge() {
         badge.style.display = 'none';
         badge.textContent = '0';
     }
+    __notifData = [];
+    __notifPage = 1;
+    renderNotificationPage();
 }
 
 function getNotificationMessage(order) {
