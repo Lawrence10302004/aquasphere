@@ -373,8 +373,42 @@
         
         .step-card {
             text-align: center;
-            padding: 2rem;
+            padding: 2.6rem 2.4rem 2.4rem;
             position: relative;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.08) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 30px 30px 18px 18px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            isolation: isolate;
+        }
+        
+        /* Bottle neck */
+        .step-card::before {
+            content: '';
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 72%;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px 16px 10px 10px;
+            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.12);
+            z-index: 1;
+        }
+        
+        /* Bottle collar accent */
+        .step-card::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 12%;
+            right: 12%;
+            height: 6px;
+            background: rgba(14, 165, 233, 0.35);
+            border-radius: 4px;
+            z-index: 1;
         }
         
         .step-number {
@@ -1140,9 +1174,9 @@
     <!-- Features Section -->
     <section id="features" class="features-section">
         <div class="container">
-            <h2 class="section-title" data-aos="fade-up">Powerful Features for Seamless Delivery</h2>
+            <h2 class="section-title" data-aos="fade-up">What You Can Do Today</h2>
             <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
-                Everything you need for a smooth water delivery experience, all in one place
+                Current, working features in the app right now
             </p>
             
             <div class="row g-4">
@@ -1160,30 +1194,28 @@
                     </div>
                 </div>
                 
-                <!-- Delivery Scheduling -->
+                <!-- Saved Address & Quick Checkout -->
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-calendar-alt"></i>
                         </div>
-                        <h3 class="feature-title">Delivery Scheduling</h3>
+                        <h3 class="feature-title">Saved Address & Quick Checkout</h3>
                         <p class="feature-description">
-                            Choose ASAP or set your preferred delivery date & time. Save multiple 
-                            delivery addresses for faster checkout and convenience.
+                            Save your delivery address once and reuse it for faster checkout. Update it anytime from your profile.
                         </p>
                     </div>
                 </div>
                 
-                <!-- Real-Time Tracking -->
+                <!-- Order Status Updates -->
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
-                        <h3 class="feature-title">Real-Time Delivery Tracking</h3>
+                        <h3 class="feature-title">Order Status Updates</h3>
                         <p class="feature-description">
-                            Live status updates: Pending → Preparing → Out for Delivery → Delivered. 
-                            GPS tracking of your delivery rider in real-time.
+                            See your order progress as it moves from Pending to Delivered. Status updates are reflected in the app.
                         </p>
                     </div>
                 </div>
@@ -1196,8 +1228,7 @@
                         </div>
                         <h3 class="feature-title">Secure Payment Options</h3>
                         <p class="feature-description">
-                            Cash on Delivery (COD) or online payment (simulated). Save your payment 
-                            option for next time for even faster checkout.
+                            Pay via Cash on Delivery or GCash (PayMongo checkout). Pick what works best for you at checkout.
                         </p>
                     </div>
                 </div>
@@ -1216,16 +1247,15 @@
                     </div>
                 </div>
                 
-                <!-- Customer Support -->
+                <!-- Order History -->
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
                     <div class="feature-card">
                         <div class="feature-icon">
-                            <i class="fas fa-headset"></i>
+                            <i class="fas fa-receipt"></i>
                         </div>
-                        <h3 class="feature-title">Customer Support & Feedback</h3>
+                        <h3 class="feature-title">Order History</h3>
                         <p class="feature-description">
-                            Built-in support messaging, submit complaints, and rate your delivery 
-                            experience. We're here to help!
+                            Review all your previous orders and their statuses in one place.
                         </p>
                     </div>
                 </div>
@@ -1259,7 +1289,7 @@
             
             <div class="row g-4">
                 <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="0">
-                    <div class="step-card" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 2.5rem; text-align: center; border: 1px solid rgba(255, 255, 255, 0.2);">
+                    <div class="step-card">
                         <div class="step-number" style="width: 80px; height: 80px; border-radius: 50%; background: white; color: #0ea5e9; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; margin: 0 auto 1.5rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);">1</div>
                         <h3 class="step-title" style="font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 1rem;">Choose Water Product</h3>
                         <p class="step-description" style="color: white; opacity: 0.9; line-height: 1.7;">
@@ -1269,27 +1299,27 @@
                 </div>
                 
                 <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="150">
-                    <div class="step-card" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 2.5rem; text-align: center; border: 1px solid rgba(255, 255, 255, 0.2);">
+                    <div class="step-card">
                         <div class="step-number" style="width: 80px; height: 80px; border-radius: 50%; background: white; color: #0ea5e9; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; margin: 0 auto 1.5rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);">2</div>
-                        <h3 class="step-title" style="font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 1rem;">Schedule Delivery</h3>
+                        <h3 class="step-title" style="font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 1rem;">Add Address & Checkout</h3>
                         <p class="step-description" style="color: white; opacity: 0.9; line-height: 1.7;">
-                            Select your preferred delivery date and time, or choose ASAP. Add or select a saved delivery address.
+                            Add or select your saved delivery address, review your cart, and place your order.
                         </p>
                     </div>
                 </div>
                 
                 <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="step-card" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 2.5rem; text-align: center; border: 1px solid rgba(255, 255, 255, 0.2);">
+                    <div class="step-card">
                         <div class="step-number" style="width: 80px; height: 80px; border-radius: 50%; background: white; color: #0ea5e9; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; margin: 0 auto 1.5rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);">3</div>
-                        <h3 class="step-title" style="font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 1rem;">Track Rider</h3>
+                        <h3 class="step-title" style="font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 1rem;">View Order Status</h3>
                         <p class="step-description" style="color: white; opacity: 0.9; line-height: 1.7;">
-                            Monitor your order status in real-time. Watch as your delivery moves from preparation to your location via GPS.
+                            Follow your order as it moves through statuses (Pending, Preparing, Out for Delivery, Delivered) in the app.
                         </p>
                     </div>
                 </div>
                 
                 <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="450">
-                    <div class="step-card" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 2.5rem; text-align: center; border: 1px solid rgba(255, 255, 255, 0.2);">
+                    <div class="step-card">
                         <div class="step-number" style="width: 80px; height: 80px; border-radius: 50%; background: white; color: #0ea5e9; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; margin: 0 auto 1.5rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);">4</div>
                         <h3 class="step-title" style="font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 1rem;">Receive Your Order</h3>
                         <p class="step-description" style="color: white; opacity: 0.9; line-height: 1.7;">
