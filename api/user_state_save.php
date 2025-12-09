@@ -51,7 +51,8 @@ $fields_map = [
 ];
 
 foreach ($fields_map as $input_key => $db_column) {
-    if (isset($input[$input_key])) {
+    // Use array_key_exists so null values are included (to clear fields)
+    if (array_key_exists($input_key, $input)) {
         $value = $input[$input_key];
         // Convert arrays/objects to JSON strings
         if (is_array($value) || is_object($value)) {
