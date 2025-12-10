@@ -23,23 +23,31 @@
             flex: 1;
         }
         .page-header {
-            text-align: center;
-            margin-bottom: 1rem;
+            text-align: left;
+            margin-bottom: 2rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 60px;
         }
         .page-header h1 {
             font-weight: 800;
             color: #0f172a;
             letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
         }
         .page-header p {
             color: #64748b;
             margin: 0;
         }
-        .orders-wrapper {
+        .orders-container {
             max-width: 900px;
             margin: 0 auto;
             position: relative;
-            padding: 0 60px;
+            padding: 0 80px;
+        }
+        .orders-wrapper {
+            position: relative;
         }
         
         .order-carousel {
@@ -749,22 +757,24 @@
                 <h1><i class="fas fa-receipt me-2 text-primary"></i>Recent Orders</h1>
                 <p>Your completed and delivered orders in one place.</p>
             </div>
-            <div class="orders-wrapper">
-                <div class="order-carousel" id="orderCarousel">
-                    <div class="loader" id="ordersLoader">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
+            <div class="orders-container">
+                <button class="nav-arrows prev" id="prevBtn" onclick="navigateOrder(-1)" style="display: none;">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="orders-wrapper">
+                    <div class="order-carousel" id="orderCarousel">
+                        <div class="loader" id="ordersLoader">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
                         </div>
+                        <div id="ordersWrapper"></div>
+                        <div class="order-counter" id="orderCounter" style="display: none;"></div>
                     </div>
-                    <button class="nav-arrows prev" id="prevBtn" onclick="navigateOrder(-1)" style="display: none;">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <div id="ordersWrapper"></div>
-                    <button class="nav-arrows next" id="nextBtn" onclick="navigateOrder(1)" style="display: none;">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                    <div class="order-counter" id="orderCounter" style="display: none;"></div>
                 </div>
+                <button class="nav-arrows next" id="nextBtn" onclick="navigateOrder(1)" style="display: none;">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
     </main>
