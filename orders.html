@@ -1316,7 +1316,7 @@
                     <p>Track your water delivery orders and manage them here</p>
                 </div>
                 
-                <button class="nav-arrows prev" id="prevBtn" onclick="changeOrder(-1)" style="display: none;">
+                <button class="nav-arrows prev" id="prevBtn" style="display: none;" type="button">
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 
@@ -1341,7 +1341,7 @@
                     <div class="order-counter" id="orderCounter" style="display: none;"></div>
                 </div>
                 
-                <button class="nav-arrows next" id="nextBtn" onclick="changeOrder(1)" style="display: none;">
+                <button class="nav-arrows next" id="nextBtn" style="display: none;" type="button">
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
@@ -1491,8 +1491,6 @@
 
                 // Store all filtered orders
                 allOrders = cleaned;
-                console.log('Filtered orders count:', allOrders.length);
-                console.log('All orders:', allOrders);
                 
                 // Share with navbar to avoid duplicate fetch for badge (already filtered - no delivered/cancelled)
                 window.__ordersCache = allOrders;
@@ -1507,22 +1505,17 @@
                     const foundIndex = allOrders.findIndex(o => o.id === currentOrderId);
                     if (foundIndex >= 0) {
                         currentIndex = foundIndex;
-                        console.log('Preserved order index:', currentIndex);
                     } else {
                         currentIndex = 0;
-                        console.log('Current order not found, resetting to 0');
                     }
                 } else {
                     currentIndex = 0;
-                    console.log('No current order ID, resetting to 0');
                 }
 
                 // Ensure index is valid
                 if (currentIndex >= allOrders.length) {
                     currentIndex = Math.max(0, allOrders.length - 1);
                 }
-                
-                console.log('Final currentIndex:', currentIndex, 'out of', allOrders.length);
 
                 renderOrders();
             } catch (error) {
@@ -1569,16 +1562,12 @@
             if (currentIndex >= allOrders.length) currentIndex = allOrders.length - 1;
 
             // Show only the current order (client carousel)
-            console.log('renderOrders - currentIndex:', currentIndex, 'allOrders.length:', allOrders.length);
-            
             if (currentIndex < 0 || currentIndex >= allOrders.length) {
                 console.warn('Invalid index:', currentIndex, 'Total orders:', allOrders.length);
                 return;
             }
             
             const order = allOrders[currentIndex];
-            console.log('Rendering order at index', currentIndex, ':', order);
-            
             if (!order) {
                 console.warn('No order at index', currentIndex);
                 return;
@@ -1589,9 +1578,9 @@
             const orderCard = createOrderCard(order);
             if (orderCard) {
                 ordersList.appendChild(orderCard);
-                console.log('Order card appended successfully');
             } else {
                 console.error('Failed to create order card for order:', order.id);
+                return;
             }
             
             // Update navigation controls
@@ -1626,28 +1615,32 @@
         
         // Navigate to next/previous order
         function changeOrder(delta) {
-            console.log('changeOrder called with delta:', delta);
-            console.log('Current index:', currentIndex, 'Total orders:', allOrders.length);
+            // Prevent multiple rapid calls
+            if (window.__navigating) {
+                return;
+            }
+            window.__navigating = true;
             
             if (allOrders.length <= 1) {
-                console.log('Not enough orders to navigate');
+                window.__navigating = false;
                 return;
             }
             
             const newIndex = currentIndex + delta;
-            console.log('New index would be:', newIndex);
             
             if (newIndex < 0 || newIndex >= allOrders.length) {
-                console.log('New index out of bounds');
+                window.__navigating = false;
                 return;
             }
             
             // Update index and render
             currentIndex = newIndex;
-            console.log('Updated currentIndex to:', currentIndex);
-            console.log('Order at new index:', allOrders[currentIndex]);
-            
             renderOrders();
+            
+            // Reset navigation lock after a short delay
+            setTimeout(() => {
+                window.__navigating = false;
+            }, 300);
             
             // Scroll to top of orders list for better UX
             const ordersList = document.getElementById('ordersList');
@@ -2184,6 +2177,26 @@
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
+            // Set up navigation button event listeners
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (prevBtn) {
+                prevBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    changeOrder(-1);
+                });
+            }
+            
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    changeOrder(1);
+                });
+            }
+            
             // Wait a bit for DOM to fully render before loading orders
             setTimeout(() => {
                 loadOrders();
