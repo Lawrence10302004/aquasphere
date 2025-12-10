@@ -31,15 +31,15 @@ if ($GLOBALS['use_postgres']) {
     $total_orders = $row['count'];
 }
 
-// Pending deliveries
-$query = "SELECT COUNT(*) as count FROM orders WHERE status IN ('pending', 'preparing', 'shipped', 'out_for_delivery')";
+// Active deliveries: shipped or out for delivery
+$query = "SELECT COUNT(*) as count FROM orders WHERE status IN ('shipped', 'out_for_delivery')";
 $result = execute_sql($conn, $query);
 if ($GLOBALS['use_postgres']) {
     $row = pg_fetch_assoc($result);
-    $pending_deliveries = $row['count'];
+    $active_deliveries = $row['count'];
 } else {
     $row = $result->fetchArray(SQLITE3_ASSOC);
-    $pending_deliveries = $row['count'];
+    $active_deliveries = $row['count'];
 }
 
 // Completed orders (delivered)
@@ -122,7 +122,7 @@ echo json_encode([
     'stats' => [
         'total_users' => (int)$total_users,
         'total_orders' => (int)$total_orders,
-        'active_deliveries' => (int)$pending_deliveries,
+        'active_deliveries' => (int)$active_deliveries,
         'completed_orders' => (int)$completed_orders,
         'total_revenue' => floatval($total_revenue),
         'today_revenue' => floatval($today_revenue),
