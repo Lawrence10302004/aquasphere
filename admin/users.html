@@ -1123,6 +1123,8 @@
             if (reasonError) reasonError.style.display = 'none';
             
             try {
+                // Hide modal immediately to avoid lingering UI
+                closeSuspendModal();
                 showCenterNotice('Processing...');
                 const response = await fetch('../api/admin/suspend_user.php', {
                     method: 'POST',
@@ -1139,8 +1141,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showCenterNotice(result.message || 'Updated successfully', 1400);
-                    closeSuspendModal();
+                    showCenterNotice(result.message || 'Updated successfully', 1200);
                     loadUsers(currentPage);
                 } else {
                     hideCenterNotice();
