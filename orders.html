@@ -1488,8 +1488,13 @@
 
                 // Store all filtered orders
                 allOrders = cleaned;
-                // Share with navbar to avoid duplicate fetch for badge
+                // Share with navbar to avoid duplicate fetch for badge (already filtered - no delivered/cancelled)
                 window.__ordersCache = allOrders;
+                
+                // Update navbar badge count immediately
+                if (typeof window.updateOrderCount === 'function') {
+                    window.updateOrderCount();
+                }
                 
                 // Preserve the currently viewed order if still present
                 const currentId = allOrders[currentIndex]?.id;

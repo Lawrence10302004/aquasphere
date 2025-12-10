@@ -148,16 +148,22 @@ function updateOrderCount() {
     }
     
     // Use cached orders when available (e.g., My Orders page just fetched)
+    // The cache should already be filtered (no delivered/cancelled orders)
     if (Array.isArray(window.__ordersCache)) {
-        const orderCount = window.__ordersCache.length;
+        // Filter out delivered and cancelled orders to match My Orders page behavior
+        const filteredOrders = window.__ordersCache.filter(o => {
+            const status = (o.status || '').toLowerCase();
+            return status !== 'cancelled' && status !== 'delivered';
+        });
+        const orderCount = filteredOrders.length;
         ordersCountEl.textContent = orderCount;
         ordersCountEl.style.display = orderCount > 0 ? 'flex' : 'none';
         return;
     }
 
     // Fetch orders from API (API uses session, so no need to check localStorage)
-    // Fetch without pagination limit to get total count, or use pagination.total
-    fetch('api/get_orders.php?limit=1')
+    // Fetch enough orders to filter out delivered/cancelled ones
+    fetch('api/get_orders.php?limit=1000')
         .then(response => {
             if (!response.ok) {
                 // If 401, user is not logged in - hide badge
@@ -172,11 +178,14 @@ function updateOrderCount() {
         .then(data => {
             if (!data) return; // Handled 401 case above
             
-            if (data.success) {
-                // Use pagination.total if available (total count), otherwise use orders array length
-                const orderCount = (data.pagination && data.pagination.total !== undefined) 
-                    ? data.pagination.total 
-                    : (Array.isArray(data.orders) ? data.orders.length : 0);
+            if (data.success && Array.isArray(data.orders)) {
+                // Filter out delivered and cancelled orders (same as My Orders page)
+                const filteredOrders = data.orders.filter(o => {
+                    const status = (o.status || '').toLowerCase();
+                    return status !== 'cancelled' && status !== 'delivered';
+                });
+                
+                const orderCount = filteredOrders.length;
                 
                 const badgeEl = document.getElementById('ordersCount');
                 if (badgeEl) {
