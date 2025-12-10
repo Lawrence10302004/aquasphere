@@ -872,7 +872,8 @@
         function showSuspendedNotice(message) {
             const overlay = document.getElementById('suspendedOverlay');
             const msgEl = document.getElementById('suspendedMessage');
-            if (msgEl && message) msgEl.textContent = message;
+            const defaultMsg = 'Your account has been suspended and is currently unavailable for login. Please check your email for more details or contact our support team for assistance.';
+            if (msgEl) msgEl.textContent = message || defaultMsg;
             if (overlay) overlay.style.display = 'flex';
         }
         window.hideSuspendedNotice = function() {
@@ -1054,7 +1055,7 @@
                                 showError(field, data.errors[field]);
                             });
                         } else if (data.suspended || (data.message && data.message.toLowerCase().includes('suspend'))) {
-                            showSuspendedNotice(data.message || 'Your account is suspended. Please check your email for details or contact the AquaSphere team.');
+                            showSuspendedNotice();
                             return;
                         } else if (data.message) {
                             // Show authentication error below password field (like AnemoCheck)
