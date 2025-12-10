@@ -1125,7 +1125,7 @@
                     </div>
                     <div class="stat-info">
                         <h4 id="totalOrders">0</h4>
-                        <p>Total Orders</p>
+                        <p>Total Order in the Cart</p>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -1445,12 +1445,31 @@
             `).join('');
         }
         
-        // Load stats (mock data for now)
-        function loadStats() {
-            const orders = JSON.parse(localStorage.getItem('orders')) || [];
-            document.getElementById('totalOrders').textContent = orders.length;
-            document.getElementById('activeDeliveries').textContent = orders.filter(o => ['pending', 'preparing', 'delivering'].includes(o.status)).length;
-            document.getElementById('completedOrders').textContent = orders.filter(o => o.status === 'delivered').length;
+        // Load stats from API
+        async function loadStats() {
+            let orders = [];
+            try {
+                const res = await fetch('api/get_orders.php?limit=1000');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success && Array.isArray(data.orders)) {
+                        orders = data.orders;
+                    }
+                }
+            } catch (err) {
+                console.error('Error loading stats:', err);
+            }
+            // Fallback to zero if none
+            const total = orders.length;
+            const active = orders.filter(o => {
+                const s = (o.status || '').toLowerCase();
+                return s === 'shipped' || s === 'out_for_delivery';
+            }).length;
+            const completed = orders.filter(o => (o.status || '').toLowerCase() === 'delivered').length;
+
+            document.getElementById('totalOrders').textContent = total;
+            document.getElementById('activeDeliveries').textContent = active;
+            document.getElementById('completedOrders').textContent = completed;
         }
         
         // Notification function
