@@ -209,26 +209,71 @@
         }
         
         .modal-header {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-            color: white;
-            padding: 1.5rem 2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #06b6d4 100%);
+            padding: 2rem 2rem 1.5rem;
+            border-bottom: none;
+            border-radius: 28px 28px 0 0;
             position: relative;
-            z-index: 2;
+            overflow: hidden;
+        }
+        
+        .modal-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            animation: rotateGradient 15s linear infinite;
         }
         
         .modal-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
             margin: 0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .modal-header h2::before {
+            content: '📍';
             font-size: 1.5rem;
-            font-weight: 700;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes rotateGradient {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
         }
         
         .modal-body {
-            padding: 2rem;
-            overflow-y: auto;
+            background: transparent;
             flex: 1;
+            overflow-y: auto;
+            padding: 2rem 2rem 1.5rem;
+            max-height: calc(92vh - 250px);
+            position: relative;
+            z-index: 1;
         }
         
         .modal-footer {
@@ -448,6 +493,60 @@
                 opacity: 1;
                 transform: scale(1);
             }
+        }
+        
+        /* Footer Styles */
+        .footer {
+            background: #0369a1;
+            color: white;
+            padding: 20px 0 15px;
+            margin-top: 40px;
+            width: 100%;
+        }
+        
+        .footer-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.7rem;
+        }
+        
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+        }
+        
+        .footer-link:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .social-icons a {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+        
+        .social-icons a:hover {
+            background: white;
+            color: #0ea5e9;
+            transform: translateY(-5px);
+        }
+        
+        .footer p {
+            font-size: 0.85rem;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -698,11 +797,63 @@
         window.logout = logout;
     </script>
     
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-3">
+                    <h4 class="footer-title" style="display: flex; align-items: center;">
+                        <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 40px; margin-right: 10px;">
+                        AquaSphere
+                    </h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.7;">
+                        Your trusted water delivery service. Fast delivery, clean quality water, and reliable service. 
+                        Everything you need for your hydration needs, all in one platform.
+                    </p>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-3">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <a href="dashboard.html" class="footer-link">Home</a>
+                    <a href="orders.html" class="footer-link">My Orders</a>
+                    <a href="profile.html" class="footer-link">Profile</a>
+                    <a href="cart.html" class="footer-link">Cart</a>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <h5 class="footer-title">Features</h5>
+                    <a href="#" class="footer-link">Easy Ordering</a>
+                    <a href="#" class="footer-link">Delivery Tracking</a>
+                    <a href="#" class="footer-link">Payment Options</a>
+                    <a href="#" class="footer-link">Customer Support</a>
+                </div>
+                
+                <div class="col-lg-3 mb-3">
+                    <h5 class="footer-title">Connect With Us</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <p class="mt-1" style="color: rgba(255, 255, 255, 0.8);">
+                        <i class="fas fa-envelope me-2"></i>support@aquasphere.com
+                    </p>
+                </div>
+            </div>
+            
+            <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 1rem 0 0.8rem;">
+            
+            <div class="text-center" style="color: rgba(255, 255, 255, 0.8); font-size: 0.8rem;">
+                <p>&copy; 2024 AquaSphere. Made with ❤️ for clean water delivery. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
     <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal" onclick="closeSettingsModal(event)" style="display: none;">
         <div class="address-modal" onclick="event.stopPropagation()" style="max-width: 600px;">
             <div class="modal-header">
-                <i class="fas fa-cog"></i>
                 <h2>Settings</h2>
             </div>
             <div class="modal-body">
