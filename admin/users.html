@@ -1092,12 +1092,14 @@
             if (overlay) overlay.style.display = 'flex';
         }
         
-        function closeSuspendModal() {
+        function closeSuspendModal(resetState = true) {
             const overlay = document.getElementById('suspendOverlay');
             if (overlay) overlay.style.display = 'none';
-            pendingSuspendUserId = null;
-            pendingSuspendUsername = '';
-            pendingAction = 'suspend';
+            if (resetState) {
+                pendingSuspendUserId = null;
+                pendingSuspendUsername = '';
+                pendingAction = 'suspend';
+            }
         }
         
         function handleSuspendOverlayClick(event) {
@@ -1123,8 +1125,8 @@
             if (reasonError) reasonError.style.display = 'none';
             
             try {
-                // Hide modal immediately to avoid lingering UI
-                closeSuspendModal();
+                // Hide modal immediately to avoid lingering UI but keep state for API payload
+                closeSuspendModal(false);
                 showCenterNotice('Processing...');
                 const response = await fetch('../api/admin/suspend_user.php', {
                     method: 'POST',
@@ -1151,6 +1153,10 @@
                 console.error('Error updating suspension:', error);
                 hideCenterNotice();
                 showNotification('Failed to update suspension', 'error');
+            } finally {
+                pendingSuspendUserId = null;
+                pendingSuspendUsername = '';
+                pendingAction = 'suspend';
             }
         }
         
