@@ -393,7 +393,7 @@
             border-right: 8px solid transparent;
             border-bottom: 8px solid #0f172a;
         }
-        .reason-note:hover .reason-tooltip {
+        .reason-note.active .reason-tooltip {
             display: block;
         }
 
@@ -727,9 +727,9 @@
                 const isSuspended = parseInt(user.suspended || 0) === 1;
                 const statusBadge = isSuspended
                     ? `<span class="badge bg-danger">Suspended</span>
-                        <span class="reason-note" title="View reason">
+                        <span class="reason-note" onclick="toggleReasonTooltip('reason-${user.id}')">
                             <i class="fas fa-sticky-note"></i>
-                            <span class="reason-tooltip">${escapeHtml(user.suspension_reason || 'No reason provided')}</span>
+                            <span class="reason-tooltip" id="reason-${user.id}">${escapeHtml(user.suspension_reason || 'No reason provided')}</span>
                         </span>`
                     : '<span class="badge bg-success">Active</span>';
                 
@@ -1123,6 +1123,7 @@
             if (reasonError) reasonError.style.display = 'none';
             
             try {
+                showCenterNotice('Processing...');
                 const response = await fetch('../api/admin/suspend_user.php', {
                     method: 'POST',
                     headers: {
@@ -1138,14 +1139,16 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showCenterNotice(result.message || 'Updated successfully');
+                    showCenterNotice(result.message || 'Updated successfully', 1400);
                     closeSuspendModal();
                     loadUsers(currentPage);
                 } else {
+                    hideCenterNotice();
                     showNotification(result.message || 'Failed to update', 'error');
                 }
             } catch (error) {
                 console.error('Error updating suspension:', error);
+                hideCenterNotice();
                 showNotification('Failed to update suspension', 'error');
             }
         }
@@ -1200,6 +1203,22 @@
                 }
             }
         }
+
+        function toggleReasonTooltip(id) {
+            document.querySelectorAll('.reason-note').forEach(note => {
+                if (note.querySelector('.reason-tooltip')?.id !== id) {
+                    note.classList.remove('active');
+                }
+            });
+            const tooltip = document.getElementById(id);
+            if (!tooltip) return;
+            const parent = tooltip.parentElement;
+            if (parent.classList.contains('active')) {
+                parent.classList.remove('active');
+            } else {
+                parent.classList.add('active');
+            }
+        }
         
         function isValidEmail(email) {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -1241,14 +1260,16 @@
 
         // Center notice with spinner
         let centerNoticeTimer = null;
-        function showCenterNotice(message, duration = 1800) {
+        function showCenterNotice(message, duration = 0) {
             const overlay = document.getElementById('centerNoticeOverlay');
             const msgEl = document.getElementById('centerNoticeMessage');
             if (!overlay || !msgEl) return;
             msgEl.textContent = message || 'Processing...';
             overlay.style.display = 'flex';
             if (centerNoticeTimer) clearTimeout(centerNoticeTimer);
-            centerNoticeTimer = setTimeout(hideCenterNotice, duration);
+            if (duration > 0) {
+                centerNoticeTimer = setTimeout(hideCenterNotice, duration);
+            }
         }
         function hideCenterNotice() {
             const overlay = document.getElementById('centerNoticeOverlay');
