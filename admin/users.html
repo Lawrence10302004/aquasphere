@@ -351,6 +351,90 @@
             margin-right: 6px;
             color: #dc2626;
         }
+
+        /* Suspended reason hover */
+        .reason-note {
+            margin-left: 6px;
+            color: #475569;
+            cursor: pointer;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .reason-note i {
+            font-size: 0.9rem;
+        }
+        .reason-tooltip {
+            display: none;
+            position: absolute;
+            top: 110%;
+            left: 0;
+            z-index: 10;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 10px 12px;
+            border-radius: 10px;
+            min-width: 220px;
+            max-width: 320px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            border: 1px solid #1e293b;
+        }
+        .reason-tooltip::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 12px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #0f172a;
+        }
+        .reason-note:hover .reason-tooltip {
+            display: block;
+        }
+
+        /* Center notice */
+        #centerNoticeOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.35);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(2px);
+        }
+        #centerNoticeCard {
+            background: #ffffff;
+            padding: 18px 22px;
+            border-radius: 14px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+            min-width: 260px;
+            max-width: 320px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .center-spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #0ea5e9;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            animation: spin 0.8s linear infinite;
+        }
+        #centerNoticeMessage {
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 1rem;
+            margin: 0;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -445,6 +529,14 @@
                 <ul class="pagination justify-content-center" id="pagination">
                 </ul>
             </nav>
+        </div>
+    </div>
+
+    <!-- Center Notice -->
+    <div id="centerNoticeOverlay">
+        <div id="centerNoticeCard">
+            <div class="center-spinner"></div>
+            <p id="centerNoticeMessage">Processing...</p>
         </div>
     </div>
 
@@ -612,7 +704,11 @@
             tbody.innerHTML = users.map(user => {
                 const isSuspended = parseInt(user.suspended || 0) === 1;
                 const statusBadge = isSuspended
-                    ? `<span class="badge bg-danger">Suspended</span><br><small class="text-muted">Reason: ${escapeHtml(user.suspension_reason || 'N/A')}</small>`
+                    ? `<span class="badge bg-danger">Suspended</span>
+                        <span class="reason-note" title="View reason">
+                            <i class="fas fa-sticky-note"></i>
+                            <span class="reason-tooltip">${escapeHtml(user.suspension_reason || 'No reason provided')}</span>
+                        </span>`
                     : '<span class="badge bg-success">Active</span>';
                 
                 const reasonParam = encodeURIComponent(user.suspension_reason || '');
@@ -1020,7 +1116,7 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    showNotification(result.message || 'Updated successfully', 'success');
+                    showCenterNotice(result.message || 'Updated successfully');
                     closeSuspendModal();
                     loadUsers(currentPage);
                 } else {
@@ -1103,7 +1199,7 @@
             fields.forEach(id => hideFieldError(id));
         }
         
-        // Show notification
+        // Show notification (top-right)
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
             notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'}`;
@@ -1119,6 +1215,23 @@
                 notification.style.transition = 'opacity 0.3s';
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
+        }
+
+        // Center notice with spinner
+        let centerNoticeTimer = null;
+        function showCenterNotice(message, duration = 1800) {
+            const overlay = document.getElementById('centerNoticeOverlay');
+            const msgEl = document.getElementById('centerNoticeMessage');
+            if (!overlay || !msgEl) return;
+            msgEl.textContent = message || 'Processing...';
+            overlay.style.display = 'flex';
+            if (centerNoticeTimer) clearTimeout(centerNoticeTimer);
+            centerNoticeTimer = setTimeout(hideCenterNotice, duration);
+        }
+        function hideCenterNotice() {
+            const overlay = document.getElementById('centerNoticeOverlay');
+            if (overlay) overlay.style.display = 'none';
+            if (centerNoticeTimer) clearTimeout(centerNoticeTimer);
         }
         
         // Search on Enter key
