@@ -680,6 +680,75 @@
             background-color: #e9ecef;
             border-color: #ced4da;
         }
+
+        /* Suspended overlay */
+        #suspendedOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.35);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(2px);
+            padding: 16px;
+        }
+        #suspendedCard {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 22px 22px 18px;
+            max-width: 420px;
+            width: 100%;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 18px 50px rgba(0,0,0,0.18);
+            text-align: center;
+        }
+        .suspended-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 12px;
+            border-radius: 16px;
+            background: linear-gradient(145deg, #fee2e2, #fecdd3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 6px 14px rgba(255,255,255,0.7), 0 10px 24px rgba(239,68,68,0.25);
+        }
+        .suspended-icon i {
+            color: #dc2626;
+            font-size: 1.8rem;
+        }
+        .suspended-title {
+            font-weight: 800;
+            color: #111827;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+        .suspended-message {
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 14px;
+            text-align: left;
+            line-height: 1.5;
+            font-size: 0.97rem;
+            margin-bottom: 14px;
+        }
+        .suspended-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-outline-dark {
+            border-color: #0ea5e9;
+            color: #0ea5e9;
+        }
+        .btn-outline-dark:hover {
+            background: #0ea5e9;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -799,6 +868,18 @@
             // Required fields
             const requiredFields = ['username', 'password'];
             
+        // Suspended notice helpers
+        function showSuspendedNotice(message) {
+            const overlay = document.getElementById('suspendedOverlay');
+            const msgEl = document.getElementById('suspendedMessage');
+            if (msgEl && message) msgEl.textContent = message;
+            if (overlay) overlay.style.display = 'flex';
+        }
+        window.hideSuspendedNotice = function() {
+            const overlay = document.getElementById('suspendedOverlay');
+            if (overlay) overlay.style.display = 'none';
+        };
+        
             // Function to show error
             function showError(fieldName, message) {
                 const field = document.getElementById(fieldName);
@@ -972,6 +1053,9 @@
                             Object.keys(data.errors).forEach(field => {
                                 showError(field, data.errors[field]);
                             });
+                        } else if (data.suspended || (data.message && data.message.toLowerCase().includes('suspend'))) {
+                            showSuspendedNotice(data.message || 'Your account is suspended. Please check your email for details or contact the AquaSphere team.');
+                            return;
                         } else if (data.message) {
                             // Show authentication error below password field (like AnemoCheck)
                             const authError = document.getElementById('auth-error');
@@ -2008,6 +2092,23 @@
             <button class="toast-close" onclick="hidePasswordResetSuccess()">
                 <i class="fas fa-times"></i>
             </button>
+        </div>
+    </div>
+
+    <!-- Suspended Notice -->
+    <div id="suspendedOverlay">
+        <div id="suspendedCard">
+            <div class="suspended-icon">
+                <i class="fas fa-user-lock"></i>
+            </div>
+            <div class="suspended-title">Account Suspended</div>
+            <div class="suspended-message" id="suspendedMessage">
+                Your account is currently suspended. Please check your email for details or contact the AquaSphere team for assistance.
+            </div>
+            <div class="suspended-actions">
+                <button class="btn btn-outline-dark" onclick="hideSuspendedNotice()">Close</button>
+                <a class="btn btn-login" style="width:auto;padding:10px 18px;" href="mailto:support@aquasphere.com">Contact Support</a>
+            </div>
         </div>
     </div>
 
