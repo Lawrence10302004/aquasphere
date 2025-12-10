@@ -12,9 +12,15 @@
             font-family: 'Poppins', sans-serif !important;
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             min-height: 100vh;
+            overflow-x: hidden;
+            scrollbar-gutter: stable;
+            display: flex;
+            flex-direction: column;
         }
         .main-content {
-            padding: 2rem 0 3rem;
+            padding: 2rem 0;
+            padding-top: 1rem;
+            flex: 1;
         }
         .page-header {
             text-align: center;
@@ -500,12 +506,14 @@
             background: #0369a1;
             color: white;
             padding: 20px 0 15px;
-            margin-top: 40px;
-            width: 100%;
+            margin-top: auto;
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
+            margin-right: calc(50% - 50vw);
         }
         
         .footer-title {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             margin-bottom: 0.7rem;
         }
@@ -524,24 +532,27 @@
             transform: translateX(5px);
         }
         
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
         .social-icons a {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+            width: 40px;
+            height: 40px;
             background: rgba(255, 255, 255, 0.1);
-            display: inline-flex;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            margin-right: 8px;
             transition: all 0.3s ease;
-            font-size: 0.85rem;
         }
         
         .social-icons a:hover {
-            background: white;
-            color: #0ea5e9;
-            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
         }
         
         .footer p {
@@ -801,7 +812,7 @@
     <footer class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 mb-3">
+                <div class="col-lg-4 mb-4">
                     <h4 class="footer-title" style="display: flex; align-items: center;">
                         <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 40px; margin-right: 10px;">
                         AquaSphere
@@ -812,7 +823,7 @@
                     </p>
                 </div>
                 
-                <div class="col-lg-2 col-md-6 mb-3">
+                <div class="col-lg-2 col-md-6 mb-4">
                     <h5 class="footer-title">Quick Links</h5>
                     <a href="dashboard.html" class="footer-link">Home</a>
                     <a href="orders.html" class="footer-link">My Orders</a>
@@ -820,7 +831,7 @@
                     <a href="cart.html" class="footer-link">Cart</a>
                 </div>
                 
-                <div class="col-lg-3 col-md-6 mb-3">
+                <div class="col-lg-3 col-md-6 mb-4">
                     <h5 class="footer-title">Features</h5>
                     <a href="#" class="footer-link">Easy Ordering</a>
                     <a href="#" class="footer-link">Delivery Tracking</a>
@@ -828,7 +839,7 @@
                     <a href="#" class="footer-link">Customer Support</a>
                 </div>
                 
-                <div class="col-lg-3 mb-3">
+                <div class="col-lg-3 mb-4">
                     <h5 class="footer-title">Connect With Us</h5>
                     <div class="social-icons">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
