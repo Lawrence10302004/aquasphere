@@ -298,64 +298,6 @@
                 </div>
             </div>
 
-            <!-- General Settings -->
-            <div class="settings-card">
-                <h5><i class="fas fa-sliders-h me-2"></i>General Settings</h5>
-                
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="site_name" class="form-label">Site Name</label>
-                        <input type="text" class="form-control" id="site_name" name="site_name" 
-                               placeholder="AquaSphere" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="site_description" class="form-label">Site Description</label>
-                        <input type="text" class="form-control" id="site_description" name="site_description" 
-                               placeholder="Clean water delivery service">
-                    </div>
-                </div>
-                
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="max_users" class="form-label">Maximum Users</label>
-                        <input type="number" class="form-control" id="max_users" name="max_users" 
-                               placeholder="1000" min="1">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="session_timeout" class="form-label">Session Timeout (minutes)</label>
-                        <input type="number" class="form-control" id="session_timeout" name="session_timeout" 
-                               placeholder="30" min="5">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Security Settings -->
-            <div class="settings-card">
-                <h5><i class="fas fa-shield-alt me-2"></i>Security Settings</h5>
-                
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="password_min_length" class="form-label">Minimum Password Length</label>
-                        <input type="number" class="form-control" id="password_min_length" name="password_min_length" 
-                               placeholder="8" min="6" max="128">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="max_login_attempts" class="form-label">Max Login Attempts</label>
-                        <input type="number" class="form-control" id="max_login_attempts" name="max_login_attempts" 
-                               placeholder="5" min="3" max="10">
-                    </div>
-                </div>
-                
-                <div class="mb-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="enable_two_factor" name="enable_two_factor" value="1">
-                        <label class="form-check-label" for="enable_two_factor">
-                            Enable Two-Factor Authentication
-                        </label>
-                    </div>
-                </div>
-            </div>
-
             <div class="d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save me-2"></i>Save Settings
@@ -378,35 +320,25 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Load current settings
-        fetch('../api/admin/get_settings.php')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Populate form fields
+        function loadEmailSettings() {
+            fetch('../api/admin/get_settings.php')
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.success) return;
                     if (data.settings.brevo_api_key) {
                         document.getElementById('brevo_api_key').placeholder = 'API key is saved - enter new key to change';
                         document.getElementById('api-key-status').style.display = 'block';
                         document.getElementById('api-key-help').textContent = 'API key is saved - enter new key to change';
                         document.getElementById('api-key-help').className = 'text-success';
                     }
-                    
                     document.getElementById('brevo_sender_email').value = data.settings.brevo_sender_email || '';
                     document.getElementById('brevo_sender_name').value = data.settings.brevo_sender_name || 'AquaSphere';
-                    document.getElementById('enable_email_notifications').checked = data.settings.enable_email_notifications === '1' || data.settings.enable_email_notifications === 'true';
-                    document.getElementById('site_name').value = data.settings.site_name || 'AquaSphere';
-                    document.getElementById('site_description').value = data.settings.site_description || '';
-                    document.getElementById('max_users').value = data.settings.max_users || '';
-                    document.getElementById('session_timeout').value = data.settings.session_timeout || '30';
-                    document.getElementById('password_min_length').value = data.settings.password_min_length || '8';
-                    document.getElementById('max_login_attempts').value = data.settings.max_login_attempts || '5';
-                    document.getElementById('enable_two_factor').checked = data.settings.enable_two_factor === '1' || data.settings.enable_two_factor === 'true';
-                }
-            })
-            .catch(error => {
-                console.error('Error loading settings:', error);
-            });
-        
+                    document.getElementById('enable_email_notifications').checked =
+                        data.settings.enable_email_notifications === '1' || data.settings.enable_email_notifications === 'true';
+                })
+                .catch(err => console.error('Error loading settings:', err));
+        }
+
         // API key input handler
         document.getElementById('brevo_api_key').addEventListener('input', function() {
             if (this.value.length > 0) {
@@ -425,7 +357,7 @@
                 }
             }
         });
-        
+
         // Test email button
         document.getElementById('testEmailBtn').addEventListener('click', function() {
             const btn = this;
@@ -435,16 +367,14 @@
             
             fetch('../api/admin/test_email.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     brevo_api_key: document.getElementById('brevo_api_key').value,
                     brevo_sender_email: document.getElementById('brevo_sender_email').value,
                     brevo_sender_name: document.getElementById('brevo_sender_name').value
                 })
             })
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
                 if (data.success) {
                     showToast('success', 'Email Test Successful', data.message || 'Test email sent successfully!');
@@ -452,81 +382,48 @@
                     showToast('error', 'Email Test Failed', data.message || 'Failed to send test email.');
                 }
             })
-            .catch(error => {
-                showToast('error', 'Error', 'An error occurred while testing email configuration.');
-            })
+            .catch(() => showToast('error', 'Error', 'An error occurred while testing email configuration.'))
             .finally(() => {
                 btn.disabled = false;
                 btn.innerHTML = originalText;
             });
         });
-        
+
         // Form submission
         document.getElementById('settingsForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const formData = new FormData(this);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-            
-            // Handle checkboxes
-            data.enable_email_notifications = document.getElementById('enable_email_notifications').checked ? '1' : '0';
-            data.enable_two_factor = document.getElementById('enable_two_factor').checked ? '1' : '0';
+            const data = {
+                brevo_api_key: document.getElementById('brevo_api_key').value,
+                brevo_sender_email: document.getElementById('brevo_sender_email').value,
+                brevo_sender_name: document.getElementById('brevo_sender_name').value,
+                enable_email_notifications: document.getElementById('enable_email_notifications').checked ? '1' : '0'
+            };
             
             fetch('../api/admin/save_settings.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             })
-            .then(response => {
-                // Check if response is ok
-                if (!response.ok) {
-                    return response.text().then(text => {
-                        throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
-                    });
-                }
-                // Try to parse as JSON
-                return response.text().then(text => {
-                    try {
-                        return JSON.parse(text);
-                    } catch (e) {
-                        console.error('JSON parse error:', e);
-                        console.error('Response text:', text);
-                        throw new Error('Invalid JSON response from server: ' + text.substring(0, 100));
-                    }
-                });
-            })
-            .then(data => {
-                if (data.success) {
-                    showToast('success', 'Settings Saved', 'All settings have been saved successfully!');
-                    // Update API key status if saved
-                    if (data.api_key_saved) {
+            .then(res => res.json())
+            .then(resp => {
+                if (resp.success) {
+                    showToast('success', 'Settings Saved', resp.message || 'Settings saved successfully');
+                    if (data.brevo_api_key) {
                         document.getElementById('brevo_api_key').value = '';
                         document.getElementById('brevo_api_key').placeholder = 'API key is saved - enter new key to change';
                         document.getElementById('api-key-status').style.display = 'block';
                         document.getElementById('api-key-help').textContent = 'API key is saved - enter new key to change';
                         document.getElementById('api-key-help').className = 'text-success';
                     }
-                    // Reload settings to show updated values
-                    setTimeout(() => {
-                        loadSettings();
-                    }, 1000);
+                    loadEmailSettings();
                 } else {
-                    const errorMsg = data.message || 'Failed to save settings.';
-                    const errors = data.errors ? data.errors.join(', ') : '';
-                    showToast('error', 'Save Failed', errorMsg + (errors ? ' Errors: ' + errors : ''));
+                    showToast('error', 'Save Failed', resp.message || 'Failed to save settings');
                 }
             })
-            .catch(error => {
-                console.error('Save settings error:', error);
-                showToast('error', 'Error', 'An error occurred while saving settings. Check console for details.');
-            });
+            .catch(() => showToast('error', 'Error', 'An error occurred while saving settings.'));
         });
-        
+
         // Toast notification function
         function showToast(type, title, message) {
             const toast = document.getElementById('toast');
@@ -536,19 +433,16 @@
             toastTitle.textContent = title;
             toastBody.textContent = message;
             
-            // Set toast type
             toast.className = 'toast';
-            if (type === 'success') {
-                toast.classList.add('bg-success', 'text-white');
-            } else if (type === 'error') {
-                toast.classList.add('bg-danger', 'text-white');
-            } else {
-                toast.classList.add('bg-info', 'text-white');
-            }
+            if (type === 'success') toast.classList.add('bg-success', 'text-white');
+            else if (type === 'error') toast.classList.add('bg-danger', 'text-white');
+            else toast.classList.add('bg-info', 'text-white');
             
-            const bsToast = new bootstrap.Toast(toast);
-            bsToast.show();
+            new bootstrap.Toast(toast).show();
         }
+
+        // Init
+        loadEmailSettings();
     </script>
 </body>
 </html>
