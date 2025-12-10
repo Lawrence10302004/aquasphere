@@ -40,9 +40,15 @@
         }
         
         /* Orders Container */
-        .orders-container {
-            max-width: 1200px;
+        .orders-container-wrapper {
+            max-width: 900px;
             margin: 0 auto;
+            position: relative;
+            padding: 0 80px;
+        }
+        
+        .orders-container {
+            position: relative;
         }
         
         .orders-header {
@@ -634,6 +640,69 @@
             opacity: 0.5;
             cursor: not-allowed;
             pointer-events: none;
+        }
+        
+        /* Navigation Arrows */
+        .nav-arrows {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-arrows:hover {
+            background: #0ea5e9;
+            border-color: #0ea5e9;
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
+        }
+        
+        .nav-arrows:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+        
+        .nav-arrows.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        .nav-arrows.prev {
+            left: 0;
+        }
+        
+        .nav-arrows.next {
+            right: 0;
+        }
+        
+        .nav-arrows i {
+            font-size: 1.2rem;
+            color: #0369a1;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-arrows:hover i {
+            color: white;
+        }
+        
+        .order-counter {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 600;
         }
         
         /* Footer Styles */
@@ -1240,37 +1309,41 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="container">
-            <div class="orders-container">
+            <div class="orders-container-wrapper">
                 <!-- Header -->
                 <div class="orders-header">
                     <h1>My Orders</h1>
                     <p>Track your water delivery orders and manage them here</p>
                 </div>
                 
-                <!-- Orders List -->
-                <div id="ordersList">
-                    <!-- Orders will be dynamically inserted here -->
-                    <div class="empty-orders" id="emptyOrders" style="display: none;">
-                        <div class="empty-orders-icon">
-                            <i class="fas fa-shopping-bag"></i>
+                <button class="nav-arrows prev" id="prevBtn" onclick="changeOrder(-1)" style="display: none;">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="orders-container">
+                    <!-- Orders List -->
+                    <div id="ordersList">
+                        <!-- Orders will be dynamically inserted here -->
+                        <div class="empty-orders" id="emptyOrders" style="display: none;">
+                            <div class="empty-orders-icon">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                            <h3>No Orders Yet</h3>
+                            <p>You haven't placed any orders. Start shopping to see your orders here!</p>
+                            <a href="dashboard.html" class="btn-shop">
+                                <i class="fas fa-store"></i>
+                                Start Shopping
+                            </a>
                         </div>
-                        <h3>No Orders Yet</h3>
-                        <p>You haven't placed any orders. Start shopping to see your orders here!</p>
-                        <a href="dashboard.html" class="btn-shop">
-                            <i class="fas fa-store"></i>
-                            Start Shopping
-                        </a>
                     </div>
+                    
+                    <!-- Order Counter -->
+                    <div class="order-counter" id="orderCounter" style="display: none;"></div>
                 </div>
                 
-                <!-- Pagination -->
-                <div id="ordersPagination" style="display: none; margin-top: 2rem; text-align: center;">
-                    <nav aria-label="Orders pagination">
-                        <ul class="pagination justify-content-center" id="paginationList" style="gap: 0.5rem;">
-                            <!-- Pagination buttons will be inserted here -->
-                        </ul>
-                    </nav>
-                </div>
+                <button class="nav-arrows next" id="nextBtn" onclick="changeOrder(1)" style="display: none;">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -1437,14 +1510,16 @@
             }
         }
         
-        // Render orders with pagination
+        // Render orders with navigation arrows
         function renderOrders() {
             const ordersList = document.getElementById('ordersList');
             const emptyOrders = document.getElementById('emptyOrders');
-            const pagination = document.getElementById('ordersPagination');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const counter = document.getElementById('orderCounter');
             
             // Ensure elements exist; if not, wait once after DOMContentLoaded
-            if (!ordersList || !emptyOrders || !pagination) {
+            if (!ordersList || !emptyOrders) {
                 if (!window.__ordersDomWaited) {
                     window.__ordersDomWaited = true;
                     return setTimeout(renderOrders, 120);
@@ -1456,7 +1531,9 @@
                 emptyOrders.style.display = 'block';
                 ordersList.innerHTML = '';
                 ordersList.appendChild(emptyOrders);
-                pagination.style.display = 'none';
+                if (prevBtn) prevBtn.style.display = 'none';
+                if (nextBtn) nextBtn.style.display = 'none';
+                if (counter) counter.style.display = 'none';
                 return;
             }
             
@@ -1474,59 +1551,43 @@
                 ordersList.appendChild(orderCard);
             }
             
-            // Render navigation controls
-            renderPagination(allOrders.length);
+            // Update navigation controls
+            updateNavigation();
         }
         
-        // Render navigation controls (prev / label / next)
-        function renderPagination(totalOrders) {
-            const pagination = document.getElementById('ordersPagination');
-            const paginationList = document.getElementById('paginationList');
+        // Update navigation arrows and counter
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const counter = document.getElementById('orderCounter');
             
-            // Check if elements exist
-            if (!pagination || !paginationList) {
-                console.warn('Pagination elements not found');
-                return;
+            if (allOrders.length > 1) {
+                if (prevBtn) {
+                    prevBtn.style.display = 'flex';
+                    prevBtn.classList.toggle('disabled', currentIndex === 0);
+                }
+                if (nextBtn) {
+                    nextBtn.style.display = 'flex';
+                    nextBtn.classList.toggle('disabled', currentIndex === allOrders.length - 1);
+                }
+                if (counter) {
+                    counter.style.display = 'block';
+                    counter.textContent = `Order ${currentIndex + 1} of ${allOrders.length}`;
+                }
+            } else {
+                if (prevBtn) prevBtn.style.display = 'none';
+                if (nextBtn) nextBtn.style.display = 'none';
+                if (counter) counter.style.display = 'none';
             }
-            
-            if (totalOrders <= 1) {
-                pagination.style.display = 'none';
-                return;
-            }
-            
-            pagination.style.display = 'block';
-            const prevDisabled = currentIndex === 0;
-            const nextDisabled = currentIndex === totalOrders - 1;
-            
-            paginationList.innerHTML = `
-                <li class="page-item ${prevDisabled ? 'disabled' : ''}">
-                    <button class="page-link" type="button" onclick="changeOrder(-1)" ${prevDisabled ? 'disabled' : ''}>
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                </li>
-                <li class="page-item disabled">
-                    <span class="page-link" style="pointer-events: none;">Order ${currentIndex + 1} of ${totalOrders}</span>
-                </li>
-                <li class="page-item ${nextDisabled ? 'disabled' : ''}">
-                    <button class="page-link" type="button" onclick="changeOrder(1)" ${nextDisabled ? 'disabled' : ''}>
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </li>
-            `;
         }
         
-        // Go to specific page
+        // Navigate to next/previous order
         function changeOrder(delta) {
             if (allOrders.length <= 1) return;
-            const nextIndex = Math.max(0, Math.min(allOrders.length - 1, currentIndex + delta));
-            if (nextIndex === currentIndex) return;
-            currentIndex = nextIndex;
+            const newIndex = currentIndex + delta;
+            if (newIndex < 0 || newIndex >= allOrders.length) return;
+            currentIndex = newIndex;
             renderOrders();
-            
-            const ordersList = document.getElementById('ordersList');
-            if (ordersList) {
-                ordersList.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
         }
         // Make navigation callable from inline handlers
         window.changeOrder = changeOrder;
