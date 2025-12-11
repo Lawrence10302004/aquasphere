@@ -1269,6 +1269,7 @@
                                     <input type="email" id="profileEmail" name="email" placeholder="Enter your email" autocomplete="off" required>
                                     <div class="error-message" id="profileEmail-error" style="display: none;">Email is required.</div>
                                     <div class="error-message" id="profileEmail-format-error" style="display: none;">Please enter a valid email.</div>
+                                    <div class="error-message" id="profileEmail-exists-error" style="display: none;">Email already exists.</div>
                                 </div>
                             </div>
                         </div>
@@ -1574,6 +1575,8 @@
             if (!emailInput) return true;
             
             hideProfileErrors('profileEmail');
+            const existsEl = document.getElementById('profileEmail-exists-error');
+            if (existsEl) existsEl.style.display = 'none';
             const v = (emailInput.value || '').trim();
             
             if (!v) {
@@ -2413,6 +2416,27 @@
                                     errEl.style.display = 'block';
                                 }
                                 markProfileError(input);
+                                showNotification(errorMsg, 'error');
+                            } else if (field === 'email') {
+                                const existsEl = document.getElementById('profileEmail-exists-error');
+                                const formatEl = document.getElementById('profileEmail-format-error');
+                                const requiredEl = document.getElementById('profileEmail-error');
+                                const input = document.getElementById('profileEmail');
+                                
+                                if (existsEl && errorMsg.toLowerCase().includes('exist')) {
+                                    existsEl.style.display = 'block';
+                                } else if (formatEl) {
+                                    formatEl.textContent = errorMsg;
+                                    formatEl.style.display = 'block';
+                                } else if (requiredEl) {
+                                    requiredEl.textContent = errorMsg;
+                                    requiredEl.style.display = 'block';
+                                }
+                                
+                                markProfileError(input);
+                                if (input && input.closest('.form-group')) {
+                                    input.closest('.form-group').classList.add('error');
+                                }
                                 showNotification(errorMsg, 'error');
                             } else if (field === 'password' && errorMsg.includes('incorrect')) {
                                 const errorEl = document.getElementById('profilePassword-incorrect');
