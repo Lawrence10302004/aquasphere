@@ -1316,7 +1316,7 @@
                     <p>Track your water delivery orders and manage them here</p>
                 </div>
                 
-                <button class="nav-arrows prev" id="prevBtn" style="display: none;" type="button">
+                <button class="nav-arrows prev" id="prevBtn" style="display: none;" type="button" onclick="changeOrder(-1)">
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 
@@ -1341,7 +1341,7 @@
                     <div class="order-counter" id="orderCounter" style="display: none;"></div>
                 </div>
                 
-                <button class="nav-arrows next" id="nextBtn" style="display: none;" type="button">
+                <button class="nav-arrows next" id="nextBtn" style="display: none;" type="button" onclick="changeOrder(1)">
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
@@ -1536,6 +1536,8 @@
             const nextBtn = document.getElementById('nextBtn');
             const counter = document.getElementById('orderCounter');
             
+            console.debug('renderOrders - currentIndex:', currentIndex, 'total:', allOrders.length);
+            
             // Ensure elements exist; if not, wait once after DOMContentLoaded
             if (!ordersList || !emptyOrders) {
                 if (!window.__ordersDomWaited) {
@@ -1620,6 +1622,7 @@
             const newIndex = currentIndex + delta;
             if (newIndex < 0 || newIndex >= allOrders.length) return;
             
+            console.debug('changeOrder from', currentIndex, 'to', newIndex, 'of', allOrders.length);
             currentIndex = newIndex;
             renderOrders();
             
