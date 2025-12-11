@@ -1948,15 +1948,30 @@
                 
                 if (result.success) {
                     if (requiresApproval) {
+                        // Mark as pending approval immediately in UI
                         await addPendingCancellationId(orderId);
+                        const idx = allOrders.findIndex(o => o.id === orderId);
+                        if (idx >= 0) {
+                            allOrders[idx].status = 'cancellation_requested';
+                        }
                         showNotification('Cancellation request submitted. Waiting for admin approval.', 'success');
+                        renderOrders();
                     } else {
+                        // Remove cancelled order from list immediately
+                        const idx = allOrders.findIndex(o => o.id === orderId);
+                        if (idx >= 0) {
+                            allOrders.splice(idx, 1);
+                            if (currentIndex >= allOrders.length) {
+                                currentIndex = Math.max(0, allOrders.length - 1);
+                            }
+                        }
+                        // Update navbar badge if available
+                        if (typeof window.updateOrderCount === 'function') {
+                            window.updateOrderCount();
+                        }
                         showNotification('Order cancelled successfully', 'success');
+                        renderOrders();
                     }
-                    // Reload orders (will maintain current page if possible)
-                    setTimeout(() => {
-                        loadOrders();
-                    }, 500);
                 } else {
                     showNotification(result.message || 'Failed to cancel order', 'error');
                 }
