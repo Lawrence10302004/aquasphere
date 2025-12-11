@@ -1528,17 +1528,17 @@
             }
         }
         
-        // Render orders with navigation arrows
+        // Render orders with navigation arrows (show one at a time)
         function renderOrders() {
             const ordersList = document.getElementById('ordersList');
             const emptyOrders = document.getElementById('emptyOrders');
+            const counter = document.getElementById('orderCounter');
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
-            const counter = document.getElementById('orderCounter');
             
             console.debug('renderOrders - currentIndex:', currentIndex, 'total:', allOrders.length);
             
-            // Ensure elements exist; if not, wait once after DOMContentLoaded
+            // Wait once if DOM not ready
             if (!ordersList || !emptyOrders) {
                 if (!window.__ordersDomWaited) {
                     window.__ordersDomWaited = true;
@@ -1559,34 +1559,27 @@
             
             emptyOrders.style.display = 'none';
             
-            // Clamp index
+            // Clamp index to range
             if (currentIndex < 0) currentIndex = 0;
             if (currentIndex >= allOrders.length) currentIndex = allOrders.length - 1;
+            
+            displayOrder(currentIndex);
+            updateNavigation();
+        }
 
-            // Show only the current order (client carousel)
-            if (currentIndex < 0 || currentIndex >= allOrders.length) {
-                console.warn('Invalid index:', currentIndex, 'Total orders:', allOrders.length);
-                return;
-            }
+        function displayOrder(index) {
+            const ordersList = document.getElementById('ordersList');
+            if (!ordersList) return;
+            if (index < 0 || index >= allOrders.length) return;
             
-            const order = allOrders[currentIndex];
-            if (!order) {
-                console.warn('No order at index', currentIndex);
-                return;
-            }
+            const order = allOrders[index];
+            if (!order) return;
             
-            // Clear and render order immediately
             ordersList.innerHTML = '';
             const orderCard = createOrderCard(order);
             if (orderCard) {
                 ordersList.appendChild(orderCard);
-            } else {
-                console.error('Failed to create order card for order:', order.id);
-                return;
             }
-            
-            // Update navigation controls
-            updateNavigation();
         }
         
         // Update navigation arrows and counter
@@ -1624,7 +1617,8 @@
             
             console.debug('changeOrder from', currentIndex, 'to', newIndex, 'of', allOrders.length);
             currentIndex = newIndex;
-            renderOrders();
+            displayOrder(currentIndex);
+            updateNavigation();
             
             // Scroll to top of orders list for better UX
             const ordersList = document.getElementById('ordersList');
