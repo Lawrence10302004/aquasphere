@@ -272,6 +272,14 @@ function getNotificationMessage(order) {
             icon: 'fas fa-truck'
         };
     }
+    if (status === 'delivered') {
+        return {
+            title: 'Delivered',
+            desc: 'Your order has been successfully delivered.',
+            color: 'linear-gradient(135deg, #10b981, #059669)',
+            icon: 'fas fa-check-circle'
+        };
+    }
     if (status === 'cancelled') {
         const isCod = payment === 'cod';
         return {
