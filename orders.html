@@ -1976,10 +1976,10 @@
                         showNotification('Order cancelled successfully', 'success');
                         renderOrders();
                     }
-                    // Re-fetch to stay in sync with backend (AJAX, no page reload)
+                    // Force a quick page refresh so UI always reflects cancellation
                     setTimeout(() => {
-                        loadOrders();
-                    }, 200);
+                        window.location.reload();
+                    }, 150);
                 } else {
                     showNotification(result.message || 'Failed to cancel order', 'error');
                 }
