@@ -156,9 +156,9 @@
         
         .form-group.error input,
         .form-group.error select {
-            border-color: #e53e3e;
+            border-color: #dc3545;
             background: #fff;
-            box-shadow: none;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
         }
         
         .form-group input.success,
@@ -203,14 +203,14 @@
         
         /* Match login error styling */
         .custom-error {
+            background-color: #fee;
+            color: #c33;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 8px;
             display: none;
-            margin-top: 0.35rem;
-            padding: 0.65rem 0.75rem;
-            background: #fde8e8;
-            border: 1px solid #f6c1c1;
-            border-radius: 4px;
-            color: #c53030;
-            font-size: 0.95rem;
+            border-left: 3px solid #dc3545;
             font-weight: 500;
         }
         .form-group.error .custom-error {
