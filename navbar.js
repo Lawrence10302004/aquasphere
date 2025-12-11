@@ -296,7 +296,7 @@ function getNotificationMessage(order) {
         return {
             title: 'Order Cancelled',
             desc: isCod
-                ? 'Your cancellation request is being reviewed by our admin. Please wait for approval.'
+                ? 'The cancellation of your order has been completed successfully.'
                 : 'Your order has been successfully cancelled. Your payment has been refunded to your GCash account.',
             color: 'linear-gradient(135deg, #ef4444, #dc2626)',
             icon: 'fas fa-ban'
