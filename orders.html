@@ -1832,6 +1832,8 @@
             const modal = document.getElementById('cancelApprovedModal');
             if (modal) modal.style.display = 'none';
             if (cancelApprovedTimer) clearTimeout(cancelApprovedTimer);
+            // Refresh after manual close to keep UI in sync
+            setTimeout(() => window.location.reload(), 150);
         }
         
         // Persist pending cancellation requests (for preparing -> approval flow)
