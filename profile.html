@@ -1568,6 +1568,7 @@
         }
         
         let usernameDebounce;
+        let emailDebounce;
         
         // Validate Email
         function validateProfileEmail() {
@@ -1592,6 +1593,19 @@
                 markProfileError(emailInput);
                 return false;
             }
+            
+            // If unchanged from original, skip availability check
+            if (originalProfileData && v === (originalProfileData.email || '')) {
+                markProfileClear(emailInput);
+                markProfileSuccess(emailInput, 'email');
+                return true;
+            }
+            
+            // Debounced availability check
+            if (emailDebounce) clearTimeout(emailDebounce);
+            emailDebounce = setTimeout(() => {
+                checkProfileEmailAvailability(v);
+            }, 250);
             
             markProfileClear(emailInput);
             markProfileSuccess(emailInput, 'email');
@@ -1746,6 +1760,37 @@
                     } else {
                         if (uniqueErr) uniqueErr.style.display = 'none';
                         if (value.length >= 4) markProfileSuccess(input, 'username');
+                    }
+                }
+            } catch (e) {
+                // ignore network errors for UX
+            }
+        }
+        
+        async function checkProfileEmailAvailability(value) {
+            const existsErr = document.getElementById('profileEmail-exists-error');
+            const input = document.getElementById('profileEmail');
+            if (existsErr) existsErr.style.display = 'none';
+            if (!value) return;
+            // Skip availability check if unchanged from original
+            if (originalProfileData && value === (originalProfileData.email || '')) {
+                markProfileClear(input);
+                markProfileSuccess(input, 'email');
+                return;
+            }
+            try {
+                const resp = await fetch(`api/check_email.php?email=${encodeURIComponent(value)}`);
+                const data = await resp.json();
+                if (data && data.success) {
+                    if (data.exists) {
+                        if (existsErr) existsErr.style.display = 'block';
+                        markProfileError(input);
+                        const group = input?.closest('.form-group');
+                        if (group) group.classList.add('error');
+                    } else {
+                        if (existsErr) existsErr.style.display = 'none';
+                        markProfileClear(input);
+                        markProfileSuccess(input, 'email');
                     }
                 }
             } catch (e) {
