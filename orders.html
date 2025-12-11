@@ -1947,25 +1947,29 @@
                 const result = await response.json();
                 
                 if (result.success) {
+                    const matchIndex = (idToFind) => allOrders.findIndex(o => String(o.id) === String(idToFind));
                     if (requiresApproval) {
                         // Mark as pending approval immediately in UI
                         await addPendingCancellationId(orderId);
-                        const idx = allOrders.findIndex(o => o.id === orderId);
+                        const idx = matchIndex(orderId);
                         if (idx >= 0) {
                             allOrders[idx].status = 'cancellation_requested';
                         }
+                        // Share updated list with navbar cache
+                        window.__ordersCache = allOrders;
                         showNotification('Cancellation request submitted. Waiting for admin approval.', 'success');
                         renderOrders();
                     } else {
                         // Remove cancelled order from list immediately
-                        const idx = allOrders.findIndex(o => o.id === orderId);
+                        const idx = matchIndex(orderId);
                         if (idx >= 0) {
                             allOrders.splice(idx, 1);
                             if (currentIndex >= allOrders.length) {
                                 currentIndex = Math.max(0, allOrders.length - 1);
                             }
                         }
-                        // Update navbar badge if available
+                        // Share updated list with navbar cache and update badge
+                        window.__ordersCache = allOrders;
                         if (typeof window.updateOrderCount === 'function') {
                             window.updateOrderCount();
                         }
