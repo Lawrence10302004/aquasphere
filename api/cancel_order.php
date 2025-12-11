@@ -45,8 +45,8 @@ $user_id = $_SESSION['user_id'];
 init_db();
 $conn = get_db_connection();
 
-// Check if order exists and belongs to user
-$check_query = "SELECT id, status FROM orders WHERE id = ? AND user_id = ?";
+// Check if order exists and belongs to user (also fetch payment_method for history)
+$check_query = "SELECT id, status, payment_method FROM orders WHERE id = ? AND user_id = ?";
 $check_result = execute_sql($conn, $check_query, [$order_id, $user_id]);
 
 if ($GLOBALS['use_postgres']) {
@@ -84,6 +84,13 @@ if ($result === false) {
     close_connection($conn);
     echo json_encode(['success' => false, 'message' => 'Failed to cancel order']);
     exit;
+}
+
+// Insert status history for notifications
+$history_query = "INSERT INTO order_status_history (order_id, user_id, status, payment_method, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)";
+$history_result = execute_sql($conn, $history_query, [$order_id, $user_id, $new_status, $order['payment_method'] ?? '']);
+if ($history_result === false) {
+    error_log('Failed to insert order_status_history for cancel_order order_id=' . $order_id);
 }
 
 close_connection($conn);
