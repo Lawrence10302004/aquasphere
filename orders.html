@@ -1415,6 +1415,7 @@
         let allOrders = [];
         let currentIndex = 0;
         const FETCH_LIMIT = 1000; // fetch up to 1000 orders in one request
+        const SELECTED_ORDER_KEY = 'ordersPageSelectedOrderId';
         
         // Load orders (fetch all, then navigate client-side)
         async function loadOrders() {
@@ -1473,8 +1474,9 @@
                 // Handle approvals: if a pending cancellation ID no longer appears (or is cancelled), show approved modal
                 await handleApprovedCancellations(fetchedOrders);
                 
-                // Preserve current order ID before filtering
+                // Preserve current order ID before filtering; also check stored selection
                 const currentOrderId = allOrders[currentIndex]?.id;
+                const storedOrderId = sessionStorage.getItem(SELECTED_ORDER_KEY);
                 
                 // Exclude cancelled and delivered orders so they disappear from My Orders
                 const cleaned = (fetchedOrders || [])
@@ -1500,14 +1502,11 @@
                     window.updateOrderCount();
                 }
                 
-                // Preserve the currently viewed order if still present
-                if (currentOrderId && allOrders.length > 0) {
-                    const foundIndex = allOrders.findIndex(o => o.id === currentOrderId);
-                    if (foundIndex >= 0) {
-                        currentIndex = foundIndex;
-                    } else {
-                        currentIndex = 0;
-                    }
+                // Preserve the currently viewed order if still present (priority: stored -> current)
+                let targetOrderId = storedOrderId || currentOrderId;
+                if (targetOrderId && allOrders.length > 0) {
+                    const foundIndex = allOrders.findIndex(o => String(o.id) === String(targetOrderId));
+                    currentIndex = foundIndex >= 0 ? foundIndex : 0;
                 } else {
                     currentIndex = 0;
                 }
@@ -1574,6 +1573,11 @@
             
             const order = allOrders[index];
             if (!order) return;
+            
+            // Remember selection across refreshes
+            try {
+                sessionStorage.setItem(SELECTED_ORDER_KEY, String(order.id));
+            } catch (_) {}
             
             ordersList.innerHTML = '';
             const orderCard = createOrderCard(order);
