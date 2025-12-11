@@ -220,6 +220,28 @@ let __notifData = [];
 let __notifPage = 1;
 const __notifPageSize = 4;
 const NOTIF_CLEARED_KEY = 'notifClearedAt';
+const NOTIF_CLEARED_COOKIE = 'notifClearedAtCookie';
+
+function setNotifCleared(ts) {
+    try {
+        localStorage.setItem(NOTIF_CLEARED_KEY, String(ts));
+    } catch (_) {}
+    try {
+        document.cookie = `${NOTIF_CLEARED_COOKIE}=${ts}; path=/; max-age=${60 * 60 * 24 * 30}`;
+    } catch (_) {}
+}
+
+function getNotifCleared() {
+    let ts = parseInt(localStorage.getItem(NOTIF_CLEARED_KEY) || '0', 10) || 0;
+    try {
+        const cookie = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(`${NOTIF_CLEARED_COOKIE}=`));
+        if (cookie) {
+            const val = parseInt(cookie.split('=')[1] || '0', 10) || 0;
+            if (val > ts) ts = val;
+        }
+    } catch (_) {}
+    return ts;
+}
 
 function clearNotificationBadge() {
     const badge = document.getElementById('notificationCount');
@@ -230,7 +252,7 @@ function clearNotificationBadge() {
     __notifData = [];
     __notifPage = 1;
     renderNotificationPage();
-    localStorage.setItem(NOTIF_CLEARED_KEY, Date.now().toString());
+    setNotifCleared(Date.now());
 }
 
 function getNotificationMessage(order) {
@@ -338,7 +360,7 @@ function loadNotifications(force = false) {
                 return;
             }
 
-            const clearedAt = parseInt(localStorage.getItem(NOTIF_CLEARED_KEY) || '0', 10) || 0;
+            const clearedAt = getNotifCleared();
             const notifications = [];
             data.notifications.forEach(row => {
                 const msg = getNotificationMessage({
