@@ -1615,32 +1615,13 @@
         
         // Navigate to next/previous order
         function changeOrder(delta) {
-            // Prevent multiple rapid calls
-            if (window.__navigating) {
-                return;
-            }
-            window.__navigating = true;
-            
-            if (allOrders.length <= 1) {
-                window.__navigating = false;
-                return;
-            }
+            if (allOrders.length <= 1) return;
             
             const newIndex = currentIndex + delta;
+            if (newIndex < 0 || newIndex >= allOrders.length) return;
             
-            if (newIndex < 0 || newIndex >= allOrders.length) {
-                window.__navigating = false;
-                return;
-            }
-            
-            // Update index and render
             currentIndex = newIndex;
             renderOrders();
-            
-            // Reset navigation lock after a short delay
-            setTimeout(() => {
-                window.__navigating = false;
-            }, 300);
             
             // Scroll to top of orders list for better UX
             const ordersList = document.getElementById('ordersList');
