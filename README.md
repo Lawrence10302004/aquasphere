@@ -9,7 +9,7 @@ A complete water delivery management system built with PHP and Python backends, 
 - **Delivery Scheduling**: Choose ASAP or set preferred delivery date & time
 - **Real-Time Delivery Tracking**: Live status updates (Pending → Preparing → Out for Delivery → Delivered)
 - **Secure Payment Options**: Cash on Delivery (COD) and online payment support
-- **Product Details**: Prices, container types, descriptions, and product images
+- **Product Details**: Prices, container types, descriptions
 - **Customer Support**: Built-in support messaging and feedback system
 - **Account Management**: User profile management and order history
 
