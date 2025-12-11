@@ -204,31 +204,22 @@
         .form-group .error-message {
             display: none;
             margin-top: 0.35rem;
-            padding: 0.45rem 0.65rem;
+            padding: 0.35rem 0.55rem;
             background: #fde8e8;
             border: 1px solid #f9c2c2;
-            border-radius: 8px;
+            border-radius: 4px;
             color: #c53030;
             font-size: 0.9rem;
             font-weight: 500;
             position: relative;
             animation: errorSlideIn 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.45rem;
         }
         .form-group .error-message + .error-message {
             margin-top: 0.35rem;
         }
         
         .form-group.error .error-message {
-            display: flex;
-        }
-        
-        .form-group .error-message::before {
-            content: '\26A0';
-            font-size: 0.95rem;
-            color: #c53030;
+            display: block;
         }
         
         @keyframes errorSlideIn {
