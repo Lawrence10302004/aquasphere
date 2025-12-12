@@ -56,11 +56,11 @@ document.querySelector('form')?.addEventListener('submit', function(e) {
     }, 1500);
 });
 
-// ---------- Client-side input guard to block obvious XSS/SQLi patterns ----------
+// ---------- Global client-side input guard to block obvious XSS/SQLi patterns ----------
 // UX-friendly: scrubs dangerous patterns as user types/pastes; server-side still enforces.
-(function attachInputGuards() {
+(function attachGlobalInputGuards() {
     const BAD_PATTERNS = [
-        /<\s*script/gi,
+        /<|>/g,
         /javascript:/gi,
         /onerror\s*=/gi,
         /onload\s*=/gi,
@@ -86,21 +86,18 @@ document.querySelector('form')?.addEventListener('submit', function(e) {
             const after = scrub(before);
             if (after !== before) {
                 const start = el.selectionStart;
-                const end = el.selectionEnd;
-                el.value = after;
                 const delta = before.length - after.length;
+                el.value = after;
                 const pos = Math.max(0, (start ?? after.length) - delta);
                 el.setSelectionRange(pos, pos);
                 e.preventDefault();
             }
         };
         el.addEventListener('input', handler);
-        el.addEventListener('paste', (e) => {
-            setTimeout(() => handler(e), 0);
-        });
+        el.addEventListener('paste', () => setTimeout(handler, 0));
     }
     document.addEventListener('DOMContentLoaded', () => {
-        const fields = document.querySelectorAll('input[type="text"], input[type="email"], input[type="search"], input[type="tel"], textarea');
+        const fields = document.querySelectorAll('input[type="text"], input[type="email"], input[type="search"], input[type="tel"], input[type="password"], textarea');
         fields.forEach(guardInput);
     });
 })();
