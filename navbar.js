@@ -251,6 +251,12 @@ function clearNotificationBadge() {
     }
     __notifData = [];
     __notifPage = 1;
+    // Clear saved page from localStorage
+    try {
+        localStorage.removeItem('notificationPage');
+    } catch (e) {
+        // Ignore localStorage errors
+    }
     renderNotificationPage();
     setNotifCleared(Date.now());
 }
@@ -379,7 +385,25 @@ function loadNotifications(force = false) {
             });
 
             __notifData = notifications;
-            __notifPage = 1;
+            
+            // Restore saved page from localStorage, or default to 1
+            let savedPage = 1;
+            try {
+                const saved = localStorage.getItem('notificationPage');
+                if (saved) {
+                    savedPage = parseInt(saved, 10);
+                    if (isNaN(savedPage) || savedPage < 1) {
+                        savedPage = 1;
+                    }
+                }
+            } catch (e) {
+                // Ignore localStorage errors
+            }
+            
+            // Validate saved page against total pages
+            const totalPages = Math.max(1, Math.ceil(notifications.length / __notifPageSize));
+            __notifPage = Math.min(savedPage, totalPages);
+            
             renderNotificationPage();
 
             if (badge) {
@@ -404,6 +428,12 @@ function paginateNotifications(delta) {
     const nextPage = Math.min(totalPages, Math.max(1, __notifPage + delta));
     if (nextPage === __notifPage) return;
     __notifPage = nextPage;
+    // Store current page in localStorage for persistence
+    try {
+        localStorage.setItem('notificationPage', String(__notifPage));
+    } catch (e) {
+        // Ignore localStorage errors
+    }
     renderNotificationPage();
 }
 
@@ -428,6 +458,12 @@ function renderNotificationPage() {
 
     const totalPages = Math.max(1, Math.ceil(__notifData.length / __notifPageSize));
     __notifPage = Math.min(__notifPage, totalPages);
+    // Save current page to localStorage
+    try {
+        localStorage.setItem('notificationPage', String(__notifPage));
+    } catch (e) {
+        // Ignore localStorage errors
+    }
     const start = (__notifPage - 1) * __notifPageSize;
     const current = __notifData.slice(start, start + __notifPageSize);
 
