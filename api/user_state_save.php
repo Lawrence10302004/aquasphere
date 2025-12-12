@@ -19,6 +19,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once 'database.php';
+require_once 'sanitize.php';
 
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
@@ -26,7 +27,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$input = json_decode(file_get_contents('php://input'), true);
+$input = sanitize_array_recursive(json_decode(file_get_contents('php://input'), true));
 $user_id = $_SESSION['user_id'];
 
 init_db();

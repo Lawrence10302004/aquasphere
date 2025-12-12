@@ -1321,22 +1321,22 @@
                 </button>
                 
                 <div class="orders-container">
-                    <!-- Orders List -->
-                    <div id="ordersList">
-                        <!-- Orders will be dynamically inserted here -->
-                        <div class="empty-orders" id="emptyOrders" style="display: none;">
-                            <div class="empty-orders-icon">
-                                <i class="fas fa-shopping-bag"></i>
-                            </div>
-                            <h3>No Orders Yet</h3>
-                            <p>You haven't placed any orders. Start shopping to see your orders here!</p>
-                            <a href="dashboard.html" class="btn-shop">
-                                <i class="fas fa-store"></i>
-                                Start Shopping
-                            </a>
+                <!-- Orders List -->
+                <div id="ordersList">
+                    <!-- Orders will be dynamically inserted here -->
+                    <div class="empty-orders" id="emptyOrders" style="display: none;">
+                        <div class="empty-orders-icon">
+                            <i class="fas fa-shopping-bag"></i>
                         </div>
+                        <h3>No Orders Yet</h3>
+                        <p>You haven't placed any orders. Start shopping to see your orders here!</p>
+                        <a href="dashboard.html" class="btn-shop">
+                            <i class="fas fa-store"></i>
+                            Start Shopping
+                        </a>
                     </div>
-                    
+                </div>
+                
                     <!-- Order Counter -->
                     <div class="order-counter" id="orderCounter" style="display: none;"></div>
                 </div>
@@ -1580,12 +1580,12 @@
             } catch (_) {}
             
             ordersList.innerHTML = '';
-            const orderCard = createOrderCard(order);
+                const orderCard = createOrderCard(order);
             if (orderCard) {
                 ordersList.appendChild(orderCard);
             }
         }
-        
+            
         // Update navigation arrows and counter
         function updateNavigation() {
             const prevBtn = document.getElementById('prevBtn');

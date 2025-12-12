@@ -10,23 +10,23 @@ async function loadNavbar() {
         console.error('Navbar container not found');
         return;
     }
-
+    
     try {
         const resp = await fetch('navbar.html', { cache: 'no-cache' });
         if (!resp.ok) throw new Error(`Failed to load navbar: ${resp.status}`);
         const html = await resp.text();
         navbarContainer.innerHTML = html;
         
-        initializeNavbar();
-        window.dispatchEvent(new Event('navbarLoaded'));
-        setTimeout(updateOrderCount, 50);
+            initializeNavbar();
+            window.dispatchEvent(new Event('navbarLoaded'));
+            setTimeout(updateOrderCount, 50);
         setTimeout(loadNotifications, 120);
 
         // Refresh notifications when dropdown is opened
         document.addEventListener('shown.bs.dropdown', (event) => {
             if (event.target && event.target.id === 'navNotifications') {
                 loadNotifications(true);
-            }
+        }
         });
     } catch (error) {
         console.error('Error loading navbar:', error);
@@ -160,7 +160,7 @@ function updateOrderCount() {
         ordersCountEl.style.display = orderCount > 0 ? 'flex' : 'none';
         return;
     }
-
+    
     // Fetch orders from API (API uses session, so no need to check localStorage)
     // Fetch enough orders to filter out delivered/cancelled ones
     fetch('api/get_orders.php?limit=1000')

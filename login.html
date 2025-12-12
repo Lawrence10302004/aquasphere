@@ -874,7 +874,7 @@
             const overlay = document.getElementById('suspendedOverlay');
             if (overlay) overlay.style.display = 'none';
         };
-        
+            
             // Function to show error
             function showError(fieldName, message) {
                 const field = document.getElementById(fieldName);
@@ -1483,7 +1483,7 @@
                             newPasswordError.textContent = 'Min 8 chars with upper, lower, number, special.';
                             newPasswordError.style.display = 'block';
                         } else {
-                            newPasswordError.style.display = 'none';
+                    newPasswordError.style.display = 'none';
                         }
                     } else {
                         // Keep showing requirement when field is empty
@@ -1494,8 +1494,8 @@
                     // Validate confirm password match
                     if (confirmPassword) {
                         if (password && password !== confirmPassword) {
-                            confirmPasswordError.textContent = 'Passwords do not match.';
-                            confirmPasswordError.style.display = 'block';
+                        confirmPasswordError.textContent = 'Passwords do not match.';
+                        confirmPasswordError.style.display = 'block';
                         } else if (password && strongPasswordRegex.test(password)) {
                             confirmPasswordError.style.display = 'none';
                         }
@@ -1522,7 +1522,7 @@
                     if (password) {
                         if (!strongPasswordRegex.test(password)) {
                             newPasswordError.textContent = 'Min 8 chars with upper, lower, number, special.';
-                            newPasswordError.style.display = 'block';
+                        newPasswordError.style.display = 'block';
                         } else {
                             newPasswordError.style.display = 'none';
                         }
@@ -1534,9 +1534,9 @@
                     if (confirmPassword) {
                         if (!strongPasswordRegex.test(confirmPassword)) {
                             confirmPasswordError.textContent = 'Min 8 chars with upper, lower, number, special.';
-                            confirmPasswordError.style.display = 'block';
+                        confirmPasswordError.style.display = 'block';
                         } else if (password && password !== confirmPassword) {
-                            confirmPasswordError.textContent = 'Passwords do not match.';
+                        confirmPasswordError.textContent = 'Passwords do not match.';
                             confirmPasswordError.style.display = 'block';
                         } else {
                             confirmPasswordError.style.display = 'none';

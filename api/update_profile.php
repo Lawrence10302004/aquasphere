@@ -149,19 +149,19 @@ try {
                       strlen($new_password) >= 8;
             if (!$strong) {
                 $errors['newPassword'] = 'New password must be at least 8 chars with upper, lower, number, and special character.';
+        } else {
+            // Verify current password
+            $query = "SELECT password_hash FROM users WHERE id = ?";
+            $result = execute_sql($conn, $query, [$user_id]);
+            
+            if ($GLOBALS['use_postgres']) {
+                $user = pg_fetch_assoc($result);
             } else {
-                // Verify current password
-                $query = "SELECT password_hash FROM users WHERE id = ?";
-                $result = execute_sql($conn, $query, [$user_id]);
-                
-                if ($GLOBALS['use_postgres']) {
-                    $user = pg_fetch_assoc($result);
-                } else {
-                    $user = $result->fetchArray(SQLITE3_ASSOC);
-                }
-                
-                if (!$user || !password_verify($password, $user['password_hash'])) {
-                    $errors['password'] = 'Current password is incorrect.';
+                $user = $result->fetchArray(SQLITE3_ASSOC);
+            }
+            
+            if (!$user || !password_verify($password, $user['password_hash'])) {
+                $errors['password'] = 'Current password is incorrect.';
                 }
             }
         }
