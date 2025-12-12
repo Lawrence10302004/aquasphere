@@ -91,6 +91,9 @@ if ($GLOBALS['use_postgres']) {
             o.status,
             o.created_at,
             o.updated_at,
+            (SELECT created_at FROM order_status_history 
+             WHERE order_id = o.id AND status = 'delivered' 
+             ORDER BY created_at DESC LIMIT 1) as delivered_at,
             COALESCE(
                 json_agg(
                     json_build_object(
@@ -126,7 +129,10 @@ if ($GLOBALS['use_postgres']) {
             o.payment_method,
             o.status,
             o.created_at,
-            o.updated_at
+            o.updated_at,
+            (SELECT created_at FROM order_status_history 
+             WHERE order_id = o.id AND status = 'delivered' 
+             ORDER BY created_at DESC LIMIT 1) as delivered_at
         FROM orders o
         LEFT JOIN users u ON o.user_id = u.id
         WHERE $where_clause

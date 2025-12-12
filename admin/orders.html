@@ -780,52 +780,36 @@
         // Calculate delivery date and time based on order status
         function calculateDeliveryInfo(order) {
             const status = (order.status || '').toLowerCase();
-            const orderDate = new Date(order.order_date);
             
-            // If order has actual delivery date/time, use it
-            if (order.delivery_date && order.delivery_time) {
-                return formatDate(order.delivery_date) + ', ' + order.delivery_time;
+            // Handle cancelled status
+            if (status === 'cancelled') {
+                return 'Cancelled';
             }
             
-            // Calculate based on status
-            let deliveryDate = new Date(orderDate);
-            let deliveryTime = '9:00 AM - 5:00 PM';
-            
-            switch(status) {
-                case 'delivered':
-                    // If delivered but no delivery date, estimate based on order date (typically 1-3 days)
+            // Handle delivered status - use actual delivery timestamp from order_status_history
+            if (status === 'delivered') {
+                if (order.delivered_at) {
+                    // Use the actual delivery timestamp from order_status_history
+                    return formatDate(order.delivered_at);
+                } else if (order.delivery_date && order.delivery_time) {
+                    // Fallback to delivery_date and delivery_time if delivered_at is not available
+                    return formatDate(order.delivery_date) + ', ' + order.delivery_time;
+                } else {
+                    // If no delivery timestamp available, estimate based on order date
+                    const orderDate = new Date(order.order_date);
+                    const deliveryDate = new Date(orderDate);
                     deliveryDate.setDate(orderDate.getDate() + 2);
-                    deliveryTime = order.delivery_time || 'Delivered';
-                    break;
-                case 'out_for_delivery':
-                    // Out for delivery - same day or next day
-                    deliveryDate.setDate(orderDate.getDate() + 1);
-                    deliveryTime = 'Out for Delivery';
-                    break;
-                case 'shipped':
-                    // Shipped - 1-2 days from order
-                    deliveryDate.setDate(orderDate.getDate() + 2);
-                    deliveryTime = '9:00 AM - 5:00 PM';
-                    break;
-                case 'preparing':
-                    // Preparing - 2-3 days from order
-                    deliveryDate.setDate(orderDate.getDate() + 3);
-                    deliveryTime = '9:00 AM - 5:00 PM';
-                    break;
-                case 'pending':
-                    // Pending - 3-5 days from order
-                    deliveryDate.setDate(orderDate.getDate() + 4);
-                    deliveryTime = 'To be determined';
-                    break;
-                case 'cancelled':
-                    return 'N/A';
-                default:
-                    // Default estimate: 3-4 days
-                    deliveryDate.setDate(orderDate.getDate() + 3);
-                    deliveryTime = '9:00 AM - 5:00 PM';
+                    return formatDate(deliveryDate.toISOString().split('T')[0]) + ', Delivered';
+                }
             }
             
-            return formatDate(deliveryDate.toISOString().split('T')[0]) + ', ' + deliveryTime;
+            // For pending, preparing, shipped, out_for_delivery - show dashes
+            if (['pending', 'preparing', 'shipped', 'out_for_delivery'].includes(status)) {
+                return '---';
+            }
+            
+            // Default fallback
+            return '---';
         }
         
         // View order details
