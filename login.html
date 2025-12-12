@@ -1363,6 +1363,7 @@
                     
                     const password = document.getElementById('newPassword').value;
                     const confirmPassword = document.getElementById('confirmPassword').value;
+                    const strong = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-\.\/:;<=>?@\[\]^_`{|}~]).{8,}$/;
                     
                     document.getElementById('newPassword-error').style.display = 'none';
                     document.getElementById('confirmPassword-error').style.display = 'none';
@@ -1379,8 +1380,8 @@
                         return;
                     }
                     
-                    if (password.length < 8) {
-                        document.getElementById('newPassword-error').textContent = 'Password must be at least 8 characters.';
+                    if (!strong.test(password)) {
+                        document.getElementById('newPassword-error').textContent = 'Min 8 chars with upper, lower, number, special.';
                         document.getElementById('newPassword-error').style.display = 'block';
                         return;
                     }
@@ -1984,7 +1985,7 @@
                                     <i class="fas fa-eye" id="newPasswordIcon"></i>
                                 </button>
                             </div>
-                            <div class="custom-error" id="newPassword-error" style="display: none;">New password is required.</div>
+                            <div class="custom-error" id="newPassword-error" style="display: none;">Min 8 chars with upper, lower, number, special.</div>
                         </div>
                         
                         <div class="mb-4">

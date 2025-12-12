@@ -31,8 +31,15 @@ if (empty($email)) {
 
 if (empty($new_password)) {
     $errors['new_password'] = 'New password is required.';
-} elseif (strlen($new_password) < 8) {
-    $errors['new_password'] = 'Password must be at least 8 characters.';
+} else {
+    $strong = preg_match('/[a-z]/', $new_password) &&
+              preg_match('/[A-Z]/', $new_password) &&
+              preg_match('/\d/', $new_password) &&
+              preg_match('/[ !"#$%&\'()*+,\-\.\/:;<=>?@\[\]^_`{|}~]/', $new_password) &&
+              strlen($new_password) >= 8;
+    if (!$strong) {
+        $errors['new_password'] = 'Min 8 chars with upper, lower, number, special.';
+    }
 }
 
 if (!empty($errors)) {
