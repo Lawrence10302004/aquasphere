@@ -1262,6 +1262,10 @@
         let cart = [];
         let cartCount = 0;
         
+        // Notification optimization - reuse single element
+        let notificationElement = null;
+        let notificationTimeout = null;
+        
         // Initialize cart from server
         (async () => {
             await UserState.loadState();
@@ -1306,8 +1310,8 @@
             UserState.setCart(cart);
             updateCartCount();
             
-            // Show success feedback
-            showNotification(`${quantity}x ${productName} added to cart!`, 'success');
+            // Show success feedback (non-blocking, debounced)
+            showNotificationFast(`${quantity}x ${productName} added to cart!`, 'success');
             
             // Reset quantity to 1
             if (quantityInput) {
@@ -1384,7 +1388,44 @@
             document.getElementById('completedOrders').textContent = completed;
         }
         
-        // Notification function
+        // Fast notification function - reuses single element for rapid updates
+        function showNotificationFast(message, type = 'success') {
+            // Clear any pending timeout
+            if (notificationTimeout) {
+                clearTimeout(notificationTimeout);
+            }
+            
+            // Create notification element if it doesn't exist
+            if (!notificationElement) {
+                notificationElement = document.createElement('div');
+                notificationElement.className = `alert alert-${type === 'success' ? 'success' : 'danger'}`;
+                notificationElement.style.cssText = 'position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); pointer-events: none; opacity: 1; transition: opacity 0.3s;';
+                document.body.appendChild(notificationElement);
+            }
+            
+            // Update content quickly (just text, no DOM recreation)
+            notificationElement.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+                ${message}
+            `;
+            notificationElement.style.opacity = '1';
+            
+            // Reset timeout to hide notification
+            notificationTimeout = setTimeout(() => {
+                if (notificationElement) {
+                    notificationElement.style.opacity = '0';
+                    setTimeout(() => {
+                        if (notificationElement && notificationElement.parentNode) {
+                            notificationElement.remove();
+                            notificationElement = null;
+                        }
+                        notificationTimeout = null;
+                    }, 300);
+                }
+            }, 2000);
+        }
+        
+        // Original notification function (kept for other uses)
         function showNotification(message, type = 'success') {
             const notification = document.createElement('div');
             notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'}`;
