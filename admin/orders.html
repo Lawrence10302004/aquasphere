@@ -784,10 +784,7 @@
             
             // If order has actual delivery date/time, use it
             if (order.delivery_date && order.delivery_time) {
-                return {
-                    date: formatDate(order.delivery_date),
-                    time: order.delivery_time
-                };
+                return formatDate(order.delivery_date) + ', ' + order.delivery_time;
             }
             
             // Calculate based on status
@@ -821,20 +818,14 @@
                     deliveryTime = 'To be determined';
                     break;
                 case 'cancelled':
-                    return {
-                        date: 'N/A',
-                        time: 'Cancelled'
-                    };
+                    return 'N/A';
                 default:
                     // Default estimate: 3-4 days
                     deliveryDate.setDate(orderDate.getDate() + 3);
                     deliveryTime = '9:00 AM - 5:00 PM';
             }
             
-            return {
-                date: formatDate(deliveryDate.toISOString().split('T')[0]),
-                time: deliveryTime
-            };
+            return formatDate(deliveryDate.toISOString().split('T')[0]) + ', ' + deliveryTime;
         }
         
         // View order details
@@ -878,11 +869,7 @@
                     </div>
                     <div class="detail-card">
                         <div class="detail-label"><i class="fas fa-truck"></i>Delivery Date</div>
-                        <div class="detail-value">${deliveryInfo.date}</div>
-                    </div>
-                    <div class="detail-card">
-                        <div class="detail-label"><i class="fas fa-clock"></i>Delivery Time</div>
-                        <div class="detail-value">${deliveryInfo.time}</div>
+                        <div class="detail-value">${deliveryInfo}</div>
                     </div>
                     <div class="detail-card">
                         <div class="detail-label"><i class="fas fa-credit-card"></i>Payment Method</div>
