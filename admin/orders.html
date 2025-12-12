@@ -295,67 +295,167 @@
             box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25);
         }
 
-        /* Order details modal */
+        /* Order details modal - Enhanced Design */
+        .order-details-modal .modal-dialog {
+            max-width: 1000px;
+        }
+        .order-details-modal .modal-header {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: white;
+            border: none;
+            padding: 1.5rem;
+        }
+        .order-details-modal .modal-header .modal-title {
+            color: white;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        .order-details-modal .modal-header .btn-close {
+            filter: invert(1);
+            opacity: 0.9;
+        }
+        .order-details-modal .modal-header .btn-close:hover {
+            opacity: 1;
+        }
+        .order-details-modal .modal-body {
+            background: linear-gradient(to bottom, #f8fbff 0%, #ffffff 100%);
+            padding: 2rem;
+        }
         .detail-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
         .detail-card {
-            background: #f8fbff;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 10px 12px;
-            min-height: 70px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 1.25rem;
+            min-height: 90px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        .detail-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #0ea5e9 0%, #0284c7 100%);
+        }
+        .detail-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.15);
+            border-color: #0ea5e9;
+        }
+        .detail-card.spacious {
+            padding: 1.5rem;
+            grid-column: span 2;
         }
         .detail-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
+            letter-spacing: 0.5px;
             color: #64748b;
-            margin-bottom: 4px;
+            margin-bottom: 0.5rem;
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .detail-label i {
+            font-size: 0.7rem;
+            color: #0ea5e9;
         }
         .detail-value {
             font-weight: 700;
             color: #0f172a;
-            line-height: 1.4;
+            line-height: 1.5;
             word-break: break-word;
             overflow-wrap: anywhere;
+            font-size: 1rem;
         }
         .detail-value small {
             display: block;
-            margin-top: 4px;
+            margin-top: 0.25rem;
             color: #6b7280;
-            font-weight: 600;
+            font-weight: 500;
+            font-size: 0.875rem;
             word-break: break-word;
             overflow-wrap: anywhere;
         }
         .section-title {
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #0f172a;
-            margin: 16px 0 8px;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .section-title i {
+            color: #0ea5e9;
+        }
+        .section-title:first-of-type {
+            margin-top: 0;
         }
         .address-block {
             white-space: pre-wrap;
             margin: 0;
             font-family: inherit;
             color: #0f172a;
-            line-height: 1.5;
-            font-weight: 600;
+            line-height: 1.8;
+            font-weight: 500;
+            background: linear-gradient(135deg, #f8fbff 0%, #ffffff 100%);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
         }
-        .order-details-modal .modal-dialog {
-            max-width: 980px;
+        .order-details-modal .table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .order-details-modal .modal-body {
-            background: #f9fbff;
+        .order-details-modal .table thead {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: white;
         }
-        .detail-card.spacious {
-            padding: 14px 16px;
+        .order-details-modal .table thead th {
+            border: none;
+            padding: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        .order-details-modal .table tbody td {
+            padding: 1rem;
+            border-color: #e2e8f0;
+            vertical-align: middle;
+        }
+        .order-details-modal .table tfoot {
+            background: #f8fbff;
+        }
+        .order-details-modal .table tfoot th {
+            padding: 1rem;
+            border: none;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .order-details-modal .table tfoot tr:last-child th {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: white;
+            font-size: 1.1rem;
         }
 
         /* Update status modal styling */
@@ -677,6 +777,66 @@
             paginationEl.innerHTML = html;
         }
         
+        // Calculate delivery date and time based on order status
+        function calculateDeliveryInfo(order) {
+            const status = (order.status || '').toLowerCase();
+            const orderDate = new Date(order.order_date);
+            
+            // If order has actual delivery date/time, use it
+            if (order.delivery_date && order.delivery_time) {
+                return {
+                    date: formatDate(order.delivery_date),
+                    time: order.delivery_time
+                };
+            }
+            
+            // Calculate based on status
+            let deliveryDate = new Date(orderDate);
+            let deliveryTime = '9:00 AM - 5:00 PM';
+            
+            switch(status) {
+                case 'delivered':
+                    // If delivered but no delivery date, estimate based on order date (typically 1-3 days)
+                    deliveryDate.setDate(orderDate.getDate() + 2);
+                    deliveryTime = order.delivery_time || 'Delivered';
+                    break;
+                case 'out_for_delivery':
+                    // Out for delivery - same day or next day
+                    deliveryDate.setDate(orderDate.getDate() + 1);
+                    deliveryTime = 'Out for Delivery';
+                    break;
+                case 'shipped':
+                    // Shipped - 1-2 days from order
+                    deliveryDate.setDate(orderDate.getDate() + 2);
+                    deliveryTime = '9:00 AM - 5:00 PM';
+                    break;
+                case 'preparing':
+                    // Preparing - 2-3 days from order
+                    deliveryDate.setDate(orderDate.getDate() + 3);
+                    deliveryTime = '9:00 AM - 5:00 PM';
+                    break;
+                case 'pending':
+                    // Pending - 3-5 days from order
+                    deliveryDate.setDate(orderDate.getDate() + 4);
+                    deliveryTime = 'To be determined';
+                    break;
+                case 'cancelled':
+                    return {
+                        date: 'N/A',
+                        time: 'Cancelled'
+                    };
+                default:
+                    // Default estimate: 3-4 days
+                    deliveryDate.setDate(orderDate.getDate() + 3);
+                    deliveryTime = '9:00 AM - 5:00 PM';
+            }
+            
+            return {
+                date: formatDate(deliveryDate.toISOString().split('T')[0]),
+                time: deliveryTime
+            };
+        }
+        
         // View order details
         async function viewOrderDetails(orderId) {
             const response = await fetch(`../api/admin/get_orders.php?page=1&limit=1000`);
@@ -695,48 +855,51 @@
             
             const address = order.delivery_address;
             const addressText = formatAddress(address);
+            const deliveryInfo = calculateDeliveryInfo(order);
             
             const subtotal = order.items.reduce((sum, item) => sum + parseFloat(item.subtotal), 0);
             const deliveryFee = parseFloat(order.total_amount) - subtotal;
+            const status = order.status.toLowerCase();
+            const statusLabel = order.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
             
             document.getElementById('modalOrderId').textContent = order.id;
             document.getElementById('orderDetailsContent').innerHTML = `
                 <div class="detail-grid">
                     <div class="detail-card spacious">
-                        <div class="detail-label">Customer</div>
+                        <div class="detail-label"><i class="fas fa-user"></i>Customer</div>
                         <div class="detail-value">
                             ${escapeHtml(order.username || 'N/A')}
                             <small>${escapeHtml(order.email || 'N/A')}</small>
                         </div>
                     </div>
                     <div class="detail-card">
-                        <div class="detail-label">Order Date</div>
+                        <div class="detail-label"><i class="fas fa-calendar-alt"></i>Order Date</div>
                         <div class="detail-value">${formatDate(order.order_date)}</div>
                     </div>
                     <div class="detail-card">
-                        <div class="detail-label">Delivery Date</div>
-                        <div class="detail-value">${order.delivery_date ? formatDate(order.delivery_date) : 'N/A'}</div>
+                        <div class="detail-label"><i class="fas fa-truck"></i>Delivery Date</div>
+                        <div class="detail-value">${deliveryInfo.date}</div>
                     </div>
                     <div class="detail-card">
-                        <div class="detail-label">Delivery Time</div>
-                        <div class="detail-value">${order.delivery_time || 'N/A'}</div>
+                        <div class="detail-label"><i class="fas fa-clock"></i>Delivery Time</div>
+                        <div class="detail-value">${deliveryInfo.time}</div>
                     </div>
                     <div class="detail-card">
-                        <div class="detail-label">Payment Method</div>
+                        <div class="detail-label"><i class="fas fa-credit-card"></i>Payment Method</div>
                         <div class="detail-value">${escapeHtml(order.payment_method || 'COD')}</div>
                     </div>
                     <div class="detail-card">
-                        <div class="detail-label">Status</div>
-                        <div class="detail-value"><span class="status-badge ${order.status.toLowerCase()}">${order.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</span></div>
+                        <div class="detail-label"><i class="fas fa-info-circle"></i>Status</div>
+                        <div class="detail-value"><span class="status-badge ${status}">${statusLabel}</span></div>
                     </div>
                 </div>
                 
-                <h6 class="section-title"><i class="fas fa-map-marker-alt me-2"></i>Delivery Address</h6>
+                <h6 class="section-title"><i class="fas fa-map-marker-alt"></i>Delivery Address</h6>
                 <div class="detail-card spacious">
                     <p class="address-block">${escapeHtml(addressText)}</p>
                 </div>
                 
-                <h6 class="section-title"><i class="fas fa-box me-2"></i>Order Items</h6>
+                <h6 class="section-title"><i class="fas fa-box"></i>Order Items</h6>
                 <div class="table-responsive">
                     <table class="table table-sm mb-0">
                         <thead>
@@ -750,10 +913,10 @@
                         <tbody>
                             ${order.items.map(item => `
                                 <tr>
-                                    <td>${escapeHtml(item.product_name)}</td>
+                                    <td><strong>${escapeHtml(item.product_name)}</strong></td>
                                     <td>₱${parseFloat(item.product_price).toFixed(2)}</td>
                                     <td>${item.quantity}</td>
-                                    <td>₱${parseFloat(item.subtotal).toFixed(2)}</td>
+                                    <td><strong>₱${parseFloat(item.subtotal).toFixed(2)}</strong></td>
                                 </tr>
                             `).join('')}
                         </tbody>
