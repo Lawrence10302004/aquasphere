@@ -3104,902 +3104,106 @@
         // Current status: San Pablo City has been updated with complete 80 barangays (verified)
         // Other municipalities/cities may need verification and updates from official sources
         const philippineLocations = {
-            'CALABARZON': {
-                name: 'IV-A – CALABARZON',
-                provinces: {
-                    'Laguna': {
-                        cities: {
-                            // 6 Component Cities
-                            'Calamba': {
-                                barangays: ['Bagong Kalsada', 'Banadero', 'Banlic', 'Barandal', 'Bucal', 'Bunggo', 'Burol', 'Camaligan', 'Canlubang', 'Halang', 'Hornalan', 'Kay-Anlog', 'La Mesa', 'Laguerta', 'Lawa', 'Lecheria', 'Lingga', 'Looc', 'Mabato', 'Majada Labas', 'Makiling', 'Mapagong', 'Masili', 'Maunong', 'Mayapa', 'Paciano Rizal', 'Palingon', 'Palo-Alto', 'Pansol', 'Parian', 'Prinza', 'Pulo', 'Puting Lupa', 'Real', 'Saimsim', 'Sampiruhan', 'San Cristobal', 'San Jose', 'San Juan', 'San Nicolas', 'San Roque', 'Santo Tomas', 'Sucol', 'Turbina', 'Ulango', 'Uwisan']
-                            },
-                            'San Pedro': {
-                                barangays: ['Bagong Silang', 'Calendola', 'Cuyab', 'Estrella', 'Landayan', 'Langgam', 'Magsaysay', 'Narra', 'Nueva', 'Pacita Complex I', 'Pacita Complex II', 'Poblacion', 'Rosario', 'San Antonio', 'San Roque', 'San Vicente', 'Santo Niño', 'United Bayanihan', 'United Better Living']
-                            },
-                            'Santa Rosa': {
-                                barangays: ['Aplaya', 'Balibago', 'Caingin', 'Dila', 'Labas', 'Macabling', 'Malitlit', 'Malusak', 'Poblacion', 'Pulong Santa Cruz', 'Sinalhan', 'Tagapo']
-                            },
-                            'Biñan': {
-                                barangays: ['Bungahan', 'Canlalay', 'Casile', 'De La Paz', 'Ganado', 'Langkiwa', 'Loma', 'Malaban', 'Malamig', 'Mampalasan', 'Platero', 'Poblacion', 'San Antonio', 'San Francisco', 'San Jose', 'San Vicente', 'Santo Domingo', 'Santo Niño', 'Santo Tomas', 'Soro-Soro', 'Timbao', 'Tubigan', 'Zapote']
-                            },
-                            'Los Baños': {
-                                barangays: ['Anos', 'Bagong Silang', 'Bambang', 'Batong Malake', 'Baybayin', 'Lalakay', 'Maahas', 'Malinta', 'Mayondon', 'Putho-Tuntungin', 'San Antonio', 'Tadlac', 'Timugan']
-                            },
-                            'Cabuyao': {
-                                barangays: ['Baclaran', 'Banay-banay', 'Banlic', 'Bigaa', 'Butong', 'Casile', 'Diezmo', 'Gulod', 'Mamatid', 'Marinig', 'Niugan', 'Pittland', 'Pulo', 'Sala', 'San Isidro', 'Santa Rosa', 'Santo Niño', 'Ulong Tubig', 'Unisan']
-                            },
-                            // 24 Municipalities
-                            'Alaminos': {
-                                barangays: ['Barangay I (Pob.)', 'Barangay II (Pob.)', 'Barangay III (Pob.)', 'Barangay IV (Pob.)', 'Del Carmen', 'Gulod', 'Magsaysay', 'Poblacion', 'San Agustin', 'San Andres', 'San Benito', 'San Gregorio', 'San Isidro', 'San Jose', 'San Juan', 'San Miguel', 'San Pablo', 'San Roque', 'Santa Cruz', 'Santa Maria', 'Santo Niño', 'Santo Tomas']
-                            },
-                            'Bay': {
-                                barangays: ['Bitin', 'Calo', 'Dila', 'Maitim', 'Masaya', 'Paciano Rizal', 'Puypuy', 'San Agustin', 'San Antonio', 'San Isidro', 'Tagumpay', 'Tranca']
-                            },
-                            'Calauan': {
-                                barangays: ['San Isidro', 'Poblacion I', 'Poblacion II', 'Poblacion III', 'Poblacion IV', 'Bubukal', 'Masili', 'Dayap', 'Lamot I', 'Lamot II', 'Limao', 'Mabacan', 'Masiit', 'Paliparan', 'Pansol', 'San Antonio', 'San Cristobal', 'San Juan', 'San Pablo', 'San Salvador', 'Santo Tomas', 'Santo Toribio', 'Talangan', 'Tambo', 'Tiaong', 'Tulay', 'Ulat', 'Ulong Tubig', 'Villa Espina', 'Villa Mercedes']
-                            },
-                            'Cavinti': {
-                                barangays: ['Anglas', 'Bancal', 'Bokbok', 'Bukal', 'Calumpang', 'Duhat', 'Inao-Awan', 'Kanluran Talaongan', 'Labayo', 'Layasin', 'Layug', 'Mahipon', 'Paowin', 'Poblacion', 'Silangan Talaongan', 'Sumucab', 'Tibatib', 'Tulo']
-                            },
-                            'Famy': {
-                                barangays: ['Asana', 'Bacong-Sigcay', 'Bagong Pag-asa', 'Balite', 'Banaba', 'Batuhan', 'Bubukal', 'Bulihan', 'Calumpang', 'Kapatalan', 'Kaytitinga', 'Kinabuan', 'Lutuc', 'Mabuhay', 'Macatad', 'Poblacion', 'San Antonio', 'San Isidro', 'San Jose', 'San Pablo', 'San Pedro', 'Santa Cruz', 'Santo Niño', 'Sinalhan', 'Tunhac', 'Wawa']
-                            },
-                            'Kalayaan': {
-                                barangays: ['Longos', 'Mabilog', 'Malaking Ambling', 'Malamig', 'Masiit', 'Palina', 'San Antonio', 'San Juan', 'Santo Tomas']
-                            },
-                            'Liliw': {
-                                barangays: ['Bagong Anyo', 'Bayate', 'Bubukal', 'Burgos', 'Cabuyao', 'Calumpang', 'Culoy', 'Dagatan', 'Laguan', 'Malamig', 'Masikap', 'Maslun', 'Pag-asa', 'Palayan', 'Poblacion', 'Rizal', 'San Isidro', 'San Roque', 'Santo Niño', 'Taytay', 'Tiaong']
-                            },
-                            'Luisiana': {
-                                barangays: ['Barangay I (Pob.)', 'Barangay II (Pob.)', 'Barangay III (Pob.)', 'Barangay IV (Pob.)', 'Barangay V (Pob.)', 'Barangay VI (Pob.)', 'Barangay VII (Pob.)', 'Barangay VIII (Pob.)', 'Barangay IX (Pob.)', 'Barangay X (Pob.)', 'Barangay XI (Pob.)', 'Barangay XII (Pob.)', 'Barangay XIII (Pob.)', 'Barangay XIV (Pob.)', 'Barangay XV (Pob.)', 'Barangay XVI (Pob.)', 'Barangay XVII (Pob.)', 'Barangay XVIII (Pob.)', 'Barangay XIX (Pob.)', 'Barangay XX (Pob.)', 'Barangay XXI (Pob.)', 'Barangay XXII (Pob.)', 'Barangay XXIII (Pob.)', 'Barangay XXIV (Pob.)', 'Barangay XXV (Pob.)', 'Barangay XXVI (Pob.)', 'Barangay XXVII (Pob.)', 'Barangay XXVIII (Pob.)', 'Barangay XXIX (Pob.)', 'Barangay XXX (Pob.)', 'Barangay XXXI (Pob.)', 'Barangay XXXII (Pob.)', 'Barangay XXXIII (Pob.)', 'Barangay XXXIV (Pob.)', 'Barangay XXXV (Pob.)', 'Barangay XXXVI (Pob.)', 'Barangay XXXVII (Pob.)', 'Barangay XXXVIII (Pob.)', 'Barangay XXXIX (Pob.)', 'Barangay XL (Pob.)', 'Barangay XLI (Pob.)', 'Barangay XLII (Pob.)', 'Barangay XLIII (Pob.)', 'Barangay XLIV (Pob.)', 'Barangay XLV (Pob.)', 'Barangay XLVI (Pob.)', 'Barangay XLVII (Pob.)', 'Barangay XLVIII (Pob.)', 'Barangay XLIX (Pob.)', 'Barangay L (Pob.)']
-                            },
-                            'Lumban': {
-                                barangays: ['Bagong Silang', 'Balimbingan', 'Concepcion', 'Lewin', 'Maracta', 'Maytalang I', 'Maytalang II', 'Primera Parang', 'Segunda Parang', 'Santo Niño', 'Wawa']
-                            },
-                            'Mabitac': {
-                                barangays: ['Amuyong', 'Lambac', 'Mabatang', 'Macatad', 'Maligaya', 'Masikap', 'Masikap Sur', 'Nanguma', 'Paagahan', 'San Antonio', 'San Miguel', 'Sinagtala', 'Taytay']
-                            },
-                            'Magdalena': {
-                                barangays: ['Baanan', 'Balanac', 'Buenavista', 'Bungalon', 'Bucal', 'Calumpang', 'Calumpang Este', 'Calumpang Oeste', 'Dingin', 'Halayhayin', 'Ibabang Atingay', 'Ibabang Butnong', 'Ilayang Atingay', 'Ilayang Butnong', 'Malaking Ambling', 'Malinao', 'Malusak', 'Poblacion', 'Sabang', 'San Bartolome', 'San Gabriel', 'San Juan', 'San Nicolas', 'Santa Elena', 'Santa Maria', 'Santo Niño', 'Talahib', 'Tanawan']
-                            },
-                            'Majayjay': {
-                                barangays: ['Bagong Silang', 'Balanac', 'Bubukal', 'Burgos', 'Buenavista', 'Bukal', 'Calumpang', 'Concepcion', 'Gagalot', 'Ibabang Banga', 'Ibabang Yuni', 'Ilayang Banga', 'Ilayang Yuni', 'Mabato', 'Mabunga', 'Malinao', 'Malinao', 'Mamala', 'Manggahan', 'Masikap', 'Mataas na Kahoy', 'Munting Kahoy', 'Olla', 'Olla', 'Pagsawitan', 'Poblacion', 'San Francisco', 'San Isidro', 'San Miguel', 'San Roque', 'Santa Catalina', 'Santo Niño', 'Taytay', 'Tiaong', 'Tulay na Lupa', 'Villa Nogales']
-                            },
-                            'Nagcarlan': {
-                                barangays: ['Abuyon', 'Alibungbungan', 'Alumbrado', 'Balayong', 'Balimbing', 'Bambang', 'Banilad', 'Bayaquitos', 'Bubukal', 'Buenavista', 'Bukal', 'Bungkol', 'Calumpang', 'Calumpang Cerca', 'Calumpang Lejos', 'Canlubang', 'Comon', 'Concepcion', 'Hulo', 'Ibabang Palina', 'Ilayang Palina', 'Imok', 'Kanluran Talaongan', 'Labney', 'Laguna', 'Lawaguin', 'Layasin', 'Mahipon', 'Malinao', 'Malusak', 'Manasa', 'Maravilla', 'Masikap', 'Maslun', 'Mataas na Kahoy', 'Munting Kahoy', 'Olla', 'Olla', 'Pagsawitan', 'Palayan', 'Poblacion', 'Sabang', 'San Francisco', 'San Isidro', 'San Miguel', 'San Roque', 'Santa Catalina', 'Santo Niño', 'Taytay', 'Tiaong', 'Tulay na Lupa', 'Villa Nogales']
-                            },
-                            'Paete': {
-                                barangays: ['Bagumbayan', 'Balanac', 'Bubukal', 'Burgos', 'Buenavista', 'Bukal', 'Calumpang', 'Concepcion', 'Gagalot', 'Ibabang Banga', 'Ibabang Yuni', 'Ilayang Banga', 'Ilayang Yuni', 'Mabato', 'Mabunga', 'Malinao', 'Malinao', 'Mamala', 'Manggahan', 'Masikap', 'Mataas na Kahoy', 'Munting Kahoy', 'Olla', 'Olla', 'Pagsawitan', 'Poblacion', 'San Francisco', 'San Isidro', 'San Miguel', 'San Roque', 'Santa Catalina', 'Santo Niño', 'Taytay', 'Tiaong', 'Tulay na Lupa', 'Villa Nogales']
-                            },
-                            'Pagsanjan': {
-                                barangays: ['Anibong', 'Barangay I (Pob.)', 'Barangay II (Pob.)', 'Barangay III (Pob.)', 'Barangay IV (Pob.)', 'Barangay V (Pob.)', 'Barangay VI (Pob.)', 'Barangay VII (Pob.)', 'Barangay VIII (Pob.)', 'Barangay IX (Pob.)', 'Barangay X (Pob.)', 'Barangay XI (Pob.)', 'Barangay XII (Pob.)', 'Barangay XIII (Pob.)', 'Barangay XIV (Pob.)', 'Barangay XV (Pob.)', 'Barangay XVI (Pob.)', 'Barangay XVII (Pob.)', 'Barangay XVIII (Pob.)', 'Barangay XIX (Pob.)', 'Barangay XX (Pob.)', 'Barangay XXI (Pob.)', 'Barangay XXII (Pob.)', 'Barangay XXIII (Pob.)', 'Barangay XXIV (Pob.)', 'Barangay XXV (Pob.)', 'Barangay XXVI (Pob.)', 'Barangay XXVII (Pob.)', 'Barangay XXVIII (Pob.)', 'Barangay XXIX (Pob.)', 'Barangay XXX (Pob.)', 'Barangay XXXI (Pob.)', 'Barangay XXXII (Pob.)', 'Barangay XXXIII (Pob.)', 'Barangay XXXIV (Pob.)', 'Barangay XXXV (Pob.)', 'Barangay XXXVI (Pob.)', 'Barangay XXXVII (Pob.)', 'Barangay XXXVIII (Pob.)', 'Barangay XXXIX (Pob.)', 'Barangay XL (Pob.)', 'Barangay XLI (Pob.)', 'Barangay XLII (Pob.)', 'Barangay XLIII (Pob.)', 'Barangay XLIV (Pob.)', 'Barangay XLV (Pob.)', 'Barangay XLVI (Pob.)', 'Barangay XLVII (Pob.)', 'Barangay XLVIII (Pob.)', 'Barangay XLIX (Pob.)', 'Barangay L (Pob.)', 'Biñan', 'Maahas', 'Sabang']
-                            },
-                            'Pakil': {
-                                barangays: ['Banilan', 'Burgos', 'Casinsin', 'Concepcion', 'Gonzalvo', 'Lumbang', 'Pagsawitan', 'Poblacion', 'Rizal', 'San Antonio', 'San Isidro', 'San Jose', 'San Miguel', 'San Roque', 'Santa Catalina', 'Santo Niño', 'Sierra', 'Taytay', 'Tiaong']
-                            },
-                            'Pangil': {
-                                barangays: ['Balian', 'Dambo', 'Galalan', 'Isla', 'Nabua', 'Pambuhan', 'Poblacion', 'San Antonio', 'San Isidro', 'San Jose', 'San Miguel', 'San Roque', 'Santa Catalina', 'Santo Niño', 'Sierra', 'Taytay', 'Tiaong']
-                            },
-                            'Pila': {
-                                barangays: ['Aplaya', 'Bagong Pook', 'Bagumbayan', 'Bubukal', 'Bulanan', 'Concepcion', 'Labuin', 'Linga', 'Masico', 'Moog', 'Pansol', 'Poblacion', 'San Antonio', 'San Miguel', 'Santa Clara', 'Santo Niño', 'Taytay']
-                            },
-                            'Rizal': {
-                                barangays: ['Antipolo', 'Bagong Silang', 'Bagong Pook', 'Bubukal', 'Burgos', 'Calumpang', 'Concepcion', 'Laguna', 'Malinao', 'Poblacion', 'San Antonio', 'San Isidro', 'San Jose', 'San Miguel', 'San Roque', 'Santa Catalina', 'Santo Niño', 'Taytay']
-                            },
-                            'San Pablo': {
-                                barangays: ['Bagong Bayan II-A', 'Bagong Pook VI-C', 'Barangay I-A', 'Barangay I-B', 'Barangay II-A', 'Barangay II-B', 'Barangay II-C', 'Barangay II-D', 'Barangay II-E', 'Barangay II-F', 'Barangay III-A', 'Barangay III-B', 'Barangay III-C', 'Barangay III-D', 'Barangay III-E', 'Barangay III-F', 'Barangay IV-A', 'Barangay IV-B', 'Barangay IV-C', 'Barangay V-A', 'Barangay V-B', 'Barangay V-C', 'Barangay V-D', 'Barangay VI-A', 'Barangay VI-B', 'Barangay VI-D', 'Barangay VI-E', 'Barangay VII-A', 'Barangay VII-B', 'Barangay VII-C', 'Barangay VII-D', 'Barangay VII-E', 'Bautista', 'Concepción', 'Del Remedio', 'Dolores', 'San Antonio 1', 'San Antonio 2', 'San Bartolomé', 'San Buenaventura', 'San Crispín', 'San Cristóbal', 'San Diego', 'San Francisco', 'San Gabriel', 'San Gregorio', 'San Ignacio', 'San Isidro', 'San Joaquín', 'San José', 'San Juan', 'San Lorenzo', 'San Lucas 1', 'San Lucas 2', 'San Marcos', 'San Mateo', 'San Miguel', 'San Nicolás', 'San Pedro', 'San Rafael', 'San Roque', 'San Vicente', 'Santa Ana', 'Santa Catalina', 'Santa Cruz', 'Santa Felomina', 'Santa Isabel', 'Santa María Magdalena', 'Santa Verónica I', 'Santiago I', 'Santiago II', 'Santisimo Rosario', 'Santo Ángel', 'Santo Cristo', 'Santo Niño', 'Soledad', 'Santa Elena', 'Santa María', 'Santa Moníca', 'Santa Verónica II']
-                            },
-                            'Santa Cruz': {
-                                barangays: ['Bagumbayan', 'Bubukal', 'Calios', 'Duhat', 'Gatid', 'Jasaan', 'Labuin', 'Malinao', 'Oogong', 'Pagsawitan', 'Paiisa', 'Palasan', 'Patimbao', 'San Jose', 'San Juan', 'San Pablo Norte', 'San Pablo Sur', 'Santo Angel Norte', 'Santo Angel Sur', 'Santo Domingo', 'Tagbakin', 'Tuburan']
-                            },
-                            'Santa Maria': {
-                                barangays: ['Adia', 'Bagong Pook', 'Bagumbayan', 'Bubukal', 'Burgos', 'Concepcion', 'Del Remedio', 'Dolores', 'Ibabang Atingay', 'Ibabang Butnong', 'Ilayang Atingay', 'Ilayang Butnong', 'Malinao', 'Mamala', 'Manggahan', 'Masikap', 'Mataas na Kahoy', 'Munting Kahoy', 'Olla', 'Pagsawitan', 'Poblacion', 'San Francisco', 'San Isidro', 'San Miguel', 'San Roque', 'Santa Catalina', 'Santo Niño', 'Taytay', 'Tiaong', 'Tulay na Lupa', 'Villa Nogales']
-                            },
-                            'Siniloan': {
-                                barangays: ['Bagong Pook', 'Bagumbayan', 'Bubukal', 'Burgos', 'Concepcion', 'Del Remedio', 'Dolores', 'Ibabang Atingay', 'Ibabang Butnong', 'Ilayang Atingay', 'Ilayang Butnong', 'Malinao', 'Mamala', 'Manggahan', 'Masikap', 'Mataas na Kahoy', 'Munting Kahoy', 'Olla', 'Pagsawitan', 'Poblacion', 'San Francisco', 'San Isidro', 'San Miguel', 'San Roque', 'Santa Catalina', 'Santo Niño', 'Taytay', 'Tiaong', 'Tulay na Lupa', 'Villa Nogales']
-                            },
-                            'Victoria': {
-                                barangays: ['Bagong Silang', 'Bubukal', 'Burgos', 'Concepcion', 'Del Remedio', 'Dolores', 'Ibabang Atingay', 'Ibabang Butnong', 'Ilayang Atingay', 'Ilayang Butnong', 'Malinao', 'Mamala', 'Manggahan', 'Masikap', 'Mataas na Kahoy', 'Munting Kahoy', 'Olla', 'Pagsawitan', 'Poblacion', 'San Francisco', 'San Isidro', 'San Miguel', 'San Roque', 'Santa Catalina', 'Santo Niño', 'Taytay', 'Tiaong', 'Tulay na Lupa', 'Villa Nogales']
-                            }
-                        }
-                    }
-                }
-            }
-        };
-        
-        // Initialize location dropdowns
-        function initializeLocationDropdowns() {
-            const regionSelect = document.getElementById('region');
-            if (!regionSelect) return;
-            
-            // Clear existing options
-            regionSelect.innerHTML = '<option value="">Select Region</option>';
-            
-            // Populate regions (only Laguna now)
-            Object.keys(philippineLocations).forEach(regionCode => {
-                const region = philippineLocations[regionCode];
-                const option = document.createElement('option');
-                option.value = regionCode;
-                option.textContent = region.name;
-                regionSelect.appendChild(option);
-            });
-            
-            // Auto-select CALABARZON if it's the only region
-            if (Object.keys(philippineLocations).length === 1) {
-                regionSelect.value = Object.keys(philippineLocations)[0];
-                updateProvinces();
-            }
-        }
-        
-        // Update provinces based on selected region
-        function updateProvinces() {
-            const regionSelect = document.getElementById('region');
-            const provinceSelect = document.getElementById('province');
-            const citySelect = document.getElementById('city');
-            const barangaySelect = document.getElementById('barangay');
-            
-            const selectedRegion = regionSelect.value;
-            
-            // Reset dependent dropdowns
-            provinceSelect.innerHTML = '<option value="">Select Province</option>';
-            citySelect.innerHTML = '<option value="">Select City/Municipality</option>';
-            barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
-            
-            if (selectedRegion && philippineLocations[selectedRegion]) {
-                provinceSelect.disabled = false;
-                const provinces = philippineLocations[selectedRegion].provinces;
-                
-                Object.keys(provinces).forEach(provinceName => {
-                    const option = document.createElement('option');
-                    option.value = provinceName;
-                    option.textContent = provinceName;
-                    provinceSelect.appendChild(option);
-                });
-            } else {
-                provinceSelect.disabled = true;
-                citySelect.disabled = true;
-                barangaySelect.disabled = true;
-            }
-        }
-        
-        // Update cities based on selected province
-        function updateCities() {
-            const regionSelect = document.getElementById('region');
-            const provinceSelect = document.getElementById('province');
-            const citySelect = document.getElementById('city');
-            const barangaySelect = document.getElementById('barangay');
-            
-            const selectedRegion = regionSelect.value;
-            const selectedProvince = provinceSelect.value;
-            
-            // Reset dependent dropdowns
-            citySelect.innerHTML = '<option value="">Select City/Municipality</option>';
-            barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
-            
-            if (selectedRegion && selectedProvince && philippineLocations[selectedRegion]) {
-                const province = philippineLocations[selectedRegion].provinces[selectedProvince];
-                if (province) {
-                    citySelect.disabled = false;
-                    const cities = province.cities;
-                    
-                    Object.keys(cities).forEach(cityName => {
-                        const option = document.createElement('option');
-                        option.value = cityName;
-                        option.textContent = cityName;
-                        citySelect.appendChild(option);
-                    });
-                }
-            } else {
-                citySelect.disabled = true;
-                barangaySelect.disabled = true;
-            }
-        }
-        
-        // Update barangays based on selected city
-        function updateBarangays() {
-            const regionSelect = document.getElementById('region');
-            const provinceSelect = document.getElementById('province');
-            const citySelect = document.getElementById('city');
-            const barangaySelect = document.getElementById('barangay');
-            
-            const selectedRegion = regionSelect.value;
-            const selectedProvince = provinceSelect.value;
-            const selectedCity = citySelect.value;
-            
-            // Reset barangay dropdown
-            barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
-            
-            if (selectedRegion && selectedProvince && selectedCity && philippineLocations[selectedRegion]) {
-                const province = philippineLocations[selectedRegion].provinces[selectedProvince];
-                if (province && province.cities[selectedCity]) {
-                    barangaySelect.disabled = false;
-                    const barangays = province.cities[selectedCity].barangays;
-                    
-                    barangays.forEach(barangayName => {
-                        const option = document.createElement('option');
-                        option.value = barangayName;
-                        option.textContent = barangayName;
-                        barangaySelect.appendChild(option);
-                    });
-                }
-            } else {
-                barangaySelect.disabled = true;
-            }
-        }
-        
-        // Address Management
-        function loadAddress() {
-            const address = UserState.getDeliveryAddress();
-            const emptyAddress = document.getElementById('emptyAddress');
-            const addressDisplay = document.getElementById('addressDisplay');
-            const addressTabs = document.getElementById('addressTabs');
-            const checkoutBtn = document.getElementById('checkoutBtn');
-            
-            if (address) {
-                emptyAddress.style.display = 'none';
-                addressDisplay.style.display = 'block';
-                document.getElementById('addressName').textContent = address.fullName;
-                document.getElementById('addressPhone').textContent = `(${address.phoneNumber})`;
-                
-                // Display full address with location breakdown
-                let locationText = '';
-                if (address.barangay && address.city && address.province) {
-                    locationText = `${address.streetAddress}, ${address.barangay}, ${address.city}, ${address.province} ${address.postalCode || ''}`;
-                } else if (address.location) {
-                    // Fallback for old format
-                    locationText = `${address.streetAddress}, ${address.location}, ${address.postalCode || ''}`;
-                } else {
-                    locationText = `${address.streetAddress}, ${address.postalCode || ''}`;
-                }
-                document.getElementById('addressText').textContent = locationText.trim();
-                
-                // Display coordinates and map if available
-                if (address.latitude && address.longitude) {
-                    const lat = parseFloat(address.latitude);
-                    const lng = parseFloat(address.longitude);
-                    
-                    // Show tabs
-                    if (addressTabs) {
-                        addressTabs.style.display = 'flex';
-                    }
-                    
-                    // Display coordinates
-                    document.getElementById('displayLatitude').textContent = lat.toFixed(6);
-                    document.getElementById('displayLongitude').textContent = lng.toFixed(6);
-                    
-                    // Initialize map (wait a bit for DOM to be ready)
-                    setTimeout(() => {
-                        initAddressMap(lat, lng);
-                    }, 300);
-                    
-                    // Reset to details tab by default
-                    switchAddressTab('details');
-                } else {
-                    // Hide tabs if no coordinates
-                    if (addressTabs) {
-                        addressTabs.style.display = 'none';
-                    }
-                }
-                
-                if (address.isDefault) {
-                    document.getElementById('defaultBadge').style.display = 'block';
-                } else {
-                    document.getElementById('defaultBadge').style.display = 'none';
-                }
-                
-                // Enable checkout button if cart has items
-                updateCheckoutButton();
-            } else {
-                emptyAddress.style.display = 'block';
-                addressDisplay.style.display = 'none';
-                if (addressTabs) {
-                    addressTabs.style.display = 'none';
-                }
-                // Disable checkout button if no address
-                if (checkoutBtn) {
-                    checkoutBtn.disabled = true;
+    'CALABARZON': {
+        name: 'IV-A - CALABARZON',
+        provinces: {
+            'Laguna': {
+                cities: {
+                    'Alaminos': {
+                        barangays: ["Barangay I", "Barangay II", "Barangay III", "Barangay IV", "Del Carmen", "Palma", "San Agustin", "San Andres", "San Benito", "San Gregorio", "San Ildefonso", "San Juan", "San Miguel", "San Roque", "Santa Rosa"]
+                    },
+                    'Bay': {
+                        barangays: ["Bitin", "Calo", "Dila", "Maitim", "Masaya", "Paciano Rizal", "Puypuy", "San Agustin", "San Antonio", "San Isidro", "San Nicolas", "Santa Cruz", "Santo Domingo", "Tagumpay", "Tranca"]
+                    },
+                    'Biñan': {
+                        barangays: ["Biñan", "Bungahan", "Canlalay", "Casile", "De La Paz", "Ganado", "Langkiwa", "Loma", "Malaban", "Malamig", "Mampalasan", "Platero", "Poblacion", "San Antonio", "San Francisco", "San Jose", "San Vicente", "Santo Domingo", "Santo Niño", "Santo Tomas", "Soro-soro", "Timbao", "Tubigan", "Zapote"]
+                    },
+                    'Cabuyao': {
+                        barangays: ["Baclaran", "Banaybanay", "Banlic", "Barangay Dos", "Barangay Tres", "Barangay Uno", "Bigaa", "Butong", "Casile", "Diezmo", "Gulod", "Mamatid", "Marinig", "Niugan", "Pittland", "Pulo", "Sala", "San Isidro"]
+                    },
+                    'Calamba': {
+                        barangays: ["Bagong Kalsada", "Banadero", "Banlic", "Barandal", "Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4", "Barangay 5", "Barangay 6", "Barangay 7", "Batino", "Bubuyan", "Bucal", "Bunggo", "Burol", "Camaligan", "Canlubang", "Halang", "Hornalan", "Kay-Anlog", "La Mesa", "Laguerta", "Lawa", "Lecheria", "Lingga", "Looc", "Mabato", "Majada Labas", "Makiling", "Mapagong", "Masili", "Maunong", "Mayapa", "Milagrosa", "Paciano Rizal", "Palingon", "Palo-Alto", "Pansol", "Parian", "Prinza", "Punta", "Puting Lupa", "Real", "Saimsim", "Sampiruhan", "San Cristobal", "San Jose", "San Juan", "Sirang Lupa", "Sucol", "Turbina", "Ulango", "Uwisan"]
+                    },
+                    'Calauan': {
+                        barangays: ["Balayhangin", "Bangyas", "Dayap", "Hanggan", "Imok", "Kanluran", "Lamot 1", "Lamot 2", "Limao", "Mabacan", "Masiit", "Paliparan", "Perez", "Prinza", "San Isidro", "Santo Tomas", "Silangan"]
+                    },
+                    'Cavinti': {
+                        barangays: ["Anglas", "Bangco", "Bukal", "Bulajo", "Cansuso", "Duhat", "Inao-awan", "Kanluran Talaongan", "Labayo", "Layasin", "Layug", "Mahipon", "Paowin", "Poblacion", "Silangan Talaongan", "Sisilmin", "Sumucab", "Tibatib", "Udia"]
+                    },
+                    'Famy': {
+                        barangays: ["Asana", "Bacong-Sigsigan", "Bagong Pag-asa", "Balitoc", "Banaba", "Batuhan", "Bulihan", "Caballero", "Calumpang", "Cuebang Bato", "Damayan", "Kapatalan", "Kataypuanan", "Liyang", "Maate", "Magdalo", "Mayatba", "Minayutan", "Salangbato", "Tunhac"]
+                    },
+                    'Kalayaan': {
+                        barangays: ["Longos", "San Antonio", "San Juan"]
+                    },
+                    'Liliw': {
+                        barangays: ["Bagong Anyo", "Bayate", "Bongkol", "Bubukal", "Cabuyao", "Calumpang", "Culoy", "Dagatan", "Daniw", "Dita", "Ibabang Palina", "Ibabang San Roque", "Ibabang Sungi", "Ibabang Taykin", "Ilayang Palina", "Ilayang San Roque", "Ilayang Sungi", "Ilayang Taykin", "Kanlurang Bukal", "Laguan", "Luquin", "Malabo-Kalantukan", "Masikap", "Maslun", "Mojon", "Novaliches", "Oples", "Pag-asa", "Palayan", "Rizal", "San Isidro", "Silangang Bukal", "Tuy-Baanan"]
+                    },
+                    'Los Baños': {
+                        barangays: ["Anos", "Bagong Silang", "Bambang", "Batong Malake", "Baybayin", "Bayog", "Lalakay", "Maahas", "Malinta", "Mayondon", "Putho Tuntungin", "San Antonio", "Tadlak", "Timugan"]
+                    },
+                    'Luisiana': {
+                        barangays: ["Barangay Zone I", "Barangay Zone II", "Barangay Zone III", "Barangay Zone IV", "Barangay Zone V", "Barangay Zone VI", "Barangay Zone VII", "Barangay Zone VIII", "De La Paz", "San Antonio", "San Buenaventura", "San Diego", "San Isidro", "San Jose", "San Juan", "San Luis", "San Pablo", "San Pedro", "San Rafael", "San Roque", "San Salvador", "Santo Domingo", "Santo Tomas"]
+                    },
+                    'Lumban': {
+                        barangays: ["Bagong Silang", "Balimbingan", "Balubad", "Caliraya", "Concepcion", "Lewin", "Maracta", "Maytalang I", "Maytalang II", "Primera Parang", "Primera Pulo", "Salac", "Santo Niño", "Segunda Parang", "Segunda Pulo", "Wawa"]
+                    },
+                    'Mabitac': {
+                        barangays: ["Amuyong", "Bayanihan", "Lambac", "Libis ng Nayon", "Lucong", "Maligaya", "Masikap", "Matalatala", "Nanguma", "Numero", "Paagahan", "Pag-asa", "San Antonio", "San Miguel", "Sinagtala"]
+                    },
+                    'Magdalena': {
+                        barangays: ["Alipit", "Baanan", "Balanac", "Bucal", "Buenavista", "Bungkol", "Buo", "Burlungan", "Cigaras", "Halayhayin", "Ibabang Atingay", "Ibabang Butnong", "Ilayang Atingay", "Ilayang Butnong", "Ilog", "Malaking Ambling", "Malinao", "Maravilla", "Munting Ambling", "Poblacion", "Sabang", "Salasad", "Tanawan", "Tipunan"]
+                    },
+                    'Majayjay': {
+                        barangays: ["Amonoy", "Bakia", "Balanac", "Balayong", "Banilad", "Banti", "Bitaoy", "Botocan", "Bukal", "Burgos", "Burol", "Coralao", "Gagalot", "Ibabang Banga", "Ibabang Bayucain", "Ilayang Banga", "Ilayang Bayucain", "Isabang", "Malinao", "May-it", "Munting Kawayan", "Olla", "Oobi", "Origuel", "Panalaban", "Pangil", "Panglan", "Piit", "Pook", "Rizal", "San Francisco", "San Isidro", "San Miguel", "San Roque", "Santa Catalina", "Suba", "Talortor", "Tanawan", "Taytay", "Villa Nogales"]
+                    },
+                    'Nagcarlan': {
+                        barangays: ["Abo", "Alibungbungan", "Alumbrado", "Balayong", "Balimbing", "Balinacon", "Bambang", "Banago", "Banca-banca", "Bangcuro", "Banilad", "Bayaquitos", "Buboy", "Buenavista", "Buhanginan", "Bukal", "Bunga", "Cabuyew", "Calumpang", "Kanluran Kabubuhayan", "Kanluran Lazaan", "Labangan", "Lagulo", "Lawaguin", "Maiit", "Malaya", "Malinao", "Manaol", "Maravilla", "Nagcalbang", "Oples", "Palayan", "Palina", "Poblacion I", "Poblacion II", "Poblacion III", "Sabang", "San Francisco", "Santa Lucia", "Sibulan", "Silangan Ilaya", "Silangan Kabubuhayan", "Silangan Lazaan", "Silangan Napapatid", "Sinipian", "Sulsuguin", "Talahib", "Talangan", "Taytay", "Tipacan", "Wakat", "Yukos"]
+                    },
+                    'Paete': {
+                        barangays: ["Bagumbayan", "Bangkusay", "Ermita", "Ibaba del Norte", "Ibaba del Sur", "Ilaya del Norte", "Ilaya del Sur", "Maytoong", "Quinale"]
+                    },
+                    'Pagsanjan': {
+                        barangays: ["Anibong", "Barangay I", "Barangay II", "Biñan", "Buboy", "Cabanbanan", "Calusiche", "Dingin", "Lambac", "Layugan", "Magdapio", "Maulawin", "Pinagsanjan", "Sabang", "Sampaloc", "San Isidro"]
+                    },
+                    'Pakil': {
+                        barangays: ["Banilan", "Baño", "Burgos", "Casa Real", "Casinsin", "Dorado", "Gonzales", "Kabulusan", "Matikiw", "Rizal", "Saray", "Taft", "Tavera"]
+                    },
+                    'Pangil': {
+                        barangays: ["Balian", "Dambo", "Galalan", "Isla", "Mabato-Azufre", "Natividad", "San Jose", "Sulib"]
+                    },
+                    'Pila': {
+                        barangays: ["Aplaya", "Bagong Pook", "Bukal", "Bulilan Norte", "Bulilan Sur", "Concepcion", "Labuin", "Linga", "Masico", "Mojon", "Pansol", "Pinagbayanan", "San Antonio", "San Miguel", "Santa Clara Norte", "Santa Clara Sur", "Tubuan"]
+                    },
+                    'Rizal': {
+                        barangays: ["Antipolo", "East Poblacion", "Entablado", "Laguan", "Paule 1", "Paule 2", "Pook", "Tala", "Talaga", "Tuy", "West Población"]
+                    },
+                    'San Pablo': {
+                        barangays: ["Atisan", "Bagong Bayan II-A", "Bagong Pook VI-C", "Barangay I-A", "Barangay I-B", "Barangay II-A", "Barangay II-B", "Barangay II-C", "Barangay II-D", "Barangay II-E", "Barangay II-F", "Barangay III-A", "Barangay III-B", "Barangay III-C", "Barangay III-D", "Barangay III-E", "Barangay III-F", "Barangay IV-A", "Barangay IV-B", "Barangay IV-C", "Barangay V-A", "Barangay V-B", "Barangay V-C", "Barangay V-D", "Barangay VI-A", "Barangay VI-B", "Barangay VI-D", "Barangay VI-E", "Barangay VII-A", "Barangay VII-B", "Barangay VII-C", "Barangay VII-D", "Barangay VII-E", "Bautista", "Concepcion", "Del Remedio", "Dolores", "San Antonio 1", "San Antonio 2", "San Bartolome", "San Buenaventura", "San Crispin", "San Cristobal", "San Diego", "San Francisco", "San Gabriel", "San Gregorio", "San Ignacio", "San Isidro", "San Joaquin", "San Jose", "San Juan", "San Lorenzo", "San Lucas 1", "San Lucas 2", "San Marcos", "San Mateo", "San Miguel", "San Nicolas", "San Pedro", "San Rafael", "San Roque", "San Vicente", "Santa Ana", "Santa Catalina", "Santa Cruz", "Santa Elena", "Santa Felomina", "Santa Isabel", "Santa Maria", "Santa Maria Magdalena", "Santa Monica", "Santa Veronica", "Santiago I", "Santiago II", "Santisimo Rosario", "Santo Angel", "Santo Cristo", "Santo Niño", "Soledad"]
+                    },
+                    'San Pedro': {
+                        barangays: ["Bagong Silang", "Calendola", "Chrysanthemum", "Cuyab", "Estrella", "Fatima", "G.S.I.S.", "Landayan", "Langgam", "Laram", "Magsaysay", "Maharlika", "Narra", "Nueva", "Pacita 1", "Pacita 2", "Poblacion", "Riverside", "Rosario", "Sampaguita Village", "San Antonio", "San Lorenzo Ruiz", "San Roque", "San Vicente", "Santo Niño", "United Bayanihan", "United Better Living"]
+                    },
+                    'Santa Cruz': {
+                        barangays: ["Alipit", "Bagumbayan", "Barangay I", "Barangay II", "Barangay III", "Barangay IV", "Barangay V", "Bubukal", "Calios", "Duhat", "Gatid", "Jasaan", "Labuin", "Malinao", "Oogong", "Pagsawitan", "Palasan", "Patimbao", "San Jose", "San Juan", "San Pablo Norte", "San Pablo Sur", "Santisima Cruz", "Santo Angel Central", "Santo Angel Norte", "Santo Angel Sur"]
+                    },
+                    'Santa Maria': {
+                        barangays: ["Adia", "Bagong Pook", "Bagumbayan", "Barangay I", "Barangay II", "Barangay III", "Barangay IV", "Bubukal", "Cabooan", "Calangay", "Cambuja", "Coralan", "Cueva", "Inayapan", "Jose Laurel, Sr.", "Jose Rizal", "Kayhakat", "Macasipac", "Masinao", "Mataling-ting", "Pao-o", "Parang ng Buho", "Santiago", "Talangka", "Tungkod"]
+                    },
+                    'Santa Rosa': {
+                        barangays: ["Aplaya", "Balibago", "Caingin", "Dila", "Dita", "Don Jose", "Ibaba", "Kanluran", "Labas", "Macabling", "Malitlit", "Malusak", "Market Area", "Pook", "Pulong Santa Cruz", "Santo Domingo", "Sinalhan", "Tagapo"]
+                    },
+                    'Siniloan': {
+                        barangays: ["Acevida", "Bagong Pag-asa", "Bagumbarangay", "Buhay", "G. Redor", "Gen. Luna", "Halayhayin", "J. Rizal", "Kapatalan", "Laguio", "Liyang", "Llavac", "Macatad", "Magsaysay", "Mayatba", "Mendiola", "P. Burgos", "Pandeno", "Salubungan", "Wawa"]
+                    },
+                    'Victoria': {
+                        barangays: ["Banca-banca", "Daniw", "Masapang", "Nanhaya", "Pagalangan", "San Benito", "San Felix", "San Francisco", "San Roque"]
+                    },
                 }
             }
         }
-        
-        // Switch address tab
-        function switchAddressTab(tabName) {
-            const tabDetails = document.getElementById('tabDetails');
-            const tabLocation = document.getElementById('tabLocation');
-            const contentDetails = document.getElementById('tabContentDetails');
-            const contentLocation = document.getElementById('tabContentLocation');
-            
-            if (tabName === 'details') {
-                // Show details tab
-                tabDetails.classList.add('active');
-                tabLocation.classList.remove('active');
-                contentDetails.style.display = 'block';
-                contentDetails.classList.add('active');
-                contentLocation.style.display = 'none';
-                contentLocation.classList.remove('active');
-            } else if (tabName === 'location') {
-                // Show location tab
-                tabLocation.classList.add('active');
-                tabDetails.classList.remove('active');
-                contentLocation.style.display = 'block';
-                contentLocation.classList.add('active');
-                contentDetails.style.display = 'none';
-                contentDetails.classList.remove('active');
-                
-                // Resize map when switching to location tab
-                setTimeout(() => {
-                    if (addressMap) {
-                        addressMap.invalidateSize();
-                    }
-                }, 200);
-            }
-        }
-        
-        // Toggle address map fullscreen
-        function toggleAddressMapFullscreen() {
-            const addressMapContainer = document.getElementById('addressMapContainer');
-            const fullscreenIcon = document.getElementById('addressMapFullscreenIcon');
-            
-            if (!addressMapContainer) return;
-            
-            if (addressMapContainer.classList.contains('fullscreen')) {
-                // Exit fullscreen
-                addressMapContainer.classList.remove('fullscreen');
-                if (fullscreenIcon) {
-                    fullscreenIcon.classList.remove('fa-compress');
-                    fullscreenIcon.classList.add('fa-expand');
-                }
-                // Trigger map resize
-                if (addressMap) {
-                    setTimeout(() => {
-                        addressMap.invalidateSize();
-                    }, 100);
-                }
-            } else {
-                // Enter fullscreen
-                addressMapContainer.classList.add('fullscreen');
-                if (fullscreenIcon) {
-                    fullscreenIcon.classList.remove('fa-expand');
-                    fullscreenIcon.classList.add('fa-compress');
-                }
-                // Trigger map resize
-                if (addressMap) {
-                    setTimeout(() => {
-                        addressMap.invalidateSize();
-                    }, 100);
-                }
-            }
-        }
-        
-        function updateCheckoutButton() {
-            const checkoutBtn = document.getElementById('checkoutBtn');
-            const cart = UserState.getCart();
-            const address = UserState.getDeliveryAddress();
-            const selectedItems = document.querySelectorAll('.item-checkbox-input:checked');
-            
-            if (checkoutBtn) {
-                // Disable if no address or no items selected
-                if (!address || selectedItems.length === 0 || cart.length === 0) {
-                    checkoutBtn.disabled = true;
-                } else {
-                    checkoutBtn.disabled = false;
-                }
-            }
-        }
-        
-        function openAddressModal() {
-            const modal = document.getElementById('addressModal');
-            if (!modal) {
-                console.error('Address modal not found');
-                return;
-            }
-            
-            const address = UserState.getDeliveryAddress();
-            
-            // Initialize location dropdowns first
-            initializeLocationDropdowns();
-            
-            // Re-initialize phone number restriction when modal opens
-            restrictPhoneNumberInput();
-            
-            // Reset map state
-            mapInitialized = false;
-            const mapPlaceholder = document.getElementById('mapPlaceholder');
-            const mapContainer = document.getElementById('mapContainer');
-            if (mapPlaceholder) mapPlaceholder.style.display = 'flex';
-            if (mapContainer) mapContainer.style.display = 'none';
-            
-            if (address) {
-                // Populate form with existing address
-                document.getElementById('fullName').value = address.fullName || '';
-                // Clean phone number to remove any non-numeric characters
-                const phoneNumber = (address.phoneNumber || '').replace(/[^0-9]/g, '');
-                document.getElementById('phoneNumber').value = formatPhonePrefill(phoneNumber);
-                document.getElementById('postalCode').value = address.postalCode || '';
-                document.getElementById('streetAddress').value = address.streetAddress || '';
-                
-                // Restore map coordinates if saved
-                if (address.latitude && address.longitude) {
-                    document.getElementById('latitude').value = address.latitude;
-                    document.getElementById('longitude').value = address.longitude;
-                    // Update visible display
-                    updateLocationDisplay(parseFloat(address.latitude), parseFloat(address.longitude));
-                } else {
-                    document.getElementById('latitude').value = '';
-                    document.getElementById('longitude').value = '';
-                    // Hide location display
-                    const locationDisplayGroup = document.getElementById('locationDisplayGroup');
-                    const locationHint = document.getElementById('locationHint');
-                    if (locationDisplayGroup) locationDisplayGroup.style.display = 'none';
-                    if (locationHint) locationHint.style.display = 'block';
-                }
-                
-                // Restore location if saved
-                if (address.region) {
-                    document.getElementById('region').value = address.region;
-                    updateProvinces();
-                    setTimeout(() => {
-                        if (address.province) {
-                            document.getElementById('province').value = address.province;
-                            updateCities();
-                            setTimeout(() => {
-                                if (address.city) {
-                                    document.getElementById('city').value = address.city;
-                                    updateBarangays();
-                                    setTimeout(() => {
-                                        if (address.barangay) {
-                                            document.getElementById('barangay').value = address.barangay;
-                                        }
-                                    }, 100);
-                                }
-                            }, 100);
-                        }
-                    }, 100);
-                }
-                
-                // Set label
-                document.querySelectorAll('.label-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                    if (btn.dataset.label === address.label) {
-                        btn.classList.add('active');
-                    }
-                });
-            } else {
-                // Reset form
-                document.getElementById('addressForm').reset();
-                document.getElementById('region').value = '';
-                document.getElementById('province').innerHTML = '<option value="">Select Province</option>';
-                document.getElementById('province').disabled = true;
-                document.getElementById('city').innerHTML = '<option value="">Select City/Municipality</option>';
-                document.getElementById('city').disabled = true;
-                document.getElementById('barangay').innerHTML = '<option value="">Select Barangay</option>';
-                document.getElementById('barangay').disabled = true;
-                document.querySelectorAll('.label-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.querySelector('.label-btn[data-label="home"]').classList.add('active');
-                
-                // Clear location display
-                clearLocation();
-            }
-            
-            // Add validation listeners using event delegation
-            const form = document.getElementById('addressForm');
-            if (form) {
-                // Use event delegation to handle all input/change events
-                form.addEventListener('input', function(e) {
-                    if (e.target.matches('input, select')) {
-                        if (e.target.checkValidity()) {
-                            validateField(e.target);
-                        }
-                    }
-                }, true);
-                form.addEventListener('change', function(e) {
-                    if (e.target.matches('input, select')) {
-                        validateField(e.target);
-                    }
-                }, true);
-            }
-            
-            // Show modal
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
-        }
-        
-        // Map variables
-        let map = null;
-        let marker = null;
-        let mapInitialized = false;
-        let popup = null;
-        let addressMap = null;
-        let addressMarker = null;
-        
-        // Initialize map
-        function initMap() {
-            const mapPlaceholder = document.getElementById('mapPlaceholder');
-            const mapContainer = document.getElementById('mapContainer');
-            const mapDiv = document.getElementById('map');
-            
-            if (!mapDiv) {
-                console.error('Map div not found');
-                return;
-            }
-            
-            // Check if Leaflet is loaded
-            if (!isMapReady()) {
-                alert('Map library is still loading. Please wait a moment and try again.');
-                return;
-            }
-            
-            // Hide placeholder, show map container
-            if (mapPlaceholder) mapPlaceholder.style.display = 'none';
-            if (mapContainer) mapContainer.style.display = 'block';
-            
-            // Show loading
-            const mapLoading = document.getElementById('mapLoading');
-            if (mapLoading) mapLoading.style.display = 'flex';
-            
-            // Initialize map after a short delay to ensure container is visible
-            setTimeout(() => {
-                try {
-                    if (!mapInitialized) {
-                        // Default center: Calauan, Laguna, Philippines
-                        const defaultCenter = [14.1500, 121.3167];
-                        
-                        // Check if we have saved coordinates
-                        const address = UserState.getDeliveryAddress();
-                        let center = defaultCenter;
-                        let zoom = 13;
-                        
-                        if (address && address.latitude && address.longitude) {
-                            center = [parseFloat(address.latitude), parseFloat(address.longitude)];
-                            zoom = 16;
-                        }
-                        
-                        // Initialize Leaflet Map
-                        map = L.map(mapDiv, {
-                            center: center,
-                            zoom: zoom,
-                            zoomControl: true
-                        });
-                        
-                        // Add OpenStreetMap tile layer
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                            maxZoom: 19
-                        }).addTo(map);
-                        
-                        // Custom marker icon (blue to match theme)
-                        const customIcon = L.icon({
-                            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-                            iconSize: [25, 41],
-                            iconAnchor: [12, 41],
-                            popupAnchor: [1, -34],
-                            shadowSize: [41, 41]
-                        });
-                        
-                        // Add marker if we have saved coordinates
-                        if (address && address.latitude && address.longitude) {
-                            const savedLat = parseFloat(address.latitude);
-                            const savedLng = parseFloat(address.longitude);
-                            
-                            marker = L.marker([savedLat, savedLng], {
-                                icon: customIcon,
-                                draggable: true
-                            }).addTo(map);
-                            
-                            // Add popup
-                            popup = L.popup().setContent('<div style="padding: 8px;"><strong>Your location</strong></div>');
-                            marker.bindPopup(popup).openPopup();
-                            
-                            // Update hidden inputs
-                            document.getElementById('latitude').value = savedLat;
-                            document.getElementById('longitude').value = savedLng;
-                            
-                            // Update visible display
-                            updateLocationDisplay(savedLat, savedLng);
-                            
-                            // Handle marker drag
-                            marker.on('dragend', function(e) {
-                                const position = marker.getLatLng();
-                                const lat = position.lat;
-                                const lng = position.lng;
-                                document.getElementById('latitude').value = lat;
-                                document.getElementById('longitude').value = lng;
-                                updateLocationDisplay(lat, lng);
-                            });
-                        }
-                        
-                        // Add click handler to set marker
-                        map.on('click', function(e) {
-                            const lat = e.latlng.lat;
-                            const lng = e.latlng.lng;
-                            
-                            // Remove existing marker
-                            if (marker) {
-                                map.removeLayer(marker);
-                            }
-                            
-                            // Add new marker
-                            marker = L.marker([lat, lng], {
-                                icon: customIcon,
-                                draggable: true
-                            }).addTo(map);
-                            
-                            // Add popup
-                            popup = L.popup().setContent('<div style="padding: 8px;"><strong>Your location</strong></div>');
-                            marker.bindPopup(popup).openPopup();
-                            
-                            // Update hidden inputs
-                            document.getElementById('latitude').value = lat;
-                            document.getElementById('longitude').value = lng;
-                            
-                            // Update visible display
-                            updateLocationDisplay(lat, lng);
-                            
-                            // Handle marker drag
-                            marker.on('dragend', function(e) {
-                                const position = marker.getLatLng();
-                                const newLat = position.lat;
-                                const newLng = position.lng;
-                                document.getElementById('latitude').value = newLat;
-                                document.getElementById('longitude').value = newLng;
-                                updateLocationDisplay(newLat, newLng);
-                            });
-                        });
-                        
-                        mapInitialized = true;
-                    }
-                    
-                    // Trigger resize to ensure map renders correctly
-                    setTimeout(() => {
-                        if (map) {
-                            map.invalidateSize();
-                        }
-                        if (mapLoading) mapLoading.style.display = 'none';
-                    }, 100);
-                } catch(error) {
-                    console.error('Error initializing map:', error);
-                    if (mapLoading) mapLoading.style.display = 'none';
-                    alert('Error loading map. Please try again.');
-                }
-            }, 50);
-        }
-        
-        // Get current location using HTML5 Geolocation API
-        function getCurrentLocation() {
-            if (!navigator.geolocation) {
-                alert('Geolocation is not supported by your browser');
-                return;
-            }
-            
-            // Ensure map is initialized first
-            const mapContainer = document.getElementById('mapContainer');
-            const mapPlaceholder = document.getElementById('mapPlaceholder');
-            
-            // If map is not visible, initialize it first
-            if (!mapInitialized || !mapContainer || mapContainer.style.display === 'none') {
-                if (mapPlaceholder && mapPlaceholder.style.display !== 'none') {
-                    // Map hasn't been opened yet, initialize it first
-                    initMap();
-                    // Wait for map to initialize before requesting location
-                    setTimeout(() => {
-                        requestLocation();
-                    }, 500);
-                    return;
-                }
-            }
-            
-            // Map is already initialized, request location immediately
-            requestLocation();
-        }
-        
-        // Request location (separate function for better control)
-        function requestLocation() {
-            const mapLoading = document.getElementById('mapLoading');
-            if (mapLoading) {
-                mapLoading.style.display = 'flex';
-                mapLoading.querySelector('span').textContent = 'Getting your location...';
-            }
-            
-            // Show visual feedback
-            const mapContainer = document.getElementById('mapContainer');
-            if (mapContainer) {
-                mapContainer.style.display = 'block';
-            }
-            
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    const accuracy = position.coords.accuracy; // Accuracy in meters
-                    
-                    console.log('Location retrieved successfully!');
-                    console.log('Latitude:', lat);
-                    console.log('Longitude:', lng);
-                    console.log('Location accuracy:', accuracy, 'meters');
-                    
-                    // Validate coordinates
-                    if (isNaN(lat) || isNaN(lng)) {
-                        console.error('Invalid coordinates received:', lat, lng);
-                        showNotification('Invalid location data received. Please try again.', 'error');
-                        if (mapLoading) mapLoading.style.display = 'none';
-                        return;
-                    }
-                    
-                    // Check if accuracy is reasonable (within 1000 meters / 1km)
-                    if (accuracy > 1000) {
-                        console.warn('Location accuracy is low:', accuracy, 'meters. This may not be your exact location.');
-                        // Still use it, but warn the user
-                        showNotification('Location accuracy is limited. The marker may not be exactly at your location. You can drag it to adjust.', 'warning');
-                    }
-                    
-                    // Ensure map container is visible
-                    const mapContainer = document.getElementById('mapContainer');
-                    const mapPlaceholder = document.getElementById('mapPlaceholder');
-                    if (mapPlaceholder) mapPlaceholder.style.display = 'none';
-                    if (mapContainer) mapContainer.style.display = 'block';
-                    
-                    // Ensure map is initialized
-                    if (!mapInitialized || !map) {
-                        console.log('Initializing map before setting location...');
-                        initMap();
-                        // Wait longer for mobile devices to ensure map is ready
-                        setTimeout(() => {
-                            setMapLocation(lat, lng);
-                        }, 1000);
-                    } else {
-                        setMapLocation(lat, lng);
-                    }
-                    
-                    if (mapLoading) {
-                        mapLoading.style.display = 'none';
-                    }
-                },
-                function(error) {
-                    console.error('Geolocation error:', error);
-                    if (mapLoading) {
-                        mapLoading.style.display = 'none';
-                    }
-                    
-                    let errorMsg = 'Unable to retrieve your location. ';
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
-                            errorMsg += 'Please allow location access in your browser settings.';
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            errorMsg += 'Location information is unavailable. Please check your GPS/Wi-Fi settings.';
-                            break;
-                        case error.TIMEOUT:
-                            errorMsg += 'Location request timed out. Please try again or check your internet connection.';
-                            break;
-                        default:
-                            errorMsg += 'An unknown error occurred. Error code: ' + error.code;
-                            break;
-                    }
-                    
-                    // Show notification instead of alert for better UX
-                    showNotification(errorMsg, 'error');
-                },
-                {
-                    enableHighAccuracy: true, // Request high accuracy GPS
-                    timeout: 30000, // Increased to 30 seconds to allow GPS to get accurate fix
-                    maximumAge: 0 // Force fresh location, don't use cached data
-                }
-            );
-        }
-        
-        // Set map location
-        function setMapLocation(lat, lng) {
-            console.log('setMapLocation called with:', lat, lng);
-            
-            // Update coordinates FIRST, even if map isn't ready
-            const latInput = document.getElementById('latitude');
-            const lngInput = document.getElementById('longitude');
-            if (latInput) {
-                latInput.value = lat;
-                console.log('Latitude input set to:', lat);
-            }
-            if (lngInput) {
-                lngInput.value = lng;
-                console.log('Longitude input set to:', lng);
-            }
-            
-            // Update visible display inputs
-            updateLocationDisplay(lat, lng);
-            
-            // Ensure map is initialized
-            if (!map || !mapInitialized) {
-                console.log('Map not ready, initializing...');
-                // Make sure map container is visible
-                const mapContainer = document.getElementById('mapContainer');
-                const mapPlaceholder = document.getElementById('mapPlaceholder');
-                if (mapPlaceholder) mapPlaceholder.style.display = 'none';
-                if (mapContainer) mapContainer.style.display = 'block';
-                
-                initMap();
-                // Wait longer for mobile devices
-                setTimeout(() => {
-                    setMapLocation(lat, lng);
-                }, 1000);
-                return;
-            }
-            
-            try {
-                // Custom marker icon (blue to match theme)
-                const customIcon = L.icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowSize: [41, 41]
-                });
-                
-                // Remove existing marker
-                if (marker) {
-                    map.removeLayer(marker);
-                }
-                
-                // Set map center and zoom
-                map.setView([lat, lng], 16);
-                console.log('Map view set to:', lat, lng);
-                
-                // Add new marker
-                marker = L.marker([lat, lng], {
-                    icon: customIcon,
-                    draggable: true
-                }).addTo(map);
-                console.log('Marker added to map');
-                
-                // Add popup
-                popup = L.popup().setContent('<div style="padding: 8px;"><strong>Your location</strong></div>');
-                marker.bindPopup(popup).openPopup();
-                
-                // Allow dragging marker
-                marker.on('dragend', function(e) {
-                    const position = marker.getLatLng();
-                    const newLat = position.lat;
-                    const newLng = position.lng;
-                    const latInput = document.getElementById('latitude');
-                    const lngInput = document.getElementById('longitude');
-                    if (latInput) latInput.value = newLat;
-                    if (lngInput) lngInput.value = newLng;
-                    updateLocationDisplay(newLat, newLng);
-                });
-                
-                // Trigger resize to ensure map renders correctly (important for mobile)
-                setTimeout(() => {
-                    if (map) {
-                        map.invalidateSize();
-                        console.log('Map size invalidated');
-                    }
-                }, 200);
-                
-                // Show success notification
-                showNotification('Location set successfully!', 'success');
-            } catch(error) {
-                console.error('Error setting map location:', error);
-                // Even if marker fails, coordinates are already set
-                showNotification('Location coordinates saved. You can manually adjust the marker on the map.', 'warning');
-            }
-        }
-        
-        let lastGeocodeLat = null;
-        let lastGeocodeLng = null;
-
-        async function autoFillAddressFromCoords(lat, lng) {
-            try {
-                // Throttle duplicate lookups
-                if (lastGeocodeLat === lat && lastGeocodeLng === lng) return;
-                lastGeocodeLat = lat;
-                lastGeocodeLng = lng;
-
-                const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`);
-                if (!resp.ok) return;
-                const data = await resp.json();
-                const addr = data.address || {};
+    }
+};
 
                 const province = (addr.state || addr.region || '').toLowerCase().includes('laguna') ? 'Laguna' : null;
                 if (!province) {
