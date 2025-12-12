@@ -392,7 +392,9 @@
             border: 1px solid rgba(14, 165, 233, 0.1);
         }
         
-        .product-card:hover {
+        .product-card:hover,
+        .product-card:focus-within,
+        .product-card.force-hover {
             transform: translateY(-12px) scale(1.02);
             box-shadow: 0 20px 40px rgba(14, 165, 233, 0.15), 0 0 0 1px rgba(14, 165, 233, 0.2);
             border-color: rgba(14, 165, 233, 0.3);
@@ -542,6 +544,17 @@
         
         .btn-add-cart:focus {
             outline: none;
+        }
+        
+        /* Prevent button from breaking card hover state */
+        .btn-add-cart:active {
+            pointer-events: auto !important;
+        }
+        
+        /* Ensure card maintains hover when button is interacted with */
+        .product-card:hover .btn-add-cart,
+        .product-card:focus-within .btn-add-cart {
+            pointer-events: auto !important;
         }
         
         .btn-add-cart i {
@@ -1115,7 +1128,7 @@
                                     <button type="button" class="quantity-btn increase" onclick="increaseQuantity(1)">+</button>
                                 </div>
                             </div>
-                            <button type="button" class="btn-add-cart" onclick="addToCart(1, '5-Gallon Refill', 25)">
+                            <button type="button" class="btn-add-cart" onclick="return addToCart(1, '5-Gallon Refill', 25, event)">
                                 <i class="fas fa-cart-plus"></i>
                                 <span>Add to Cart</span>
                             </button>
@@ -1142,7 +1155,7 @@
                                     <button type="button" class="quantity-btn increase" onclick="increaseQuantity(2)">+</button>
                                 </div>
                             </div>
-                            <button type="button" class="btn-add-cart" onclick="addToCart(2, 'New 5-Gallon + Container', 150)">
+                            <button type="button" class="btn-add-cart" onclick="return addToCart(2, 'New 5-Gallon + Container', 150, event)">
                                 <i class="fas fa-cart-plus"></i>
                                 <span>Add to Cart</span>
                             </button>
@@ -1169,7 +1182,7 @@
                                     <button type="button" class="quantity-btn increase" onclick="increaseQuantity(3)">+</button>
                                 </div>
                             </div>
-                            <button type="button" class="btn-add-cart" onclick="addToCart(3, '1-Liter Bottle (12-pack)', 120)">
+                            <button type="button" class="btn-add-cart" onclick="return addToCart(3, '1-Liter Bottle (12-pack)', 120, event)">
                                 <i class="fas fa-cart-plus"></i>
                                 <span>Add to Cart</span>
                             </button>
@@ -1196,7 +1209,7 @@
                                     <button type="button" class="quantity-btn increase" onclick="increaseQuantity(4)">+</button>
                                 </div>
                             </div>
-                            <button type="button" class="btn-add-cart" onclick="addToCart(4, '500ml Bottle (24-pack)', 100)">
+                            <button type="button" class="btn-add-cart" onclick="return addToCart(4, '500ml Bottle (24-pack)', 100, event)">
                                 <i class="fas fa-cart-plus"></i>
                                 <span>Add to Cart</span>
                             </button>
@@ -1223,7 +1236,7 @@
                                     <button type="button" class="quantity-btn increase" onclick="increaseQuantity(5)">+</button>
                                 </div>
                             </div>
-                            <button type="button" class="btn-add-cart" onclick="addToCart(5, 'Bring Your Jug (Refill)', 20)">
+                            <button type="button" class="btn-add-cart" onclick="return addToCart(5, 'Bring Your Jug (Refill)', 20, event)">
                                 <i class="fas fa-cart-plus"></i>
                                 <span>Add to Cart</span>
                             </button>
@@ -1266,7 +1279,13 @@
             }
         }
         
-        function addToCart(productId, productName, price) {
+        function addToCart(productId, productName, price, event) {
+            // Prevent any default behavior that might interfere
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
             cart = UserState.getCart();
             const quantityInput = document.getElementById('qty-' + productId);
             const quantity = quantityInput ? parseInt(quantityInput.value) || 1 : 1;
@@ -1294,6 +1313,9 @@
             if (quantityInput) {
                 quantityInput.value = 1;
             }
+            
+            // Return false to prevent any further event propagation
+            return false;
         }
         
         // Search functionality
@@ -1413,6 +1435,32 @@
         // Initialize
         updateCartCount();
         loadStats();
+        
+        // Maintain card hover state when button is clicked to allow continuous clicking
+        document.addEventListener('DOMContentLoaded', function() {
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach(card => {
+                const button = card.querySelector('.btn-add-cart');
+                if (button) {
+                    // Keep card hovered when button is active/clicked
+                    button.addEventListener('mousedown', function(e) {
+                        card.classList.add('force-hover');
+                    });
+                    button.addEventListener('mouseup', function(e) {
+                        // Don't remove force-hover immediately to allow rapid clicks
+                        setTimeout(() => {
+                            if (!card.matches(':hover')) {
+                                card.classList.remove('force-hover');
+                            }
+                        }, 100);
+                    });
+                    // Remove force-hover when mouse leaves card
+                    card.addEventListener('mouseleave', function() {
+                        card.classList.remove('force-hover');
+                    });
+                }
+            });
+        });
         
         // Navbar scroll effect
         // Navbar scroll effect (only shadow, no size changes)
