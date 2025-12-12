@@ -1690,13 +1690,28 @@
                     window.updateOrderCount();
                 }
                 
-                // Preserve the currently viewed order if still present (priority: stored -> current)
-                let targetOrderId = storedOrderId || currentOrderId;
-                if (targetOrderId && allOrders.length > 0) {
-                    const foundIndex = allOrders.findIndex(o => String(o.id) === String(targetOrderId));
-                    currentIndex = foundIndex >= 0 ? foundIndex : 0;
-                } else {
+                // Check if redirecting from payment - if so, show latest order
+                const urlParams = new URLSearchParams(window.location.search);
+                const fromPayment = urlParams.get('from_payment') === 'true' || sessionStorage.getItem('from_payment') === 'true';
+                
+                if (fromPayment) {
+                    // Clear the flag after using it
+                    urlParams.delete('from_payment');
+                    sessionStorage.removeItem('from_payment');
+                    // Update URL without the parameter (without page reload)
+                    const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+                    window.history.replaceState({}, '', newUrl);
+                    // Show latest order (index 0, since orders are sorted newest first)
                     currentIndex = 0;
+                } else {
+                    // Preserve the currently viewed order if still present (priority: stored -> current)
+                    let targetOrderId = storedOrderId || currentOrderId;
+                    if (targetOrderId && allOrders.length > 0) {
+                        const foundIndex = allOrders.findIndex(o => String(o.id) === String(targetOrderId));
+                        currentIndex = foundIndex >= 0 ? foundIndex : 0;
+                    } else {
+                        currentIndex = 0;
+                    }
                 }
 
                 // Ensure index is valid

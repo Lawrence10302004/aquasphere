@@ -2055,9 +2055,12 @@
                     successModal.classList.add('show');
                 }, 10);
                 
-                // Redirect after 3 seconds
+                // Redirect after 3 seconds with flag to show latest order
                 setTimeout(() => {
-                    window.location.href = 'orders.html';
+                    // Set flag in sessionStorage as backup
+                    sessionStorage.setItem('from_payment', 'true');
+                    // Redirect with URL parameter
+                    window.location.href = 'orders.html?from_payment=true';
                 }, 3000);
             }
         }
