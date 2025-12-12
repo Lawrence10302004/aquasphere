@@ -1507,6 +1507,11 @@
             
             const confirmPasswordEl = document.getElementById('confirmPassword');
             if (confirmPasswordEl) {
+                confirmPasswordEl.addEventListener('focus', function() {
+                    const confirmPasswordError = document.getElementById('confirmPassword-error');
+                    confirmPasswordError.textContent = 'Min 8 chars with upper, lower, number, special.';
+                    confirmPasswordError.style.display = 'block';
+                });
                 confirmPasswordEl.addEventListener('input', function() {
                     const password = document.getElementById('newPassword').value;
                     const confirmPassword = this.value;
@@ -1527,14 +1532,18 @@
                     
                     // Validate confirm password match
                     if (confirmPassword) {
-                        if (password && password !== confirmPassword) {
+                        if (!strongPasswordRegex.test(confirmPassword)) {
+                            confirmPasswordError.textContent = 'Min 8 chars with upper, lower, number, special.';
+                            confirmPasswordError.style.display = 'block';
+                        } else if (password && password !== confirmPassword) {
                             confirmPasswordError.textContent = 'Passwords do not match.';
                             confirmPasswordError.style.display = 'block';
                         } else {
                             confirmPasswordError.style.display = 'none';
                         }
                     } else {
-                        confirmPasswordError.style.display = 'none';
+                        confirmPasswordError.textContent = 'Min 8 chars with upper, lower, number, special.';
+                        confirmPasswordError.style.display = 'block';
                     }
                 });
             }
@@ -2019,7 +2028,7 @@
                                     <i class="fas fa-eye" id="confirmPasswordIcon"></i>
                                 </button>
                             </div>
-                            <div class="custom-error" id="confirmPassword-error" style="display: none;">Confirm password is required.</div>
+                            <div class="custom-error" id="confirmPassword-error" style="display: none;">Min 8 chars with upper, lower, number, special.</div>
                         </div>
                         
                         <div class="d-grid">
