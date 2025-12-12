@@ -1935,6 +1935,14 @@
                 allValid = validatePasswordSameAsCurrent() && allValid;
             }
             
+            // Check if there are any validation errors (fields with error class or form-group.error)
+            if (allValid) {
+                const hasErrors = document.querySelectorAll('.form-group.error, input.error, select.error').length > 0;
+                if (hasErrors) {
+                    allValid = false;
+                }
+            }
+            
             // Check if there are any changes from original values
             if (allValid && typeof originalProfileData !== 'undefined' && Object.keys(originalProfileData).length > 0) {
                 const currentUsername = (document.getElementById('profileUsername').value || '').trim();
@@ -2446,8 +2454,9 @@
                         }, 5000);
                     } else {
                         showNotification('Profile updated successfully!', 'success');
+                        // Reload the page to show updated values
                         setTimeout(() => {
-                            window.location.href = 'dashboard.html';
+                            window.location.reload();
                         }, 1500);
                     }
                 } else {
@@ -2509,8 +2518,10 @@
                         showNotification(data.message || 'Failed to update profile. Please try again.', 'error');
                     }
                     
+                    // Re-check validation after displaying errors to disable button if errors exist
+                    checkProfileRequiredFields();
+                    
                     if (updateBtn) {
-                        updateBtn.disabled = false;
                         updateBtn.textContent = 'Save Changes';
                     }
                 }
@@ -2519,8 +2530,10 @@
                 console.error('Error updating profile:', error);
                 showNotification('An error occurred while updating your profile. Please try again.', 'error');
                 
+                // Re-check validation to disable button if errors exist
+                checkProfileRequiredFields();
+                
                 if (updateBtn) {
-                    updateBtn.disabled = false;
                     updateBtn.textContent = 'Save Changes';
                 }
             });
