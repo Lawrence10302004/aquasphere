@@ -1774,16 +1774,38 @@
                 opacity: 0;
                 transition: all 0.3s ease-in-out;
             `;
+            const row = document.createElement('div');
+            row.className = 'd-flex align-items-center justify-content-between';
             
-            feedbackContainer.innerHTML = `
-                <div class="d-flex align-items-center justify-content-between">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-check-circle me-2" style="color: #059669; font-size: 16px;"></i>
-                        <span style="color: #0c4a6e; font-size: 14px; font-weight: 400;">${message}</span>
-                    </div>
-                    <button type="button" class="btn-close" aria-label="Close" onclick="removeFeedbackContainer()" style="color: #6b7280; font-size: 14px;"></button>
-                </div>
-            `;
+            const left = document.createElement('div');
+            left.className = 'd-flex align-items-center';
+            
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-check-circle me-2';
+            icon.style.color = '#059669';
+            icon.style.fontSize = '16px';
+            
+            const text = document.createElement('span');
+            text.style.color = '#0c4a6e';
+            text.style.fontSize = '14px';
+            text.style.fontWeight = '400';
+            text.textContent = message;
+            
+            left.appendChild(icon);
+            left.appendChild(text);
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.type = 'button';
+            closeBtn.className = 'btn-close';
+            closeBtn.setAttribute('aria-label', 'Close');
+            closeBtn.style.color = '#6b7280';
+            closeBtn.style.fontSize = '14px';
+            closeBtn.addEventListener('click', removeFeedbackContainer);
+            
+            row.appendChild(left);
+            row.appendChild(closeBtn);
+            
+            feedbackContainer.appendChild(row);
             
             const buttonContainer = document.querySelector('#otpVerificationForm .d-grid');
             if (buttonContainer) {
