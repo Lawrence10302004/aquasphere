@@ -5,6 +5,7 @@
 
 header('Content-Type: application/json');
 require_once '../database.php';
+require_once '../sanitize.php';
 
 // Check if user is admin (you should implement proper session/auth check)
 // For now, we'll just return the settings

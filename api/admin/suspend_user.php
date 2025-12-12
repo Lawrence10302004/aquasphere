@@ -14,6 +14,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once '../database.php';
+require_once '../sanitize.php';
 require_once '../email_service.php';
 
 // Admin check
@@ -29,10 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$input = json_decode(file_get_contents('php://input'), true);
-$user_id = intval($input['user_id'] ?? 0);
-$action = $input['action'] ?? '';
-$reason = trim($input['reason'] ?? '');
+$input = sanitize_array_recursive(json_decode(file_get_contents('php://input'), true));
+$user_id = sanitize_int($input['user_id'] ?? 0);
+$action = sanitize_string($input['action'] ?? '', 32);
+$reason = sanitize_string($input['reason'] ?? '', 1024);
 
 if ($user_id <= 0) {
     echo json_encode(['success' => false, 'message' => 'Valid user_id is required']);

@@ -15,6 +15,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once '../database.php';
+require_once '../sanitize.php';
 
 // Check if user is admin
 if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
@@ -31,16 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Get JSON input
-$input = json_decode(file_get_contents('php://input'), true);
+$input = sanitize_array_recursive(json_decode(file_get_contents('php://input'), true));
 
-$user_id = intval($input['user_id'] ?? 0);
-$first_name = trim($input['first_name'] ?? '');
-$last_name = trim($input['last_name'] ?? '');
-$email = trim($input['email'] ?? '');
-$gender = trim($input['gender'] ?? '');
-$date_of_birth = trim($input['date_of_birth'] ?? '');
-$is_admin = isset($input['is_admin']) ? intval($input['is_admin']) : null;
-$new_password = trim($input['new_password'] ?? '');
+$user_id = sanitize_int($input['user_id'] ?? 0);
+$first_name = sanitize_string($input['first_name'] ?? '', 128);
+$last_name = sanitize_string($input['last_name'] ?? '', 128);
+$email = sanitize_email($input['email'] ?? '', 128);
+$gender = sanitize_string($input['gender'] ?? '', 32);
+$date_of_birth = sanitize_string($input['date_of_birth'] ?? '', 32);
+$is_admin = isset($input['is_admin']) ? sanitize_int($input['is_admin']) : null;
+$new_password = sanitize_string($input['new_password'] ?? '', 255);
 
 if ($user_id <= 0) {
     echo json_encode(['success' => false, 'message' => 'Valid user_id is required']);

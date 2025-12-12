@@ -15,6 +15,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once '../database.php';
+require_once '../sanitize.php';
 
 // Check if user is admin
 if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
@@ -28,10 +29,10 @@ init_db();
 $conn = get_db_connection();
 
 // Get filter parameters
-$status = $_GET['status'] ?? '';
-$search = $_GET['search'] ?? '';
-$page = intval($_GET['page'] ?? 1);
-$limit = intval($_GET['limit'] ?? 10);
+$status = sanitize_string($_GET['status'] ?? '', 64);
+$search = sanitize_string($_GET['search'] ?? '', 255);
+$page = max(1, sanitize_int($_GET['page'] ?? 1));
+$limit = max(1, sanitize_int($_GET['limit'] ?? 10));
 $offset = ($page - 1) * $limit;
 
 // Build where clause

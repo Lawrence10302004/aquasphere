@@ -15,6 +15,7 @@ ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
 require_once '../database.php';
+require_once '../sanitize.php';
 
 // Check if user is admin (you should implement proper session/auth check)
 // For now, we'll just save the settings
@@ -25,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$data = json_decode(file_get_contents('php://input'), true);
+$data = sanitize_array_recursive(json_decode(file_get_contents('php://input'), true));
 
 if (!$data) {
     http_response_code(400);
