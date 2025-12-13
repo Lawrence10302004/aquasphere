@@ -23,7 +23,6 @@ async function loadNavbar() {
         // Load all badges immediately (no delays) - similar to dashboard.html and cart.html
         // Use a flag to ensure badges only load once per page
         if (!window.__navbarBadgesLoaded) {
-            window.__navbarBadgesLoaded = true;
             (async () => {
                 // Load cart count immediately
                 await updateCartCount();
@@ -36,6 +35,9 @@ async function loadNavbar() {
                 
                 // Load full notifications in background (for dropdown)
                 loadNotifications();
+                
+                // Set flag AFTER badges are loaded
+                window.__navbarBadgesLoaded = true;
             })();
         }
 
