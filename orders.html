@@ -1872,7 +1872,7 @@
                         <div class="order-info">
                             <h3>Order #${order.id}</h3>
                             <p><i class="fas fa-calendar me-1"></i> ${formatDate(order.order_date)}</p>
-                            ${order.delivery_date_range ? `<p style="margin-top: 0.25rem; color: #64748b; font-size: 0.875rem;"><i class="fas fa-truck me-1"></i> Estimated delivery: ${escapeHtml(order.delivery_date_range)}</p>` : ''}
+                            ${order.delivery_date_range ? `<p style="margin-top: 0.5rem; color: rgba(255, 255, 255, 0.95); font-size: 0.9rem; font-weight: 600; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 0.4rem 0.75rem; border-radius: 12px; display: inline-block; border: 1px solid rgba(255, 255, 255, 0.2);"><i class="fas fa-truck me-1"></i> Estimated delivery: ${escapeHtml(order.delivery_date_range)}</p>` : ''}
                         </div>
                         <div class="order-status-badge ${status}">${statusLabel}</div>
                     </div>
