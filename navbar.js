@@ -145,8 +145,16 @@ function updateOrderCount() {
     // Try to get badge element - retry if not found (navbar might still be loading)
     const ordersCountEl = document.getElementById('ordersCount');
     if (!ordersCountEl) {
-        // Retry after a short delay if element doesn't exist yet
-        setTimeout(updateOrderCount, 100);
+        // Retry immediately if element doesn't exist yet (navbar still loading)
+        // Use requestAnimationFrame for smooth retry without blocking
+        requestAnimationFrame(() => {
+            if (document.getElementById('ordersCount')) {
+                updateOrderCount();
+            } else {
+                // Fallback: retry after a very short delay if still not found
+                setTimeout(updateOrderCount, 50);
+            }
+        });
         return;
     }
     
@@ -340,7 +348,18 @@ function loadNotifications(force = false) {
     const badge = document.getElementById('notificationCount');
     const list = document.getElementById('notificationList');
     const wrapper = document.getElementById('navNotificationsWrapper');
-    if (!list || !wrapper) return;
+    if (!list || !wrapper) {
+        // Retry immediately if elements don't exist yet (navbar still loading)
+        requestAnimationFrame(() => {
+            if (document.getElementById('notificationList') && document.getElementById('navNotificationsWrapper')) {
+                loadNotifications(force);
+            } else {
+                // Fallback: retry after a very short delay if still not found
+                setTimeout(() => loadNotifications(force), 50);
+            }
+        });
+        return;
+    }
 
     fetch('api/get_notifications.php?limit=200')
         .then(resp => {
