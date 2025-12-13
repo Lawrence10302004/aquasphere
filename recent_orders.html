@@ -227,6 +227,55 @@
             margin: 0;
         }
         
+        .order-summary {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .summary-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0369a1;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            color: #475569;
+        }
+        
+        .summary-row.total {
+            border-top: 2px solid #f1f5f9;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0369a1;
+        }
+        
+        .summary-label {
+            font-weight: 500;
+        }
+        
+        .summary-value {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        
+        .summary-row.total .summary-value {
+            color: #0369a1;
+            font-size: 1.5rem;
+        }
+        
         .order-total-section {
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             border-radius: 16px;
@@ -885,8 +934,19 @@
             const items = Array.isArray(order.items) ? order.items : [];
             const status = (order.status || '').toLowerCase();
             const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
-            const total = parseFloat(order.total_amount || 0).toFixed(2);
+            const totalAmount = parseFloat(order.total_amount || 0);
             const date = formatDate(order.order_date);
+
+            // Calculate subtotal from items
+            const subtotal = items.reduce((sum, item) => {
+                const itemSubtotal = parseFloat(item?.subtotal || 0);
+                return sum + (isFinite(itemSubtotal) ? itemSubtotal : 0);
+            }, 0);
+            
+            // Use saved delivery_fee from order, or calculate as fallback
+            const deliveryFee = order.delivery_fee !== null && order.delivery_fee !== undefined 
+                ? parseFloat(order.delivery_fee) 
+                : Math.max(0, totalAmount - subtotal);
 
             const itemsHtml = items.map(item => `
                 <div class="item-row">
@@ -920,10 +980,22 @@
                             </div>
                             ${itemsHtml || '<p class="text-muted mb-0">No items found.</p>'}
                         </div>
-                        <div class="order-total-section">
-                            <div class="order-total">
-                                <span class="total-label">Total Amount</span>
-                                <span class="total-amount">₱${total}</span>
+                        <div class="order-summary">
+                            <div class="summary-title">
+                                <i class="fas fa-receipt"></i>
+                                Order Summary
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Subtotal</span>
+                                <span class="summary-value">₱${subtotal.toFixed(2)}</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Delivery Fee</span>
+                                <span class="summary-value">₱${deliveryFee.toFixed(2)}</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span class="summary-label">Total</span>
+                                <span class="summary-value">₱${totalAmount.toFixed(2)}</span>
                             </div>
                         </div>
                     </div>
