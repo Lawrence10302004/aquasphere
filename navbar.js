@@ -599,8 +599,8 @@ function fetchNotificationsInBackground() {
                     // Ignore localStorage errors
                 }
                 
-                // Only update if not yet initialized (prevent multiple updates)
-                if (!badgeEl.dataset.initialized) {
+                // Only update if badges haven't been loaded yet
+                if (!window.__navbarBadgesLoaded) {
                     badgeEl.textContent = totalCount;
                     // Always set display explicitly - use 'flex' when count > 0, 'none' when 0
                     badgeEl.style.display = totalCount > 0 ? 'flex' : 'none';
@@ -610,7 +610,6 @@ function fetchNotificationsInBackground() {
                         badgeEl.style.visibility = 'visible';
                         badgeEl.style.opacity = '1';
                     }
-                    badgeEl.dataset.initialized = 'true';
                 }
             }
         })
