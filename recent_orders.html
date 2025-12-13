@@ -973,6 +973,12 @@
                                 <span class="summary-label"><i class="fas fa-credit-card me-1"></i>Payment Method</span>
                                 <span class="summary-value">${escapeHtml(order.payment_method || 'COD')}</span>
                             </div>
+                            ${order.delivered_at ? `
+                            <div class="summary-row" style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #cbd5e1;">
+                                <span class="summary-label"><i class="fas fa-check-circle me-1"></i>Delivered On</span>
+                                <span class="summary-value">${formatDate(order.delivered_at)}</span>
+                            </div>
+                            ` : ''}
                         </div>
                     </div>
                 </div>

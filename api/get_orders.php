@@ -108,7 +108,11 @@ if ($GLOBALS['use_postgres']) {
             o.payment_method,
             o.status,
             o.created_at,
-            o.updated_at
+            o.updated_at,
+            (SELECT created_at 
+             FROM order_status_history 
+             WHERE order_id = o.id AND status = 'delivered' 
+             ORDER BY created_at DESC LIMIT 1) as delivered_at
         FROM orders o
         WHERE o.user_id = ?
         ORDER BY o.order_date DESC
