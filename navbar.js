@@ -295,6 +295,15 @@ function clearNotificationBadge() {
         badge.style.display = 'none';
         badge.textContent = '0';
     }
+    
+    // Clear cache when user manually clears notifications
+    try {
+        localStorage.setItem('notificationCount', '0');
+        localStorage.setItem('notificationCountTimestamp', String(Date.now()));
+    } catch (e) {
+        // Ignore localStorage errors
+    }
+    
     __notifData = [];
     __notifPage = 1;
     // Clear saved page from localStorage
