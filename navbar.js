@@ -505,6 +505,15 @@ function fetchNotificationsInBackground() {
                 const totalCount = clearedAt > 0
                     ? filteredCount
                     : (typeof apiTotal === 'number' && apiTotal >= 0 ? apiTotal : filteredCount);
+                
+                // Cache the count in localStorage for fast loading next time
+                try {
+                    localStorage.setItem('notificationCount', String(totalCount));
+                    localStorage.setItem('notificationCountTimestamp', String(Date.now()));
+                } catch (e) {
+                    // Ignore localStorage errors
+                }
+                
                 badge.textContent = totalCount;
                 badge.style.display = totalCount > 0 ? 'flex' : 'none';
             }
