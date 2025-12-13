@@ -1340,6 +1340,74 @@
         // Variable to store payment monitoring interval (if needed)
         let paymentMonitoringInterval = null;
         
+        // Store ML prediction results
+        let mlPrediction = {
+            deliveryTimeMinutes: null,
+            shippingFee: null,
+            deliveryTimeHours: null
+        };
+        
+        // Predict delivery time and shipping fee
+        async function predictDeliveryTime() {
+            const deliveryAddress = UserState.getDeliveryAddress();
+            const checkoutItems = UserState.getCheckoutItems();
+            
+            // Check if we have address and items
+            if (!deliveryAddress || !deliveryAddress.latitude || !deliveryAddress.longitude) {
+                mlPrediction = { deliveryTimeMinutes: null, shippingFee: null, deliveryTimeHours: null };
+                loadOrderSummary();
+                return;
+            }
+            
+            // Calculate total order size
+            let orderSize = 0;
+            checkoutItems.forEach(item => {
+                orderSize += item.quantity;
+            });
+            
+            if (orderSize === 0) {
+                mlPrediction = { deliveryTimeMinutes: null, shippingFee: null, deliveryTimeHours: null };
+                loadOrderSummary();
+                return;
+            }
+            
+            try {
+                const now = new Date();
+                const timeOfOrder = now.getHours();
+                const dayOfWeek = (now.getDay() + 6) % 7;
+                
+                const response = await fetch('api/predict_delivery.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        latitude: parseFloat(deliveryAddress.latitude),
+                        longitude: parseFloat(deliveryAddress.longitude),
+                        municipality: deliveryAddress.city || '',
+                        barangay: deliveryAddress.barangay || '',
+                        postal_code: deliveryAddress.postalCode || '',
+                        order_size: orderSize,
+                        time_of_order: timeOfOrder,
+                        day_of_week: dayOfWeek
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        mlPrediction = {
+                            deliveryTimeMinutes: data.delivery_time_minutes,
+                            shippingFee: data.shipping_fee,
+                            deliveryTimeHours: data.delivery_time_hours
+                        };
+                    }
+                }
+            } catch (error) {
+                console.error('Error predicting delivery time:', error);
+            }
+            
+            loadOrderSummary();
+        }
+        
         // Load order summary from checkout items
         async function loadOrderSummary() {
             await UserState.loadState();
@@ -1358,7 +1426,10 @@
                 subtotal += item.price * item.quantity;
             });
             
-            const deliveryFee = subtotal > 0 ? 50 : 0;
+            // Use predicted shipping fee if available, otherwise default to 50
+            const deliveryFee = mlPrediction.shippingFee !== null && subtotal > 0 
+                ? mlPrediction.shippingFee 
+                : (subtotal > 0 ? 50 : 0);
             const total = subtotal + deliveryFee;
             
             document.getElementById('orderSubtotal').textContent = `₱${subtotal.toFixed(2)}`;
@@ -1425,7 +1496,10 @@
             }
             
             const subtotal = calculateSubtotal(checkoutItems);
-            const deliveryFee = 50;
+            // Use predicted shipping fee if available, otherwise default to 50
+            const deliveryFee = mlPrediction.shippingFee !== null && subtotal > 0 
+                ? mlPrediction.shippingFee 
+                : 50;
             const total = subtotal + deliveryFee;
             
             // Disable button during processing
@@ -2113,7 +2187,7 @@
             // Reset modal flag on fresh page load
             paymentErrorModalShown = false;
             
-            loadOrderSummary();
+            predictDeliveryTime();
             
             // Check for payment redirect once on page load (with delay to ensure state is loaded)
             setTimeout(() => {

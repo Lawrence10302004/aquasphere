@@ -451,6 +451,20 @@
             color: #475569;
         }
         
+        .summary-row#deliveryTimeRow {
+            color: #0369a1;
+            font-size: 0.95rem;
+        }
+        
+        .summary-row#deliveryTimeRow .summary-label {
+            color: #0369a1;
+        }
+        
+        .summary-row#deliveryTimeRow .summary-value {
+            color: #0369a1;
+            font-weight: 600;
+        }
+        
         .summary-row.total {
             border-top: 2px solid #f1f5f9;
             margin-top: 0.75rem;
@@ -2159,6 +2173,13 @@
                                 <span class="summary-value" id="subtotal">₱0.00</span>
                             </div>
                             
+                            <div class="summary-row" id="deliveryTimeRow" style="display: none;">
+                                <span class="summary-label">
+                                    <i class="fas fa-clock me-1"></i>Estimated Delivery
+                                </span>
+                                <span class="summary-value" id="deliveryTime">--</span>
+                            </div>
+                            
                             <div class="summary-row">
                                 <span class="summary-label">Delivery Fee</span>
                                 <span class="summary-value" id="deliveryFee">₱50.00</span>
@@ -2881,6 +2902,9 @@
             // Defer server save (non-blocking)
             UserState.setCart(cart);
             
+            // Predict delivery time when quantity changes
+            predictDeliveryTime();
+            
             return false;
         }
         
@@ -2902,6 +2926,8 @@
                 UserState.setCart(cart);
                 updateCartCount(); // Update navbar count immediately
                 loadCart();
+                // Predict delivery time when quantity changes
+                predictDeliveryTime();
             }
         }
         
@@ -2919,6 +2945,108 @@
             }, 'Remove this item from cart?');
         }
         
+        // Store ML prediction results
+        let mlPrediction = {
+            deliveryTimeMinutes: null,
+            shippingFee: null,
+            deliveryTimeHours: null
+        };
+        
+        // Debounce prediction calls
+        let predictionTimeout = null;
+        
+        // Call ML prediction API (with debouncing)
+        async function predictDeliveryTime() {
+            // Clear existing timeout
+            if (predictionTimeout) {
+                clearTimeout(predictionTimeout);
+            }
+            
+            // Debounce: wait 500ms before making API call
+            predictionTimeout = setTimeout(async () => {
+                await executePrediction();
+            }, 500);
+        }
+        
+        // Execute the actual prediction
+        async function executePrediction() {
+            const address = UserState.getDeliveryAddress();
+            const cart = UserState.getCart();
+            
+            // Check if we have address and cart items
+            if (!address || !address.latitude || !address.longitude) {
+                // Reset to default if no address
+                mlPrediction = { deliveryTimeMinutes: null, shippingFee: null, deliveryTimeHours: null };
+                updateSummary();
+                return;
+            }
+            
+            // Calculate total order size (number of bottles)
+            let orderSize = 0;
+            selectedItems.forEach(itemId => {
+                const item = cart.find(i => i.id === itemId);
+                if (item) {
+                    orderSize += item.quantity;
+                }
+            });
+            
+            if (orderSize === 0) {
+                // Reset to default if no items selected
+                mlPrediction = { deliveryTimeMinutes: null, shippingFee: null, deliveryTimeHours: null };
+                updateSummary();
+                return;
+            }
+            
+            try {
+                // Get current time and day of week
+                const now = new Date();
+                const timeOfOrder = now.getHours();
+                const dayOfWeek = (now.getDay() + 6) % 7; // Convert to Monday=0, Sunday=6
+                
+                // Call prediction API
+                const response = await fetch('api/predict_delivery.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        latitude: parseFloat(address.latitude),
+                        longitude: parseFloat(address.longitude),
+                        municipality: address.city || '',
+                        barangay: address.barangay || '',
+                        postal_code: address.postalCode || '',
+                        order_size: orderSize,
+                        time_of_order: timeOfOrder,
+                        day_of_week: dayOfWeek
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Prediction API failed');
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    mlPrediction = {
+                        deliveryTimeMinutes: data.delivery_time_minutes,
+                        shippingFee: data.shipping_fee,
+                        deliveryTimeHours: data.delivery_time_hours
+                    };
+                } else {
+                    // Fallback to default
+                    mlPrediction = { deliveryTimeMinutes: null, shippingFee: null, deliveryTimeHours: null };
+                }
+            } catch (error) {
+                console.error('Error predicting delivery time:', error);
+                // Fallback to default
+                mlPrediction = { deliveryTimeMinutes: null, shippingFee: null, deliveryTimeHours: null };
+            }
+            
+            // Update summary with new prediction
+            updateSummary();
+        }
+        
         // Update summary (works across all pages)
         function updateSummary() {
             const cart = UserState.getCart();
@@ -2932,12 +3060,46 @@
                 }
             });
             
-            const deliveryFee = subtotal > 0 ? 50 : 0;
+            // Use predicted shipping fee if available, otherwise default to 50
+            const deliveryFee = mlPrediction.shippingFee !== null && subtotal > 0 
+                ? mlPrediction.shippingFee 
+                : (subtotal > 0 ? 50 : 0);
             const total = subtotal + deliveryFee;
             
             document.getElementById('subtotal').textContent = `₱${subtotal.toFixed(2)}`;
             document.getElementById('deliveryFee').textContent = `₱${deliveryFee.toFixed(2)}`;
             document.getElementById('total').textContent = `₱${total.toFixed(2)}`;
+            
+            // Update delivery time display
+            const deliveryTimeRow = document.getElementById('deliveryTimeRow');
+            const deliveryTimeEl = document.getElementById('deliveryTime');
+            
+            if (mlPrediction.deliveryTimeMinutes !== null && subtotal > 0) {
+                // Format delivery time
+                const hours = Math.floor(mlPrediction.deliveryTimeMinutes / 60);
+                const minutes = Math.round(mlPrediction.deliveryTimeMinutes % 60);
+                let timeText = '';
+                
+                if (hours > 0) {
+                    timeText = `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
+                    if (minutes > 0) {
+                        timeText += ` ${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
+                    }
+                } else {
+                    timeText = `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`;
+                }
+                
+                if (deliveryTimeEl) {
+                    deliveryTimeEl.textContent = timeText;
+                }
+                if (deliveryTimeRow) {
+                    deliveryTimeRow.style.display = 'flex';
+                }
+            } else {
+                if (deliveryTimeRow) {
+                    deliveryTimeRow.style.display = 'none';
+                }
+            }
             
             // Update checkout button (check both items and address)
             updateCheckoutButton();
@@ -2956,6 +3118,9 @@
             
             updateSummary();
             updateSelectAllState();
+            
+            // Predict delivery time when selection changes
+            predictDeliveryTime();
         }
         
         // Update select all checkbox state
@@ -3428,6 +3593,9 @@
                     setTimeout(() => {
                         initAddressMap(lat, lng);
                     }, 300);
+                    
+                    // Predict delivery time when address is loaded
+                    predictDeliveryTime();
                     
                     // Reset to details tab by default
                     switchAddressTab('details');
@@ -4581,6 +4749,9 @@
             updateCheckoutButton(); // Enable checkout when address is saved
             closeAddressModal();
             showNotification('Delivery address saved successfully!', 'success');
+            
+            // Predict delivery time and shipping fee
+            predictDeliveryTime();
         }
         
         function deleteAddress() {

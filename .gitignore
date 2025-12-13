@@ -30,3 +30,9 @@ node_modules/
 *.tmp
 *.temp
 
+# ML model files and generated data
+ml/models/
+ml/synthetic_delivery_data.csv
+ml/*.joblib
+ml/*.pkl
+
