@@ -247,8 +247,8 @@ function fetchOrdersInBackground() {
                 
                 const badgeEl = document.getElementById('ordersCount');
                 if (badgeEl) {
-                    // Only update if badges haven't been loaded yet
-                    if (!window.__navbarBadgesLoaded) {
+                    // Only update if badges haven't been loaded yet or force update is requested
+                    if (!window.__navbarBadgesLoaded || window.__forceUpdateOrders) {
                         badgeEl.textContent = orderCount;
                         // Show badge when count > 0, hide when 0
                         badgeEl.style.display = orderCount > 0 ? 'flex' : 'none';
