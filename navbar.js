@@ -553,8 +553,9 @@ function fetchNotificationsInBackground() {
             }
 
             // Always update badge, even if list doesn't exist yet
-            const badge = document.getElementById('notificationCount');
-            if (badge) {
+            // Get badge fresh each time to ensure we have the latest element
+            const badgeEl = document.getElementById('notificationCount');
+            if (badgeEl) {
                 // When user cleared locally, honor filtered count (post-clear)
                 // Otherwise prefer API total if provided.
                 const apiTotal = data.pagination?.total;
@@ -571,8 +572,15 @@ function fetchNotificationsInBackground() {
                     // Ignore localStorage errors
                 }
                 
-                badge.textContent = totalCount;
-                badge.style.display = totalCount > 0 ? 'flex' : 'none';
+                badgeEl.textContent = totalCount;
+                // Always set display explicitly - use 'flex' when count > 0, 'none' when 0
+                badgeEl.style.display = totalCount > 0 ? 'flex' : 'none';
+                
+                // Force visibility - ensure badge is shown
+                if (totalCount > 0) {
+                    badgeEl.style.visibility = 'visible';
+                    badgeEl.style.opacity = '1';
+                }
             }
         })
         .catch(err => {
