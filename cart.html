@@ -2175,7 +2175,7 @@
                             
                             <div class="summary-row" id="deliveryTimeRow" style="display: none;">
                                 <span class="summary-label">
-                                    <i class="fas fa-clock me-1"></i>Estimated Delivery
+                                    <i class="fas fa-truck me-1"></i>Estimated Delivery
                                 </span>
                                 <span class="summary-value" id="deliveryTime">--</span>
                             </div>
@@ -2976,7 +2976,12 @@
             // Check if we have address and cart items
             if (!address || !address.latitude || !address.longitude) {
                 // Reset to default if no address
-                mlPrediction = { deliveryTimeMinutes: null, shippingFee: null, deliveryTimeHours: null };
+                mlPrediction = { 
+                    deliveryTimeMinutes: null, 
+                    shippingFee: null, 
+                    deliveryTimeHours: null,
+                    deliveryDateRange: null
+                };
                 updateSummary();
                 return;
             }
@@ -2992,7 +2997,12 @@
             
             if (orderSize === 0) {
                 // Reset to default if no items selected
-                mlPrediction = { deliveryTimeMinutes: null, shippingFee: null, deliveryTimeHours: null };
+                mlPrediction = { 
+                    deliveryTimeMinutes: null, 
+                    shippingFee: null, 
+                    deliveryTimeHours: null,
+                    deliveryDateRange: null
+                };
                 updateSummary();
                 return;
             }
@@ -3002,6 +3012,9 @@
                 const now = new Date();
                 const timeOfOrder = now.getHours();
                 const dayOfWeek = (now.getDay() + 6) % 7; // Convert to Monday=0, Sunday=6
+                
+                // Format order datetime for accurate date calculation
+                const orderDatetime = now.toISOString();
                 
                 // Call prediction API
                 const response = await fetch('api/predict_delivery.php', {
@@ -3017,7 +3030,8 @@
                         postal_code: address.postalCode || '',
                         order_size: orderSize,
                         time_of_order: timeOfOrder,
-                        day_of_week: dayOfWeek
+                        day_of_week: dayOfWeek,
+                        order_datetime: orderDatetime
                     })
                 });
                 
@@ -3031,11 +3045,19 @@
                     mlPrediction = {
                         deliveryTimeMinutes: data.delivery_time_minutes,
                         shippingFee: data.shipping_fee,
-                        deliveryTimeHours: data.delivery_time_hours
+                        deliveryTimeHours: data.delivery_time_hours,
+                        deliveryDateRange: data.delivery_date_range || null,
+                        deliveryStartDate: data.delivery_start_date || null,
+                        deliveryEndDate: data.delivery_end_date || null
                     };
                 } else {
                     // Fallback to default
-                    mlPrediction = { deliveryTimeMinutes: null, shippingFee: null, deliveryTimeHours: null };
+                    mlPrediction = { 
+                        deliveryTimeMinutes: null, 
+                        shippingFee: null, 
+                        deliveryTimeHours: null,
+                        deliveryDateRange: null
+                    };
                 }
             } catch (error) {
                 console.error('Error predicting delivery time:', error);
@@ -3110,27 +3132,14 @@
             document.getElementById('deliveryFee').textContent = deliveryFeeDisplay;
             document.getElementById('total').textContent = totalDisplay;
             
-            // Update delivery time display
+            // Update delivery date range display
             const deliveryTimeRow = document.getElementById('deliveryTimeRow');
             const deliveryTimeEl = document.getElementById('deliveryTime');
             
-            if (mlPrediction.deliveryTimeMinutes !== null && subtotal > 0 && predictionReady) {
-                // Format delivery time
-                const hours = Math.floor(mlPrediction.deliveryTimeMinutes / 60);
-                const minutes = Math.round(mlPrediction.deliveryTimeMinutes % 60);
-                let timeText = '';
-                
-                if (hours > 0) {
-                    timeText = `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
-                    if (minutes > 0) {
-                        timeText += ` ${minutes} ${minutes === 1 ? 'min' : 'mins'}`;
-                    }
-                } else {
-                    timeText = `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`;
-                }
-                
+            if (mlPrediction.deliveryDateRange && subtotal > 0 && predictionReady) {
+                // Display delivery date range (e.g., "Dec 13 - Dec 17")
                 if (deliveryTimeEl) {
-                    deliveryTimeEl.textContent = timeText;
+                    deliveryTimeEl.textContent = mlPrediction.deliveryDateRange;
                 }
                 if (deliveryTimeRow) {
                     deliveryTimeRow.style.display = 'flex';

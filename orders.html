@@ -1872,6 +1872,7 @@
                         <div class="order-info">
                             <h3>Order #${order.id}</h3>
                             <p><i class="fas fa-calendar me-1"></i> ${formatDate(order.order_date)}</p>
+                            ${order.delivery_date_range ? `<p style="margin-top: 0.25rem; color: #64748b; font-size: 0.875rem;"><i class="fas fa-truck me-1"></i> Estimated delivery: ${escapeHtml(order.delivery_date_range)}</p>` : ''}
                         </div>
                         <div class="order-status-badge ${status}">${statusLabel}</div>
                     </div>

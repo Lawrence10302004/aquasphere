@@ -29,6 +29,7 @@ $delivery_address = $input['delivery_address'] ?? null;
 $payment_method = assert_safe_string($input['payment_method'] ?? 'COD', 'payment_method', 32);
 $delivery_date = assert_safe_string($input['delivery_date'] ?? null, 'delivery_date', 32);
 $delivery_time = assert_safe_string($input['delivery_time'] ?? null, 'delivery_time', 32);
+$delivery_date_range = assert_safe_string($input['delivery_date_range'] ?? null, 'delivery_date_range', 100);
 
 if ($user_id <= 0) {
     echo json_encode(['success' => false, 'message' => 'Valid user_id is required']);
@@ -107,8 +108,32 @@ if (!$delivery_fee_exists) {
     execute_sql($conn, $alter_query);
 }
 
+// Check if delivery_date_range column exists, add if not
+$check_delivery_date_range_query = $GLOBALS['use_postgres'] 
+    ? "SELECT column_name FROM information_schema.columns WHERE table_name='orders' AND column_name='delivery_date_range'"
+    : "PRAGMA table_info(orders)";
+
+$delivery_date_range_check = execute_sql($conn, $check_delivery_date_range_query);
+$delivery_date_range_exists = false;
+
+if ($GLOBALS['use_postgres']) {
+    $delivery_date_range_exists = pg_fetch_assoc($delivery_date_range_check) !== false;
+} else {
+    while ($row = $delivery_date_range_check->fetchArray(SQLITE3_ASSOC)) {
+        if ($row['name'] === 'delivery_date_range') {
+            $delivery_date_range_exists = true;
+            break;
+        }
+    }
+}
+
+if (!$delivery_date_range_exists) {
+    $alter_query = "ALTER TABLE orders ADD COLUMN delivery_date_range " . get_text_type();
+    execute_sql($conn, $alter_query);
+}
+
 // Create order
-$query = "INSERT INTO orders (user_id, delivery_date, delivery_time, delivery_address, delivery_fee, total_amount, payment_method, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+$query = "INSERT INTO orders (user_id, delivery_date, delivery_time, delivery_address, delivery_fee, delivery_date_range, total_amount, payment_method, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
 
 $result = execute_sql($conn, $query, [
     $user_id,
@@ -116,6 +141,7 @@ $result = execute_sql($conn, $query, [
     $delivery_time,
     json_encode($delivery_address), // Store address as JSON
     $delivery_fee,
+    $delivery_date_range,
     $total_amount,
     $payment_method
 ]);

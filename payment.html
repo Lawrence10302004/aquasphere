@@ -1242,6 +1242,12 @@
                                 <span class="summary-label">Subtotal</span>
                                 <span class="summary-value" id="orderSubtotal">₱0.00</span>
                             </div>
+                            <div class="summary-row" id="orderDeliveryTimeRow" style="display: none;">
+                                <span class="summary-label">
+                                    <i class="fas fa-truck me-1"></i>Estimated Delivery
+                                </span>
+                                <span class="summary-value" id="orderDeliveryTime">--</span>
+                            </div>
                             <div class="summary-row">
                                 <span class="summary-label">Delivery Fee</span>
                                 <span class="summary-value" id="orderDeliveryFee">₱--</span>
@@ -1378,7 +1384,8 @@
         let mlPrediction = {
             deliveryTimeMinutes: null,
             shippingFee: null,
-            deliveryTimeHours: null
+            deliveryTimeHours: null,
+            deliveryDateRange: null
         };
         
         // Predict delivery time and shipping fee
@@ -1388,7 +1395,12 @@
             
             // Check if we have address and items
             if (!deliveryAddress || !deliveryAddress.latitude || !deliveryAddress.longitude) {
-                mlPrediction = { deliveryTimeMinutes: null, shippingFee: null, deliveryTimeHours: null };
+                mlPrediction = { 
+                    deliveryTimeMinutes: null, 
+                    shippingFee: null, 
+                    deliveryTimeHours: null,
+                    deliveryDateRange: null
+                };
                 loadOrderSummary();
                 return;
             }
@@ -1400,7 +1412,12 @@
             });
             
             if (orderSize === 0) {
-                mlPrediction = { deliveryTimeMinutes: null, shippingFee: null, deliveryTimeHours: null };
+                mlPrediction = { 
+                    deliveryTimeMinutes: null, 
+                    shippingFee: null, 
+                    deliveryTimeHours: null,
+                    deliveryDateRange: null
+                };
                 loadOrderSummary();
                 return;
             }
@@ -1409,6 +1426,7 @@
                 const now = new Date();
                 const timeOfOrder = now.getHours();
                 const dayOfWeek = (now.getDay() + 6) % 7;
+                const orderDatetime = now.toISOString();
                 
                 const response = await fetch('api/predict_delivery.php', {
                     method: 'POST',
@@ -1421,7 +1439,8 @@
                         postal_code: deliveryAddress.postalCode || '',
                         order_size: orderSize,
                         time_of_order: timeOfOrder,
-                        day_of_week: dayOfWeek
+                        day_of_week: dayOfWeek,
+                        order_datetime: orderDatetime
                     })
                 });
                 
@@ -1431,7 +1450,8 @@
                         mlPrediction = {
                             deliveryTimeMinutes: data.delivery_time_minutes,
                             shippingFee: data.shipping_fee,
-                            deliveryTimeHours: data.delivery_time_hours
+                            deliveryTimeHours: data.delivery_time_hours,
+                            deliveryDateRange: data.delivery_date_range || null
                         };
                     }
                 }
@@ -1503,6 +1523,24 @@
             document.getElementById('orderSubtotal').textContent = subtotalDisplay;
             document.getElementById('orderDeliveryFee').textContent = deliveryFeeDisplay;
             document.getElementById('orderTotal').textContent = totalDisplay;
+            
+            // Update delivery date range display
+            const deliveryTimeRow = document.getElementById('orderDeliveryTimeRow');
+            const deliveryTimeEl = document.getElementById('orderDeliveryTime');
+            
+            if (mlPrediction.deliveryDateRange && subtotal > 0 && predictionReady) {
+                // Display delivery date range (e.g., "Dec 13 - Dec 17")
+                if (deliveryTimeEl) {
+                    deliveryTimeEl.textContent = mlPrediction.deliveryDateRange;
+                }
+                if (deliveryTimeRow) {
+                    deliveryTimeRow.style.display = 'flex';
+                }
+            } else {
+                if (deliveryTimeRow) {
+                    deliveryTimeRow.style.display = 'none';
+                }
+            }
         }
         
         // Select payment method
@@ -1589,9 +1627,10 @@
                             delivery_address: deliveryAddress,
                             payment_method: 'GCASH',
                             delivery_date: null,
-                        delivery_time: null,
-                        delivery_fee: deliveryFee,
-                        total_amount: total
+                            delivery_time: null,
+                            delivery_fee: deliveryFee,
+                            delivery_date_range: mlPrediction.deliveryDateRange || null,
+                            total_amount: total
                     };
                     
                     // Store pending order data in UserState
@@ -1663,7 +1702,8 @@
                             payment_method: 'COD',
                             delivery_date: null,
                             delivery_time: null,
-                            delivery_fee: deliveryFee
+                            delivery_fee: deliveryFee,
+                            delivery_date_range: mlPrediction.deliveryDateRange || null
                         })
                     });
                     

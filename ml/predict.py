@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import os
+from datetime import datetime, timedelta
 
 # Delivery hub location (San Pablo City)
 HUB_LATITUDE = 14.0703
@@ -145,6 +146,58 @@ def calculate_shipping_fee(delivery_time_minutes):
     shipping_fee = BASE_FEE + (delivery_time_minutes * RATE_PER_MINUTE)
     return round(shipping_fee, 2)
 
+def calculate_delivery_date_range(delivery_time_minutes, order_datetime=None):
+    """
+    Calculate delivery date range from predicted delivery time in minutes
+    
+    Args:
+        delivery_time_minutes: Predicted delivery time in minutes
+        order_datetime: Datetime object for when the order was placed (default: current time)
+    
+    Returns:
+        Dictionary with 'start_date', 'end_date', 'start_date_formatted', 'end_date_formatted', 'date_range'
+    """
+    if order_datetime is None:
+        order_datetime = datetime.now()
+    
+    # Convert minutes to days (assuming business days and delivery hours)
+    # Add buffer for processing and delivery window
+    hours = delivery_time_minutes / 60
+    
+    # Calculate minimum delivery days (at least 1 day, up to 2 days for processing)
+    min_days = 1
+    max_days = max(min_days, int(hours / 8) + 1)  # Assuming 8 hours of delivery work per day
+    
+    # Add buffer days for processing and delivery window (typically 1-3 days)
+    processing_days = 1
+    delivery_window_days = 2  # Range of 2 days (e.g., Dec 13 - Dec 15)
+    
+    # Calculate start date (order date + processing + minimum delivery)
+    start_date = order_datetime + timedelta(days=processing_days + min_days)
+    
+    # Calculate end date (start date + delivery window)
+    end_date = start_date + timedelta(days=delivery_window_days)
+    
+    # Format dates
+    start_formatted = start_date.strftime('%b %d')
+    end_formatted = end_date.strftime('%b %d')
+    
+    # Create date range string
+    if start_date.year != end_date.year or start_date.month != end_date.month:
+        # Different months or years
+        date_range = f"{start_date.strftime('%b %d')} - {end_date.strftime('%b %d, %Y')}"
+    else:
+        # Same month
+        date_range = f"{start_formatted} - {end_formatted}"
+    
+    return {
+        'start_date': start_date.isoformat(),
+        'end_date': end_date.isoformat(),
+        'start_date_formatted': start_formatted,
+        'end_date_formatted': end_formatted,
+        'date_range': date_range
+    }
+
 def main():
     """Main function for command-line usage"""
     if len(sys.argv) < 2:
@@ -179,6 +232,17 @@ def main():
     order_size = int(input_data.get('order_size', 1))
     model_dir = input_data.get('model_dir', 'models')
     
+    # Get order datetime if provided (for accurate date calculation)
+    order_datetime_str = input_data.get('order_datetime')
+    order_datetime = None
+    if order_datetime_str:
+        try:
+            order_datetime = datetime.fromisoformat(order_datetime_str.replace('Z', '+00:00'))
+        except:
+            order_datetime = datetime.now()
+    else:
+        order_datetime = datetime.now()
+    
     try:
         # Predict delivery time
         delivery_time_minutes = predict_delivery_time(
@@ -189,12 +253,20 @@ def main():
         # Calculate shipping fee
         shipping_fee = calculate_shipping_fee(delivery_time_minutes)
         
+        # Calculate delivery date range
+        date_range_info = calculate_delivery_date_range(delivery_time_minutes, order_datetime)
+        
         # Return results
         result = {
             'success': True,
             'delivery_time_minutes': delivery_time_minutes,
             'shipping_fee': shipping_fee,
-            'delivery_time_hours': round(delivery_time_minutes / 60, 2)
+            'delivery_time_hours': round(delivery_time_minutes / 60, 2),
+            'delivery_date_range': date_range_info['date_range'],
+            'delivery_start_date': date_range_info['start_date'],
+            'delivery_end_date': date_range_info['end_date'],
+            'delivery_start_date_formatted': date_range_info['start_date_formatted'],
+            'delivery_end_date_formatted': date_range_info['end_date_formatted']
         }
         
         print(json.dumps(result))
