@@ -468,11 +468,15 @@ function loadNotifications(force = false) {
 
 // Fetch notifications in background and update cache
 function fetchNotificationsInBackground() {
+    const badge = document.getElementById('notificationCount');
+    const list = document.getElementById('notificationList');
+    const wrapper = document.getElementById('navNotificationsWrapper');
+    
     fetch('api/get_notifications.php?limit=200')
         .then(resp => {
             if (!resp.ok) {
                 if (resp.status === 401) {
-                    wrapper.style.display = 'none';
+                    if (wrapper) wrapper.style.display = 'none';
                     return null;
                 }
                 throw new Error('Failed to fetch notifications');
@@ -483,11 +487,13 @@ function fetchNotificationsInBackground() {
             if (!data) return;
 
             if (!data.success || !Array.isArray(data.notifications)) {
-                list.innerHTML = `
-                    <div class="notification-empty">
-                        <i class="fas fa-inbox"></i>
-                        <p>No notifications yet.</p>
-                    </div>`;
+                if (list) {
+                    list.innerHTML = `
+                        <div class="notification-empty">
+                            <i class="fas fa-inbox"></i>
+                            <p>No notifications yet.</p>
+                        </div>`;
+                }
                 
                 // Cache the count in localStorage for fast loading next time
                 try {
