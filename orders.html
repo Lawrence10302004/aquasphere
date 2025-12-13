@@ -2189,13 +2189,11 @@
                     }
                         // Share updated list with navbar cache and update badge
                         window.__ordersCache = allOrders;
-                        // Force update by clearing initialization flag
+                        // Force update by setting flag
                         if (typeof window.updateOrderCount === 'function') {
-                            const ordersCountEl = document.getElementById('ordersCount');
-                            if (ordersCountEl) {
-                                ordersCountEl.dataset.initialized = 'false';
-                            }
+                            window.__forceUpdateOrders = true;
                             window.updateOrderCount();
+                            window.__forceUpdateOrders = false;
                         }
                         // Show order cancelled success modal (will refresh page after 3 seconds)
                         showOrderCancelledModal();

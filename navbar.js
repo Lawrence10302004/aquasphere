@@ -21,7 +21,7 @@ async function loadNavbar() {
         window.dispatchEvent(new Event('navbarLoaded'));
         
         // Load all badges immediately (no delays) - similar to dashboard.html and cart.html
-        // Use a flag to ensure badges only load once
+        // Use a flag to ensure badges only load once per page
         if (!window.__navbarBadgesLoaded) {
             window.__navbarBadgesLoaded = true;
             (async () => {
@@ -34,7 +34,7 @@ async function loadNavbar() {
                 // Load notifications immediately (badge only, fast display)
                 loadNotificationBadgeFast();
                 
-                // Load full notifications in background (for dropdown) - but don't update badge if already initialized
+                // Load full notifications in background (for dropdown)
                 loadNotifications();
             })();
         }
@@ -138,12 +138,11 @@ async function updateCartCount(force = false) {
     const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
     const cartCountEl = document.getElementById('cartCount');
     if (cartCountEl) {
-        // Only update if forced (user action) or not yet initialized (prevent multiple updates)
-        if (force || !cartCountEl.dataset.initialized) {
+        // Only update if forced (user action) or badges haven't been loaded yet
+        if (force || !window.__navbarBadgesLoaded) {
             cartCountEl.textContent = totalItems;
             // Hide badge when count is 0, only show when there are items
             cartCountEl.style.display = totalItems > 0 ? 'flex' : 'none';
-            cartCountEl.dataset.initialized = 'true';
         }
     }
 }
@@ -153,16 +152,20 @@ window.updateCartCount = updateCartCount;
 
 // Update order count in navbar
 function updateOrderCount() {
+    // If badges have already been loaded, don't update again (unless forced by user action)
+    if (window.__navbarBadgesLoaded && !window.__forceUpdateOrders) {
+        return;
+    }
+    
     // Try to get badge element - retry if not found (navbar might still be loading)
     const ordersCountEl = document.getElementById('ordersCount');
     if (!ordersCountEl) {
         // Retry immediately if element doesn't exist yet (navbar still loading)
         // Use requestAnimationFrame for smooth retry without blocking
         requestAnimationFrame(() => {
-            const el = document.getElementById('ordersCount');
-            if (el && !el.dataset.initialized) {
+            if (document.getElementById('ordersCount')) {
                 updateOrderCount();
-            } else if (!el) {
+            } else {
                 // Fallback: retry after a very short delay if still not found
                 setTimeout(updateOrderCount, 50);
             }
@@ -170,15 +173,9 @@ function updateOrderCount() {
         return;
     }
     
-    // If already initialized, don't update again (prevent multiple refreshes)
-    if (ordersCountEl.dataset.initialized) {
-        return;
-    }
-    
     // FAST PATH: Use cached orders when available (e.g., My Orders page just fetched)
     // The cache should already be filtered (no delivered/cancelled orders)
-    // Only use cache if badge hasn't been set yet (to prevent multiple updates)
-    if (Array.isArray(window.__ordersCache) && !ordersCountEl.dataset.initialized) {
+    if (Array.isArray(window.__ordersCache)) {
         // Filter out delivered and cancelled orders to match My Orders page behavior
         const filteredOrders = window.__ordersCache.filter(o => {
             const status = (o.status || '').toLowerCase();
@@ -187,32 +184,27 @@ function updateOrderCount() {
         const orderCount = filteredOrders.length;
         ordersCountEl.textContent = orderCount;
         ordersCountEl.style.display = orderCount > 0 ? 'flex' : 'none';
-        ordersCountEl.dataset.initialized = 'true';
         // Still fetch in background to sync, but don't wait for it
         fetchOrdersInBackground();
         return;
     }
     
     // FAST PATH: Try localStorage cache first (instant display)
-    // Only use cache if badge hasn't been initialized yet (to prevent multiple updates)
-    if (!ordersCountEl.dataset.initialized) {
-        try {
-            const cachedCount = localStorage.getItem('ordersCount');
-            const cacheTimestamp = localStorage.getItem('ordersCountTimestamp');
-            const now = Date.now();
-            // Use cache if it's less than 30 seconds old
-            if (cachedCount !== null && cacheTimestamp && (now - parseInt(cacheTimestamp)) < 30000) {
-                const orderCount = parseInt(cachedCount, 10);
-                ordersCountEl.textContent = orderCount;
-                ordersCountEl.style.display = orderCount > 0 ? 'flex' : 'none';
-                ordersCountEl.dataset.initialized = 'true';
-                // Fetch in background to sync, but don't wait for it
-                fetchOrdersInBackground();
-                return;
-            }
-        } catch (e) {
-            // Ignore localStorage errors
+    try {
+        const cachedCount = localStorage.getItem('ordersCount');
+        const cacheTimestamp = localStorage.getItem('ordersCountTimestamp');
+        const now = Date.now();
+        // Use cache if it's less than 30 seconds old
+        if (cachedCount !== null && cacheTimestamp && (now - parseInt(cacheTimestamp)) < 30000) {
+            const orderCount = parseInt(cachedCount, 10);
+            ordersCountEl.textContent = orderCount;
+            ordersCountEl.style.display = orderCount > 0 ? 'flex' : 'none';
+            // Fetch in background to sync, but don't wait for it
+            fetchOrdersInBackground();
+            return;
         }
+    } catch (e) {
+        // Ignore localStorage errors
     }
     
     // SLOW PATH: Fetch orders from API (only if no cache available)
@@ -255,12 +247,11 @@ function fetchOrdersInBackground() {
                 
                 const badgeEl = document.getElementById('ordersCount');
                 if (badgeEl) {
-                    // Only update if not yet initialized (prevent multiple updates)
-                    if (!badgeEl.dataset.initialized) {
+                    // Only update if badges haven't been loaded yet
+                    if (!window.__navbarBadgesLoaded) {
                         badgeEl.textContent = orderCount;
                         // Show badge when count > 0, hide when 0
                         badgeEl.style.display = orderCount > 0 ? 'flex' : 'none';
-                        badgeEl.dataset.initialized = 'true';
                     }
                 }
             } else {
@@ -414,22 +405,21 @@ function getNotificationMessage(order) {
 
 // Fast badge-only loading (for instant display)
 function loadNotificationBadgeFast() {
+    // If badges have already been loaded, don't update again
+    if (window.__navbarBadgesLoaded) {
+        return;
+    }
+    
     const badge = document.getElementById('notificationCount');
     if (!badge) {
         // Retry immediately if element doesn't exist yet
         requestAnimationFrame(() => {
-            const el = document.getElementById('notificationCount');
-            if (el && !el.dataset.initialized) {
+            if (document.getElementById('notificationCount')) {
                 loadNotificationBadgeFast();
-            } else if (!el) {
+            } else {
                 setTimeout(loadNotificationBadgeFast, 50);
             }
         });
-        return;
-    }
-
-    // Only update if not yet initialized (prevent multiple updates)
-    if (badge.dataset.initialized) {
         return;
     }
 
@@ -443,7 +433,6 @@ function loadNotificationBadgeFast() {
             const notifCount = parseInt(cachedCount, 10);
             badge.textContent = notifCount;
             badge.style.display = notifCount > 0 ? 'flex' : 'none';
-            badge.dataset.initialized = 'true';
             return; // Badge updated, full load will happen in background
         }
     } catch (e) {
@@ -473,9 +462,9 @@ function loadNotifications(force = false) {
 
     // FAST PATH: Try localStorage cache first (instant display) - only if not forcing refresh
     if (!force) {
-        // Only update badge if not yet initialized (prevent multiple updates)
-        if (badge && badge.dataset.initialized) {
-            // Badge already initialized, just fetch in background to sync
+        // If badges have already been loaded, don't update badge again
+        if (window.__navbarBadgesLoaded && badge) {
+            // Badge already loaded, just fetch in background to sync
             fetchNotificationsInBackground();
             return;
         }
@@ -487,10 +476,9 @@ function loadNotifications(force = false) {
             // Use cache if it's less than 30 seconds old
             if (cachedCount !== null && cacheTimestamp && (now - parseInt(cacheTimestamp)) < 30000) {
                 const notifCount = parseInt(cachedCount, 10);
-                if (badge && !badge.dataset.initialized) {
+                if (badge && !window.__navbarBadgesLoaded) {
                     badge.textContent = notifCount;
                     badge.style.display = notifCount > 0 ? 'flex' : 'none';
-                    badge.dataset.initialized = 'true';
                 }
                 // Fetch in background to sync, but don't wait for it
                 fetchNotificationsInBackground();

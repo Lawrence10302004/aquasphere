@@ -1723,14 +1723,12 @@
                     window.__ordersCache = null;
                     
                     // Update order count badge (with delay to ensure order is saved in database)
-                    // Force update by clearing initialization flag
+                    // Force update by setting flag
                     if (typeof updateOrderCount === 'function') {
-                        const ordersCountEl = document.getElementById('ordersCount');
-                        if (ordersCountEl) {
-                            ordersCountEl.dataset.initialized = 'false';
-                        }
+                        window.__forceUpdateOrders = true;
                         setTimeout(() => {
                             updateOrderCount();
+                            window.__forceUpdateOrders = false;
                         }, 1000);
                     }
                     
@@ -1836,14 +1834,12 @@
                 window.__ordersCache = null;
                 
                 // Update order count badge (with delay to ensure order is saved in database)
-                // Force update by clearing initialization flag
+                // Force update by setting flag
                 if (typeof updateOrderCount === 'function') {
-                    const ordersCountEl = document.getElementById('ordersCount');
-                    if (ordersCountEl) {
-                        ordersCountEl.dataset.initialized = 'false';
-                    }
+                    window.__forceUpdateOrders = true;
                     setTimeout(() => {
                         updateOrderCount();
+                        window.__forceUpdateOrders = false;
                     }, 1000);
                 }
                     
