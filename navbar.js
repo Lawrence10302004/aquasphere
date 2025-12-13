@@ -548,8 +548,12 @@ function fetchNotificationsInBackground() {
             const totalPages = Math.max(1, Math.ceil(notifications.length / __notifPageSize));
             __notifPage = Math.min(savedPage, totalPages);
             
-            renderNotificationPage();
+            if (list) {
+                renderNotificationPage();
+            }
 
+            // Always update badge, even if list doesn't exist yet
+            const badge = document.getElementById('notificationCount');
             if (badge) {
                 // When user cleared locally, honor filtered count (post-clear)
                 // Otherwise prefer API total if provided.
