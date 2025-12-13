@@ -138,12 +138,9 @@ async function updateCartCount(force = false) {
     const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
     const cartCountEl = document.getElementById('cartCount');
     if (cartCountEl) {
-        // Only update if forced (user action) or badges haven't been loaded yet
-        if (force || !window.__navbarBadgesLoaded) {
-            cartCountEl.textContent = totalItems;
-            // Hide badge when count is 0, only show when there are items
-            cartCountEl.style.display = totalItems > 0 ? 'flex' : 'none';
-        }
+        cartCountEl.textContent = totalItems;
+        // Hide badge when count is 0, only show when there are items
+        cartCountEl.style.display = totalItems > 0 ? 'flex' : 'none';
     }
 }
 
@@ -152,11 +149,6 @@ window.updateCartCount = updateCartCount;
 
 // Update order count in navbar
 function updateOrderCount() {
-    // If badges have already been loaded, don't update again (unless forced by user action)
-    if (window.__navbarBadgesLoaded && !window.__forceUpdateOrders) {
-        return;
-    }
-    
     // Try to get badge element - retry if not found (navbar might still be loading)
     const ordersCountEl = document.getElementById('ordersCount');
     if (!ordersCountEl) {
@@ -170,6 +162,11 @@ function updateOrderCount() {
                 setTimeout(updateOrderCount, 50);
             }
         });
+        return;
+    }
+    
+    // If badges have already been loaded and this is not a forced update, don't update again
+    if (window.__navbarBadgesLoaded && !window.__forceUpdateOrders) {
         return;
     }
     
@@ -405,11 +402,6 @@ function getNotificationMessage(order) {
 
 // Fast badge-only loading (for instant display)
 function loadNotificationBadgeFast() {
-    // If badges have already been loaded, don't update again
-    if (window.__navbarBadgesLoaded) {
-        return;
-    }
-    
     const badge = document.getElementById('notificationCount');
     if (!badge) {
         // Retry immediately if element doesn't exist yet
@@ -420,6 +412,11 @@ function loadNotificationBadgeFast() {
                 setTimeout(loadNotificationBadgeFast, 50);
             }
         });
+        return;
+    }
+    
+    // If badges have already been loaded, don't update again
+    if (window.__navbarBadgesLoaded) {
         return;
     }
 
@@ -462,13 +459,6 @@ function loadNotifications(force = false) {
 
     // FAST PATH: Try localStorage cache first (instant display) - only if not forcing refresh
     if (!force) {
-        // If badges have already been loaded, don't update badge again
-        if (window.__navbarBadgesLoaded && badge) {
-            // Badge already loaded, just fetch in background to sync
-            fetchNotificationsInBackground();
-            return;
-        }
-        
         try {
             const cachedCount = localStorage.getItem('notificationCount');
             const cacheTimestamp = localStorage.getItem('notificationCountTimestamp');
@@ -476,6 +466,7 @@ function loadNotifications(force = false) {
             // Use cache if it's less than 30 seconds old
             if (cachedCount !== null && cacheTimestamp && (now - parseInt(cacheTimestamp)) < 30000) {
                 const notifCount = parseInt(cachedCount, 10);
+                // Only update badge if it hasn't been loaded yet
                 if (badge && !window.__navbarBadgesLoaded) {
                     badge.textContent = notifCount;
                     badge.style.display = notifCount > 0 ? 'flex' : 'none';
