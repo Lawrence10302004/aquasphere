@@ -194,21 +194,25 @@ function updateOrderCount() {
     }
     
     // FAST PATH: Try localStorage cache first (instant display)
-    try {
-        const cachedCount = localStorage.getItem('ordersCount');
-        const cacheTimestamp = localStorage.getItem('ordersCountTimestamp');
-        const now = Date.now();
-        // Use cache if it's less than 30 seconds old
-        if (cachedCount !== null && cacheTimestamp && (now - parseInt(cacheTimestamp)) < 30000) {
-            const orderCount = parseInt(cachedCount, 10);
-            ordersCountEl.textContent = orderCount;
-            ordersCountEl.style.display = orderCount > 0 ? 'flex' : 'none';
-            // Fetch in background to sync, but don't wait for it
-            fetchOrdersInBackground();
-            return;
+    // Only use cache if badge hasn't been initialized yet (to prevent multiple updates)
+    if (!ordersCountEl.dataset.initialized) {
+        try {
+            const cachedCount = localStorage.getItem('ordersCount');
+            const cacheTimestamp = localStorage.getItem('ordersCountTimestamp');
+            const now = Date.now();
+            // Use cache if it's less than 30 seconds old
+            if (cachedCount !== null && cacheTimestamp && (now - parseInt(cacheTimestamp)) < 30000) {
+                const orderCount = parseInt(cachedCount, 10);
+                ordersCountEl.textContent = orderCount;
+                ordersCountEl.style.display = orderCount > 0 ? 'flex' : 'none';
+                ordersCountEl.dataset.initialized = 'true';
+                // Fetch in background to sync, but don't wait for it
+                fetchOrdersInBackground();
+                return;
+            }
+        } catch (e) {
+            // Ignore localStorage errors
         }
-    } catch (e) {
-        // Ignore localStorage errors
     }
     
     // SLOW PATH: Fetch orders from API (only if no cache available)
