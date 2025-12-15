@@ -128,7 +128,7 @@ function send_otp_email_brevo($email, $otp_code, $username) {
         <meta charset='UTF-8'>
         <title>Email Verification</title>
         <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            body { font-family: Inter, system-ui, Segoe UI, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
             .header { background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
             .content { padding: 20px; background-color: #f9f9f9; border-radius: 0 0 8px 8px; }
@@ -220,7 +220,7 @@ function send_password_reset_otp_email_brevo($email, $otp_code, $username) {
         <meta charset='UTF-8'>
         <title>Password Reset</title>
         <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            body { font-family: Inter, system-ui, Segoe UI, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
             .header { background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
             .content { padding: 20px; background-color: #f9f9f9; border-radius: 0 0 8px 8px; }
@@ -304,7 +304,7 @@ function send_suspension_email_brevo($email, $username, $reason) {
     <!DOCTYPE html>
     <html>
     <head><meta charset='UTF-8'><title>Account Suspended</title></head>
-    <body style='font-family: Arial, sans-serif; color: #0f172a;'>
+    <body style='font-family: Inter, system-ui, Segoe UI, sans-serif; color: #0f172a;'>
         <div style='max-width:600px;margin:0 auto;padding:20px;'>
             <div style='background:linear-gradient(135deg,#0ea5e9,#0284c7);padding:16px;border-radius:12px 12px 0 0;color:white;text-align:center;'>
                 <h2 style='margin:0;'>Account Suspended</h2>
@@ -341,7 +341,7 @@ function send_unsuspension_email_brevo($email, $username) {
     <!DOCTYPE html>
     <html>
     <head><meta charset='UTF-8'><title>Suspension Lifted</title></head>
-    <body style='font-family: Arial, sans-serif; color: #0f172a;'>
+    <body style='font-family: Inter, system-ui, Segoe UI, sans-serif; color: #0f172a;'>
         <div style='max-width:600px;margin:0 auto;padding:20px;'>
             <div style='background:linear-gradient(135deg,#22c55e,#16a34a);padding:16px;border-radius:12px 12px 0 0;color:white;text-align:center;'>
                 <h2 style='margin:0;'>Suspension Lifted</h2>

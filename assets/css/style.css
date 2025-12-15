@@ -3,6 +3,11 @@
 /* Additional custom styles can be added here */
 /* The main styles are currently in index.html for easier management */
 
+/* Global Font Family */
+* {
+    font-family: Inter, system-ui, Segoe UI, sans-serif;
+}
+
 /* Smooth transitions for all interactive elements */
 * {
     transition: all 0.3s ease;
