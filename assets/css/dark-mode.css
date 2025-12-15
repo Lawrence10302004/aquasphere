@@ -845,11 +845,19 @@ body.dark .label-btn {
   box-shadow: none !important;
 }
 
-/* Keep work pill with blue border even when inactive */
+/* Keep work/default brand colors */
 body.dark .label-btn[data-label="work"] {
-  background: var(--panel-bg-dark) !important;
   border-color: var(--accent-blue) !important;
   color: var(--accent-blue-light) !important;
+}
+
+body.dark .label-btn[data-label="work"]:not(.active) {
+  background: transparent !important;
+}
+
+body.dark .label-btn[data-label="default"] {
+  border-color: #f97316 !important;
+  color: #fdba74 !important;
 }
 
 body.dark .label-btn:hover {
