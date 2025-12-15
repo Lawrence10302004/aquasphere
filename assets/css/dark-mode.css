@@ -837,6 +837,27 @@ body.dark .address-text {
   color: var(--text-dark) !important;
 }
 
+/* Address label pills (Work / Default) */
+body.dark .label-btn {
+  background: var(--panel-bg-dark) !important;
+  border: 1px solid var(--border-dark) !important;
+  color: var(--text-dark) !important;
+  box-shadow: none !important;
+}
+
+body.dark .label-btn:hover {
+  background: var(--panel-bg-dark-alt) !important;
+  border-color: var(--accent-blue) !important;
+  color: var(--accent-blue-light) !important;
+}
+
+body.dark .label-btn.active {
+  background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-dark) 100%) !important;
+  border-color: var(--accent-blue) !important;
+  color: white !important;
+  box-shadow: 0 6px 18px rgba(14, 165, 233, 0.35) !important;
+}
+
 body.dark .address-coordinates,
 body.dark .coordinates-display,
 body.dark .coordinate-item {
@@ -903,6 +924,10 @@ body.dark .address-display .btn-outline-warning.active {
   border-color: var(--accent-blue) !important;
 }
 
+/* Make map popup text readable while keeping default popup background */
+body.dark .address-display .leaflet-popup-content {
+  color: #0f172a !important;
+}
 /* Explicitly darken the Work/Default pills */
 body.dark .address-display .btn-outline-info,
 body.dark .address-display .btn-outline-warning {
