@@ -769,4 +769,62 @@ body.dark .form-group select.success {
   background: rgba(14, 165, 233, 0.08) !important;
 }
 
+/* Cart page – select-all strip and address block */
+body.dark .select-all {
+  background: var(--panel-bg-dark-alt) !important;
+  border: 1px solid var(--border-dark) !important;
+  border-radius: 12px !important;
+}
+
+body.dark .btn-delete-all {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border-color: rgba(239, 68, 68, 0.6) !important;
+  color: #fca5a5 !important;
+}
+
+body.dark .btn-delete-all:hover {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #fecdd3 !important;
+}
+
+body.dark .address-display {
+  background: var(--panel-bg-dark-alt) !important;
+  border-color: var(--border-dark) !important;
+  color: var(--text-dark) !important;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45) !important;
+}
+
+body.dark .address-header-row,
+body.dark .address-info {
+  color: var(--text-dark) !important;
+}
+
+body.dark .address-name-phone,
+body.dark .address-tag {
+  color: var(--text-dark) !important;
+}
+
+/* Dashboard search/filter wrapper */
+body.dark .search-filter-bar {
+  background: var(--panel-bg-dark) !important;
+  border: 1px solid var(--border-dark) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Footer */
+body.dark footer,
+body.dark .footer,
+body.dark .site-footer {
+  background: var(--panel-bg-dark) !important;
+  color: var(--text-dark) !important;
+  border-top: 1px solid var(--border-dark) !important;
+}
+
+body.dark footer a,
+body.dark .footer a,
+body.dark .site-footer a {
+  color: var(--accent-blue-light) !important;
+}
+
 
