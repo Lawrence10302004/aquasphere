@@ -1259,4 +1259,58 @@ body.dark .cta-section {
   color: var(--text-dark) !important;
 }
 
+/* Dashboard modals (logout + settings) */
+body.dark .logout-confirm-content {
+  background: linear-gradient(135deg, var(--panel-bg-dark) 0%, var(--panel-bg-dark-alt) 100%) !important;
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.85) !important;
+}
+
+body.dark .logout-confirm-icon {
+  background: radial-gradient(circle at 30% 20%, rgba(148, 163, 184, 0.45), transparent 65%),
+              linear-gradient(135deg, var(--panel-bg-dark-alt), var(--panel-bg-dark)) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.9) !important;
+}
+
+body.dark .logout-confirm-icon::before {
+  background: linear-gradient(135deg, var(--accent-blue-light), var(--accent-blue)) !important;
+  opacity: 0.4 !important;
+}
+
+body.dark .logout-confirm-icon i {
+  color: #e5f0ff !important;
+}
+
+body.dark .logout-confirm-body h3 {
+  color: var(--text-dark) !important;
+}
+
+body.dark .logout-confirm-body p {
+  color: var(--text-muted-dark) !important;
+}
+
+body.dark .btn-logout-cancel {
+  background: var(--panel-bg-dark-alt) !important;
+  color: var(--text-dark) !important;
+  border-color: var(--border-dark) !important;
+}
+
+body.dark .btn-logout-cancel:hover {
+  background: var(--panel-bg-dark) !important;
+  border-color: var(--accent-blue) !important;
+}
+
+/* Reuse address/profile modal shell for settings in dark mode */
+body.dark .address-modal {
+  background: var(--panel-bg-dark) !important;
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.85) !important;
+}
+
+body.dark .modal-body {
+  background: transparent !important;
+}
+
+body.dark #settingsModal .modal-body p {
+  color: var(--text-muted-dark) !important;
+}
+
 
