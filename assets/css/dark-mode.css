@@ -838,12 +838,20 @@ body.dark .address-display .location-coordinate {
   color: var(--text-dark) !important;
 }
 
+/* Ensure disabled/readonly address inputs stay dark */
 body.dark .address-display .form-control:disabled,
 body.dark .address-display .location-input:disabled,
 body.dark .address-display .location-coordinate:disabled {
   background: var(--panel-bg-dark) !important;
   color: var(--text-muted-dark) !important;
   opacity: 1 !important;
+}
+
+body.dark .address-display .form-control[readonly],
+body.dark .address-display .location-input[readonly],
+body.dark .address-display .location-coordinate[readonly] {
+  background: var(--panel-bg-dark) !important;
+  color: var(--text-dark) !important;
 }
 
 body.dark .address-display .form-control::placeholder {
@@ -890,6 +898,30 @@ body.dark .address-display .tab-pane {
 
 body.dark .address-display .leaflet-container {
   background: var(--panel-bg-dark) !important;
+}
+
+body.dark .address-display .leaflet-popup-content,
+body.dark .address-display .leaflet-control-container,
+body.dark .address-display .leaflet-control {
+  background: var(--panel-bg-dark) !important;
+  color: var(--text-dark) !important;
+}
+
+body.dark .address-display .leaflet-bar a {
+  background: var(--panel-bg-dark) !important;
+  color: var(--text-dark) !important;
+  border-color: var(--border-dark) !important;
+}
+
+body.dark .address-display .leaflet-bar a:hover {
+  background: var(--panel-bg-dark-alt) !important;
+}
+
+/* Location coordinates block */
+body.dark .address-display .location-coordinates {
+  background: var(--panel-bg-dark) !important;
+  border: 1px solid var(--border-dark) !important;
+  color: var(--text-dark) !important;
 }
 
 /* Dashboard search/filter wrapper */
