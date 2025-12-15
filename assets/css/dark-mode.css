@@ -838,6 +838,14 @@ body.dark .address-display .location-coordinate {
   color: var(--text-dark) !important;
 }
 
+body.dark .address-display .form-control:disabled,
+body.dark .address-display .location-input:disabled,
+body.dark .address-display .location-coordinate:disabled {
+  background: var(--panel-bg-dark) !important;
+  color: var(--text-muted-dark) !important;
+  opacity: 1 !important;
+}
+
 body.dark .address-display .form-control::placeholder {
   color: var(--text-muted-dark) !important;
 }
@@ -861,6 +869,27 @@ body.dark .address-display .btn-outline-warning.active {
   background: rgba(14, 165, 233, 0.18) !important;
   color: var(--accent-blue-light) !important;
   border-color: var(--accent-blue) !important;
+}
+
+body.dark .address-display .nav-tabs .nav-link {
+  background: var(--panel-bg-dark) !important;
+  border: 1px solid var(--border-dark) !important;
+  color: var(--text-dark) !important;
+}
+
+body.dark .address-display .nav-tabs .nav-link.active {
+  background: var(--panel-bg-dark-alt) !important;
+  border-color: var(--accent-blue) !important;
+  color: var(--accent-blue-light) !important;
+}
+
+body.dark .address-display .tab-pane {
+  background: var(--panel-bg-dark) !important;
+  border: 1px solid var(--border-dark) !important;
+}
+
+body.dark .address-display .leaflet-container {
+  background: var(--panel-bg-dark) !important;
 }
 
 /* Dashboard search/filter wrapper */
