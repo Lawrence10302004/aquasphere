@@ -848,6 +848,7 @@ body.dark .label-btn {
 /* Keep work pill with blue border even when inactive */
 body.dark .label-btn[data-label="work"] {
   border-color: var(--accent-blue) !important;
+  color: var(--accent-blue-light) !important;
 }
 
 body.dark .label-btn:hover {
