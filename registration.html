@@ -310,6 +310,12 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="registration.html">Register</a>
                     </li>
+                    <!-- Dark mode toggle -->
+                    <li class="nav-item">
+                        <button id="themeToggle" class="theme-toggle-btn nav-link" title="Toggle Dark Mode" style="border: none; background: transparent; padding: 0 16px;">
+                            <span id="themeIcon">🌙</span>
+                        </button>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -423,6 +429,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Initialize dark mode toggle using shared function when available
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof initializeDarkMode === 'function') {
+                initializeDarkMode();
+            }
+        });
+        
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('registerForm');
             const birthdayInput = document.getElementById('birthday');
