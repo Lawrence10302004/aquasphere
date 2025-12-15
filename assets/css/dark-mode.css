@@ -520,28 +520,41 @@ body.dark .order-summary {
   border-color: var(--border-dark) !important;
 }
 
-/* Orders empty state container */
+/* Orders empty state container (recent_orders & orders pages) */
 body.dark .orders-empty,
 body.dark .orders-empty .empty-state-card,
 body.dark .orders-empty .empty-content,
-body.dark .orders-empty .empty-icon {
+body.dark .orders-empty .empty-icon,
+body.dark .empty-orders {
   background: var(--panel-bg-dark) !important;
   border: 1px solid var(--border-dark) !important;
   color: var(--text-dark) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55) !important;
+}
+
+body.dark .empty-orders-icon {
+  background: radial-gradient(circle at 30% 20%, rgba(148, 163, 184, 0.4), transparent 60%),
+              linear-gradient(135deg, var(--panel-bg-dark-alt), var(--panel-bg-dark)) !important;
+  color: var(--accent-blue-light) !important;
 }
 
 body.dark .orders-empty p,
 body.dark .orders-empty h3,
 body.dark .orders-empty h4,
-body.dark .orders-empty span {
+body.dark .orders-empty span,
+body.dark .empty-orders h3,
+body.dark .empty-orders p,
+body.dark .empty-orders span {
   color: var(--text-dark) !important;
 }
 
-body.dark .orders-empty .btn {
+body.dark .orders-empty .btn,
+body.dark .empty-orders .btn,
+body.dark .empty-orders .btn-shop {
   background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-dark) 100%) !important;
   border: 1px solid var(--accent-blue) !important;
   color: #ffffff !important;
-  box-shadow: 0 8px 18px rgba(14, 165, 233, 0.35) !important;
+  box-shadow: 0 8px 18px rgba(14, 165, 233, 0.45) !important;
 }
 
 body.dark .order-item {
