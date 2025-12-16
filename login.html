@@ -756,6 +756,20 @@
     </style>
 </head>
 <body>
+    <script>
+        // Redirect logged-in users away from login page
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const resp = await fetch('api/get_current_user.php', { credentials: 'include' });
+                if (resp.ok) {
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+            } catch (e) {
+                console.warn('Auth check failed:', e);
+            }
+        });
+    </script>
     <!-- Navbar -->
     <div id="navbar-container"></div>
 
