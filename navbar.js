@@ -121,12 +121,37 @@ function loadUserData() {
     // Try to fetch from server first, then fallback to localStorage
     fetch('api/get_current_user.php')
         .then(response => {
+            // If 401, user is not logged in - clear localStorage and hide user data
+            if (response.status === 401) {
+                // Clear user data from localStorage
+                localStorage.removeItem('loggedInUser');
+                localStorage.removeItem('userData');
+                sessionStorage.removeItem('userData');
+                
+                // Hide user dropdown or show default "User"
+                const usernameDisplay = document.getElementById('usernameDisplay');
+                if (usernameDisplay) {
+                    usernameDisplay.textContent = 'User';
+                }
+                
+                // Hide user-specific elements (notifications, orders, etc.)
+                const navNotificationsWrapper = document.getElementById('navNotificationsWrapper');
+                if (navNotificationsWrapper) {
+                    navNotificationsWrapper.style.display = 'none';
+                }
+                
+                return null; // Don't proceed with JSON parsing
+            }
+            
             if (!response.ok) {
                 throw new Error('Failed to fetch user data');
             }
             return response.json();
         })
         .then(data => {
+            // If we got null (401 case), we already handled it above
+            if (!data) return;
+            
             if (data.success && data.user) {
                 const userData = data.user;
                 // Save to localStorage
@@ -137,26 +162,48 @@ function loadUserData() {
                 if (usernameDisplay) {
                     usernameDisplay.textContent = userData.username || 'User';
                 }
+                
+                // Show user-specific elements
+                const navNotificationsWrapper = document.getElementById('navNotificationsWrapper');
+                if (navNotificationsWrapper) {
+                    navNotificationsWrapper.style.display = '';
+                }
             } else {
-                // Fallback to localStorage
-                const userData = JSON.parse(localStorage.getItem('loggedInUser')) || 
-                               JSON.parse(localStorage.getItem('userData')) || 
-                               JSON.parse(sessionStorage.getItem('userData')) || {};
+                // No user data from server - clear localStorage and show default
+                localStorage.removeItem('loggedInUser');
+                localStorage.removeItem('userData');
+                sessionStorage.removeItem('userData');
+                
                 const usernameDisplay = document.getElementById('usernameDisplay');
                 if (usernameDisplay) {
-                    usernameDisplay.textContent = userData.username || 'User';
+                    usernameDisplay.textContent = 'User';
+                }
+                
+                // Hide user-specific elements
+                const navNotificationsWrapper = document.getElementById('navNotificationsWrapper');
+                if (navNotificationsWrapper) {
+                    navNotificationsWrapper.style.display = 'none';
                 }
             }
         })
         .catch(error => {
             console.error('Error loading user data:', error);
-            // Fallback to localStorage
-            const userData = JSON.parse(localStorage.getItem('loggedInUser')) || 
-                           JSON.parse(localStorage.getItem('userData')) || 
-                           JSON.parse(sessionStorage.getItem('userData')) || {};
+            // On network error, check if we have valid session data
+            // Only use localStorage if we're sure user is logged in (check session cookie or try API again)
+            // For now, clear localStorage to be safe - user should log in again
+            localStorage.removeItem('loggedInUser');
+            localStorage.removeItem('userData');
+            sessionStorage.removeItem('userData');
+            
             const usernameDisplay = document.getElementById('usernameDisplay');
             if (usernameDisplay) {
-                usernameDisplay.textContent = userData.username || 'User';
+                usernameDisplay.textContent = 'User';
+            }
+            
+            // Hide user-specific elements
+            const navNotificationsWrapper = document.getElementById('navNotificationsWrapper');
+            if (navNotificationsWrapper) {
+                navNotificationsWrapper.style.display = 'none';
             }
         });
 }
