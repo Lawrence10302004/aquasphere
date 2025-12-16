@@ -64,7 +64,9 @@ function initializeDarkMode() {
     }
     
     // Toggle dark mode
-    themeToggle.addEventListener('click', () => {
+    themeToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         document.body.classList.toggle('dark');
         const isDark = document.body.classList.contains('dark');
         themeIcon.textContent = isDark ? '☀️' : '🌙';

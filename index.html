@@ -1376,12 +1376,6 @@
                     <li class="nav-item" id="registerNavItem">
                         <a class="nav-link" href="registration.html">Register</a>
                     </li>
-                    <!-- Dark mode toggle (aligned just left of profile dropdown) -->
-                    <li class="nav-item">
-                        <button id="themeToggle" class="theme-toggle-btn nav-link" title="Toggle Dark Mode" style="border: none; background: transparent; padding: 0 16px;">
-                            <span id="themeIcon">🌙</span>
-                        </button>
-                    </li>
                     <!-- User dropdown (shown when logged in) -->
                     <li class="nav-item dropdown user-dropdown" id="userDropdownNavItem" style="display: none;">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: flex; align-items: center; gap: 0.5rem;">
@@ -1394,6 +1388,11 @@
                             <li><a class="dropdown-item" href="recent_orders.html"><i class="fas fa-receipt me-2"></i>Recent Orders</a></li>
                             <li><a class="dropdown-item" href="#" onclick="openSettingsModal(); return false;"><i class="fas fa-cog me-2"></i>Settings</a></li>
                             <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <button id="themeToggle" class="dropdown-item" title="Toggle Dark Mode" style="border: none; background: transparent; width: 100%; text-align: left; padding: 0.5rem 1rem;">
+                                    <span id="themeIcon">🌙</span> <span style="margin-left: 0.5rem;">Dark Mode</span>
+                                </button>
+                            </li>
                             <li><a class="dropdown-item" href="#" onclick="logout(); return false;"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                         </ul>
                     </li>
