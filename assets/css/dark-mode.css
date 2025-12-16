@@ -1435,4 +1435,42 @@ body.dark .map-loading i {
   color: var(--accent-blue-light) !important;
 }
 
+/* Payment error modal */
+body.dark .payment-error-container {
+  background: linear-gradient(135deg, var(--panel-bg-dark) 0%, var(--panel-bg-dark-alt) 100%) !important;
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.85) !important;
+}
+
+body.dark .payment-error-container h3 {
+  color: var(--text-dark) !important;
+}
+
+body.dark .payment-error-container p {
+  color: var(--text-muted-dark) !important;
+}
+
+body.dark .payment-error-close {
+  color: var(--text-muted-dark) !important;
+}
+
+body.dark .payment-error-close:hover {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #f87171 !important;
+}
+
+body.dark .payment-error-icon {
+  background: radial-gradient(circle at 40% 40%, rgba(248, 113, 113, 0.4), transparent 60%),
+              linear-gradient(135deg, var(--panel-bg-dark-alt), var(--panel-bg-dark)) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.9) !important;
+}
+
+body.dark .payment-error-icon::before {
+  background: linear-gradient(135deg, #f87171, #ef4444) !important;
+  opacity: 0.3 !important;
+}
+
+body.dark .payment-error-icon i {
+  color: #f87171 !important;
+}
+
 
