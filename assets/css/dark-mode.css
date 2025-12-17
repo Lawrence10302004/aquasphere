@@ -1178,9 +1178,11 @@ body.dark .site-footer a {
 
 /* Landing / Home page (index.html) */
 body.dark .hero-section {
-  background:
-    radial-gradient(circle at top left, rgba(56, 189, 248, 0.28), transparent 55%),
-    linear-gradient(135deg, #020617 0%, var(--bg-dark) 45%, var(--bg-dark-alt) 100%) !important;
+  background: url('home_image.png') center center / cover no-repeat !important;
+}
+
+body.dark .hero-section::before {
+  background: rgba(0, 0, 0, 0.5) !important;
 }
 
 body.dark .hero-content {
