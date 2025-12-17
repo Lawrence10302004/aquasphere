@@ -452,6 +452,38 @@
                 const mm = String(maxDate.getMonth() + 1).padStart(2, '0');
                 const dd = String(maxDate.getDate()).padStart(2, '0');
                 birthdayInput.max = `${yyyy}-${mm}-${dd}`;
+                
+                // Force calendar icon to be white in dark mode
+                function applyCalendarIconStyle() {
+                    if (document.body.classList.contains('dark')) {
+                        const style = document.createElement('style');
+                        style.id = 'calendar-icon-dark-fix';
+                        style.textContent = `
+                            body.dark #birthday::-webkit-calendar-picker-indicator,
+                            body.dark .register-card input[type="date"]::-webkit-calendar-picker-indicator {
+                                filter: invert(1) brightness(10) contrast(2) saturate(0) !important;
+                                opacity: 1 !important;
+                                background: transparent !important;
+                            }
+                        `;
+                        // Remove existing style if any
+                        const existing = document.getElementById('calendar-icon-dark-fix');
+                        if (existing) existing.remove();
+                        document.head.appendChild(style);
+                    }
+                }
+                
+                // Apply immediately
+                applyCalendarIconStyle();
+                
+                // Re-apply when dark mode toggles
+                const observer = new MutationObserver(() => {
+                    applyCalendarIconStyle();
+                });
+                observer.observe(document.body, {
+                    attributes: true,
+                    attributeFilter: ['class']
+                });
             }
             
             // Success timers to revert the green glow after 3s
