@@ -1187,7 +1187,8 @@ body.dark .hero-section {
 }
 
 body.dark .hero-section::before {
-  display: none !important;
+  background: rgba(14, 165, 233, 0.3) !important;
+  /* Same blue overlay as light mode */
 }
 
 /* Ensure hero section content remains visible in dark mode */
