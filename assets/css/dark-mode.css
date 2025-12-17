@@ -1831,6 +1831,19 @@ body.dark .register-card .btn-outline-secondary:hover i {
   color: var(--accent-blue-light) !important;
 }
 
+/* Custom Calendar Icon Overlay - White in Dark Mode */
+body.dark .date-icon-overlay {
+  color: var(--text-dark) !important;
+}
+
+body.dark .date-input-wrapper .date-icon-overlay {
+  color: var(--text-dark) !important;
+}
+
+body.dark .register-card .date-icon-overlay {
+  color: var(--text-dark) !important;
+}
+
 /* Date Input Calendar Icon Dark Mode - Make it white and visible */
 body.dark input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1) brightness(2) !important;

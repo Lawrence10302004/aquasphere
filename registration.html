@@ -199,6 +199,41 @@
             border-color: #ced4da;
         }
         
+        /* Date Input Wrapper with Custom Calendar Icon */
+        .date-input-wrapper {
+            position: relative;
+        }
+        
+        .date-input-wrapper input[type="date"] {
+            padding-right: 40px;
+        }
+        
+        .date-icon-overlay {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #4a5568;
+            font-size: 1rem;
+            z-index: 1;
+        }
+        
+        body.dark .date-icon-overlay {
+            color: #f1f5f9 !important;
+        }
+        
+        /* Hide native calendar icon but keep it clickable */
+        .date-input-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
+            position: absolute;
+            right: 0;
+            width: 40px;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+        }
+        
         .login-link {
             text-align: center;
             margin-top: 1rem;
@@ -354,7 +389,10 @@
                                 
                                 <div class="col-md-6 mb-2">
                                     <label for="birthday" class="form-label">Birthday</label>
-                                    <input type="date" class="form-control" id="birthday" name="birthday" required>
+                                    <div class="date-input-wrapper" style="position: relative;">
+                                        <input type="date" class="form-control" id="birthday" name="birthday" required>
+                                        <i class="fas fa-calendar-alt date-icon-overlay"></i>
+                                    </div>
                                     <div class="custom-error" id="birthday-error">Birthday is required.</div>
                                 </div>
                             </div>
