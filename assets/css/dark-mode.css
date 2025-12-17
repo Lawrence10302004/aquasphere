@@ -1176,30 +1176,16 @@ body.dark .site-footer a {
   color: var(--accent-blue-light) !important;
 }
 
-/* Landing / Home page (index.html) - Hero section exempt from dark mode */
-/* Keep hero section in light mode even when body has dark class */
+/* Landing / Home page (index.html) */
 body.dark .hero-section {
   background-image: url('./home_image.png') !important;
   background-position: center center !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
-  /* Override any dark mode background colors */
-  background-color: transparent !important;
 }
 
 body.dark .hero-section::before {
   display: none !important;
-  /* Remove overlay completely in dark mode so image is fully visible */
-}
-
-body.dark .hero-content {
-  color: #e5f0ff !important;
-}
-
-body.dark .btn-hero {
-  background: white !important;
-  color: #0ea5e9 !important;
-  border: none !important;
 }
 
 body.dark .btn-hero:hover,
