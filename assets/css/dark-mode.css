@@ -1176,7 +1176,7 @@ body.dark .site-footer a {
   color: var(--accent-blue-light) !important;
 }
 
-/* Landing / Home page (index.html) */
+/* Landing / Home page (index.html) - Hero section exempt from dark mode overlay */
 body.dark .hero-section {
   background-image: url('./home_image.png') !important;
   background-position: center center !important;
@@ -1185,7 +1185,7 @@ body.dark .hero-section {
 }
 
 body.dark .hero-section::before {
-  background: rgba(14, 165, 233, 0.4) !important;
+  display: none !important;
 }
 
 body.dark .hero-content {
