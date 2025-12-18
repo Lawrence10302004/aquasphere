@@ -63,11 +63,11 @@ body.dark .nav-link.active {
 }
 
 body.dark .nav-link[title]:hover {
-  background: rgba(14, 165, 233, 0.2) !important;
+  background: rgba(37, 104, 146, 0.2) !important;
 }
 
 body.dark .nav-link[title].active {
-  background: rgba(14, 165, 233, 0.2) !important;
+  background: rgba(37, 104, 146, 0.2) !important;
 }
 
 /* Badge colors in dark mode - ensure white text stays white on hover */
@@ -97,7 +97,7 @@ body.dark .dropdown-item {
 }
 
 body.dark .dropdown-item:hover {
-  background: rgba(14, 165, 233, 0.2) !important;
+  background: rgba(37, 104, 146, 0.2) !important;
   color: var(--accent-blue-light) !important;
 }
 
@@ -136,7 +136,7 @@ body.dark input:focus {
   background: var(--panel-bg-dark-alt) !important;
   border-color: var(--accent-blue) !important;
   color: var(--text-dark) !important;
-  box-shadow: 0 0 0 0.25rem rgba(14, 165, 233, 0.25) !important;
+  box-shadow: 0 0 0 0.25rem rgba(37, 104, 146, 0.25) !important;
 }
 
 body.dark .form-label {
@@ -268,8 +268,8 @@ body.dark .alert-warning {
 }
 
 body.dark .alert-info {
-  background: rgba(14, 165, 233, 0.2) !important;
-  border-color: rgba(14, 165, 233, 0.4) !important;
+  background: rgba(37, 104, 146, 0.2) !important;
+  border-color: rgba(37, 104, 146, 0.4) !important;
   color: var(--accent-blue-light) !important;
 }
 
@@ -526,7 +526,7 @@ body.dark .order-card::before {
 }
 
 body.dark .order-header {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.25) 0%, rgba(2, 132, 199, 0.4) 100%) !important;
+  background: linear-gradient(135deg, rgba(37, 104, 146, 0.25) 0%, rgba(30, 79, 115, 0.4) 100%) !important;
   color: var(--text-dark) !important;
 }
 
@@ -570,7 +570,7 @@ body.dark .empty-orders .btn-shop {
   background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-dark) 100%) !important;
   border: 1px solid var(--accent-blue) !important;
   color: #ffffff !important;
-  box-shadow: 0 8px 18px rgba(14, 165, 233, 0.45) !important;
+  box-shadow: 0 8px 18px rgba(37, 104, 146, 0.45) !important;
 }
 
 body.dark .order-item {
@@ -607,9 +607,9 @@ body.dark .summary-row .text-muted {
 
 body.dark .status-badge,
 body.dark .badge-status {
-  background: rgba(14, 165, 233, 0.15) !important;
+  background: rgba(37, 104, 146, 0.15) !important;
   color: var(--accent-blue-light) !important;
-  border: 1px solid rgba(14, 165, 233, 0.35) !important;
+  border: 1px solid rgba(37, 104, 146, 0.35) !important;
 }
 
 /* Generic panels / cards across pages */
@@ -795,7 +795,7 @@ body.dark .payment-card {
 }
 
 body.dark .payment-card-header {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.25) 0%, rgba(2, 132, 199, 0.45) 100%) !important;
+  background: linear-gradient(135deg, rgba(37, 104, 146, 0.25) 0%, rgba(30, 79, 115, 0.45) 100%) !important;
   color: var(--text-dark) !important;
 }
 
@@ -895,7 +895,7 @@ body.dark .form-group.error select {
 
 body.dark .form-group input.success,
 body.dark .form-group select.success {
-  background: rgba(14, 165, 233, 0.08) !important;
+  background: rgba(37, 104, 146, 0.08) !important;
 }
 
 /* Password change success modal */
@@ -1018,7 +1018,7 @@ body.dark .label-btn.active {
   background: var(--panel-bg-dark) !important;
   border-color: var(--accent-blue) !important;
   color: var(--accent-blue-light) !important;
-  box-shadow: 0 6px 18px rgba(14, 165, 233, 0.35) !important;
+  box-shadow: 0 6px 18px rgba(37, 104, 146, 0.35) !important;
 }
 
 body.dark .address-coordinates,
@@ -1117,7 +1117,7 @@ body.dark .address-display .badge.active,
 body.dark .address-display .tag.active,
 body.dark .address-display .btn-outline-info.active,
 body.dark .address-display .btn-outline-warning.active {
-  background: rgba(14, 165, 233, 0.18) !important;
+  background: rgba(37, 104, 146, 0.18) !important;
   color: var(--accent-blue-light) !important;
   border-color: var(--accent-blue) !important;
 }
@@ -1136,7 +1136,7 @@ body.dark .address-display .btn-outline-warning {
 
 body.dark .address-display .btn-outline-info.active,
 body.dark .address-display .btn-outline-warning.active {
-  background: rgba(14, 165, 233, 0.18) !important;
+  background: rgba(37, 104, 146, 0.18) !important;
   color: var(--accent-blue-light) !important;
   border-color: var(--accent-blue) !important;
 }
@@ -1203,7 +1203,7 @@ body.dark .hero-section {
 }
 
 body.dark .hero-section::before {
-  background: rgba(14, 165, 233, 0.3) !important;
+  background: rgba(37, 104, 146, 0.3) !important;
   /* Same blue overlay as light mode */
 }
 
@@ -1226,7 +1226,7 @@ body.dark .btn-hero-outline {
 
 body.dark .btn-hero-outline:hover {
   background: white !important;
-  color: #0ea5e9 !important;
+  color: #256892 !important;
   border-color: white !important;
 }
 
@@ -1660,11 +1660,11 @@ body.dark .form-control:focus {
   background: var(--panel-bg-dark-alt) !important;
   border-color: var(--accent-blue) !important;
   color: var(--text-dark) !important;
-  box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25) !important;
+  box-shadow: 0 0 0 0.2rem rgba(37, 104, 146, 0.25) !important;
 }
 
 body.dark .form-control.success {
-  background: rgba(14, 165, 233, 0.1) !important;
+  background: rgba(37, 104, 146, 0.1) !important;
   border-color: var(--accent-blue) !important;
 }
 
@@ -1796,12 +1796,12 @@ body.dark .register-card .form-select:focus {
   background: var(--panel-bg-dark-alt) !important;
   border-color: var(--accent-blue) !important;
   color: var(--text-dark) !important;
-  box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25) !important;
+  box-shadow: 0 0 0 0.2rem rgba(37, 104, 146, 0.25) !important;
 }
 
 body.dark .register-card .form-control.success,
 body.dark .register-card .form-select.success {
-  background: rgba(14, 165, 233, 0.1) !important;
+  background: rgba(37, 104, 146, 0.1) !important;
   border-color: var(--accent-blue) !important;
 }
 
@@ -1970,7 +1970,7 @@ body.dark .otp-input:focus {
   background: var(--panel-bg-dark-alt) !important;
   border-color: var(--accent-blue) !important;
   color: var(--text-dark) !important;
-  box-shadow: 0 0 0 0.3rem rgba(14, 165, 233, 0.25) !important;
+  box-shadow: 0 0 0 0.3rem rgba(37, 104, 146, 0.25) !important;
 }
 
 body.dark .otp-input.filled {
@@ -2016,7 +2016,7 @@ body.dark .error-message {
 }
 
 body.dark .success-message {
-  background: rgba(14, 165, 233, 0.2) !important;
+  background: rgba(37, 104, 146, 0.2) !important;
   color: var(--accent-blue-light) !important;
   border-left-color: var(--accent-blue) !important;
 }
@@ -2056,12 +2056,12 @@ body.dark .registration-success-icon-wrapper {
 
 body.dark .registration-success-icon {
   background: linear-gradient(135deg, var(--panel-bg-dark-alt) 0%, var(--panel-bg-dark) 100%) !important;
-  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.4) !important;
+  box-shadow: 0 8px 24px rgba(37, 104, 146, 0.4) !important;
   border: 2px solid var(--border-dark) !important;
 }
 
 body.dark .registration-success-icon::before {
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.3), rgba(2, 132, 199, 0.3)) !important;
+  background: linear-gradient(135deg, rgba(37, 104, 146, 0.3), rgba(30, 79, 115, 0.3)) !important;
 }
 
 body.dark .registration-success-icon i {
