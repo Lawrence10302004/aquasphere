@@ -190,6 +190,21 @@
             transform: translateY(-2px);
         }
         
+        .exact-match-row {
+            background-color: #e0f2fe !important;
+            border-left: 4px solid #0ea5e9;
+            animation: highlightPulse 2s ease-in-out;
+        }
+        
+        @keyframes highlightPulse {
+            0%, 100% {
+                background-color: #e0f2fe;
+            }
+            50% {
+                background-color: #bae6fd;
+            }
+        }
+        
         .pagination {
             margin-top: 20px;
         }
@@ -725,7 +740,27 @@
                 return;
             }
             
+            // Sort users: exact matches first
+            const searchTerm = currentSearch.toLowerCase().trim();
+            if (searchTerm) {
+                users.sort((a, b) => {
+                    const aUsername = (a.username || '').toLowerCase();
+                    const bUsername = (b.username || '').toLowerCase();
+                    const aExactMatch = aUsername === searchTerm;
+                    const bExactMatch = bUsername === searchTerm;
+                    
+                    if (aExactMatch && !bExactMatch) return -1;
+                    if (!aExactMatch && bExactMatch) return 1;
+                    return 0;
+                });
+            }
+            
             tbody.innerHTML = users.map(user => {
+                const isExactMatch = searchTerm && (user.username || '').toLowerCase() === searchTerm;
+                const highlightClass = isExactMatch ? 'exact-match-row' : '';
+                
+                return `
+                <tr class="${highlightClass}">
                 const isSuspended = parseInt(user.suspended || 0) === 1;
                 const statusBadge = isSuspended
                     ? `<span class="badge bg-danger">Suspended</span>
