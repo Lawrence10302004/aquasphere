@@ -22,9 +22,9 @@
   --border-dark: #334155;
   
   /* Accent colors (work in both modes) */
-  --accent-blue: #0ea5e9;
-  --accent-blue-dark: #0284c7;
-  --accent-blue-light: #38bdf8;
+  --accent-blue: #256892;
+  --accent-blue-dark: #1e4f73;
+  --accent-blue-light: #3b7fb8;
 }
 
 /* Dark mode body class */
