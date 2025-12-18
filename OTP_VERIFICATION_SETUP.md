@@ -1,9 +1,3 @@
-# OTP Verification Implementation with Brevo API - Setup Summary
-
-## Overview
-This document summarizes how OTP (One-Time Password) email verification is implemented in the AquaSphere application using Brevo (formerly Sendinblue) API for email delivery.
-
----
 
 ## Architecture Components
 

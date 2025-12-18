@@ -427,7 +427,7 @@ function getNotificationMessage(order) {
         return {
             title: 'Shipped',
             desc: 'Your order has been shipped and is now in transit. Please await our next update regarding delivery.',
-            color: 'linear-gradient(135deg, #06b6d4, #256892)',
+            color: 'linear-gradient(135deg, #3b7fb8, #256892)',
             icon: 'fas fa-shipping-fast'
         };
     }
