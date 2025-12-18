@@ -60,12 +60,12 @@
         .navbar-brand {
             font-weight: 700;
             font-size: 1.5rem;
-            color: #0ea5e9 !important;
+            color: #256892 !important;
             transition: all 0.3s ease;
         }
         
         .navbar-brand:hover {
-            color: #0369a1 !important;
+            color: #1a4a6b !important;
             transform: scale(1.05);
         }
         
@@ -84,7 +84,7 @@
             height: 3px;
             bottom: 0;
             left: 50%;
-            background: linear-gradient(90deg, #0ea5e9, #0369a1);
+            background: linear-gradient(90deg, #256892, #1a4a6b);
             transition: all 0.3s ease;
             transform: translateX(-50%);
         }
@@ -96,7 +96,7 @@
         
         .nav-link:hover,
         .nav-link.active {
-            color: #0ea5e9 !important;
+            color: #256892 !important;
         }
         
         /* Verification Card */
@@ -113,7 +113,7 @@
         .verification-icon {
             width: 100px;
             height: 100px;
-            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            background: linear-gradient(135deg, #256892, #1e4f73);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -139,7 +139,7 @@
         .verification-title {
             font-size: 2rem;
             font-weight: 700;
-            color: #0369a1;
+            color: #1a4a6b;
             margin-bottom: 0.5rem;
         }
         
@@ -163,7 +163,7 @@
         }
         
         .email-badge i {
-            color: #0ea5e9;
+            color: #256892;
         }
         
         .otp-container {
@@ -187,12 +187,12 @@
             border-radius: 15px;
             background: #f8f9fa;
             transition: all 0.3s ease;
-            color: #0369a1;
+            color: #1a4a6b;
         }
         
         .otp-input:focus {
             outline: none;
-            border-color: #0ea5e9;
+            border-color: #256892;
             background: white;
             box-shadow: 0 0 0 0.3rem rgba(14, 165, 233, 0.25);
             transform: scale(1.05);
@@ -217,7 +217,7 @@
         }
         
         .verify-btn {
-            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            background: linear-gradient(135deg, #256892, #1e4f73);
             border: none;
             color: white;
             padding: 15px 40px;
@@ -247,7 +247,7 @@
         }
         
         .resend-link {
-            color: #0ea5e9;
+            color: #256892;
             text-decoration: none;
             font-weight: 500;
             font-size: 1rem;
@@ -255,7 +255,7 @@
         }
         
         .resend-link:hover {
-            color: #0284c7;
+            color: #1e4f73;
             text-decoration: underline;
         }
         
@@ -296,7 +296,7 @@
             border-radius: 10px;
             margin-bottom: 1.5rem;
             display: none;
-            border-left: 4px solid #0ea5e9;
+            border-left: 4px solid #256892;
             font-weight: 500;
         }
         
@@ -355,7 +355,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%);
+            background: linear-gradient(90deg, #256892 0%, #1e4f73 50%, #1a4a6b 100%);
             animation: gradientShift 3s ease infinite;
         }
         
@@ -422,7 +422,7 @@
         
         .registration-success-icon i {
             font-size: 3.5rem;
-            color: #0ea5e9;
+            color: #256892;
             position: relative;
             z-index: 1;
         }
@@ -435,7 +435,7 @@
         .registration-success-body h3 {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #0369a1;
+            color: #1a4a6b;
             margin-bottom: 1rem;
         }
         
@@ -458,7 +458,7 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            background: linear-gradient(135deg, #256892, #1e4f73);
             animation: loaderBounce 1.4s ease-in-out infinite both;
         }
         
@@ -494,13 +494,13 @@
         }
         
         .back-link a:hover {
-            color: #0ea5e9;
+            color: #256892;
             text-decoration: underline;
         }
         
         /* Footer */
         .footer {
-            background: #0369a1;
+            background: #1a4a6b;
             color: white;
             padding: 20px 0 15px;
             width: 100%;
@@ -545,7 +545,7 @@
         
         .social-icons a:hover {
             background: white;
-            color: #0ea5e9;
+            color: #256892;
             transform: translateY(-5px);
         }
         
@@ -643,7 +643,7 @@
             devNotice.style.cssText = 'background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 15px; margin-bottom: 1.5rem;';
             devNotice.innerHTML = `
                 <strong><i class="fas fa-exclamation-triangle me-2"></i>Development Mode:</strong><br>
-                Email service not configured. Your OTP code is: <strong style="font-size: 1.2rem; color: #0ea5e9;">${devOTP}</strong>
+                Email service not configured. Your OTP code is: <strong style="font-size: 1.2rem; color: #256892;">${devOTP}</strong>
             `;
             document.querySelector('.verification-card').insertBefore(devNotice, document.querySelector('.email-badge'));
         }
@@ -945,7 +945,7 @@
                         devNotice.style.cssText = 'background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 15px; margin-bottom: 1.5rem;';
                         devNotice.innerHTML = `
                             <strong><i class="fas fa-exclamation-triangle me-2"></i>Development Mode:</strong><br>
-                            Email service not configured. Your new OTP code is: <strong style="font-size: 1.2rem; color: #0ea5e9;">${data.otp}</strong>
+                            Email service not configured. Your new OTP code is: <strong style="font-size: 1.2rem; color: #256892;">${data.otp}</strong>
                         `;
                         const emailBadge = document.querySelector('.email-badge');
                         if (emailBadge) {
