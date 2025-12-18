@@ -70,6 +70,22 @@ body.dark .nav-link[title].active {
   background: rgba(14, 165, 233, 0.2) !important;
 }
 
+/* Badge colors in dark mode - ensure white text stays white on hover */
+body.dark .cart-badge,
+body.dark .orders-badge,
+body.dark .notification-badge {
+  color: white !important;
+}
+
+body.dark .nav-link:hover .cart-badge,
+body.dark .nav-link:hover .orders-badge,
+body.dark .nav-link:hover .notification-badge,
+body.dark .nav-link.active .cart-badge,
+body.dark .nav-link.active .orders-badge,
+body.dark .nav-link.active .notification-badge {
+  color: white !important;
+}
+
 body.dark .dropdown-menu {
   background: var(--panel-bg-dark) !important;
   border-color: var(--border-dark) !important;
