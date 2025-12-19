@@ -1401,9 +1401,18 @@
                         return;
                     }
                     const spinner = sendResetButton.querySelector('.fa-spinner');
+                    const paperPlaneIcon = sendResetButton.querySelector('.fa-paper-plane');
+                    const buttonText = sendResetButton.querySelector('span');
+                    
                     sendResetButton.disabled = true;
                     if (spinner) {
                         spinner.style.display = 'inline-block';
+                    }
+                    if (paperPlaneIcon) {
+                        paperPlaneIcon.style.display = 'none';
+                    }
+                    if (buttonText) {
+                        buttonText.textContent = 'Sending...';
                     }
                     
                     try {
@@ -1498,9 +1507,16 @@
                             errorDiv.style.display = 'block';
                         }
                     } finally {
-                        if (sendResetButton) {
-                            sendResetButton.disabled = false;
-                            if (spinner) spinner.style.display = 'none';
+                        const sendResetButtonFinal = document.getElementById('sendResetButton');
+                        if (sendResetButtonFinal) {
+                            sendResetButtonFinal.disabled = false;
+                            const spinnerFinal = sendResetButtonFinal.querySelector('.fa-spinner');
+                            const paperPlaneIconFinal = sendResetButtonFinal.querySelector('.fa-paper-plane');
+                            const buttonTextFinal = sendResetButtonFinal.querySelector('span');
+                            
+                            if (spinnerFinal) spinnerFinal.style.display = 'none';
+                            if (paperPlaneIconFinal) paperPlaneIconFinal.style.display = 'inline-block';
+                            if (buttonTextFinal) buttonTextFinal.textContent = 'Send Reset Code';
                         }
                     }
                 });
@@ -1833,9 +1849,18 @@
                     }
                     
                     const verifyButton = document.getElementById('verifyButton');
+                    if (!verifyButton) {
+                        console.error('Verify button not found');
+                        return;
+                    }
+                    
                     const spinner = verifyButton.querySelector('.fa-spinner');
+                    const buttonText = verifyButton.querySelector('span');
+                    
+                    // Show loading state - keep button visible
                     verifyButton.disabled = true;
-                    spinner.style.display = 'inline-block';
+                    if (spinner) spinner.style.display = 'inline-block';
+                    if (buttonText) buttonText.textContent = 'Verifying...';
                     
                     try {
                         const [response] = await Promise.all([
@@ -1852,30 +1877,92 @@
                             new Promise(resolve => setTimeout(resolve, 1500))
                         ]);
                         
-                        const data = await response.json();
+                        // Check if response is ok
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            let errorData;
+                            try {
+                                errorData = JSON.parse(errorText);
+                            } catch (e) {
+                                errorData = { error: 'Server error. Please try again.' };
+                            }
+                            const otpError = document.getElementById('otp-error');
+                            if (otpError) {
+                                otpError.textContent = errorData.error || 'Invalid or expired verification code. Please try again.';
+                                otpError.style.display = 'block';
+                            }
+                            return;
+                        }
+                        
+                        const text = await response.text();
+                        let data;
+                        try {
+                            data = JSON.parse(text);
+                        } catch (e) {
+                            console.error('JSON parse error:', e, 'Response text:', text);
+                            const otpError = document.getElementById('otp-error');
+                            if (otpError) {
+                                otpError.textContent = 'Invalid response from server. Please try again.';
+                                otpError.style.display = 'block';
+                            }
+                            return;
+                        }
                         
                         if (data.success) {
                             // Store the OTP code before closing the modal
                             resetOTPCode = otpCode;
-                            bootstrap.Modal.getInstance(document.getElementById('otpVerificationModal')).hide();
-                            const newPasswordModal = new bootstrap.Modal(document.getElementById('newPasswordModal'));
-                            newPasswordModal.show();
+                            
+                            // Hide OTP modal and show new password modal
+                            const otpModalElement = document.getElementById('otpVerificationModal');
+                            if (otpModalElement) {
+                                const otpModal = bootstrap.Modal.getInstance(otpModalElement);
+                                if (otpModal) {
+                                    otpModal.hide();
+                                }
+                            }
+                            
+                            // Wait a bit for modal to close, then show new password modal
+                            setTimeout(() => {
+                                const newPasswordModalElement = document.getElementById('newPasswordModal');
+                                if (newPasswordModalElement) {
+                                    try {
+                                        const newPasswordModal = new bootstrap.Modal(newPasswordModalElement, {
+                                            backdrop: true,
+                                            keyboard: true
+                                        });
+                                        newPasswordModal.show();
+                                    } catch (error) {
+                                        console.error('Error showing new password modal:', error);
+                                        // Fallback: show modal directly
+                                        newPasswordModalElement.classList.add('show');
+                                        newPasswordModalElement.style.display = 'block';
+                                        document.body.classList.add('modal-open');
+                                        const backdrop = document.createElement('div');
+                                        backdrop.className = 'modal-backdrop fade show';
+                                        document.body.appendChild(backdrop);
+                                    }
+                                }
+                            }, 300);
                         } else {
-                            document.getElementById('otp-error').textContent = data.error || 'Invalid or expired verification code. Please try again.';
-                            document.getElementById('otp-error').style.display = 'block';
+                            // Show error message - this is important for invalid code
+                            const otpError = document.getElementById('otp-error');
+                            if (otpError) {
+                                otpError.textContent = data.error || 'Invalid or expired verification code. Please try again.';
+                                otpError.style.display = 'block';
+                            }
                         }
                     } catch (error) {
-                        // Removed console.error('Error:', error);
+                        console.error('Error verifying OTP:', error);
                         const otpError = document.getElementById('otp-error');
                         if (otpError) {
                             otpError.textContent = 'An error occurred. Please try again.';
                             otpError.style.display = 'block';
                         }
                     } finally {
-                        if (verifyButton) {
-                            verifyButton.disabled = false;
-                            if (spinner) spinner.style.display = 'none';
-                        }
+                        // Reset button state - keep it visible
+                        verifyButton.disabled = false;
+                        if (spinner) spinner.style.display = 'none';
+                        if (buttonText) buttonText.textContent = 'Verify and Continue';
                     }
                 });
             }
