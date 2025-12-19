@@ -1212,62 +1212,69 @@
         }
         
         function addToCart(productId, productName, price, event) {
+            console.log('addToCart called with:', { productId, productName, price });
+            
             // Prevent any default behavior that might interfere
             if (event) {
                 event.preventDefault();
                 event.stopPropagation();
             }
             
-            // Ensure productId is a number for consistent comparison
-            productId = parseInt(productId);
-            price = parseFloat(price);
-            
-            // Get current cart and update immediately (synchronous)
-            cart = UserState.getCart();
-            const quantityInput = document.getElementById('qty-' + productId);
-            const quantity = quantityInput ? parseInt(quantityInput.value) || 1 : 1;
-            
-            // Update cart array immediately - ensure ID comparison is consistent
-            const existingItem = cart.find(item => parseInt(item.id) === productId);
-            if (existingItem) {
-                existingItem.quantity += quantity;
-            } else {
-                cart.push({
-                    id: productId,
-                    name: productName,
-                    price: price,
-                    quantity: quantity
-                });
-            }
-            
-            // Update localStorage immediately (synchronous, fast)
-            localStorage.setItem('cart', JSON.stringify(cart));
-            
-            // Update cart count immediately (synchronous, fast)
-            cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const cartCountEl = document.getElementById('cartCount');
-            if (cartCountEl) {
-                cartCountEl.textContent = cartCount;
-                cartCountEl.style.display = cartCount > 0 ? 'flex' : 'none';
-            }
-            
-            // Save to server (non-blocking)
-            UserState.setCart(cart);
-            
-            // Update navbar cart count (global function from navbar.js)
-            if (typeof window.updateCartCount === 'function') {
-                window.updateCartCount();
-            }
-            
-            // Show notification immediately
-            showNotificationFast(`${quantity}x ${productName} added to cart!`, 'success');
-            
-            console.log('Cart updated:', cart);
-            console.log('Cart count:', cartCount);
-            
-            // Reset quantity to 1
-            if (quantityInput) {
-                quantityInput.value = 1;
+            try {
+                // Ensure productId is a number for consistent comparison
+                productId = parseInt(productId);
+                price = parseFloat(price);
+                
+                // Get current cart and update immediately (synchronous)
+                cart = UserState.getCart();
+                const quantityInput = document.getElementById('qty-' + productId);
+                const quantity = quantityInput ? parseInt(quantityInput.value) || 1 : 1;
+                
+                // Update cart array immediately - ensure ID comparison is consistent
+                const existingItem = cart.find(item => parseInt(item.id) === productId);
+                if (existingItem) {
+                    existingItem.quantity += quantity;
+                } else {
+                    cart.push({
+                        id: productId,
+                        name: productName,
+                        price: price,
+                        quantity: quantity
+                    });
+                }
+                
+                // Update localStorage immediately (synchronous, fast)
+                localStorage.setItem('cart', JSON.stringify(cart));
+                
+                // Update cart count immediately (synchronous, fast)
+                cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+                const cartCountEl = document.getElementById('cartCount');
+                if (cartCountEl) {
+                    cartCountEl.textContent = cartCount;
+                    cartCountEl.style.display = cartCount > 0 ? 'flex' : 'none';
+                }
+                
+                // Save to server (non-blocking)
+                UserState.setCart(cart);
+                
+                // Update navbar cart count (global function from navbar.js)
+                if (typeof window.updateCartCount === 'function') {
+                    window.updateCartCount();
+                }
+                
+                // Show notification immediately
+                showNotificationFast(`${quantity}x ${productName} added to cart!`, 'success');
+                
+                console.log('Cart updated:', cart);
+                console.log('Cart count:', cartCount);
+                
+                // Reset quantity to 1
+                if (quantityInput) {
+                    quantityInput.value = 1;
+                }
+            } catch (error) {
+                console.error('Error in addToCart:', error);
+                alert('Error adding to cart: ' + error.message);
             }
             
             // Return false to prevent any further event propagation
