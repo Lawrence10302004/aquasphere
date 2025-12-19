@@ -418,6 +418,47 @@ function init_db() {
         }
     }
     
+    // Create products table
+    if ($GLOBALS['use_postgres']) {
+        $query = "
+        CREATE TABLE IF NOT EXISTS products (
+            id " . get_id_type() . ",
+            label " . get_text_type() . " NOT NULL,
+            description TEXT NOT NULL,
+            price DECIMAL(10,2) NOT NULL,
+            image_url TEXT,
+            icon_class " . get_text_type() . " NOT NULL,
+            category " . get_text_type() . " NOT NULL,
+            unit " . get_text_type() . " NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+        ";
+        $result = execute_sql($conn, $query);
+        if ($result === false) {
+            error_log("Failed to create products table: " . pg_last_error($conn));
+        }
+    } else {
+        $query = "
+        CREATE TABLE IF NOT EXISTS products (
+            id " . get_id_type() . ",
+            label " . get_text_type() . " NOT NULL,
+            description TEXT NOT NULL,
+            price DECIMAL(10,2) NOT NULL,
+            image_url TEXT,
+            icon_class " . get_text_type() . " NOT NULL,
+            category " . get_text_type() . " NOT NULL,
+            unit " . get_text_type() . " NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+        ";
+        $result = execute_sql($conn, $query);
+        if ($result === false) {
+            error_log("Failed to create products table: SQLite error");
+        }
+    }
+    
     close_connection($conn);
     error_log("Database initialization completed. Using: " . ($GLOBALS['use_postgres'] ? "PostgreSQL" : "SQLite"));
 }

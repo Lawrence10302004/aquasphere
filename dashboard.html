@@ -1143,134 +1143,9 @@
             
             <!-- Products Grid -->
             <div class="products-grid" id="productsGrid">
-                <!-- Product 1: 5-Gallon Refill -->
-                <div class="product-card" data-category="refill gallon">
-                    <div class="product-image">
-                        <i class="fas fa-fill-drip"></i>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">5-Gallon Refill</h3>
-                        <p class="product-description">Refill your existing container with fresh, clean water</p>
-                        <div class="product-footer">
-                            <button type="button" class="btn-add-cart" onclick="return addToCart(1, '5-Gallon Refill', 25, event)">
-                                Add to Cart
-                            </button>
-                            <div class="product-price-row">
-                                <div class="product-price">
-                                    ₱25<span>/refill</span>
-                                </div>
-                                <div class="quantity-controls">
-                                    <button type="button" class="quantity-btn decrease" onclick="decreaseQuantity(1)">−</button>
-                                    <input type="number" class="quantity-input" id="qty-1" value="1" min="1" onchange="validateQuantity(1)">
-                                    <button type="button" class="quantity-btn increase" onclick="increaseQuantity(1)">+</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Product 2: New 5-Gallon + Container -->
-                <div class="product-card" data-category="gallon">
-                    <div class="product-image">
-                        <i class="fas fa-wine-bottle"></i>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">New 5-Gallon + Container</h3>
-                        <p class="product-description">Includes new gallon container with fresh water</p>
-                        <div class="product-footer">
-                            <button type="button" class="btn-add-cart" onclick="return addToCart(2, 'New 5-Gallon + Container', 150, event)">
-                                Add to Cart
-                            </button>
-                            <div class="product-price-row">
-                                <div class="product-price">
-                                    ₱150<span>/unit</span>
-                                </div>
-                                <div class="quantity-controls">
-                                    <button type="button" class="quantity-btn decrease" onclick="decreaseQuantity(2)">−</button>
-                                    <input type="number" class="quantity-input" id="qty-2" value="1" min="1" onchange="validateQuantity(2)">
-                                    <button type="button" class="quantity-btn increase" onclick="increaseQuantity(2)">+</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Product 3: 1-Liter Bottle (12-pack) -->
-                <div class="product-card" data-category="bottle">
-                    <div class="product-image">
-                        <i class="fas fa-wine-bottle"></i>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">1-Liter Bottle (12-pack)</h3>
-                        <p class="product-description">Convenient bottles perfect for home and office</p>
-                        <div class="product-footer">
-                            <button type="button" class="btn-add-cart" onclick="return addToCart(3, '1-Liter Bottle (12-pack)', 120, event)">
-                                Add to Cart
-                            </button>
-                            <div class="product-price-row">
-                                <div class="product-price">
-                                    ₱120<span>/pack</span>
-                                </div>
-                                <div class="quantity-controls">
-                                    <button type="button" class="quantity-btn decrease" onclick="decreaseQuantity(3)">−</button>
-                                    <input type="number" class="quantity-input" id="qty-3" value="1" min="1" onchange="validateQuantity(3)">
-                                    <button type="button" class="quantity-btn increase" onclick="increaseQuantity(3)">+</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Product 4: 500ml Bottle (24-pack) -->
-                <div class="product-card" data-category="bottle">
-                    <div class="product-image">
-                        <i class="fas fa-wine-bottle"></i>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">500ml Bottle (24-pack)</h3>
-                        <p class="product-description">Perfect for on-the-go hydration</p>
-                        <div class="product-footer">
-                            <button type="button" class="btn-add-cart" onclick="return addToCart(4, '500ml Bottle (24-pack)', 100, event)">
-                                Add to Cart
-                            </button>
-                            <div class="product-price-row">
-                                <div class="product-price">
-                                    ₱100<span>/pack</span>
-                                </div>
-                                <div class="quantity-controls">
-                                    <button type="button" class="quantity-btn decrease" onclick="decreaseQuantity(4)">−</button>
-                                    <input type="number" class="quantity-input" id="qty-4" value="1" min="1" onchange="validateQuantity(4)">
-                                    <button type="button" class="quantity-btn increase" onclick="increaseQuantity(4)">+</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Product 5: Bring Your Jug (Refill) -->
-                <div class="product-card" data-category="refill">
-                    <div class="product-image">
-                        <i class="fas fa-hand-holding-water"></i>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">Bring Your Jug (Refill)</h3>
-                        <p class="product-description">Use your own container for eco-friendly refills</p>
-                        <div class="product-footer">
-                            <button type="button" class="btn-add-cart" onclick="return addToCart(5, 'Bring Your Jug (Refill)', 20, event)">
-                                Add to Cart
-                            </button>
-                            <div class="product-price-row">
-                                <div class="product-price">
-                                    ₱20<span>/refill</span>
-                                </div>
-                                <div class="quantity-controls">
-                                    <button type="button" class="quantity-btn decrease" onclick="decreaseQuantity(5)">−</button>
-                                    <input type="number" class="quantity-input" id="qty-5" value="1" min="1" onchange="validateQuantity(5)">
-                                    <button type="button" class="quantity-btn increase" onclick="increaseQuantity(5)">+</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="text-center text-muted" style="padding: 3rem;">
+                    <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+                    <p>Loading products...</p>
                 </div>
             </div>
             
@@ -1290,6 +1165,7 @@
         // Cart functionality
         let cart = [];
         let cartCount = 0;
+        let products = [];
         
         // Notification optimization - reuse single element
         let notificationElement = null;
@@ -1399,6 +1275,79 @@
                     }
                 }
             });
+        });
+        
+        // Load products from API
+        async function loadProducts() {
+            try {
+                const response = await fetch('api/get_products.php');
+                const data = await response.json();
+                
+                if (data.success && data.products) {
+                    products = data.products;
+                    renderProducts(products);
+                } else {
+                    document.getElementById('productsGrid').innerHTML = '<div class="text-center text-muted" style="padding: 3rem;"><p>No products available. Please check back later.</p></div>';
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                document.getElementById('productsGrid').innerHTML = '<div class="text-center text-muted" style="padding: 3rem;"><p>Failed to load products. Please refresh the page.</p></div>';
+            }
+        }
+        
+        // Render products
+        function renderProducts(productsList) {
+            const productsGrid = document.getElementById('productsGrid');
+            
+            if (!productsList || productsList.length === 0) {
+                productsGrid.innerHTML = '<div class="text-center text-muted" style="padding: 3rem;"><p>No products available. Please check back later.</p></div>';
+                return;
+            }
+            
+            productsGrid.innerHTML = productsList.map(product => {
+                const iconClass = product.icon_class || 'fa-box';
+                const category = product.category || '';
+                const unit = product.unit || '';
+                
+                return `
+                    <div class="product-card" data-category="${escapeHtml(category)}">
+                        <div class="product-image">
+                            <i class="fas ${escapeHtml(iconClass)}"></i>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">${escapeHtml(product.label)}</h3>
+                            <p class="product-description">${escapeHtml(product.description)}</p>
+                            <div class="product-footer">
+                                <button type="button" class="btn-add-cart" onclick="return addToCart(${product.id}, ${JSON.stringify(product.label)}, ${product.price}, event)">
+                                    Add to Cart
+                                </button>
+                                <div class="product-price-row">
+                                    <div class="product-price">
+                                        ₱${parseFloat(product.price).toFixed(2)}<span style="color: #256892; font-weight: 700;">${escapeHtml(unit)}</span>
+                                    </div>
+                                    <div class="quantity-controls">
+                                        <button type="button" class="quantity-btn decrease" onclick="decreaseQuantity(${product.id})">−</button>
+                                        <input type="number" class="quantity-input" id="qty-${product.id}" value="1" min="1" onchange="validateQuantity(${product.id})">
+                                        <button type="button" class="quantity-btn increase" onclick="increaseQuantity(${product.id})">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Escape HTML helper
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Load products on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
         });
         
         // Load stats from API
