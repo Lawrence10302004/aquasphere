@@ -18,7 +18,6 @@ Railway Volumes provide persistent storage that survives redeployments. This gui
    - Click the **"+ New"** button (top right)
    - Select **"Volume"**
    - Name it: `uploads` (or any name you prefer)
-   - Set the mount path: `/data/uploads` (or `/persistent/uploads`)
    - Click **"Add"**
 
 3. **Wait for Volume to be Created**
@@ -35,7 +34,7 @@ Railway Volumes provide persistent storage that survives redeployments. This gui
 2. **Mount the Volume**
    - Click **"+ Add Volume"**
    - Select the volume you created (`uploads`)
-   - **Important**: Set the mount path to `/app/uploads` (this makes it accessible via the web server)
+   - **CRITICAL**: Set the mount path to `/app/uploads` (this makes it accessible via the web server)
    - Click **"Add"**
 
 ### Step 3: Set Environment Variable
@@ -63,14 +62,29 @@ After setting up the volume and environment variable:
    - Add a new product with an image
 
 2. **Check the Volume**
-   - The image should be stored in `/app/uploads/uploads/products/`
+   - The image should be stored in `/app/uploads/products/`
    - The file will be accessible via the web at `https://your-app.railway.app/uploads/products/filename.jpg`
-   - You can verify this by checking Railway logs
+   - Check Railway logs for confirmation: `Image uploaded successfully: uploads/products/filename.jpg to /app/uploads/products/filename.jpg (Volume: Yes)`
 
 3. **Test Persistence**
    - Redeploy your application (push a small change)
    - Check that the product image still displays
    - Images should now persist across redeployments! ✅
+
+## Important Notes
+
+### Mount Path Configuration
+- **Mount Path**: `/app/uploads` (in Railway service settings)
+- **Environment Variable**: `RAILWAY_VOLUME_PATH=/app/uploads`
+- **File Storage**: Files are stored at `/app/uploads/products/` in the volume
+- **Web URL**: Files are accessible at `https://your-app.railway.app/uploads/products/filename.jpg`
+
+### Why This Works
+- Railway volumes are mounted into your container's filesystem
+- When mounted at `/app/uploads`, files stored there persist across redeployments
+- The web server (Apache/Nginx) serves files from `/app/uploads/` as `/uploads/` in URLs
+- The database stores relative paths like `uploads/products/filename.jpg`
+- These paths work because the volume is mounted at the web root level
 
 ## Alternative: Using Cloud Storage
 
@@ -100,33 +114,81 @@ If you prefer not to use Railway Volumes, you can use cloud storage services:
 ## Current Implementation
 
 The code now checks for:
-1. `RAILWAY_VOLUME_PATH` environment variable (Railway Volume)
+1. `RAILWAY_VOLUME_PATH` environment variable (Railway Volume) - **RECOMMENDED**
 2. `UPLOAD_DIR` environment variable (Custom path)
-3. Falls back to web root `uploads/` directory (ephemeral)
+3. Falls back to web root `uploads/` directory (ephemeral - will be lost on redeploy)
 
 ## Troubleshooting
 
 ### Images Still Disappearing?
-- Verify `RAILWAY_VOLUME_PATH` is set correctly
-- Check that the volume is mounted in your app service settings
-- Ensure the mount path matches the environment variable value
-- Check Railway logs for upload errors
+
+1. **Verify Environment Variable**
+   - Go to Railway → Your Service → Variables
+   - Check that `RAILWAY_VOLUME_PATH` is set to `/app/uploads`
+   - Make sure there are no typos or extra spaces
+
+2. **Verify Volume Mount**
+   - Go to Railway → Your Service → Settings → Volumes
+   - Check that the volume is mounted at `/app/uploads`
+   - The mount path must match the environment variable exactly
+
+3. **Check Railway Logs**
+   - After uploading an image, check logs for:
+     - `Using Railway Volume path: /app/uploads`
+     - `Image uploaded successfully: uploads/products/filename.jpg to /app/uploads/products/filename.jpg (Volume: Yes)`
+   - If you see `Volume: No`, the environment variable is not set correctly
+
+4. **Test File Persistence**
+   - Upload an image
+   - Check Railway logs to confirm it's using the volume
+   - Redeploy the application
+   - Check if the image still exists in the volume
+   - Access the image URL directly: `https://your-app.railway.app/uploads/products/filename.jpg`
 
 ### Permission Errors?
+
 - Railway volumes should have correct permissions automatically
 - If issues persist, check volume mount settings
+- The code automatically sets directory permissions to 0777
 
 ### Volume Not Showing?
+
 - Make sure you're on a Railway plan that supports volumes
 - Free tier may have limitations - check Railway documentation
+- Volumes are only available on certain Railway plans
+
+### Files Not Accessible via Web?
+
+- Ensure the volume is mounted at `/app/uploads` (not `/data/uploads` or other paths)
+- Check that your web server (Apache/Nginx) is configured to serve files from `/app/uploads/`
+- Verify the `.htaccess` file exists in the `uploads/` directory
+- Test by accessing the image URL directly in a browser
 
 ## Quick Checklist
 
 - [ ] Volume created in Railway project
-- [ ] Volume mounted to app service at `/data/uploads` (or your path)
-- [ ] `RAILWAY_VOLUME_PATH` environment variable set
-- [ ] Application redeployed
-- [ ] Test: Upload product image → Redeploy → Image still exists ✅
+- [ ] Volume mounted to app service at `/app/uploads`
+- [ ] `RAILWAY_VOLUME_PATH` environment variable set to `/app/uploads`
+- [ ] Application redeployed after setting up volume
+- [ ] Test: Upload product image → Check logs show "Volume: Yes" → Redeploy → Image still exists ✅
+
+## Verification Commands (if you have SSH access)
+
+If Railway provides SSH access to your container:
+
+```bash
+# Check if volume is mounted
+ls -la /app/uploads
+
+# Check if products directory exists
+ls -la /app/uploads/products/
+
+# Check environment variable
+echo $RAILWAY_VOLUME_PATH
+
+# Verify a specific file exists
+ls -la /app/uploads/products/product_*.jpg
+```
 
 ## Notes
 
@@ -134,4 +196,4 @@ The code now checks for:
 - **Backups**: Consider backing up important images separately
 - **Performance**: Volumes provide fast local storage, better than cloud storage for frequently accessed files
 - **Cost**: Check Railway pricing for volume storage costs
-
+- **Migration**: If you already have images in ephemeral storage, you'll need to re-upload them after setting up the volume
