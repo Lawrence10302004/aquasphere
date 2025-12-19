@@ -63,29 +63,19 @@ function initializeDarkMode() {
         themeIcon.textContent = '🌙';
     }
     
-    // Toggle dark mode - use capture phase to ensure it fires before dropdown closes
+    // Toggle dark mode
     themeToggle.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        e.stopImmediatePropagation();
         document.body.classList.toggle('dark');
         const isDark = document.body.classList.contains('dark');
         themeIcon.textContent = isDark ? '☀️' : '🌙';
         // Save preference to localStorage
         localStorage.setItem('darkMode', isDark ? 'true' : 'false');
         
-        // Prevent dropdown from closing
-        const dropdown = themeToggle.closest('.dropdown-menu');
-        if (dropdown) {
-            const bsDropdown = bootstrap.Dropdown.getInstance(themeToggle.closest('.dropdown-toggle'));
-            if (bsDropdown) {
-                // Keep dropdown open
-                setTimeout(() => {
-                    bsDropdown.show();
-                }, 10);
-            }
-        }
-    }, true); // Use capture phase
+        // Dispatch custom event to notify other listeners
+        window.dispatchEvent(new CustomEvent('darkModeToggled', { detail: { isDark } }));
+    });
 }
 
 // Initialize dark mode on page load
