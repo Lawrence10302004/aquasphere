@@ -695,6 +695,278 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
+
+        /* Edit Product Modal Styles */
+        .edit-product-modal-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .edit-product-modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #256892, #1e4f73, #256892);
+            background-size: 200% 100%;
+            animation: gradientShift 2s ease infinite;
+        }
+
+        .edit-product-modal-header {
+            padding: 2rem 2rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        }
+
+        .edit-product-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(37, 104, 146, 0.25);
+        }
+
+        .edit-product-icon-wrapper i {
+            font-size: 1.75rem;
+            color: white;
+        }
+
+        .edit-product-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .edit-product-subtitle {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+        .edit-product-modal-body {
+            padding: 2rem;
+        }
+
+        .edit-form-label {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #334155;
+            margin-bottom: 0.5rem;
+        }
+
+        .edit-form-label i {
+            color: #256892;
+            font-size: 0.85rem;
+        }
+
+        .edit-form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: #1e293b;
+            background: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .edit-form-control:focus {
+            outline: none;
+            border-color: #256892;
+            box-shadow: 0 0 0 3px rgba(37, 104, 146, 0.1);
+            background: #ffffff;
+        }
+
+        .edit-form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        .edit-image-section {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+        }
+
+        .edit-image-upload-wrapper {
+            margin-bottom: 1rem;
+        }
+
+        .edit-file-input {
+            display: none;
+        }
+
+        .edit-file-label {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .edit-file-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 104, 146, 0.3);
+        }
+
+        .edit-image-hint {
+            display: block;
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .edit-current-image,
+        .edit-preview-image {
+            margin-top: 1rem;
+        }
+
+        .edit-current-image .alert,
+        .edit-preview-image .alert {
+            border-radius: 12px;
+            border: none;
+            padding: 1rem;
+            margin: 0;
+        }
+
+        .edit-current-image img,
+        .edit-preview-image img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-top: 0.75rem;
+        }
+
+        .edit-product-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .btn-edit-submit,
+        .btn-edit-cancel {
+            padding: 0.875rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-edit-submit {
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+        }
+
+        .btn-edit-submit:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1e4f73, #153d5a);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 104, 146, 0.4);
+        }
+
+        .btn-edit-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-edit-cancel {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-edit-cancel:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .edit-btn-text {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* Dark mode support for edit modal */
+        body.dark .edit-product-modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        body.dark .edit-product-modal-header {
+            border-bottom-color: #334155;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        body.dark .edit-product-title {
+            color: #f1f5f9;
+        }
+
+        body.dark .edit-product-subtitle {
+            color: #94a3b8;
+        }
+
+        body.dark .edit-form-label {
+            color: #e2e8f0;
+        }
+
+        body.dark .edit-form-control {
+            background: #1e293b;
+            border-color: #334155;
+            color: #f1f5f9;
+        }
+
+        body.dark .edit-form-control:focus {
+            border-color: #256892;
+            background: #1e293b;
+        }
+
+        body.dark .edit-image-section {
+            background: #0f172a;
+            border-color: #334155;
+        }
+
+        body.dark .btn-edit-cancel {
+            background: #334155;
+            color: #e2e8f0;
+        }
+
+        body.dark .btn-edit-cancel:hover {
+            background: #475569;
+        }
+
+        body.dark .edit-product-actions {
+            border-top-color: #334155;
+        }
     </style>
 </head>
 <body>
@@ -842,34 +1114,58 @@
 
     <!-- Edit Product Modal -->
     <div id="editProductModal" class="delete-confirm-modal">
-        <div class="delete-confirm-content" style="max-width: 600px; width: 90%;">
-            <div class="delete-confirm-body">
-                <h3 class="delete-confirm-title">Edit Product</h3>
+        <div class="edit-product-modal-content">
+            <div class="edit-product-modal-header">
+                <div class="edit-product-icon-wrapper">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <h3 class="edit-product-title">Edit Product</h3>
+                <p class="edit-product-subtitle">Update product information below</p>
+            </div>
+            <div class="edit-product-modal-body">
                 <form id="editProductForm">
                     <input type="hidden" id="editProductId">
-                    <div class="row g-3 mt-2">
+                    <div class="row g-4">
                         <div class="col-md-6">
-                            <label for="editProductLabel" class="form-label">Product Label/Name</label>
-                            <input type="text" class="form-control" id="editProductLabel" required placeholder="e.g., 5-Gallon Refill">
+                            <label for="editProductLabel" class="edit-form-label">
+                                <i class="fas fa-tag me-2"></i>Product Label/Name
+                            </label>
+                            <input type="text" class="edit-form-control" id="editProductLabel" required placeholder="e.g., 5-Gallon Refill">
                         </div>
                         <div class="col-md-6">
-                            <label for="editProductPrice" class="form-label">Price (₱)</label>
-                            <input type="number" class="form-control" id="editProductPrice" required step="0.01" min="0" placeholder="e.g., 25.00">
+                            <label for="editProductPrice" class="edit-form-label">
+                                <i class="fas fa-peso-sign me-2"></i>Price (₱)
+                            </label>
+                            <input type="number" class="edit-form-control" id="editProductPrice" required step="0.01" min="0" placeholder="e.g., 25.00">
                         </div>
                         <div class="col-md-12">
-                            <label for="editProductDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="editProductDescription" rows="3" required placeholder="Product description..."></textarea>
+                            <label for="editProductDescription" class="edit-form-label">
+                                <i class="fas fa-align-left me-2"></i>Description
+                            </label>
+                            <textarea class="edit-form-control" id="editProductDescription" rows="4" required placeholder="Enter a detailed product description..."></textarea>
                         </div>
                         <div class="col-md-12">
-                            <label for="editProductImage" class="form-label">Product Image (Optional - leave empty to keep current image)</label>
-                            <input type="file" class="form-control" id="editProductImage" accept="image/*">
-                            <small class="text-muted">Upload a new image to replace the current one</small>
-                            <div id="editImagePreview" style="margin-top: 10px;"></div>
-                            <div id="currentImageDisplay" style="margin-top: 10px;"></div>
+                            <div class="edit-image-section">
+                                <label for="editProductImage" class="edit-form-label">
+                                    <i class="fas fa-image me-2"></i>Product Image
+                                </label>
+                                <div class="edit-image-upload-wrapper">
+                                    <input type="file" class="edit-file-input" id="editProductImage" accept="image/*">
+                                    <label for="editProductImage" class="edit-file-label">
+                                        <i class="fas fa-cloud-upload-alt me-2"></i>
+                                        <span>Choose new image</span>
+                                    </label>
+                                    <small class="edit-image-hint">Leave empty to keep current image</small>
+                                </div>
+                                <div id="currentImageDisplay" class="edit-current-image"></div>
+                                <div id="editImagePreview" class="edit-preview-image"></div>
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <label for="editProductCategory" class="form-label">Category</label>
-                            <select class="form-select" id="editProductCategory" required>
+                            <label for="editProductCategory" class="edit-form-label">
+                                <i class="fas fa-folder me-2"></i>Category
+                            </label>
+                            <select class="edit-form-control" id="editProductCategory" required>
                                 <option value="">Select category...</option>
                                 <option value="refill gallon">Refill Gallon</option>
                                 <option value="gallon">Gallon</option>
@@ -877,19 +1173,25 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="editProductUnit" class="form-label">Price Unit</label>
-                            <input type="text" class="form-control" id="editProductUnit" required placeholder="e.g., /refill, /unit, /pack">
+                            <label for="editProductUnit" class="edit-form-label">
+                                <i class="fas fa-ruler me-2"></i>Price Unit
+                            </label>
+                            <input type="text" class="edit-form-control" id="editProductUnit" required placeholder="e.g., /refill, /unit, /pack">
                         </div>
-                        <div class="col-12 mt-3">
-                            <div class="delete-confirm-actions">
-                                <button type="submit" class="btn-delete-confirm" id="editProductSubmitBtn">
-                                    <span class="delete-confirm-text">Update Product</span>
+                        <div class="col-12">
+                            <div class="edit-product-actions">
+                                <button type="submit" class="btn-edit-submit" id="editProductSubmitBtn">
+                                    <span class="edit-btn-text">
+                                        <i class="fas fa-save me-2"></i>Update Product
+                                    </span>
                                     <span class="delete-loading" id="editProductLoading">
                                         <span class="delete-loading-spinner"></span>
                                         <span class="delete-loading-text">Updating...</span>
                                     </span>
                                 </button>
-                                <button type="button" class="btn-delete-cancel" id="editProductCancelBtn">Cancel</button>
+                                <button type="button" class="btn-edit-cancel" id="editProductCancelBtn">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1263,17 +1565,24 @@
                     }
                     currentImageDisplay.innerHTML = `
                         <div class="alert alert-info">
-                            <strong>Current Image:</strong><br>
-                            <img src="${escapeHtml(imageUrl)}" alt="Current product image" style="max-width: 200px; max-height: 200px; margin-top: 10px; border-radius: 8px;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'alert alert-warning\\'>Image not found</div>';">
+                            <strong><i class="fas fa-image me-2"></i>Current Image:</strong><br>
+                            <img src="${escapeHtml(imageUrl)}" alt="Current product image" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'alert alert-warning\\'><i class=\\'fas fa-exclamation-triangle me-2\\'></i>Image not found</div>';">
                         </div>
                     `;
                 } else {
-                    currentImageDisplay.innerHTML = '<div class="alert alert-warning">No image currently set</div>';
+                    currentImageDisplay.innerHTML = '<div class="alert alert-warning"><i class="fas fa-exclamation-circle me-2"></i>No image currently set</div>';
                 }
 
-                // Clear edit image preview
+                // Clear edit image preview and reset file label
                 document.getElementById('editImagePreview').innerHTML = '';
                 document.getElementById('editProductImage').value = '';
+                const fileLabel = document.querySelector('label[for="editProductImage"]');
+                if (fileLabel) {
+                    const span = fileLabel.querySelector('span');
+                    if (span) {
+                        span.textContent = 'Choose new image';
+                    }
+                }
 
                 // Show modal
                 const modal = document.getElementById('editProductModal');
@@ -1293,12 +1602,31 @@
                     newImageInput.addEventListener('change', function(e) {
                         const file = e.target.files[0];
                         if (file) {
+                            // Update file label to show selected file name
+                            const fileLabel = document.querySelector('label[for="editProductImage"]');
+                            if (fileLabel) {
+                                const span = fileLabel.querySelector('span');
+                                if (span) {
+                                    span.textContent = file.name;
+                                }
+                            }
+                            
                             const reader = new FileReader();
                             reader.onload = function(e) {
                                 const preview = document.getElementById('editImagePreview');
-                                preview.innerHTML = `<div class="alert alert-success"><strong>New Image Preview:</strong><br><img src="${e.target.result}" alt="Preview" style="max-width: 200px; max-height: 200px; border-radius: 8px; margin-top: 10px;"></div>`;
+                                preview.innerHTML = `<div class="alert alert-success"><strong><i class="fas fa-check-circle me-2"></i>New Image Preview:</strong><br><img src="${e.target.result}" alt="Preview"></div>`;
                             };
                             reader.readAsDataURL(file);
+                        } else {
+                            // Reset label if no file selected
+                            const fileLabel = document.querySelector('label[for="editProductImage"]');
+                            if (fileLabel) {
+                                const span = fileLabel.querySelector('span');
+                                if (span) {
+                                    span.textContent = 'Choose new image';
+                                }
+                            }
+                            document.getElementById('editImagePreview').innerHTML = '';
                         }
                     });
                 }
@@ -1388,9 +1716,7 @@
                 if (data.success) {
                     showNotification('Product updated successfully!', 'success');
                     document.getElementById('editProductModal').classList.remove('show');
-                    document.getElementById('editProductForm').reset();
-                    document.getElementById('editImagePreview').innerHTML = '';
-                    document.getElementById('currentImageDisplay').innerHTML = '';
+                    resetEditForm();
                     
                     // Reload products to reflect changes
                     await loadProducts();
@@ -1410,12 +1736,25 @@
             }
         });
 
-        // Handle edit modal cancel
-        document.getElementById('editProductCancelBtn').addEventListener('click', function() {
-            document.getElementById('editProductModal').classList.remove('show');
+        // Helper function to reset edit form
+        function resetEditForm() {
             document.getElementById('editProductForm').reset();
             document.getElementById('editImagePreview').innerHTML = '';
             document.getElementById('currentImageDisplay').innerHTML = '';
+            // Reset file label
+            const fileLabel = document.querySelector('label[for="editProductImage"]');
+            if (fileLabel) {
+                const span = fileLabel.querySelector('span');
+                if (span) {
+                    span.textContent = 'Choose new image';
+                }
+            }
+        }
+
+        // Handle edit modal cancel
+        document.getElementById('editProductCancelBtn').addEventListener('click', function() {
+            document.getElementById('editProductModal').classList.remove('show');
+            resetEditForm();
         });
         
         // Close edit modal when clicking outside
