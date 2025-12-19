@@ -1396,8 +1396,8 @@
                 // Build the style string for the image - use background shorthand to override CSS gradient
                 let imageStyle = '';
                 if (imageUrl) {
-                    // Use background-size: contain to show full image without cropping, with light background
-                    imageStyle = `background-image: url('${imageUrl}') !important; background-size: contain !important; background-position: center center !important; background-repeat: no-repeat !important; background-color: #f8fafc !important;`;
+                    // Use background-size: cover to fill entire container without white spaces
+                    imageStyle = `background-image: url('${imageUrl}') !important; background-size: cover !important; background-position: center center !important; background-repeat: no-repeat !important; background-color: transparent !important;`;
                 }
                 
                 return `
