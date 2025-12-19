@@ -35,7 +35,7 @@ Railway Volumes provide persistent storage that survives redeployments. This gui
 2. **Mount the Volume**
    - Click **"+ Add Volume"**
    - Select the volume you created (`uploads`)
-   - Set the mount path: `/data/uploads` (or your preferred path)
+   - **Important**: Set the mount path to `/app/uploads` (this makes it accessible via the web server)
    - Click **"Add"**
 
 ### Step 3: Set Environment Variable
@@ -46,7 +46,7 @@ Railway Volumes provide persistent storage that survives redeployments. This gui
 
 2. **Add Volume Path Variable**
    - Name: `RAILWAY_VOLUME_PATH`
-   - Value: `/data/uploads` (or whatever mount path you used in Step 2)
+   - Value: `/app/uploads` (must match the mount path from Step 2)
    - Click **"Add"**
 
 ### Step 4: Redeploy Your Application
@@ -63,8 +63,9 @@ After setting up the volume and environment variable:
    - Add a new product with an image
 
 2. **Check the Volume**
-   - The image should be stored in `/data/uploads/uploads/products/`
-   - You can verify this by checking Railway logs or using the Railway CLI
+   - The image should be stored in `/app/uploads/uploads/products/`
+   - The file will be accessible via the web at `https://your-app.railway.app/uploads/products/filename.jpg`
+   - You can verify this by checking Railway logs
 
 3. **Test Persistence**
    - Redeploy your application (push a small change)
