@@ -473,6 +473,14 @@ body.dark .search-box input:focus {
   outline: none !important;
 }
 
+/* Ensure search-filter-bar container is visible with curved edges in dark mode */
+body.dark .search-filter-bar {
+  background: var(--panel-bg-dark) !important;
+  border: none !important;
+  border-radius: 15px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
 body.dark .search-box i {
   color: var(--text-muted-dark) !important;
 }
@@ -482,11 +490,17 @@ body.dark .filter-select select {
   background: var(--panel-bg-dark) !important;
   border: 1px solid var(--border-dark) !important;
   color: var(--text-dark) !important;
-  /* Custom dropdown arrow for dark mode - white/light colored */
+}
+
+/* Dashboard form-select dropdown arrow in dark mode */
+body.dark .search-filter-bar .form-select,
+body.dark #filterSelect {
+  appearance: none !important;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f1f5f9' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
   background-repeat: no-repeat !important;
   background-position: right 15px center !important;
   padding-right: 40px !important;
+  background-color: var(--panel-bg-dark) !important;
 }
 
 /* How It Works section - Step numbers visibility in dark mode */
