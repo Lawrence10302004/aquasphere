@@ -2333,7 +2333,6 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content otp-modal-card">
             <div class="modal-header border-0 pb-0">
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body px-lg-5 pb-lg-5">
@@ -2393,54 +2392,58 @@
 </div>
 
     <!-- New Password Modal -->
-    <div class="modal fade" id="newPasswordModal" tabindex="-1" aria-labelledby="newPasswordModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content forgot-password-modal-content">
-                <div class="modal-header forgot-password-modal-header">
-                    <h5 class="modal-title" id="newPasswordModalLabel">Reset Password</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal fade" id="newPasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content forgot-password-modal-content border-0">
+            <div class="modal-header border-0 pb-0 justify-content-end">
+            </div>
+
+            <div class="modal-body px-lg-5 pb-lg-5 text-center">
+                <div class="otp-icon-circle mb-4">
+                    <i class="fas fa-lock-open text-primary"></i>
                 </div>
-                <div class="modal-body forgot-password-modal-body">
-                    <div class="forgot-password-illustration">
-                        <div class="illustration-icon reset-icon">
-                            <i class="fas fa-lock"></i>
-                        </div>
-                    </div>
-                    <p class="forgot-password-instruction">Your new password must be different from your previous password.</p>
-                    <form id="newPasswordForm">
-                        <div class="mb-3">
-                            <label for="newPassword" class="form-label forgot-password-label">New Password</label>
-                            <div class="input-group forgot-password-input-group">
-                                <input type="password" class="form-control forgot-password-input" id="newPassword" placeholder="Enter new password" autocomplete="off">
-                                <button class="btn btn-password-toggle" type="button" id="toggleNewPassword">
-                                    <i class="fas fa-eye" id="newPasswordIcon"></i>
-                                </button>
-                            </div>
-                            <div class="custom-error" id="newPassword-error" style="display: none;">Min 8 chars with upper, lower, number, special.</div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="confirmPassword" class="form-label forgot-password-label">Confirm New Password</label>
-                            <div class="input-group forgot-password-input-group">
-                                <input type="password" class="form-control forgot-password-input" id="confirmPassword" placeholder="Confirm new password" autocomplete="off">
-                                <button class="btn btn-password-toggle" type="button" id="toggleConfirmPassword">
-                                    <i class="fas fa-eye" id="confirmPasswordIcon"></i>
-                                </button>
-                            </div>
-                            <div class="custom-error" id="confirmPassword-error" style="display: none;">Min 8 chars with upper, lower, number, special.</div>
-                        </div>
-                        
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-forgot-password" id="proceedButton">
-                                <i class="fas fa-spinner fa-spin me-2" style="display: none;"></i>
-                                Reset Password
+
+                <h3 class="fw-bold text-dark mb-2">Reset Password</h3>
+                <p class="text-muted small mb-4">
+                    Your new password must be different from your previous password.
+                </p>
+
+                <form id="newPasswordForm" class="text-start">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-uppercase text-muted">New Password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control custom-input border-end-0" 
+                                   id="newPassword" placeholder="Enter new password" required>
+                            <button class="btn btn-password-toggle border-start-0" type="button" id="toggleNewPassword">
+                                <i class="fas fa-eye text-muted" id="newPasswordIcon"></i>
                             </button>
                         </div>
-                    </form>
-                </div>
+                        <div class="custom-error" id="newPassword-error">Min 8 chars with upper, lower, number, special.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-uppercase text-muted">Confirm New Password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control custom-input border-end-0" 
+                                   id="confirmPassword" placeholder="Confirm new password" required>
+                            <button class="btn btn-password-toggle border-start-0" type="button" id="toggleConfirmPassword">
+                                <i class="fas fa-eye text-muted" id="confirmPasswordIcon"></i>
+                            </button>
+                        </div>
+                        <div class="custom-error" id="confirmPassword-error">Passwords do not match.</div>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-register py-3" id="proceedButton">
+                            <i class="fas fa-spinner fa-spin me-2" style="display: none;"></i>
+                            Reset Password
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
 
     <!-- Password Reset Success Toast -->
