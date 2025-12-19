@@ -502,19 +502,11 @@
             border-top: 1px solid #e2e8f0;
         }
         
-        .exact-match-row {
-            background-color: #fef3c7 !important;
-            border-left: 4px solid #f59e0b;
-            animation: highlightPulse 2s ease-in-out;
-        }
-        
-        @keyframes highlightPulse {
-            0%, 100% {
-                background-color: #fef3c7;
-            }
-            50% {
-                background-color: #fde68a;
-            }
+        .search-highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -680,6 +672,19 @@
         let currentSearch = '';
         let currentStatus = '';
         
+        // Function to highlight matching text
+        function highlightText(text, searchTerm) {
+            if (!searchTerm || !text) return escapeHtml(text);
+            const escapedText = escapeHtml(text);
+            const regex = new RegExp(`(${escapeRegex(searchTerm)})`, 'gi');
+            return escapedText.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+        
+        // Escape special regex characters
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        
         // Load orders
         function loadOrders(page = 1) {
             currentPage = page;
@@ -737,15 +742,6 @@
             }
             
             tbody.innerHTML = orders.map(order => {
-                const orderId = String(order.id || '').toLowerCase();
-                const username = (order.username || '').toLowerCase();
-                const email = (order.email || '').toLowerCase();
-                const isExactMatch = searchTerm && (
-                    orderId === searchTerm || 
-                    username === searchTerm || 
-                    email === searchTerm
-                );
-                const highlightClass = isExactMatch ? 'exact-match-row' : '';
                 const status = order.status.toLowerCase();
                 const statusLabel = status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
                 const itemsCount = order.items ? order.items.length : 0;
@@ -753,11 +749,11 @@
                 const addressText = address ? (typeof address === 'string' ? address : (address.address || address.street || 'N/A')) : 'N/A';
                 
                 return `
-                    <tr class="${highlightClass}">
-                        <td><strong>#${order.id}</strong></td>
+                    <tr>
+                        <td><strong>${highlightText('#' + order.id, searchTerm)}</strong></td>
                         <td>
-                            <div><strong>${escapeHtml(order.username || 'N/A')}</strong></div>
-                            <small class="text-muted">${escapeHtml(order.email || 'N/A')}</small>
+                            <div><strong>${highlightText(order.username || 'N/A', searchTerm)}</strong></div>
+                            <small class="text-muted">${highlightText(order.email || 'N/A', searchTerm)}</small>
                         </td>
                         <td>${formatDate(order.order_date)}</td>
                         <td>${itemsCount} item${itemsCount !== 1 ? 's' : ''}</td>

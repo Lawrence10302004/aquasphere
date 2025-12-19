@@ -190,19 +190,11 @@
             transform: translateY(-2px);
         }
         
-        .exact-match-row {
-            background-color: #fef3c7 !important;
-            border-left: 4px solid #f59e0b;
-            animation: highlightPulse 2s ease-in-out;
-        }
-        
-        @keyframes highlightPulse {
-            0%, 100% {
-                background-color: #fef3c7;
-            }
-            50% {
-                background-color: #fde68a;
-            }
+        .search-highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
         }
         
         .pagination {
@@ -707,6 +699,19 @@
         let currentSearch = '';
         let originalUserData = null;
         
+        // Function to highlight matching text
+        function highlightText(text, searchTerm) {
+            if (!searchTerm || !text) return escapeHtml(text);
+            const escapedText = escapeHtml(text);
+            const regex = new RegExp(`(${escapeRegex(searchTerm)})`, 'gi');
+            return escapedText.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+        
+        // Escape special regex characters
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        
         // Load users
         function loadUsers(page = 1) {
             currentPage = page;
@@ -756,8 +761,6 @@
             }
             
             tbody.innerHTML = users.map(user => {
-                const isExactMatch = searchTerm && (user.username || '').toLowerCase() === searchTerm;
-                const highlightClass = isExactMatch ? 'exact-match-row' : '';
                 const isSuspended = parseInt(user.suspended || 0) === 1;
                 const statusBadge = isSuspended
                     ? `<span class="badge bg-danger">Suspended</span>
@@ -775,11 +778,11 @@
                     </button>`;
 
                 return `
-                <tr class="${highlightClass}">
+                <tr>
                     <td>${user.id}</td>
-                    <td><strong>${escapeHtml(user.username)}</strong></td>
-                    <td>${escapeHtml(user.email || 'N/A')}</td>
-                    <td>${escapeHtml((user.first_name || '') + ' ' + (user.last_name || '')) || 'N/A'}</td>
+                    <td><strong>${highlightText(user.username, searchTerm)}</strong></td>
+                    <td>${highlightText(user.email || 'N/A', searchTerm)}</td>
+                    <td>${highlightText((user.first_name || '') + ' ' + (user.last_name || '') || 'N/A', searchTerm)}</td>
                     <td>${formatGender(user.gender)}</td>
                     <td>
                         ${user.is_admin == 1 
