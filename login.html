@@ -1010,7 +1010,13 @@
                 }
                 
                 if (fieldName === 'password') {
+                    // Strong password regex: at least 8 chars with upper, lower, number, and special char
+                    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-\.\/:;<=>?@\[\]^_`{|}~]).{8,}$/;
+                    
                     if (value.length < 8) {
+                        showError(fieldName, 'Min 8 chars with upper, lower, number, special.');
+                        return false;
+                    } else if (!strongPasswordRegex.test(value)) {
                         showError(fieldName, 'Min 8 chars with upper, lower, number, special.');
                         return false;
                     } else {
