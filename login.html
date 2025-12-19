@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - AquaSphere</title>
-
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    
     <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Dark Mode CSS -->
     <link rel="stylesheet" href="assets/css/dark-mode.css">
     <!-- Shared Navbar CSS -->
     <link rel="stylesheet" href="navbar.css">
-
+    
     <style>
         /* Global Styles */
         * {
@@ -25,7 +25,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: Inter, system-ui, Segoe UI, sans-serif !important;
             background: #ffffff;
@@ -34,11 +34,11 @@
             display: flex;
             flex-direction: column;
         }
-
+        
         .main-content {
             flex: 1;
         }
-
+        
         /* Navbar Styles */
         .navbar {
              background:rgba(240, 248, 255, 0.8) !important;
@@ -46,24 +46,24 @@
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
-
+        
         .navbar.scrolled {
             padding: 0.5rem 0;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
         }
-
+        
         .navbar-brand {
             font-weight: 400;
             font-size: 1.5rem;
             color: #1a4a6b !important;
             transition: all 0.3s ease;
         }
-
+        
         .navbar-brand:hover {
             color: #256892 !important;
             transform: scale(1.05);
         }
-
+        
         .nav-link {
             font-weight: 500;
             color: #1a4a6b !important;
@@ -71,7 +71,7 @@
             transition: all 0.3s ease;
             position: relative;
         }
-
+        
         .nav-link::after {
             content: '';
             position: absolute;
@@ -83,18 +83,18 @@
             transition: all 0.3s ease;
             transform: translateX(-50%);
         }
-
+        
         .nav-link:hover::after,
         .nav-link.active::after {
             width: 80%;
         }
-
+        
         .nav-link:hover,
         .nav-link.active {
             color: #1a4a6b !important;
             font-weight: 900;
         }
-
+        
        /* --- Login Page Container --- */
         .main-content {
             background: linear-gradient(135deg, #16405c 0%, #256892 100%);
@@ -178,20 +178,15 @@
 
         /* --- Error Styling --- */
         .custom-error {
-            color: #e11d48;
-            font-size: 0.8rem;
-            margin-top: 6px;
-            font-weight: 600;
+            background-color: #fef2f2;
+            color: #b91c1c;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            border-left: 4px solid #ef4444;
+            font-weight: 500;
             display: none;
-            padding-left: 4px;
-        }
-
-        .custom-input.error {
-            border-color: #fb7185 !important;
-        }
-
-        .custom-input.error:focus {
-            box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1) !important;
         }
 
         /* --- Login Button --- */
@@ -235,7 +230,7 @@
             padding-top: 1.5rem;
             margin-top: 2rem;
         }
-
+        
         /* Footer */
         .footer {
             background: #0f2a3d; 
@@ -345,7 +340,7 @@
         .footer-legal a:hover {
             color: white;
         }
-
+        
         /* Toast Notification Styles */
         .toast-notification {
             position: fixed;
@@ -361,18 +356,18 @@
             transform: translateX(100%);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
+        
         .toast-notification.show {
             transform: translateX(0);
         }
-
+        
         .toast-content {
             display: flex;
             align-items: flex-start;
             padding: 20px;
             gap: 16px;
         }
-
+        
         .toast-icon {
             flex-shrink: 0;
             width: 48px;
@@ -386,12 +381,12 @@
             font-size: 20px;
             box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
         }
-
+        
         .toast-message {
             flex: 1;
             min-width: 0;
         }
-
+        
         .toast-title {
             margin: 0 0 8px 0;
             font-size: 16px;
@@ -399,14 +394,14 @@
             color: #2d3748;
             line-height: 1.4;
         }
-
+        
         .toast-text {
             margin: 0;
             font-size: 14px;
             color: #718096;
             line-height: 1.5;
         }
-
+        
         .toast-close {
             flex-shrink: 0;
             background: none;
@@ -423,13 +418,13 @@
             align-items: center;
             justify-content: center;
         }
-
+        
         .toast-close:hover {
             background: #f7fafc;
             color: #4a5568;
         }
-
-
+        
+        
         /* Forgot Password Modal Styles */
         .forgot-password-modal-content {
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
@@ -451,7 +446,7 @@
             animation: gradientShift 3s ease infinite;
             z-index: 1;
         }
-
+        
         @keyframes gradientShift {
             0%, 100% {
                 background-position: 0% 50%;
@@ -460,7 +455,7 @@
                 background-position: 100% 50%;
             }
         }
-
+        
         .forgot-password-modal-header {
             background: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #3b7fb8 100%);
             padding: 2rem 2rem 1.5rem;
@@ -469,7 +464,7 @@
             position: relative;
             overflow: hidden;
         }
-
+        
         .forgot-password-modal-header .modal-title {
             font-size: 1.75rem;
             font-weight: 800;
@@ -479,29 +474,29 @@
             position: relative;
             z-index: 1;
         }
-
+        
         .forgot-password-modal-header .btn-close {
             filter: brightness(0) invert(1);
             opacity: 0.9;
             z-index: 2;
         }
-
+        
         .forgot-password-modal-header .btn-close:hover {
             opacity: 1;
         }
-
+        
         .forgot-password-modal-body {
             background: transparent;
             padding: 2rem 2rem 1.5rem;
             position: relative;
             z-index: 1;
         }
-
+        
         .forgot-password-illustration {
             text-align: center;
             margin-bottom: 1.5rem;
         }
-
+        
         .illustration-icon {
             width: 120px;
             height: 120px;
@@ -514,12 +509,12 @@
             box-shadow: 0 10px 30px rgba(14, 165, 233, 0.3);
             animation: iconFloat 3s ease-in-out infinite;
         }
-
+        
         .illustration-icon i {
             font-size: 3.5rem;
             color: white;
         }
-
+        
         .illustration-icon.verification-icon {
             background: transparent;
             border-radius: 0;
@@ -528,7 +523,7 @@
             height: 140px;
             position: relative;
         }
-
+        
         .water-droplets {
             position: relative;
             width: 100%;
@@ -537,7 +532,7 @@
             align-items: center;
             justify-content: center;
         }
-
+        
         .water-droplet {
             position: absolute;
             width: 40px;
@@ -548,13 +543,13 @@
             box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
             animation: dropletFloat 3s ease-in-out infinite;
         }
-
+        
         .water-droplet:nth-child(1) {
             top: 20%;
             left: 30%;
             animation-delay: 0s;
         }
-
+        
         .water-droplet:nth-child(2) {
             top: 50%;
             left: 50%;
@@ -565,13 +560,13 @@
             animation-delay: 0.3s;
             z-index: 2;
         }
-
+        
         .water-droplet:nth-child(3) {
             top: 60%;
             right: 25%;
             animation-delay: 0.6s;
         }
-
+        
         .water-droplet::before {
             content: '';
             position: absolute;
@@ -582,12 +577,12 @@
             background: rgba(255, 255, 255, 0.6);
             border-radius: 50%;
         }
-
+        
         .water-droplet:nth-child(2)::before {
             width: 15px;
             height: 15px;
         }
-
+        
         @keyframes dropletFloat {
             0%, 100% {
                 transform: translateY(0) rotate(-45deg);
@@ -596,16 +591,16 @@
                 transform: translateY(-8px) rotate(-45deg);
             }
         }
-
+        
         .water-droplet:nth-child(2)::before {
             width: 15px;
             height: 15px;
         }
-
+        
         .illustration-icon.reset-icon {
             background: linear-gradient(135deg, #1e4f73, #1a4a6b);
         }
-
+        
         @keyframes iconFloat {
             0%, 100% {
                 transform: translateY(0px);
@@ -614,7 +609,7 @@
                 transform: translateY(-10px);
             }
         }
-
+        
         .forgot-password-instruction {
             color: #64748b;
             text-align: center;
@@ -622,14 +617,14 @@
             margin-bottom: 1.5rem;
             line-height: 1.6;
         }
-
+        
         .forgot-password-label {
             font-weight: 600;
             color: #1a4a6b;
             margin-bottom: 0.5rem;
             font-size: 0.95rem;
         }
-
+        
         .forgot-password-input {
             border-radius: 10px;
             border: 2px solid #e2e8f0;
@@ -637,17 +632,17 @@
             transition: all 0.3s ease;
             font-size: 0.95rem;
         }
-
+        
         .forgot-password-input:focus {
             border-color: #256892;
             box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25);
             outline: none;
         }
-
+        
         .forgot-password-input-group {
             position: relative;
         }
-
+        
         .btn-forgot-password {
             background: linear-gradient(135deg, #256892, #1e4f73);
             border: none;
@@ -659,13 +654,13 @@
             transition: all 0.3s ease;
             width: 100%;
         }
-
+        
         .btn-forgot-password:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(14, 165, 233, 0.4);
             color: white;
         }
-
+        
         .btn-forgot-password:disabled {
             opacity: 0.7;
             cursor: not-allowed;
@@ -762,7 +757,7 @@
         .letter-spacing-1 {
             letter-spacing: 0.5px;
         }
-
+   
 
         /* Suspended overlay */
         #suspendedOverlay {
@@ -838,24 +833,15 @@
     <script>
         // Redirect logged-in users away from login page
         document.addEventListener('DOMContentLoaded', async () => {
-            // Don't auto-redirect if user is already on login page (they should stay here to log in)
-            // Only redirect if they're already logged in and shouldn't be on login page
             try {
                 const resp = await fetch('api/get_current_user.php', { credentials: 'include' });
                 if (resp.ok) {
                     const data = await resp.json();
-                    // Only redirect if user is logged in and not coming from password change
-                    // Check URL parameters - if no redirect param, allow normal redirect
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const fromPasswordChange = urlParams.has('from') && urlParams.get('from') === 'password_change';
-
-                    if (!fromPasswordChange) {
-                        // Check if user is admin and redirect accordingly
-                        if (data.user && data.user.is_admin) {
-                            window.location.href = 'admin/dashboard.html';
-                        } else {
-                            window.location.href = 'dashboard.html';
-                        }
+                    // Check if user is admin and redirect accordingly
+                    if (data.user && data.user.is_admin) {
+                        window.location.href = 'admin/dashboard.html';
+                    } else {
+                        window.location.href = 'dashboard.html';
                     }
                     return;
                 }
@@ -901,7 +887,6 @@
                                 </button>
                             </div>
                             <div class="custom-error" id="password-error">Password is required.</div>
-                            <div class="custom-error" id="auth-error" style="display: none;"></div>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -941,11 +926,11 @@
             }
         });
     </script>
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('loginForm');
-
+            
             // Success timers to revert the green glow after 3s
             const successTimers = {};
             function markSuccess(fieldName) {
@@ -961,7 +946,7 @@
 
             // Required fields
             const requiredFields = ['username', 'password'];
-
+            
         // Suspended notice helpers
         function showSuspendedNotice(message) {
             const overlay = document.getElementById('suspendedOverlay');
@@ -974,12 +959,12 @@
             const overlay = document.getElementById('suspendedOverlay');
             if (overlay) overlay.style.display = 'none';
         };
-
+            
             // Function to show error
             function showError(fieldName, message) {
                 const field = document.getElementById(fieldName);
                 const errorDiv = document.getElementById(fieldName + '-error');
-
+                
                 if (field && errorDiv) {
                     field.classList.add('error');
                     field.classList.remove('success');
@@ -987,30 +972,30 @@
                     errorDiv.style.display = 'block';
                 }
             }
-
+            
             // Function to hide error
             function hideError(fieldName) {
                 const field = document.getElementById(fieldName);
                 const errorDiv = document.getElementById(fieldName + '-error');
-
+                
                 if (field && errorDiv) {
                     field.classList.remove('error');
                     errorDiv.style.display = 'none';
                 }
             }
-
+            
             // Function to validate individual field
             function validateField(fieldName) {
                 const field = document.getElementById(fieldName);
                 if (!field) return true;
-
+                
                 const value = field.value.trim();
-
+                
                 if (!value) {
                     showError(fieldName, getFieldLabel(fieldName) + ' is required.');
                     return false;
                 }
-
+                
                 // Additional validations
                 if (fieldName === 'username') {
                     if (value.length < 4 || value.length > 64) {
@@ -1021,12 +1006,12 @@
                         markSuccess(fieldName);
                     }
                 }
-
+                
                 if (fieldName === 'password') {
                     // Check if this is admin login - admin can use simpler password
                     const usernameField = document.getElementById('username');
                     const isAdmin = usernameField && usernameField.value.trim().toLowerCase() === 'admin';
-
+                    
                     if (value.length < 8) {
                         showError(fieldName, 'Min 8 chars with upper, lower, number, special.');
                         return false;
@@ -1042,10 +1027,10 @@
                     hideError(fieldName);
                     markSuccess(fieldName);
                 }
-
+                
                 return true;
             }
-
+            
             // Function to get field label
             function getFieldLabel(fieldName) {
                 const labels = {
@@ -1054,20 +1039,20 @@
                 };
                 return labels[fieldName] || fieldName;
             }
-
+            
             // Function to validate all fields
             function validateForm() {
                 let isValid = true;
-
+                
                 requiredFields.forEach(fieldName => {
                     if (!validateField(fieldName)) {
                         isValid = false;
                     }
                 });
-
+                
                 return isValid;
             }
-
+            
             // Add event listeners to all required fields
             requiredFields.forEach(fieldName => {
                 const field = document.getElementById(fieldName);
@@ -1088,13 +1073,13 @@
                     });
                 }
             });
-
+            
             // Password toggle functionality
             function togglePasswordVisibility(passwordFieldId, toggleButtonId, iconId) {
                 const passwordField = document.getElementById(passwordFieldId);
                 const toggleButton = document.getElementById(toggleButtonId);
                 const icon = document.getElementById(iconId);
-
+                
                 if (passwordField && toggleButton && icon) {
                     toggleButton.addEventListener('click', function() {
                         if (passwordField.type === 'password') {
@@ -1109,13 +1094,13 @@
                     });
                 }
             }
-
+            
             togglePasswordVisibility('password', 'togglePassword', 'passwordIcon');
-
+            
             // Form submission handler
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
-
+                
                 // Validate form first
                 if (!validateForm()) {
                     // Scroll to first error
@@ -1125,7 +1110,7 @@
                     }
                     return;
                 }
-
+                
                 // Submit form
                 const formData = new FormData(form);
                 fetch('api/login.php', {
@@ -1149,19 +1134,8 @@
                 })
                 .then(data => {
                     if (data && data.success === true) {
-                        // Check if there's a redirect parameter in URL (from password change)
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const redirectParam = urlParams.get('redirect');
-
-                        // If redirect parameter is 'stay', don't redirect (user should stay on login page)
-                        if (redirectParam === 'stay') {
-                            // Just reload the page to show logged in state
-                            window.location.reload();
-                            return;
-                        }
-
-                        // Use redirect parameter if present, otherwise use API redirect
-                        const redirectUrl = redirectParam || data.redirect || 'dashboard.html';
+                        // Redirect to dashboard or home
+                        const redirectUrl = data.redirect || 'dashboard.html';
                         // Force redirect immediately
                         window.location.replace(redirectUrl);
                     } else {
@@ -1174,13 +1148,12 @@
                             showSuspendedNotice();
                             return;
                         } else if (data.message) {
-                            // Show authentication error below password field
+                            // Show authentication error below password field (like AnemoCheck)
                             const authError = document.getElementById('auth-error');
                             const usernameField = document.getElementById('username');
                             const passwordField = document.getElementById('password');
-
+                            
                             if (authError) {
-                                authError.textContent = data.message;
                                 authError.style.display = 'block';
                                 // Make both fields red immediately
                                 if (usernameField) {
@@ -1191,6 +1164,8 @@
                                     passwordField.classList.add('error');
                                     passwordField.classList.remove('success');
                                 }
+                            } else {
+                                alert(data.message);
                             }
                         }
                     }
@@ -1200,21 +1175,21 @@
                     const authError = document.getElementById('auth-error');
                     const usernameField = document.getElementById('username');
                     const passwordField = document.getElementById('password');
-
+                    
                     if (authError) {
                         authError.textContent = 'An error occurred. Please try again.';
                         authError.style.display = 'block';
                     }
                     if (usernameField) usernameField.classList.add('error');
                     if (passwordField) passwordField.classList.add('error');
-
+                    
                     // If it's a network error but we got a response, try to redirect anyway
                     if (error.message && error.message.includes('Invalid response format')) {
                         window.location.replace('dashboard.html');
                     }
                 });
             });
-
+            
             // Navbar scroll effect
             window.addEventListener('scroll', function() {
                 const navbar = document.querySelector('.navbar');
@@ -1224,7 +1199,7 @@
                     navbar.classList.remove('scrolled');
                 }
             });
-
+            
             // Set active nav link for current page
             const currentPath = window.location.pathname;
             document.querySelectorAll('.nav-link').forEach(link => {
@@ -1234,14 +1209,14 @@
                     link.classList.remove('active');
                 }
             });
-
+            
         });
-
+        
         // Forgot Password functionality (global scope - available immediately)
         let resetEmail = '';
         let resetOTPCode = ''; // Store OTP code globally
         let otpTimer = null;
-
+        
         // Forgot Password function (global scope - must be available immediately)
         function showForgotPassword() {
             // Ensure Bootstrap is loaded
@@ -1256,7 +1231,7 @@
                 }, 100);
                 return;
             }
-
+            
             // Wait for DOM to be ready
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', function() {
@@ -1266,13 +1241,13 @@
                 openForgotPasswordModal();
             }
         }
-
+        
         function openForgotPasswordModal() {
             // Reset the modal first
             const resetEmailEl = document.getElementById('resetEmail');
             const errorDiv = document.getElementById('resetEmail-error');
             const sendResetButton = document.getElementById('sendResetButton');
-
+            
             if (resetEmailEl) resetEmailEl.value = '';
             if (errorDiv) {
                 errorDiv.style.display = 'none';
@@ -1283,7 +1258,7 @@
                 sendResetButton.disabled = false;
                 if (spinner) spinner.style.display = 'none';
             }
-
+            
             // Show the modal
             const modalElement = document.getElementById('forgotPasswordModal');
             if (modalElement) {
@@ -1316,12 +1291,12 @@
                 }
             }
         }
-
+        
         function resetForgotPasswordModal() {
             const resetEmailEl = document.getElementById('resetEmail');
             const errorDiv = document.getElementById('resetEmail-error');
             const sendResetButton = document.getElementById('sendResetButton');
-
+            
             if (resetEmailEl) resetEmailEl.value = '';
             if (errorDiv) {
                 errorDiv.style.display = 'none';
@@ -1333,7 +1308,7 @@
                 if (spinner) spinner.style.display = 'none';
             }
         }
-
+        
         // Wait for DOM to be ready before attaching event listeners
         document.addEventListener('DOMContentLoaded', function() {
             // Reset modals when hidden
@@ -1343,7 +1318,7 @@
                     resetForgotPasswordModal();
                 });
             }
-
+        
             const otpVerificationModal = document.getElementById('otpVerificationModal');
             if (otpVerificationModal) {
                 otpVerificationModal.addEventListener('hidden.bs.modal', function() {
@@ -1373,7 +1348,7 @@
                     if (otpTimer) clearInterval(otpTimer);
                 });
             }
-
+            
             const newPasswordModal = document.getElementById('newPasswordModal');
             if (newPasswordModal) {
                 newPasswordModal.addEventListener('hidden.bs.modal', function() {
@@ -1382,7 +1357,7 @@
                     const newPasswordError = document.getElementById('newPassword-error');
                     const confirmPasswordError = document.getElementById('confirmPassword-error');
                     const proceedButton = document.getElementById('proceedButton');
-
+                    
                     if (newPasswordEl) newPasswordEl.value = '';
                     if (confirmPasswordEl) confirmPasswordEl.value = '';
                     if (newPasswordError) newPasswordError.style.display = 'none';
@@ -1394,30 +1369,30 @@
                     }
                 });
             }
-
+            
             // Forgot Password Form Handler
             const forgotPasswordForm = document.getElementById('forgotPasswordForm');
             if (forgotPasswordForm) {
                 forgotPasswordForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
-
+                    
                     const email = document.getElementById('resetEmail').value.trim();
                     const errorDiv = document.getElementById('resetEmail-error');
-
+                    
                     if (!email) {
                         errorDiv.textContent = 'Please enter your email address.';
                         errorDiv.style.display = 'block';
                         return;
                     }
-
+                    
                     if (!isValidEmail(email)) {
                         errorDiv.textContent = 'Please enter a valid email.';
                         errorDiv.style.display = 'block';
                         return;
                     }
-
+                    
                     errorDiv.style.display = 'none';
-
+                    
                     const sendResetButton = document.getElementById('sendResetButton');
                     if (!sendResetButton) {
                         console.error('Send reset button not found');
@@ -1428,7 +1403,7 @@
                     const spinner = sendResetButton.querySelector('.fa-spinner');
                     const paperPlaneIcon = sendResetButton.querySelector('.fa-paper-plane');
                     const buttonText = sendResetButton.querySelector('span');
-
+                    
                     sendResetButton.disabled = true;
                     if (spinner) {
                         spinner.style.display = 'inline-block';
@@ -1439,7 +1414,7 @@
                     if (buttonText) {
                         buttonText.textContent = 'Sending...';
                     }
-
+                    
                     try {
                         const response = await fetch('api/forgot_password.php', {
                             method: 'POST',
@@ -1448,7 +1423,7 @@
                             },
                             body: JSON.stringify({ email: email })
                         });
-
+                        
                         // Check if response is ok
                         if (!response.ok) {
                             const errorText = await response.text();
@@ -1462,7 +1437,7 @@
                             errorDiv.style.display = 'block';
                             return;
                         }
-
+                        
                         const text = await response.text();
                         let data;
                         try {
@@ -1473,10 +1448,10 @@
                             errorDiv.style.display = 'block';
                             return;
                         }
-
+                        
                         if (data.success) {
                             resetEmail = email;
-
+                            
                             // Hide forgot password modal first
                             const forgotModalElement = document.getElementById('forgotPasswordModal');
                             if (forgotModalElement) {
@@ -1492,7 +1467,7 @@
                                     if (backdrop) backdrop.remove();
                                 }
                             }
-
+                            
                             // Wait a bit for modal to close, then show OTP modal
                             setTimeout(() => {
                                 const otpModalElement = document.getElementById('otpVerificationModal');
@@ -1538,7 +1513,7 @@
                             const spinnerFinal = sendResetButtonFinal.querySelector('.fa-spinner');
                             const paperPlaneIconFinal = sendResetButtonFinal.querySelector('.fa-paper-plane');
                             const buttonTextFinal = sendResetButtonFinal.querySelector('span');
-
+                            
                             if (spinnerFinal) spinnerFinal.style.display = 'none';
                             if (paperPlaneIconFinal) paperPlaneIconFinal.style.display = 'inline-block';
                             if (buttonTextFinal) buttonTextFinal.textContent = 'Send Reset Code';
@@ -1546,14 +1521,14 @@
                     }
                 });
             }
-
+            
             // Real-time email validation
             const resetEmailEl = document.getElementById('resetEmail');
             if (resetEmailEl) {
                 resetEmailEl.addEventListener('input', function() {
                     const email = this.value.trim();
                     const errorDiv = document.getElementById('resetEmail-error');
-
+                    
                     if (email && !isValidEmail(email)) {
                         if (errorDiv) {
                             errorDiv.textContent = 'Please enter a valid email.';
@@ -1564,19 +1539,19 @@
                     }
                 });
             }
-
+            
             // Real-time password validation on login form
             const passwordEl = document.getElementById('password');
             const usernameEl = document.getElementById('username');
             if (passwordEl) {
                 const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-\.\/:;<=>?@\[\]^_`{|}~]).{8,}$/;
-
+                
                 function validatePasswordInput() {
                     const password = passwordEl.value;
                     const username = usernameEl ? usernameEl.value.trim().toLowerCase() : '';
                     const isAdmin = username === 'admin';
                     const errorDiv = document.getElementById('password-error');
-
+                    
                     if (!password) {
                         if (errorDiv) {
                             errorDiv.textContent = 'Password is required.';
@@ -1608,28 +1583,28 @@
                         }, 3000);
                     }
                 }
-
+                
                 passwordEl.addEventListener('input', validatePasswordInput);
-
+                
                 // Also re-validate password when username changes (in case user switches to/from admin)
                 if (usernameEl) {
                     usernameEl.addEventListener('input', validatePasswordInput);
                 }
             }
-
+            
             // New Password Form Handler
             const newPasswordForm = document.getElementById('newPasswordForm');
             if (newPasswordForm) {
                 newPasswordForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
-
+                    
                     const password = document.getElementById('newPassword').value;
                     const confirmPassword = document.getElementById('confirmPassword').value;
                     const strong = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-\.\/:;<=>?@\[\]^_`{|}~]).{8,}$/;
-
+                    
                     document.getElementById('newPassword-error').style.display = 'none';
                     document.getElementById('confirmPassword-error').style.display = 'none';
-
+                    
                     if (!password || !confirmPassword) {
                         if (!password) {
                             document.getElementById('newPassword-error').textContent = 'New password is required.';
@@ -1641,24 +1616,24 @@
                         }
                         return;
                     }
-
+                    
                     if (!strong.test(password)) {
                         document.getElementById('newPassword-error').textContent = 'Min 8 chars with upper, lower, number, special.';
                         document.getElementById('newPassword-error').style.display = 'block';
                         return;
                     }
-
+                    
                     if (password !== confirmPassword) {
                         document.getElementById('confirmPassword-error').textContent = 'Passwords do not match.';
                         document.getElementById('confirmPassword-error').style.display = 'block';
                         return;
                     }
-
+                    
                     const proceedButton = document.getElementById('proceedButton');
                     const spinner = proceedButton.querySelector('.fa-spinner');
                     proceedButton.disabled = true;
                     spinner.style.display = 'inline-block';
-
+                    
                     try {
                         const [response] = await Promise.all([
                             fetch('api/reset_password.php', {
@@ -1673,16 +1648,16 @@
                             }),
                             new Promise(resolve => setTimeout(resolve, 1500))
                         ]);
-
+                        
                         const responseText = await response.text();
-
+                        
                         let data;
                         try {
                             data = JSON.parse(responseText);
                         } catch (parseError) {
                             throw new Error('Invalid response from server. Please try again.');
                         }
-
+                        
                         if (data.success) {
                             bootstrap.Modal.getInstance(document.getElementById('newPasswordModal')).hide();
                             showPasswordResetSuccess();
@@ -1720,10 +1695,10 @@
                     }
                 });
             }
-
+            
             // Real-time password validation
             const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-\.\/:;<=>?@\[\]^_`{|}~]).{8,}$/;
-
+            
             const newPasswordEl = document.getElementById('newPassword');
             if (newPasswordEl) {
                 // Show requirement message when user focuses on the field
@@ -1732,13 +1707,13 @@
                     newPasswordError.textContent = 'Min 8 chars with upper, lower, number, special.';
                     newPasswordError.style.display = 'block';
                 });
-
+                
                 newPasswordEl.addEventListener('input', function() {
                     const password = this.value;
                     const confirmPassword = document.getElementById('confirmPassword').value;
                     const newPasswordError = document.getElementById('newPassword-error');
                     const confirmPasswordError = document.getElementById('confirmPassword-error');
-
+                    
                     // Validate new password strength
                     if (password) {
                         if (!strongPasswordRegex.test(password)) {
@@ -1752,7 +1727,7 @@
                         newPasswordError.textContent = 'Min 8 chars with upper, lower, number, special.';
                         newPasswordError.style.display = 'block';
                     }
-
+                    
                     // Validate confirm password match
                     if (confirmPassword) {
                         if (password && password !== confirmPassword) {
@@ -1766,7 +1741,7 @@
                     }
                 });
             }
-
+            
             const confirmPasswordEl = document.getElementById('confirmPassword');
             if (confirmPasswordEl) {
                 confirmPasswordEl.addEventListener('focus', function() {
@@ -1779,7 +1754,7 @@
                     const confirmPassword = this.value;
                     const newPasswordError = document.getElementById('newPassword-error');
                     const confirmPasswordError = document.getElementById('confirmPassword-error');
-
+                    
                     // Validate new password strength
                     if (password) {
                         if (!strongPasswordRegex.test(password)) {
@@ -1791,7 +1766,7 @@
                     } else {
                         newPasswordError.style.display = 'none';
                     }
-
+                    
                     // Validate confirm password match
                     if (confirmPassword) {
                         if (!strongPasswordRegex.test(confirmPassword)) {
@@ -1809,7 +1784,7 @@
                     }
                 });
             }
-
+            
             // OTP Input handling
             document.querySelectorAll('.otp-input').forEach((input, index) => {
                 input.addEventListener('input', function(e) {
@@ -1819,7 +1794,7 @@
                         document.querySelectorAll('.otp-input')[index + 1].focus();
                     }
                     updateOTPCode();
-
+                    
                     const inputs = document.querySelectorAll('.otp-input');
                     const otpCode = Array.from(inputs).map(input => input.value).join('');
                     if (otpCode.length === 6) {
@@ -1828,13 +1803,13 @@
                         }, 100);
                     }
                 });
-
+                
                 input.addEventListener('keydown', function(e) {
                     if (e.key === 'Backspace' && !e.target.value && index > 0) {
                         document.querySelectorAll('.otp-input')[index - 1].focus();
                     }
                 });
-
+                
                 input.addEventListener('paste', function(e) {
                     e.preventDefault();
                     const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
@@ -1850,43 +1825,43 @@
                     }
                 });
             });
-
+            
             function updateOTPCode() {
                 const inputs = document.querySelectorAll('.otp-input');
                 const otpCode = Array.from(inputs).map(input => input.value).join('');
                 const otpCodeEl = document.getElementById('otpCode');
                 if (otpCodeEl) otpCodeEl.value = otpCode;
             }
-
+            
             // OTP Verification Form Handler
             const otpVerificationForm = document.getElementById('otpVerificationForm');
             if (otpVerificationForm) {
                 otpVerificationForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
-
+                    
                     const otpCode = document.getElementById('otpCode').value;
-
+                    
                     document.getElementById('otp-error').style.display = 'none';
-
+                    
                     if (!otpCode || otpCode.length !== 6) {
                         document.getElementById('otp-error').style.display = 'block';
                         return;
                     }
-
+                    
                     const verifyButton = document.getElementById('verifyButton');
                     if (!verifyButton) {
                         console.error('Verify button not found');
                         return;
                     }
-
+                    
                     const spinner = verifyButton.querySelector('.fa-spinner');
                     const buttonText = verifyButton.querySelector('span');
-
+                    
                     // Show loading state - keep button visible
                     verifyButton.disabled = true;
                     if (spinner) spinner.style.display = 'inline-block';
                     if (buttonText) buttonText.textContent = 'Verifying...';
-
+                    
                     try {
                         const [response] = await Promise.all([
                             fetch('api/verify_reset_otp.php', {
@@ -1901,7 +1876,7 @@
                             }),
                             new Promise(resolve => setTimeout(resolve, 1500))
                         ]);
-
+                        
                         // Check if response is ok
                         if (!response.ok) {
                             const errorText = await response.text();
@@ -1918,7 +1893,7 @@
                             }
                             return;
                         }
-
+                        
                         const text = await response.text();
                         let data;
                         try {
@@ -1932,11 +1907,11 @@
                             }
                             return;
                         }
-
+                        
                         if (data.success) {
                             // Store the OTP code before closing the modal
                             resetOTPCode = otpCode;
-
+                            
                             // Hide OTP modal and show new password modal
                             const otpModalElement = document.getElementById('otpVerificationModal');
                             if (otpModalElement) {
@@ -1945,7 +1920,7 @@
                                     otpModal.hide();
                                 }
                             }
-
+                            
                             // Wait a bit for modal to close, then show new password modal
                             setTimeout(() => {
                                 const newPasswordModalElement = document.getElementById('newPasswordModal');
@@ -1991,32 +1966,32 @@
                     }
                 });
             }
-
+            
             // Resend OTP
             async function resendOTP() {
                 if (!resetEmail) {
                     createFeedbackContainer('Email not found. Please start the password reset process again.');
                     return;
                 }
-
+                
                 const resendLink = document.getElementById('resendOTPLink');
                 if (!resendLink) {
                     console.error('Resend OTP link not found');
                     return;
                 }
-
+                
                 const spinner = resendLink.querySelector('.fa-spinner');
                 if (!spinner) {
                     console.error('Spinner element not found in resend link');
                 }
-
+                
                 // Disable link and show spinner
                 resendLink.style.pointerEvents = 'none';
                 resendLink.style.opacity = '0.6';
                 if (spinner) {
                     spinner.style.display = 'inline-block';
                 }
-
+                
                 try {
                     const response = await fetch('api/forgot_password.php', {
                         method: 'POST',
@@ -2025,7 +2000,7 @@
                         },
                         body: JSON.stringify({ email: resetEmail })
                     });
-
+                    
                     // Check if response is ok
                     if (!response.ok) {
                         const errorText = await response.text();
@@ -2038,7 +2013,7 @@
                         createFeedbackContainer(errorData.error || 'Failed to resend code. Please try again.');
                         return;
                     }
-
+                    
                     const text = await response.text();
                     let data;
                     try {
@@ -2048,7 +2023,7 @@
                         createFeedbackContainer('Invalid response from server. Please try again.');
                         return;
                     }
-
+                    
                     if (data.success) {
                         // Reset timer and show success message
                         startOTPTimer();
@@ -2068,7 +2043,7 @@
                     }
                 }
             }
-
+            
             const resendOTPLink = document.getElementById('resendOTPLink');
             if (resendOTPLink) {
                 resendOTPLink.addEventListener('click', function(e) {
@@ -2076,14 +2051,14 @@
                     resendOTP();
                 });
             }
-
+            
             // Password visibility toggles
             const toggleNewPassword = document.getElementById('toggleNewPassword');
             if (toggleNewPassword) {
                 toggleNewPassword.addEventListener('click', function() {
                     const passwordField = document.getElementById('newPassword');
                     const icon = document.getElementById('newPasswordIcon');
-
+                    
                     if (passwordField && icon) {
                         if (passwordField.type === 'password') {
                             passwordField.type = 'text';
@@ -2097,13 +2072,13 @@
                     }
                 });
             }
-
+            
             const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
             if (toggleConfirmPassword) {
                 toggleConfirmPassword.addEventListener('click', function() {
                     const passwordField = document.getElementById('confirmPassword');
                     const icon = document.getElementById('confirmPasswordIcon');
-
+                    
                     if (passwordField && icon) {
                         if (passwordField.type === 'password') {
                             passwordField.type = 'text';
@@ -2117,15 +2092,15 @@
                     }
                 });
             }
-
+            
             // OTP Timer
             function startOTPTimer() {
                 let timeLeft = 60;
                 const resendLink = document.getElementById('resendOTPLink');
                 const timerSpan = document.getElementById('otpTimer');
-
+                
                 if (otpTimer) clearInterval(otpTimer);
-
+                
                 otpTimer = setInterval(() => {
                     if (timeLeft > 0) {
                         const minutes = Math.floor(timeLeft / 60);
@@ -2142,13 +2117,13 @@
                     }
                 }, 1000);
             }
-
+            
             // Email validation
             function isValidEmail(email) {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 return emailRegex.test(email);
             }
-
+            
             // Make functions globally accessible (already defined globally, but ensure they're available)
             window.startOTPTimer = startOTPTimer;
             window.resendOTP = resendOTP;
@@ -2158,17 +2133,17 @@
             window.showPasswordResetSuccess = showPasswordResetSuccess;
             window.hidePasswordResetSuccess = hidePasswordResetSuccess;
         });
-
+        
         // Ensure showForgotPassword is globally accessible
         window.showForgotPassword = showForgotPassword;
-
+        
         // Feedback container (global scope)
         function createFeedbackContainer(message) {
             const existingFeedback = document.getElementById('dynamic-feedback');
             if (existingFeedback) {
                 existingFeedback.remove();
             }
-
+            
             const feedbackContainer = document.createElement('div');
             feedbackContainer.id = 'dynamic-feedback';
             feedbackContainer.className = 'mb-3';
@@ -2183,24 +2158,24 @@
             `;
             const row = document.createElement('div');
             row.className = 'd-flex align-items-center justify-content-between';
-
+            
             const left = document.createElement('div');
             left.className = 'd-flex align-items-center';
-
+            
             const icon = document.createElement('i');
             icon.className = 'fas fa-check-circle me-2';
             icon.style.color = '#059669';
             icon.style.fontSize = '16px';
-
+            
             const text = document.createElement('span');
             text.style.color = '#0c4a6e';
             text.style.fontSize = '14px';
             text.style.fontWeight = '400';
             text.textContent = message;
-
+            
             left.appendChild(icon);
             left.appendChild(text);
-
+            
             const closeBtn = document.createElement('button');
             closeBtn.type = 'button';
             closeBtn.className = 'btn-close';
@@ -2208,23 +2183,23 @@
             closeBtn.style.color = '#6b7280';
             closeBtn.style.fontSize = '14px';
             closeBtn.addEventListener('click', removeFeedbackContainer);
-
+            
             row.appendChild(left);
             row.appendChild(closeBtn);
-
+            
             feedbackContainer.appendChild(row);
-
+            
             const buttonContainer = document.querySelector('#otpVerificationForm .d-grid');
             if (buttonContainer) {
                 buttonContainer.parentNode.insertBefore(feedbackContainer, buttonContainer);
-
+                
                 setTimeout(() => {
                     feedbackContainer.style.transform = 'translateY(0)';
                     feedbackContainer.style.opacity = '1';
                 }, 10);
             }
         }
-
+        
         function removeFeedbackContainer() {
             const feedbackContainer = document.getElementById('dynamic-feedback');
             if (feedbackContainer) {
@@ -2235,7 +2210,7 @@
                 }, 300);
             }
         }
-
+        
         // Password Reset Success Toast (global scope)
         function showPasswordResetSuccess() {
             const toast = document.getElementById('passwordResetSuccessToast');
@@ -2243,24 +2218,24 @@
                 if (toast.autoHideTimer) {
                     clearTimeout(toast.autoHideTimer);
                 }
-
+                
                 toast.classList.remove('slide-in', 'slide-out');
                 toast.style.display = 'block';
                 toast.style.transform = 'translateX(100%)';
                 toast.style.opacity = '0';
-
+                
                 toast.offsetHeight;
-
+                
                 toast.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
                 toast.style.transform = 'translateX(0)';
                 toast.style.opacity = '1';
-
+                
                 toast.autoHideTimer = setTimeout(() => {
                     hidePasswordResetSuccess();
                 }, 8000);
             }
         }
-
+        
         function hidePasswordResetSuccess() {
             const toast = document.getElementById('passwordResetSuccessToast');
             if (toast) {
@@ -2268,11 +2243,11 @@
                     clearTimeout(toast.autoHideTimer);
                     toast.autoHideTimer = null;
                 }
-
+                
                 toast.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                 toast.style.transform = 'translateX(100%)';
                 toast.style.opacity = '0';
-
+                
                 setTimeout(() => {
                     toast.style.display = 'none';
                     toast.style.transition = '';
@@ -2281,14 +2256,14 @@
         }
     </script>
 
-
+    
     <!-- Forgot Password Modal -->
    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content forgot-card">
             <div class="modal-header border-0 pb-0">
             </div>
-
+            
             <div class="modal-body px-lg-5 pb-lg-5">
                 <div class="text-center mb-4">
                     <div class="illustration-wrapper mb-3">
@@ -2317,7 +2292,7 @@
                             <i class="fas fa-paper-plane me-2"></i>
                             <span>Send Reset Code</span>
                         </button>
-
+                        
                         <button type="button" class="btn btn-link text-decoration-none text-muted small mt-2" data-bs-dismiss="modal">
                             <i class="fas fa-arrow-left me-1"></i> Back to Login
                         </button>
@@ -2370,7 +2345,7 @@
                             <i class="fas fa-spinner fa-spin me-2" style="display: none;"></i>
                             <span>Verify and Continue</span>
                         </button>
-
+                        
                         <div class="text-center mt-3">
                             <p class="otp-resend-text">
                                 Didn't receive the code? 
@@ -2399,37 +2374,12 @@
                 <div class="modal-header forgot-password-modal-header">
                     <h5 class="modal-title" id="newPasswordModalLabel">Reset Password</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    <div class="modal fade" id="newPasswordModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content forgot-password-modal-content border-0">
-            <div class="modal-header border-0 pb-0 justify-content-end">
-            </div>
-
-            <div class="modal-body px-lg-5 pb-lg-5 text-center">
-                <div class="otp-icon-circle mb-4">
-                    <i class="fas fa-lock-open text-primary"></i>
                 </div>
                 <div class="modal-body forgot-password-modal-body">
                     <div class="forgot-password-illustration">
                         <div class="illustration-icon reset-icon">
                             <i class="fas fa-lock"></i>
-
-                <h3 class="fw-bold text-dark mb-2">Reset Password</h3>
-                <p class="text-muted small mb-4">
-                    Your new password must be different from your previous password.
-                </p>
-
-                <form id="newPasswordForm" class="text-start">
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-uppercase text-muted">New Password</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control custom-input border-end-0" 
-                                   id="newPassword" placeholder="Enter new password" required>
-                            <button class="btn btn-password-toggle border-start-0" type="button" id="toggleNewPassword">
-                                <i class="fas fa-eye text-muted" id="newPasswordIcon"></i>
-                            </button>
                         </div>
-                        <div class="custom-error" id="newPassword-error">Min 8 chars with upper, lower, number, special.</div>
                     </div>
                     <p class="forgot-password-instruction">Your new password must be different from your previous password.</p>
                     <form id="newPasswordForm">
@@ -2459,32 +2409,13 @@
                             <button type="submit" class="btn btn-forgot-password" id="proceedButton">
                                 <i class="fas fa-spinner fa-spin me-2" style="display: none;"></i>
                                 Reset Password
-
-                    <div class="mb-4">
-                        <label class="form-label small fw-bold text-uppercase text-muted">Confirm New Password</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control custom-input border-end-0" 
-                                   id="confirmPassword" placeholder="Confirm new password" required>
-                            <button class="btn btn-password-toggle border-start-0" type="button" id="toggleConfirmPassword">
-                                <i class="fas fa-eye text-muted" id="confirmPasswordIcon"></i>
                             </button>
                         </div>
                     </form>
                 </div>
-                        <div class="custom-error" id="confirmPassword-error">Passwords do not match.</div>
-                    </div>
-
-                    <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-register py-3" id="proceedButton">
-                            <i class="fas fa-spinner fa-spin me-2" style="display: none;"></i>
-                            Reset Password
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
-</div>
 
 
     <!-- Password Reset Success Toast -->
@@ -2638,3 +2569,4 @@
     </script>
 </body>
 </html>
+
