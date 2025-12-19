@@ -2246,54 +2246,9 @@
             </div>
         </div>
     </div>
-    
-    <!-- Forgot Password Modal -->
-     <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content forgot-card">
-            <div class="modal-header border-0 pb-0">
-            </div>
-            
-            <div class="modal-body px-lg-5 pb-lg-5">
-                <div class="text-center mb-4">
-                    <div class="illustration-wrapper mb-3">
-                        <i class="fas fa-key fa-3x illustration-icon" style="color:white; "></i>
-                    </div>
-                    <h4 class="modal-title-custom mb-2">Forgot Password?</h4>
-                    <p class="text-muted small px-3">
-                        Don't worry! Enter your registered email below and we'll send you a secure code to reset your password.
-                    </p>
-                </div>
 
-                <form id="forgotPasswordForm">
-                    <div class="mb-4">
-                        <label for="resetEmail" class="form-label fw-bold text-dark small">Email Address</label>
-                        <div class="input-group-custom">
-                            <i class="fas fa-envelope input-icon"></i>
-                            <input type="email" class="form-control custom-input" id="resetEmail" 
-                                   placeholder="name@example.com" autocomplete="off" required>
-                        </div>
-                        <div class="custom-error" id="resetEmail-error">Please enter a valid email address.</div>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-login-submit py-3" id="sendResetButton">
-                            <i class="fas fa-paper-plane me-2"></i>
-                            <span>Send Reset Code</span>
-                        </button>
-                        
-                        <button type="button" class="btn btn-link text-decoration-none text-muted small mt-2" data-bs-dismiss="modal">
-                            <i class="fas fa-arrow-left me-1"></i> Back to Login
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-    <!-- OTP Verification Modal -->
-    <div class="modal fade" id="otpVerificationModal" tabindex="-1" aria-labelledby="otpVerificationModalLabel" aria-hidden="true">
+    <!-- OTP Verification Modal (duplicate removed - using first instance) -->
+    <div class="modal fade" id="otpVerificationModal" tabindex="-1" aria-labelledby="otpVerificationModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content forgot-password-modal-content">
                 <div class="modal-header forgot-password-modal-header">
