@@ -949,8 +949,12 @@
         
         .form-group.error input,
         .form-group.error select {
-            border-color: #ef4444;
-            background: #fef2f2;
+            border-color: #fb7185;
+        }
+        
+        .form-group.error input:focus,
+        .form-group.error select:focus {
+            box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1);
         }
         
         .form-group input.success,
@@ -962,38 +966,15 @@
         
         .form-group .error-message {
             display: none;
-            margin-top: 0.4rem;
-            padding: 0.5rem 0.75rem;
-            background: linear-gradient(135deg, #fee2e2, #fecaca);
-            border: 1px solid #fca5a5;
-            border-radius: 8px;
-            color: #991b1b;
-            font-size: 0.85rem;
-            font-weight: 500;
-            position: relative;
-            animation: errorSlideIn 0.3s ease;
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
-        }
-        
-        @keyframes errorSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-5px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            color: #e11d48;
+            font-size: 0.8rem;
+            margin-top: 6px;
+            font-weight: 600;
+            padding-left: 4px;
         }
         
         .form-group.error .error-message {
             display: block;
-        }
-        
-        .form-group .error-message::before {
-            content: '⚠️';
-            margin-right: 0.5rem;
-            font-size: 0.9rem;
         }
         
         .form-group label {

@@ -205,9 +205,12 @@
         }
         
         .otp-input.error {
-            border-color: #dc3545;
-            background: #fff5f5;
+            border-color: #fb7185;
             animation: shake 0.5s ease-in-out;
+        }
+        
+        .otp-input.error:focus {
+            box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1);
         }
         
         @keyframes shake {
@@ -279,14 +282,13 @@
         }
         
         .error-message {
-            background: #fee;
-            color: #c33;
-            padding: 12px 20px;
-            border-radius: 10px;
+            color: #e11d48;
+            font-size: 0.8rem;
+            margin-top: 6px;
             margin-bottom: 1.5rem;
+            font-weight: 600;
             display: none;
-            border-left: 4px solid #dc3545;
-            font-weight: 500;
+            padding-left: 4px;
         }
         
         .success-message {
