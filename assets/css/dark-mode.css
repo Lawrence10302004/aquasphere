@@ -974,7 +974,12 @@ body.dark .profile-section select[readonly] {
 
 body.dark .form-group.error input,
 body.dark .form-group.error select {
-  border-color: #ef4444 !important;
+  border-color: #fb7185 !important;
+}
+
+body.dark .form-group.error input:focus,
+body.dark .form-group.error select:focus {
+  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1) !important;
 }
 
 body.dark .form-group input.success,
@@ -1785,7 +1790,11 @@ body.dark .form-control.success {
 }
 
 body.dark .form-control.error {
-  border-color: #ef4444 !important;
+  border-color: #fb7185 !important;
+}
+
+body.dark .form-control.error:focus {
+  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1) !important;
 }
 
 body.dark .custom-error {
@@ -1967,7 +1976,12 @@ body.dark .register-card .form-select.success {
 
 body.dark .register-card .form-control.error,
 body.dark .register-card .form-select.error {
-  border-color: #ef4444 !important;
+  border-color: #fb7185 !important;
+}
+
+body.dark .register-card .form-control.error:focus,
+body.dark .register-card .form-select.error:focus {
+  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1) !important;
 }
 
 body.dark .register-card .custom-error {
@@ -2137,8 +2151,11 @@ body.dark .otp-input.filled {
 }
 
 body.dark .otp-input.error {
-  border-color: #ef4444 !important;
-  background: rgba(239, 68, 68, 0.1) !important;
+  border-color: #fb7185 !important;
+}
+
+body.dark .otp-input.error:focus {
+  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1) !important;
 }
 
 body.dark .resend-section {
@@ -2307,6 +2324,85 @@ body.dark .btn-delete-confirm {
 body.dark .delete-loading-spinner {
   border-color: rgba(255, 255, 255, 0.3) !important;
   border-top-color: white !important;
+}
+
+/* Admin Products Custom Toast Dark Mode */
+body.dark .custom-toast {
+  background: linear-gradient(135deg, var(--panel-bg-dark) 0%, var(--panel-bg-dark-alt) 100%) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid var(--border-dark) !important;
+}
+
+body.dark .custom-toast.success {
+  border-left-color: #22c55e !important;
+}
+
+body.dark .custom-toast.error {
+  border-left-color: #ef4444 !important;
+}
+
+body.dark .toast-icon-wrapper.success {
+  background: radial-gradient(circle at 40% 40%, rgba(34, 197, 94, 0.3), transparent 60%),
+              linear-gradient(135deg, var(--panel-bg-dark-alt), var(--panel-bg-dark)) !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2) !important;
+}
+
+body.dark .toast-icon-wrapper.error {
+  background: radial-gradient(circle at 40% 40%, rgba(239, 68, 68, 0.3), transparent 60%),
+              linear-gradient(135deg, var(--panel-bg-dark-alt), var(--panel-bg-dark)) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2) !important;
+}
+
+body.dark .toast-icon-wrapper.success i {
+  color: #4ade80 !important;
+}
+
+body.dark .toast-icon-wrapper.error i {
+  color: #fca5a5 !important;
+}
+
+body.dark .toast-message {
+  color: var(--text-dark) !important;
+}
+
+/* Admin Products Pagination Dark Mode */
+body.dark .pagination-container {
+  border-top-color: var(--border-dark) !important;
+}
+
+body.dark .pagination-info {
+  color: var(--text-muted-dark) !important;
+}
+
+body.dark .pagination-btn {
+  background: var(--panel-bg-dark-alt) !important;
+  border-color: var(--border-dark) !important;
+  color: var(--text-dark) !important;
+}
+
+body.dark .pagination-btn:hover:not(:disabled) {
+  background: var(--accent-blue) !important;
+  border-color: var(--accent-blue) !important;
+  color: white !important;
+}
+
+body.dark .pagination-btn.active {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark)) !important;
+  border-color: var(--accent-blue) !important;
+  color: white !important;
+}
+
+body.dark .pagination-page-numbers span {
+  color: var(--text-muted-dark) !important;
+}
+
+/* Admin Products Description Column Dark Mode */
+body.dark .table td.description-cell {
+  color: var(--text-dark) !important;
+}
+
+body.dark .description-text {
+  color: var(--text-muted-dark) !important;
 }
 
 

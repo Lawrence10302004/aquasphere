@@ -144,12 +144,47 @@
             padding: 12px 30px;
             border-radius: 50px;
             font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
         
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             background: linear-gradient(135deg, #1e4f73, #256892);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(37, 104, 146, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-loading.show {
+            display: flex;
+        }
+
+        .btn-loading-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
         
         .btn-danger {
@@ -173,13 +208,150 @@
             font-weight: 600;
             color: #1a4a6b;
         }
+
+        /* Table column widths */
+        .products-table table {
+            table-layout: auto;
+            width: 100%;
+        }
+
+        .products-table table th:nth-child(1),
+        .products-table table td:nth-child(1) {
+            width: 5%;
+            min-width: 60px;
+        }
+
+        .products-table table th:nth-child(2),
+        .products-table table td:nth-child(2) {
+            width: 12%;
+            min-width: 120px;
+        }
+
+        .products-table table th:nth-child(3),
+        .products-table table td:nth-child(3) {
+            width: 35%;
+            min-width: 300px;
+            max-width: 500px;
+        }
+
+        .products-table table th:nth-child(4),
+        .products-table table td:nth-child(4) {
+            width: 12%;
+            min-width: 100px;
+        }
+
+        .products-table table th:nth-child(5),
+        .products-table table td:nth-child(5) {
+            width: 12%;
+            min-width: 100px;
+        }
+
+        .products-table table th:nth-child(6),
+        .products-table table td:nth-child(6) {
+            width: 10%;
+            min-width: 100px;
+        }
+
+        /* Description column formatting */
+        .table td.description-cell {
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            line-height: 1.6;
+            padding: 12px 16px;
+            vertical-align: top;
+        }
+
+        .description-text {
+            display: block;
+            color: #475569;
+            font-size: 0.9rem;
+            text-align: left;
+            hyphens: auto;
+            -webkit-hyphens: auto;
+            -moz-hyphens: auto;
+            margin: 0;
+        }
         
-        .toast {
+        /* Custom Notification Toast */
+        .custom-toast {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 9999;
-            min-width: 300px;
+            min-width: 320px;
+            max-width: 400px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: toastSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-left: 4px solid;
+        }
+
+        .custom-toast.success {
+            border-left-color: #22c55e;
+        }
+
+        .custom-toast.error {
+            border-left-color: #ef4444;
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-icon-wrapper {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .toast-icon-wrapper.success {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+        }
+
+        .toast-icon-wrapper.error {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        }
+
+        .toast-icon-wrapper i {
+            font-size: 1.25rem;
+        }
+
+        .toast-icon-wrapper.success i {
+            color: #22c55e;
+        }
+
+        .toast-icon-wrapper.error i {
+            color: #ef4444;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-message {
+            font-weight: 600;
+            color: #1a4a6b;
+            font-size: 0.95rem;
+            margin: 0;
+            line-height: 1.4;
         }
         
         .image-preview {
@@ -188,6 +360,65 @@
             margin-top: 10px;
             border-radius: 8px;
             border: 2px solid #e2e8f0;
+        }
+
+        /* Pagination Styles */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .pagination-info {
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .pagination-btn {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #1a4a6b;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: #256892;
+            color: white;
+            border-color: #256892;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 104, 146, 0.3);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pagination-btn.active {
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+            border-color: #256892;
+        }
+
+        .pagination-page-numbers {
+            display: flex;
+            gap: 0.25rem;
         }
 
         /* Delete Confirmation Modal */
@@ -542,8 +773,14 @@
                         <input type="text" class="form-control" id="productUnit" required placeholder="e.g., /refill, /unit, /pack">
                     </div>
                     <div class="col-12">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-plus me-2"></i>Add Product
+                        <button type="submit" class="btn btn-primary" id="addProductBtn">
+                            <span class="btn-text">
+                                <i class="fas fa-plus me-2"></i>Add Product
+                            </span>
+                            <span class="btn-loading" id="addProductLoading">
+                                <span class="btn-loading-spinner"></span>
+                                <span>Adding...</span>
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -571,6 +808,11 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <!-- Pagination -->
+            <div class="pagination-container" id="paginationContainer" style="display: none;">
+                <div class="pagination-info" id="paginationInfo"></div>
+                <div class="pagination-controls" id="paginationControls"></div>
             </div>
         </div>
     </div>
@@ -606,6 +848,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Pagination state
+        let currentPage = 1;
+        const itemsPerPage = 5;
+        let allProducts = [];
+
         // Load products on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadProducts();
@@ -619,12 +866,14 @@
 
         // Load products
         function loadProducts() {
-            fetch('../api/admin/get_products.php')
+            return fetch('../api/admin/get_products.php')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        displayProducts(data.products);
-                        document.getElementById('totalProductsCount').textContent = `${data.products.length} Products`;
+                        allProducts = data.products;
+                        document.getElementById('totalProductsCount').textContent = `${allProducts.length} Products`;
+                        currentPage = 1; // Reset to first page when reloading
+                        displayProducts();
                     } else {
                         showNotification(data.message || 'Failed to load products', 'error');
                     }
@@ -635,21 +884,35 @@
                 });
         }
 
-        // Display products
-        function displayProducts(products) {
+        // Display products with pagination
+        function displayProducts() {
             const tbody = document.getElementById('productsTableBody');
+            const paginationContainer = document.getElementById('paginationContainer');
+            const paginationInfo = document.getElementById('paginationInfo');
+            const paginationControls = document.getElementById('paginationControls');
             
-            if (products.length === 0) {
+            if (allProducts.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No products found. Add your first product above.</td></tr>';
+                paginationContainer.style.display = 'none';
                 return;
             }
-            
-            tbody.innerHTML = products.map(product => {
+
+            // Calculate pagination
+            const totalPages = Math.ceil(allProducts.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const currentProducts = allProducts.slice(startIndex, endIndex);
+
+            // Display current page products
+            tbody.innerHTML = currentProducts.map(product => {
+                const description = escapeHtml(product.description || 'No description');
                 return `
                     <tr>
                         <td>${product.id}</td>
                         <td><strong>${escapeHtml(product.label)}</strong></td>
-                        <td>${escapeHtml(product.description)}</td>
+                        <td class="description-cell">
+                            <span class="description-text">${description}</span>
+                        </td>
                         <td>₱${parseFloat(product.price).toFixed(2)}${product.unit ? '<span style="color: #256892; font-weight: 700;">' + escapeHtml(product.unit) + '</span>' : ''}</td>
                         <td><span class="badge bg-secondary">${escapeHtml(product.category || 'N/A')}</span></td>
                         <td>
@@ -660,6 +923,112 @@
                     </tr>
                 `;
             }).join('');
+
+            // Update pagination info
+            const startItem = allProducts.length > 0 ? startIndex + 1 : 0;
+            const endItem = Math.min(endIndex, allProducts.length);
+            paginationInfo.textContent = `Showing ${startItem}-${endItem} of ${allProducts.length} products`;
+
+            // Build pagination controls
+            paginationControls.innerHTML = '';
+
+            // Previous button
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'pagination-btn';
+            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i> Previous';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayProducts();
+                }
+            };
+            paginationControls.appendChild(prevBtn);
+
+            // Page numbers
+            const pageNumbers = document.createElement('div');
+            pageNumbers.className = 'pagination-page-numbers';
+            
+            // Show page numbers (max 5 visible)
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+            
+            // Adjust if near start or end
+            if (endPage - startPage < 4) {
+                if (startPage === 1) {
+                    endPage = Math.min(5, totalPages);
+                } else {
+                    startPage = Math.max(1, totalPages - 4);
+                }
+            }
+
+            // First page
+            if (startPage > 1) {
+                const firstBtn = document.createElement('button');
+                firstBtn.className = 'pagination-btn';
+                firstBtn.textContent = '1';
+                firstBtn.onclick = () => {
+                    currentPage = 1;
+                    displayProducts();
+                };
+                pageNumbers.appendChild(firstBtn);
+                if (startPage > 2) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.textContent = '...';
+                    ellipsis.style.padding = '8px 4px';
+                    ellipsis.style.color = '#64748b';
+                    pageNumbers.appendChild(ellipsis);
+                }
+            }
+
+            // Page number buttons
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => {
+                    currentPage = i;
+                    displayProducts();
+                };
+                pageNumbers.appendChild(pageBtn);
+            }
+
+            // Last page
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.textContent = '...';
+                    ellipsis.style.padding = '8px 4px';
+                    ellipsis.style.color = '#64748b';
+                    pageNumbers.appendChild(ellipsis);
+                }
+                const lastBtn = document.createElement('button');
+                lastBtn.className = 'pagination-btn';
+                lastBtn.textContent = totalPages;
+                lastBtn.onclick = () => {
+                    currentPage = totalPages;
+                    displayProducts();
+                };
+                pageNumbers.appendChild(lastBtn);
+            }
+
+            paginationControls.appendChild(pageNumbers);
+
+            // Next button
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'pagination-btn';
+            nextBtn.innerHTML = 'Next <i class="fas fa-chevron-right"></i>';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayProducts();
+                }
+            };
+            paginationControls.appendChild(nextBtn);
+
+            // Show pagination if more than one page
+            paginationContainer.style.display = totalPages > 1 ? 'flex' : 'none';
         }
 
         // Preview image
@@ -679,7 +1048,11 @@
         });
 
         // Add product
-        function addProduct() {
+        async function addProduct() {
+            const addBtn = document.getElementById('addProductBtn');
+            const btnText = addBtn.querySelector('.btn-text');
+            const btnLoading = document.getElementById('addProductLoading');
+
             const label = document.getElementById('productLabel').value.trim();
             const description = document.getElementById('productDescription').value.trim();
             const price = parseFloat(document.getElementById('productPrice').value);
@@ -703,34 +1076,63 @@
                 return;
             }
 
-            // Create FormData for file upload
-            const formData = new FormData();
-            formData.append('label', label);
-            formData.append('description', description);
-            formData.append('price', price);
-            formData.append('image', imageFile);
-            formData.append('category', category);
-            formData.append('unit', unit);
+            // Show loading state immediately
+            addBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoading.classList.add('show');
 
-            fetch('../api/admin/add_product.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
+            try {
+                // Create FormData for file upload
+                const formData = new FormData();
+                formData.append('label', label);
+                formData.append('description', description);
+                formData.append('price', price);
+                formData.append('image', imageFile);
+                formData.append('category', category);
+                formData.append('unit', unit);
+
+                const response = await fetch('../api/admin/add_product.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Reset button state
+                addBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoading.classList.remove('show');
+
                 if (data.success) {
                     showNotification('Product added successfully!', 'success');
                     document.getElementById('addProductForm').reset();
                     document.getElementById('imagePreview').innerHTML = '';
-                    loadProducts();
+                    // Reload products
+                    loadProducts().then(() => {
+                        // Navigate to last page to show the newly added product
+                        const totalPages = Math.ceil(allProducts.length / itemsPerPage);
+                        if (totalPages > 0) {
+                            currentPage = totalPages;
+                            displayProducts();
+                        }
+                    });
                 } else {
                     showNotification(data.message || 'Failed to add product', 'error');
                 }
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error adding product:', error);
+                
+                // Reset button state
+                addBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoading.classList.remove('show');
+                
                 showNotification('Failed to add product', 'error');
-            });
+            }
         }
 
         // Delete product
@@ -786,22 +1188,78 @@
                         body: JSON.stringify({ id: productId })
                     });
 
+                    // Check if response is ok
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
                     const data = await response.json();
-
-                    // Hide modal
-                    modal.classList.remove('show');
-
-                    // Reset button state
-                    newConfirmBtnRef.disabled = false;
-                    newLoadingDiv.classList.remove('show');
-                    newConfirmText.style.display = 'inline';
-                    iconWrapper.classList.remove('loading');
-                    iconWrapper.innerHTML = '<div class="delete-confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>';
+                    
+                    // Validate response structure
+                    if (!data || typeof data !== 'object') {
+                        throw new Error('Invalid response from server');
+                    }
 
                     if (data.success) {
+                        // Hide modal immediately
+                        modal.classList.remove('show');
+
+                        // Reset button state
+                        newConfirmBtnRef.disabled = false;
+                        newLoadingDiv.classList.remove('show');
+                        newConfirmText.style.display = 'inline';
+                        iconWrapper.classList.remove('loading');
+                        iconWrapper.innerHTML = '<div class="delete-confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>';
+
+                        // Remove deleted product from allProducts array immediately
+                        allProducts = allProducts.filter(p => p.id !== productId);
+                        
+                        // Update total count
+                        document.getElementById('totalProductsCount').textContent = `${allProducts.length} Products`;
+                        
+                        // Calculate new total pages
+                        const totalPages = Math.ceil(allProducts.length / itemsPerPage);
+                        
+                        // If current page is empty and not first page, go to previous page
+                        if (allProducts.length > 0 && currentPage > totalPages) {
+                            currentPage = Math.max(1, totalPages);
+                        }
+                        
+                        // Immediately remove the product row from the table with animation
+                        const tbody = document.getElementById('productsTableBody');
+                        const rows = tbody.querySelectorAll('tr');
+                        
+                        rows.forEach(row => {
+                            const deleteBtn = row.querySelector(`button[onclick*="deleteProduct(${productId})"]`);
+                            if (deleteBtn) {
+                                // Add fade-out animation
+                                row.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                                row.style.opacity = '0';
+                                row.style.transform = 'translateX(-20px)';
+                                
+                                setTimeout(() => {
+                                    // Update display with new pagination
+                                    displayProducts();
+                                }, 300);
+                                return;
+                            }
+                        });
+                        
+                        // If row not found, just update display
+                        displayProducts();
+
                         showNotification('Product deleted successfully!', 'success');
-                        loadProducts();
                     } else {
+                        // Hide modal
+                        modal.classList.remove('show');
+
+                        // Reset button state
+                        newConfirmBtnRef.disabled = false;
+                        newLoadingDiv.classList.remove('show');
+                        newConfirmText.style.display = 'inline';
+                        iconWrapper.classList.remove('loading');
+                        iconWrapper.innerHTML = '<div class="delete-confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>';
+
                         showNotification(data.message || 'Failed to delete product', 'error');
                     }
                 } catch (error) {
@@ -838,25 +1296,38 @@
 
         // Show notification
         function showNotification(message, type = 'success') {
+            // Remove any existing notifications
+            document.querySelectorAll('.custom-toast').forEach(toast => toast.remove());
+
             const notification = document.createElement('div');
-            notification.className = `alert alert-${type === 'success' ? 'info' : 'danger'} toast`;
-            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px;';
+            notification.className = `custom-toast ${type}`;
+            
+            const iconWrapper = document.createElement('div');
+            iconWrapper.className = `toast-icon-wrapper ${type}`;
             
             const icon = document.createElement('i');
-            icon.className = `fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2`;
+            icon.className = `fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}`;
+            iconWrapper.appendChild(icon);
             
-            const text = document.createElement('span');
+            const content = document.createElement('div');
+            content.className = 'toast-content';
+            
+            const text = document.createElement('p');
+            text.className = 'toast-message';
             text.textContent = message;
+            content.appendChild(text);
             
-            notification.appendChild(icon);
-            notification.appendChild(text);
+            notification.appendChild(iconWrapper);
+            notification.appendChild(content);
             document.body.appendChild(notification);
             
+            // Auto remove after 4 seconds
             setTimeout(() => {
                 notification.style.opacity = '0';
-                notification.style.transition = 'opacity 0.3s';
+                notification.style.transform = 'translateX(400px)';
+                notification.style.transition = 'all 0.3s ease';
                 setTimeout(() => notification.remove(), 300);
-            }, 3000);
+            }, 4000);
         }
     </script>
 </body>
