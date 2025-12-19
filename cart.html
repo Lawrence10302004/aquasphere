@@ -585,16 +585,25 @@
             border-top: none !important;
             border-left: none !important;
             border-right: none !important;
+            border-bottom: none !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
         }
         
         .cart-summary-wrapper > .cart-summary:first-child {
             border-bottom: none !important;
             border-left: none !important;
             border-right: none !important;
+            border-top: none !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
         }
         
         /* Remove any connecting line/separator */
         .cart-summary-wrapper > .cart-summary {
+            border: none !important;
+        }
+        
+        /* Ensure no visual connection between containers */
+        .cart-summary-wrapper {
             border: none !important;
         }
         
