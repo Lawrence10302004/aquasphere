@@ -744,8 +744,6 @@ body.dark .pagination-container {
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45) !important;
   color: var(--text-dark) !important;
 }
-  overflow: hidden !important;
-}
 
 body.dark .cart-header,
 body.dark .select-all {
