@@ -65,7 +65,7 @@
             background: white;
             border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            margin-top: 1rem;
+            margin-top: 4rem;
             padding: 2rem 1.25rem 1.25rem 1.25rem;
             margin-bottom: 0;
         }
@@ -162,6 +162,7 @@
         }
         
         .btn-continue-shopping:hover {
+            background: #477a9e;
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4);
             color: white;
@@ -175,7 +176,7 @@
         .cart-item {
             display: flex;
             align-items: center;
-            padding: 1rem;
+            padding: 4rem;
             border: 1px solid #f1f5f9;
             border-radius: 15px;
             margin-bottom: 0.75rem;
@@ -374,6 +375,7 @@
         /* Cart Summary */
         .cart-summary {
             background: white;
+            margin-top: 3rem;
             border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             padding: 1.25rem;
@@ -503,6 +505,7 @@
         }
         
         .btn-checkout:hover {
+            background: #477a9e;
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4);
             color: white;
@@ -903,6 +906,7 @@
         }
         
         .btn-change-address:hover {
+            background: #477a9e;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(14, 165, 233, 0.3);
             color: white;
@@ -1567,12 +1571,9 @@
         
         .form-group.error input,
         .form-group.error select {
-            border-color: #fb7185;
-        }
-        
-        .form-group.error input:focus,
-        .form-group.error select:focus {
-            box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1);
+            border-color: #dc3545;
+            background: #fff;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
         }
         
         .form-group input.success,
@@ -1580,6 +1581,12 @@
             border-color: #256892;
             background: #f0f9ff;
             box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25);
+        }
+        
+        .form-group.error input:focus,
+        .form-group.error select:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
         }
         
         .form-group input.success,
@@ -1609,15 +1616,18 @@
             transform: none;
         }
         
-        /* Match registration validation design */
+        /* Match login validation bar design */
         .form-group .error-message,
         .custom-error {
-            color: #e11d48;
-            font-size: 0.8rem;
-            margin-top: 6px;
-            font-weight: 600;
+            background-color: #fee;
+            color: #c33;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 8px;
             display: none;
-            padding-left: 4px;
+            border-left: 3px solid #dc3545;
+            font-weight: 500;
         }
         
         .form-group.error .error-message {
@@ -1666,10 +1676,21 @@
             transform: translateY(-1px);
         }
         
+        .form-group.error input:focus,
+        .form-group.error select:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12), 0 4px 12px rgba(239, 68, 68, 0.15);
+        }
+        
         .form-group input:hover,
         .form-group select:hover {
             border-color: #cbd5e1;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-group.error input:hover,
+        .form-group.error select:hover {
+            border-color: #f87171;
         }
         
         .form-group.full-width {
@@ -2209,7 +2230,7 @@
                         </div>
                         
                         <!-- Delivery Address Section -->
-                        <div class="cart-summary" style="flex: 1; display: flex; flex-direction: column;">
+                        <div class="cart-summary" style="flex: 1; display: flex; flex-direction: column;margin-top: 3rem;">
                             <div class="delivery-address-section" id="deliveryAddressSection" style="flex: 1; display: flex; flex-direction: column;">
                             <div class="address-header">
                                 <i class="fas fa-map-marker-alt"></i>
@@ -5771,8 +5792,8 @@
                             localStorage.removeItem('loggedInUser');
                             sessionStorage.removeItem('userData');
                             
-                            // Redirect to login page with parameter to prevent auto-redirect
-                            window.location.href = 'login.html?from=password_change';
+                            // Redirect to login page
+                            window.location.href = 'login.html';
                         }, 2000);
                     } else {
                         // Show success message for regular profile update
