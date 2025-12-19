@@ -12,11 +12,11 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['
 }
 
 // Validate required fields
-$label = sanitize_input($_POST['label'] ?? '');
-$description = sanitize_input($_POST['description'] ?? '');
+$label = sanitize_string($_POST['label'] ?? '', 255);
+$description = sanitize_string($_POST['description'] ?? '', 1000);
 $price = floatval($_POST['price'] ?? 0);
-$category = sanitize_input($_POST['category'] ?? '');
-$unit = sanitize_input($_POST['unit'] ?? '');
+$category = sanitize_string($_POST['category'] ?? '', 100);
+$unit = sanitize_string($_POST['unit'] ?? '', 50);
 
 if (empty($label) || empty($description) || $price <= 0 || empty($category) || empty($unit)) {
     echo json_encode(['success' => false, 'message' => 'All required fields must be filled']);
