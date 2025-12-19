@@ -974,7 +974,7 @@ body.dark .profile-section select[readonly] {
 
 body.dark .form-group.error input,
 body.dark .form-group.error select {
-  background: rgba(239, 68, 68, 0.08) !important;
+  border-color: #ef4444 !important;
 }
 
 body.dark .form-group input.success,
@@ -1786,7 +1786,6 @@ body.dark .form-control.success {
 
 body.dark .form-control.error {
   border-color: #ef4444 !important;
-  background: rgba(239, 68, 68, 0.1) !important;
 }
 
 body.dark .custom-error {
@@ -2168,9 +2167,7 @@ body.dark .timer-text {
 }
 
 body.dark .error-message {
-  background: rgba(239, 68, 68, 0.2) !important;
   color: #fca5a5 !important;
-  border-left-color: #ef4444 !important;
 }
 
 body.dark .success-message {
@@ -2255,6 +2252,61 @@ body.dark .loader-dot {
 body.dark.verify-page,
 body.dark body[class*="verify"] {
   background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-dark-alt) 100%) !important;
+}
+
+/* Admin Products Delete Confirmation Modal Dark Mode */
+body.dark .delete-confirm-modal {
+  background: rgba(15, 23, 42, 0.85) !important;
+}
+
+body.dark .delete-confirm-content {
+  background: linear-gradient(135deg, var(--panel-bg-dark) 0%, var(--panel-bg-dark-alt) 100%) !important;
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.85) !important;
+  border: 1px solid var(--border-dark) !important;
+}
+
+body.dark .delete-confirm-icon {
+  background: radial-gradient(circle at 40% 40%, rgba(248, 113, 113, 0.4), transparent 60%),
+              linear-gradient(135deg, var(--panel-bg-dark-alt), var(--panel-bg-dark)) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65) !important;
+}
+
+body.dark .delete-confirm-icon::before {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  opacity: 0.5 !important;
+}
+
+body.dark .delete-confirm-icon i {
+  color: #fca5a5 !important;
+}
+
+body.dark .delete-confirm-title {
+  color: var(--text-dark) !important;
+}
+
+body.dark .delete-confirm-message {
+  color: var(--text-muted-dark) !important;
+}
+
+body.dark .btn-delete-cancel {
+  background: var(--panel-bg-dark-alt) !important;
+  border: 2px solid var(--border-dark) !important;
+  color: var(--text-dark) !important;
+}
+
+body.dark .btn-delete-cancel:hover {
+  background: var(--panel-bg-dark) !important;
+  color: var(--accent-blue-light) !important;
+  border-color: var(--accent-blue) !important;
+}
+
+body.dark .btn-delete-confirm {
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.35) !important;
+}
+
+body.dark .delete-loading-spinner {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  border-top-color: white !important;
 }
 
 
