@@ -49,7 +49,7 @@ if ($username === 'admin' && $password === 'admin123') {
     echo json_encode([
         'success' => true, 
         'message' => 'Admin login successful!',
-        'redirect' => 'admin/dashboard.html'
+        'redirect' => 'index.html'
     ]);
     ob_end_flush();
     exit;
@@ -144,8 +144,8 @@ try {
         
         close_connection($conn);
         
-        // Check if user is admin and redirect accordingly
-        $redirect_url = ($user['is_admin'] ?? 0) ? 'admin/dashboard.html' : 'dashboard.html';
+        // Redirect all users to index.html
+        $redirect_url = 'index.html';
         
         // Clear any output buffer before sending JSON
         ob_clean();

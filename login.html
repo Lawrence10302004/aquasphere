@@ -842,12 +842,8 @@
                 const resp = await fetch('api/get_current_user.php', { credentials: 'include' });
                 if (resp.ok) {
                     const data = await resp.json();
-                    // Check if user is admin and redirect accordingly
-                    if (data.user && data.user.is_admin) {
-                        window.location.href = 'admin/dashboard.html';
-                    } else {
-                        window.location.href = 'dashboard.html';
-                    }
+                    // Redirect to index.html for all users (including admins)
+                    window.location.href = 'index.html';
                     return;
                 }
             } catch (e) {
