@@ -482,6 +482,14 @@ body.dark .filter-select select {
   padding-right: 40px !important;
 }
 
+/* How It Works section - Step numbers visibility in dark mode */
+body.dark .step-number {
+  background: #ffffff !important;
+  color: #256892 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
+
 body.dark .product-card {
   background: var(--panel-bg-dark) !important;
   border: 1px solid var(--border-dark) !important;
