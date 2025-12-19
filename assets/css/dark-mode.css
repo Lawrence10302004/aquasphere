@@ -1784,6 +1784,11 @@ body.dark .register-card .form-select {
   background: var(--panel-bg-dark-alt) !important;
   border-color: var(--border-dark) !important;
   color: var(--text-dark) !important;
+  /* Custom dropdown arrow for dark mode - white/light colored */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f1f5f9' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 15px center !important;
+  padding-right: 40px !important;
 }
 
 body.dark .register-card .form-control::placeholder,
