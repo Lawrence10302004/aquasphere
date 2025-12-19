@@ -92,13 +92,15 @@ $query = "INSERT INTO products (label, description, price, image_url, category, 
 
 $result = execute_sql($conn, $query, [$label, $description, $price, $image_url, $category, $unit]);
 
-if ($result) {
+if ($result !== false) {
     $product_id = last_insert_id($conn, 'products');
     close_connection($conn);
     echo json_encode(['success' => true, 'message' => 'Product added successfully', 'product_id' => $product_id, 'image_url' => $image_url]);
 } else {
+    $error_msg = $GLOBALS['use_postgres'] ? pg_last_error($conn) : ($conn->lastErrorMsg() ?? 'Database error');
     close_connection($conn);
-    echo json_encode(['success' => false, 'message' => 'Failed to add product']);
+    error_log("Failed to insert product: " . $error_msg);
+    echo json_encode(['success' => false, 'message' => 'Failed to add product to database: ' . $error_msg]);
 }
 ?>
 
