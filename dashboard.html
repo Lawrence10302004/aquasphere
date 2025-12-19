@@ -1399,7 +1399,7 @@
                             <h3 class="product-title">${escapeHtml(product.label)}</h3>
                             <p class="product-description">${escapeHtml(product.description)}</p>
                             <div class="product-footer">
-                                <button type="button" class="btn-add-cart" onclick="addToCart(${product.id}, ${JSON.stringify(product.label)}, ${product.price}, event); return false;">
+                                <button type="button" class="btn-add-cart" data-product-id="${product.id}" data-product-name="${escapeHtml(product.label)}" data-product-price="${product.price}">
                                     Add to Cart
                                 </button>
                                 <div class="product-price-row">
