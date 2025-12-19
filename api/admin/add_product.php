@@ -57,22 +57,49 @@ if (isset($_FILES['image'])) {
         exit;
     }
     
-    $upload_dir = '../uploads/products/';
+    // Upload directory should be at web root level, not relative to api/admin/
+    // Try multiple possible paths
+    $possible_paths = [
+        __DIR__ . '/../../uploads/products/',  // From api/admin/ to root/uploads/products/
+        __DIR__ . '/../../../uploads/products/', // Alternative path
+        dirname(__DIR__, 2) . '/uploads/products/', // Using dirname to go up 2 levels
+    ];
+    
+    $upload_dir = null;
+    foreach ($possible_paths as $path) {
+        if (file_exists(dirname($path)) || @mkdir(dirname($path), 0777, true)) {
+            $upload_dir = $path;
+            break;
+        }
+    }
+    
+    // Fallback: use relative path from current file
+    if (!$upload_dir) {
+        $upload_dir = __DIR__ . '/../../uploads/products/';
+    }
+    
+    // Normalize path separators
+    $upload_dir = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $upload_dir);
+    $upload_dir = rtrim($upload_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     
     // Create directory if it doesn't exist
     if (!file_exists($upload_dir)) {
-        if (!mkdir($upload_dir, 0777, true)) {
+        if (!@mkdir($upload_dir, 0777, true)) {
             ob_end_clean();
-            echo json_encode(['success' => false, 'message' => 'Failed to create upload directory']);
+            echo json_encode(['success' => false, 'message' => 'Failed to create upload directory: ' . $upload_dir]);
             exit;
         }
     }
     
     // Check if directory is writable
     if (!is_writable($upload_dir)) {
-        ob_end_clean();
-        echo json_encode(['success' => false, 'message' => 'Upload directory is not writable']);
-        exit;
+        // Try to make it writable
+        @chmod($upload_dir, 0777);
+        if (!is_writable($upload_dir)) {
+            ob_end_clean();
+            echo json_encode(['success' => false, 'message' => 'Upload directory is not writable: ' . $upload_dir]);
+            exit;
+        }
     }
     
     $file_extension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
@@ -93,10 +120,17 @@ if (isset($_FILES['image'])) {
         // Store relative path from web root (without leading slash for flexibility)
         $image_url = 'uploads/products/' . $filename;
         error_log("Image uploaded successfully: " . $image_url . " to " . $file_path);
+        
+        // Verify file exists after move
+        if (!file_exists($file_path)) {
+            ob_end_clean();
+            echo json_encode(['success' => false, 'message' => 'File was moved but does not exist at destination']);
+            exit;
+        }
     } else {
         $error = error_get_last();
         $error_msg = $error ? $error['message'] : 'Unknown error';
-        error_log("Failed to move uploaded file: " . $error_msg);
+        error_log("Failed to move uploaded file: " . $error_msg . " from " . $_FILES['image']['tmp_name'] . " to " . $file_path);
         ob_end_clean();
         echo json_encode(['success' => false, 'message' => 'Failed to upload image: ' . $error_msg]);
         exit;
