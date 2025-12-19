@@ -1396,8 +1396,8 @@
                 // Build the style string for the image - use background shorthand to override CSS gradient
                 let imageStyle = '';
                 if (imageUrl) {
-                    // Use background shorthand to completely override the CSS gradient
-                    imageStyle = `background: url('${imageUrl}') center center / cover no-repeat !important; background-color: transparent !important;`;
+                    // Use background-size: contain to show full image without cropping
+                    imageStyle = `background: url('${imageUrl}') center center / contain no-repeat !important; background-color: #f8fafc !important;`;
                 }
                 
                 return `
