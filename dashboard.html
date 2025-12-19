@@ -1305,14 +1305,14 @@
             }
             
             productsGrid.innerHTML = productsList.map(product => {
-                const iconClass = product.icon_class || 'fa-box';
                 const category = product.category || '';
                 const unit = product.unit || '';
+                const imageUrl = product.image_url || '';
                 
                 return `
                     <div class="product-card" data-category="${escapeHtml(category)}">
-                        <div class="product-image">
-                            <i class="fas ${escapeHtml(iconClass)}"></i>
+                        <div class="product-image" style="background-image: url('${escapeHtml(imageUrl)}'); background-size: cover; background-position: center;">
+                            ${!imageUrl ? '<i class="fas fa-box"></i>' : ''}
                         </div>
                         <div class="product-info">
                             <h3 class="product-title">${escapeHtml(product.label)}</h3>

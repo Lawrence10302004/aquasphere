@@ -426,8 +426,7 @@ function init_db() {
             label " . get_text_type() . " NOT NULL,
             description TEXT NOT NULL,
             price DECIMAL(10,2) NOT NULL,
-            image_url TEXT,
-            icon_class " . get_text_type() . " NOT NULL,
+            image_url TEXT NOT NULL,
             category " . get_text_type() . " NOT NULL,
             unit " . get_text_type() . " NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -438,6 +437,9 @@ function init_db() {
         if ($result === false) {
             error_log("Failed to create products table: " . pg_last_error($conn));
         }
+        
+        // Remove icon_class column if it exists (migration)
+        @execute_sql($conn, "ALTER TABLE products DROP COLUMN IF EXISTS icon_class");
     } else {
         $query = "
         CREATE TABLE IF NOT EXISTS products (
@@ -445,8 +447,7 @@ function init_db() {
             label " . get_text_type() . " NOT NULL,
             description TEXT NOT NULL,
             price DECIMAL(10,2) NOT NULL,
-            image_url TEXT,
-            icon_class " . get_text_type() . " NOT NULL,
+            image_url TEXT NOT NULL,
             category " . get_text_type() . " NOT NULL,
             unit " . get_text_type() . " NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -457,6 +458,9 @@ function init_db() {
         if ($result === false) {
             error_log("Failed to create products table: SQLite error");
         }
+        
+        // SQLite doesn't support DROP COLUMN easily, so we'll just ignore it
+        // The icon_class field will remain but won't be used
     }
     
     close_connection($conn);

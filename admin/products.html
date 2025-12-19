@@ -271,14 +271,10 @@
                         <textarea class="form-control" id="productDescription" rows="3" required placeholder="Product description..."></textarea>
                     </div>
                     <div class="col-md-12">
-                        <label for="productImage" class="form-label">Image URL</label>
-                        <input type="url" class="form-control" id="productImage" placeholder="https://example.com/image.jpg">
-                        <small class="text-muted">Or use Font Awesome icon class (e.g., fa-fill-drip, fa-wine-bottle)</small>
-                    </div>
-                    <div class="col-md-12">
-                        <label for="productIcon" class="form-label">Icon Class (Font Awesome)</label>
-                        <input type="text" class="form-control" id="productIcon" placeholder="fa-fill-drip" required>
-                        <small class="text-muted">Font Awesome icon class without 'fas' prefix (e.g., fill-drip, wine-bottle)</small>
+                        <label for="productImage" class="form-label">Product Image</label>
+                        <input type="file" class="form-control" id="productImage" accept="image/*">
+                        <small class="text-muted">Upload an image for the product (JPG, PNG, GIF)</small>
+                        <div id="imagePreview" style="margin-top: 10px;"></div>
                     </div>
                     <div class="col-md-6">
                         <label for="productCategory" class="form-label">Category</label>
