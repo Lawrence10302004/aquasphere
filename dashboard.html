@@ -1417,6 +1417,26 @@
                     </div>
                 `;
             }).join('');
+            
+            // Attach event listeners to all Add to Cart buttons after rendering
+            setTimeout(() => {
+                const addToCartButtons = document.querySelectorAll('.btn-add-cart[data-product-id]');
+                addToCartButtons.forEach(button => {
+                    // Remove any existing listeners to avoid duplicates
+                    const newButton = button.cloneNode(true);
+                    button.parentNode.replaceChild(newButton, button);
+                    
+                    newButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const productId = parseInt(this.getAttribute('data-product-id'));
+                        const productName = this.getAttribute('data-product-name');
+                        const productPrice = parseFloat(this.getAttribute('data-product-price'));
+                        addToCart(productId, productName, productPrice, e);
+                        return false;
+                    });
+                });
+            }, 100);
         }
         
         // Escape HTML helper
