@@ -90,10 +90,13 @@ if (isset($_FILES['image'])) {
     
     // Move uploaded file
     if (move_uploaded_file($_FILES['image']['tmp_name'], $file_path)) {
+        // Store relative path from web root (without leading slash for flexibility)
         $image_url = 'uploads/products/' . $filename;
+        error_log("Image uploaded successfully: " . $image_url . " to " . $file_path);
     } else {
         $error = error_get_last();
         $error_msg = $error ? $error['message'] : 'Unknown error';
+        error_log("Failed to move uploaded file: " . $error_msg);
         ob_end_clean();
         echo json_encode(['success' => false, 'message' => 'Failed to upload image: ' . $error_msg]);
         exit;

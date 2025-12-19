@@ -1388,6 +1388,9 @@
                     }
                     // Encode the URL properly to handle spaces and special characters
                     imageUrl = encodeURI(imageUrl);
+                    console.log('Product image URL:', product.id, imageUrl);
+                } else {
+                    console.log('Product has no image URL:', product.id, product);
                 }
                 
                 // Build the style string for the image - use background shorthand to override CSS gradient
