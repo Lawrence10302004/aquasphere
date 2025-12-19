@@ -37,6 +37,14 @@ body.dark * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
+/* Exclude form selects from transitions to prevent color flash */
+body.dark .form-select,
+body.dark .form-select *,
+body.dark select,
+body.dark select * {
+  transition: none !important;
+}
+
 /* Navbar dark mode */
 body.dark .navbar {
   background: rgba(30, 41, 59, 0.95) !important;
