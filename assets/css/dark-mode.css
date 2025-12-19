@@ -709,6 +709,8 @@ body.dark .pagination-container {
   border: 1px solid var(--border-dark) !important;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45) !important;
   color: var(--text-dark) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
 }
 
 body.dark .cart-header,
