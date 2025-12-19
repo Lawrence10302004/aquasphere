@@ -1033,7 +1033,7 @@
                 
                 if (fieldName === 'password') {
                     if (value.length < 8) {
-                        showError(fieldName, 'Password must be at least 8 characters.');
+                        showError(fieldName, 'Min 8 chars with upper, lower, number, special.');
                         return false;
                     } else {
                         hideError(fieldName);
