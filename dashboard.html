@@ -434,7 +434,11 @@
             width: 40%;
             min-width: 200px;
             height: 240px;
-            background: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #1a4a6b 100%);
+            background-color: #256892;
+            background-image: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #1a4a6b 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -452,6 +456,24 @@
             background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="waves" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 0 50 Q 25 30, 50 50 T 100 50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/></pattern></defs><rect width="100" height="100" fill="url(%23waves)"/></svg>');
             opacity: 0.3;
             pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* When image is present, hide the gradient overlay and icon */
+        .product-image[style*="background-image"] {
+            background-image: var(--product-bg-image) !important;
+        }
+        
+        .product-image[style*="background-image"]::after {
+            display: none;
+        }
+        
+        .product-image[style*="background-image"] i {
+            display: none;
+        }
+        
+        .product-image[style*="background-image"]::before {
+            display: none;
         }
         
         .product-image i {
