@@ -901,6 +901,7 @@
                                 </button>
                             </div>
                             <div class="custom-error" id="password-error">Password is required.</div>
+                            <div class="custom-error" id="auth-error" style="display: none;"></div>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -1173,12 +1174,13 @@
                             showSuspendedNotice();
                             return;
                         } else if (data.message) {
-                            // Show authentication error below password field (like AnemoCheck)
+                            // Show authentication error below password field
                             const authError = document.getElementById('auth-error');
                             const usernameField = document.getElementById('username');
                             const passwordField = document.getElementById('password');
                             
                             if (authError) {
+                                authError.textContent = data.message;
                                 authError.style.display = 'block';
                                 // Make both fields red immediately
                                 if (usernameField) {
@@ -1189,8 +1191,6 @@
                                     passwordField.classList.add('error');
                                     passwordField.classList.remove('success');
                                 }
-                            } else {
-                                alert(data.message);
                             }
                         }
                     }
