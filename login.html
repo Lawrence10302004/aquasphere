@@ -2198,13 +2198,14 @@
                     <div class="mb-4">
                         <label class="form-label fw-bold text-dark small text-uppercase letter-spacing-1">Verification Code</label>
                         <div class="otp-input-container">
-                            <input type="text" class="otp-input-box" maxlength="1" inputmode="numeric" autocomplete="off" required>
-                            <input type="text" class="otp-input-box" maxlength="1" inputmode="numeric" autocomplete="off" required>
-                            <input type="text" class="otp-input-box" maxlength="1" inputmode="numeric" autocomplete="off" required>
-                            <input type="text" class="otp-input-box" maxlength="1" inputmode="numeric" autocomplete="off" required>
-                            <input type="text" class="otp-input-box" maxlength="1" inputmode="numeric" autocomplete="off" required>
-                            <input type="text" class="otp-input-box" maxlength="1" inputmode="numeric" autocomplete="off" required>
+                            <input type="text" class="otp-input-box otp-input" maxlength="1" inputmode="numeric" autocomplete="off" required>
+                            <input type="text" class="otp-input-box otp-input" maxlength="1" inputmode="numeric" autocomplete="off" required>
+                            <input type="text" class="otp-input-box otp-input" maxlength="1" inputmode="numeric" autocomplete="off" required>
+                            <input type="text" class="otp-input-box otp-input" maxlength="1" inputmode="numeric" autocomplete="off" required>
+                            <input type="text" class="otp-input-box otp-input" maxlength="1" inputmode="numeric" autocomplete="off" required>
+                            <input type="text" class="otp-input-box otp-input" maxlength="1" inputmode="numeric" autocomplete="off" required>
                         </div>
+                        <input type="hidden" id="otpCode" name="otp_code">
                         <div class="custom-error" id="otp-error" style="display: none;">
                             <i class="fas fa-exclamation-triangle me-1"></i> Invalid code. Please try again.
                         </div>
