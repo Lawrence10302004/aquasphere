@@ -248,8 +248,22 @@
 
         .products-table table th:nth-child(6),
         .products-table table td:nth-child(6) {
-            width: 10%;
-            min-width: 100px;
+            width: 15%;
+            min-width: 150px;
+        }
+        
+        /* Actions column - keep buttons side by side */
+        .products-table table td:nth-child(6) {
+            white-space: nowrap;
+        }
+        
+        .products-table table td:nth-child(6) .btn {
+            display: inline-block;
+            margin-right: 5px;
+        }
+        
+        .products-table table td:nth-child(6) .btn:last-child {
+            margin-right: 0;
         }
 
         /* Description column formatting */
@@ -973,8 +987,8 @@
                         </td>
                         <td>₱${parseFloat(product.price).toFixed(2)}${product.unit ? '<span style="color: #256892; font-weight: 700;">' + escapeHtml(product.unit) + '</span>' : ''}</td>
                         <td><span class="badge bg-secondary">${escapeHtml(product.category || 'N/A')}</span></td>
-                        <td>
-                            <button class="btn btn-primary btn-sm me-2" onclick="editProduct(${product.id})" title="Edit product">
+                        <td style="white-space: nowrap;">
+                            <button class="btn btn-primary btn-sm" onclick="editProduct(${product.id})" title="Edit product" style="margin-right: 5px;">
                                 <i class="fas fa-edit"></i> Edit
                             </button>
                             <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})">
@@ -1198,59 +1212,76 @@
 
         // Edit product
         function editProduct(productId) {
-            const product = allProducts.find(p => p.id === productId);
-            if (!product) {
-                showNotification('Product not found', 'error');
-                return;
-            }
-
-            // Populate form with product data
-            document.getElementById('editProductId').value = product.id;
-            document.getElementById('editProductLabel').value = product.label || '';
-            document.getElementById('editProductPrice').value = product.price || '';
-            document.getElementById('editProductDescription').value = product.description || '';
-            document.getElementById('editProductCategory').value = product.category || '';
-            document.getElementById('editProductUnit').value = product.unit || '';
-
-            // Show current image if exists
-            const currentImageDisplay = document.getElementById('currentImageDisplay');
-            if (product.image_url) {
-                const imageUrl = product.image_url.startsWith('http') ? product.image_url : '../' + product.image_url;
-                currentImageDisplay.innerHTML = `
-                    <div class="alert alert-info">
-                        <strong>Current Image:</strong><br>
-                        <img src="${imageUrl}" alt="Current product image" style="max-width: 200px; max-height: 200px; margin-top: 10px; border-radius: 8px;">
-                    </div>
-                `;
-            } else {
-                currentImageDisplay.innerHTML = '<div class="alert alert-warning">No image currently set</div>';
-            }
-
-            // Clear edit image preview
-            document.getElementById('editImagePreview').innerHTML = '';
-            document.getElementById('editProductImage').value = '';
-
-            // Show modal
-            const modal = document.getElementById('editProductModal');
-            modal.classList.add('show');
-
-            // Handle image preview for new image
-            const imageInput = document.getElementById('editProductImage');
-            // Remove existing listeners
-            const newImageInput = imageInput.cloneNode(true);
-            imageInput.parentNode.replaceChild(newImageInput, imageInput);
-            
-            newImageInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const preview = document.getElementById('editImagePreview');
-                        preview.innerHTML = `<div class="alert alert-success"><strong>New Image Preview:</strong><br><img src="${e.target.result}" alt="Preview" style="max-width: 200px; max-height: 200px; border-radius: 8px; margin-top: 10px;"></div>`;
-                    };
-                    reader.readAsDataURL(file);
+            try {
+                const product = allProducts.find(p => p.id === productId);
+                if (!product) {
+                    showNotification('Product not found', 'error');
+                    return;
                 }
-            });
+
+                // Populate form with product data
+                document.getElementById('editProductId').value = product.id;
+                document.getElementById('editProductLabel').value = product.label || '';
+                document.getElementById('editProductPrice').value = product.price || '';
+                document.getElementById('editProductDescription').value = product.description || '';
+                document.getElementById('editProductCategory').value = product.category || '';
+                document.getElementById('editProductUnit').value = product.unit || '';
+
+                // Show current image if exists
+                const currentImageDisplay = document.getElementById('currentImageDisplay');
+                if (product.image_url) {
+                    let imageUrl = product.image_url;
+                    // Fix image URL path
+                    if (!imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
+                        imageUrl = '../' + imageUrl;
+                    } else if (imageUrl.startsWith('/')) {
+                        imageUrl = '..' + imageUrl;
+                    }
+                    currentImageDisplay.innerHTML = `
+                        <div class="alert alert-info">
+                            <strong>Current Image:</strong><br>
+                            <img src="${escapeHtml(imageUrl)}" alt="Current product image" style="max-width: 200px; max-height: 200px; margin-top: 10px; border-radius: 8px;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'alert alert-warning\\'>Image not found</div>';">
+                        </div>
+                    `;
+                } else {
+                    currentImageDisplay.innerHTML = '<div class="alert alert-warning">No image currently set</div>';
+                }
+
+                // Clear edit image preview
+                document.getElementById('editImagePreview').innerHTML = '';
+                document.getElementById('editProductImage').value = '';
+
+                // Show modal
+                const modal = document.getElementById('editProductModal');
+                if (!modal) {
+                    showNotification('Edit modal not found', 'error');
+                    return;
+                }
+                modal.classList.add('show');
+
+                // Handle image preview for new image
+                const imageInput = document.getElementById('editProductImage');
+                if (imageInput) {
+                    // Remove existing listeners
+                    const newImageInput = imageInput.cloneNode(true);
+                    imageInput.parentNode.replaceChild(newImageInput, imageInput);
+                    
+                    newImageInput.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const preview = document.getElementById('editImagePreview');
+                                preview.innerHTML = `<div class="alert alert-success"><strong>New Image Preview:</strong><br><img src="${e.target.result}" alt="Preview" style="max-width: 200px; max-height: 200px; border-radius: 8px; margin-top: 10px;"></div>`;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error opening edit modal:', error);
+                showNotification('Failed to open edit form. Please try again.', 'error');
+            }
         }
 
         // Handle edit form submission
@@ -1361,6 +1392,16 @@
             document.getElementById('editProductForm').reset();
             document.getElementById('editImagePreview').innerHTML = '';
             document.getElementById('currentImageDisplay').innerHTML = '';
+        });
+        
+        // Close edit modal when clicking outside
+        document.getElementById('editProductModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+                document.getElementById('editProductForm').reset();
+                document.getElementById('editImagePreview').innerHTML = '';
+                document.getElementById('currentImageDisplay').innerHTML = '';
+            }
         });
 
         // Delete product
