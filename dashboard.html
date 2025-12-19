@@ -434,7 +434,8 @@
             width: 40%;
             min-width: 200px;
             height: 240px;
-            background: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #1a4a6b 100%);
+            background-color: #256892;
+            background-image: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #1a4a6b 100%);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -443,6 +444,11 @@
             justify-content: center;
             position: relative;
             overflow: hidden;
+        }
+        
+        /* When inline style sets background-image, it will override the gradient */
+        .product-image[style*="background-image"] {
+            background-image: inherit;
         }
         
         .product-image::after {
@@ -1353,7 +1359,7 @@
                 
                 return `
                     <div class="product-card" data-category="${escapeHtml(category)}">
-                        <div class="product-image" style="${imageUrl ? `background-image: url('${escapeHtml(imageUrl)}'); background-size: cover; background-position: center;` : ''}">
+                        <div class="product-image" style="${imageUrl ? `background-image: url('${escapeHtml(imageUrl)}') !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important;` : ''}">
                             ${!imageUrl ? '<i class="fas fa-box"></i>' : ''}
                         </div>
                         <div class="product-info">
