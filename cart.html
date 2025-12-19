@@ -385,7 +385,7 @@
             position: static;
             display: flex;
             flex-direction: column;
-            gap: 0;
+            gap: 1rem;
             width: 100%;
             margin-top: 1rem; /* Extra spacing to avoid navbar overlap */
         }
@@ -582,12 +582,19 @@
         /* Remove any border or line between Order Summary and Delivery Address */
         .cart-summary-wrapper > .cart-summary:last-child {
             border-top: none !important;
-            margin-top: 0 !important;
+            border-left: none !important;
+            border-right: none !important;
         }
         
         .cart-summary-wrapper > .cart-summary:first-child {
             border-bottom: none !important;
-            margin-bottom: 0 !important;
+            border-left: none !important;
+            border-right: none !important;
+        }
+        
+        /* Remove any connecting line/separator */
+        .cart-summary-wrapper > .cart-summary {
+            border: none !important;
         }
         
         .address-header i {
