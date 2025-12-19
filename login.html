@@ -1139,8 +1139,12 @@
                 })
                 .then(data => {
                     if (data && data.success === true) {
-                        // Redirect to dashboard or home
-                        const redirectUrl = data.redirect || 'dashboard.html';
+                        // Check if there's a redirect parameter in URL (from password change)
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const redirectParam = urlParams.get('redirect');
+                        
+                        // Use redirect parameter if present, otherwise use API redirect
+                        const redirectUrl = redirectParam || data.redirect || 'dashboard.html';
                         // Force redirect immediately
                         window.location.replace(redirectUrl);
                     } else {

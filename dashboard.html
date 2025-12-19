@@ -2283,7 +2283,8 @@
                         setTimeout(() => {
                             localStorage.removeItem('loggedInUser');
                             sessionStorage.removeItem('userData');
-                            window.location.href = 'login.html';
+                            // Redirect to login with parameter to go to index.html after login
+                            window.location.href = 'login.html?redirect=index.html';
                         }, 2000);
                     } else {
                         showNotification('Profile updated successfully!', 'success');
