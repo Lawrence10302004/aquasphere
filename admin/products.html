@@ -817,6 +817,64 @@
         </div>
     </div>
 
+    <!-- Edit Product Modal -->
+    <div id="editProductModal" class="delete-confirm-modal">
+        <div class="delete-confirm-content" style="max-width: 600px; width: 90%;">
+            <div class="delete-confirm-body">
+                <h3 class="delete-confirm-title">Edit Product</h3>
+                <form id="editProductForm">
+                    <input type="hidden" id="editProductId">
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-6">
+                            <label for="editProductLabel" class="form-label">Product Label/Name</label>
+                            <input type="text" class="form-control" id="editProductLabel" required placeholder="e.g., 5-Gallon Refill">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="editProductPrice" class="form-label">Price (₱)</label>
+                            <input type="number" class="form-control" id="editProductPrice" required step="0.01" min="0" placeholder="e.g., 25.00">
+                        </div>
+                        <div class="col-md-12">
+                            <label for="editProductDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="editProductDescription" rows="3" required placeholder="Product description..."></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="editProductImage" class="form-label">Product Image (Optional - leave empty to keep current image)</label>
+                            <input type="file" class="form-control" id="editProductImage" accept="image/*">
+                            <small class="text-muted">Upload a new image to replace the current one</small>
+                            <div id="editImagePreview" style="margin-top: 10px;"></div>
+                            <div id="currentImageDisplay" style="margin-top: 10px;"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="editProductCategory" class="form-label">Category</label>
+                            <select class="form-select" id="editProductCategory" required>
+                                <option value="">Select category...</option>
+                                <option value="refill gallon">Refill Gallon</option>
+                                <option value="gallon">Gallon</option>
+                                <option value="bottle">Bottle</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="editProductUnit" class="form-label">Price Unit</label>
+                            <input type="text" class="form-control" id="editProductUnit" required placeholder="e.g., /refill, /unit, /pack">
+                        </div>
+                        <div class="col-12 mt-3">
+                            <div class="delete-confirm-actions">
+                                <button type="submit" class="btn-delete-confirm" id="editProductSubmitBtn">
+                                    <span class="delete-confirm-text">Update Product</span>
+                                    <span class="delete-loading" id="editProductLoading">
+                                        <span class="delete-loading-spinner"></span>
+                                        <span class="delete-loading-text">Updating...</span>
+                                    </span>
+                                </button>
+                                <button type="button" class="btn-delete-cancel" id="editProductCancelBtn">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Delete Confirmation Modal -->
     <div id="deleteConfirmModal" class="delete-confirm-modal">
         <div class="delete-confirm-content">
@@ -916,6 +974,9 @@
                         <td>₱${parseFloat(product.price).toFixed(2)}${product.unit ? '<span style="color: #256892; font-weight: 700;">' + escapeHtml(product.unit) + '</span>' : ''}</td>
                         <td><span class="badge bg-secondary">${escapeHtml(product.category || 'N/A')}</span></td>
                         <td>
+                            <button class="btn btn-primary btn-sm me-2" onclick="editProduct(${product.id})" title="Edit product">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
                             <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})">
                                 <i class="fas fa-trash"></i> Delete
                             </button>
@@ -1134,6 +1195,173 @@
                 showNotification('Failed to add product', 'error');
             }
         }
+
+        // Edit product
+        function editProduct(productId) {
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) {
+                showNotification('Product not found', 'error');
+                return;
+            }
+
+            // Populate form with product data
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('editProductLabel').value = product.label || '';
+            document.getElementById('editProductPrice').value = product.price || '';
+            document.getElementById('editProductDescription').value = product.description || '';
+            document.getElementById('editProductCategory').value = product.category || '';
+            document.getElementById('editProductUnit').value = product.unit || '';
+
+            // Show current image if exists
+            const currentImageDisplay = document.getElementById('currentImageDisplay');
+            if (product.image_url) {
+                const imageUrl = product.image_url.startsWith('http') ? product.image_url : '../' + product.image_url;
+                currentImageDisplay.innerHTML = `
+                    <div class="alert alert-info">
+                        <strong>Current Image:</strong><br>
+                        <img src="${imageUrl}" alt="Current product image" style="max-width: 200px; max-height: 200px; margin-top: 10px; border-radius: 8px;">
+                    </div>
+                `;
+            } else {
+                currentImageDisplay.innerHTML = '<div class="alert alert-warning">No image currently set</div>';
+            }
+
+            // Clear edit image preview
+            document.getElementById('editImagePreview').innerHTML = '';
+            document.getElementById('editProductImage').value = '';
+
+            // Show modal
+            const modal = document.getElementById('editProductModal');
+            modal.classList.add('show');
+
+            // Handle image preview for new image
+            const imageInput = document.getElementById('editProductImage');
+            // Remove existing listeners
+            const newImageInput = imageInput.cloneNode(true);
+            imageInput.parentNode.replaceChild(newImageInput, imageInput);
+            
+            newImageInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const preview = document.getElementById('editImagePreview');
+                        preview.innerHTML = `<div class="alert alert-success"><strong>New Image Preview:</strong><br><img src="${e.target.result}" alt="Preview" style="max-width: 200px; max-height: 200px; border-radius: 8px; margin-top: 10px;"></div>`;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Handle edit form submission
+        document.getElementById('editProductForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('editProductSubmitBtn');
+            const loadingDiv = document.getElementById('editProductLoading');
+            const submitText = submitBtn.querySelector('.delete-confirm-text');
+            const productId = parseInt(document.getElementById('editProductId').value);
+
+            // Get form data
+            const label = document.getElementById('editProductLabel').value.trim();
+            const description = document.getElementById('editProductDescription').value.trim();
+            const price = parseFloat(document.getElementById('editProductPrice').value);
+            const category = document.getElementById('editProductCategory').value;
+            const unit = document.getElementById('editProductUnit').value.trim();
+            const imageFile = document.getElementById('editProductImage').files[0];
+
+            // Validate
+            if (!label || !description || !price || price <= 0 || !category || !unit) {
+                showNotification('All required fields must be filled', 'error');
+                return;
+            }
+
+            // Show loading state
+            submitBtn.disabled = true;
+            loadingDiv.classList.add('show');
+            submitText.style.display = 'none';
+
+            try {
+                let response;
+                
+                // If new image is uploaded, use FormData
+                if (imageFile) {
+                    const formData = new FormData();
+                    formData.append('id', productId);
+                    formData.append('label', label);
+                    formData.append('description', description);
+                    formData.append('price', price);
+                    formData.append('category', category);
+                    formData.append('unit', unit);
+                    formData.append('image', imageFile);
+
+                    response = await fetch('../api/admin/update_product.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                } else {
+                    // Use JSON if no new image
+                    const updateData = {
+                        id: productId,
+                        label: label,
+                        description: description,
+                        price: price,
+                        category: category,
+                        unit: unit
+                    };
+
+                    response = await fetch('../api/admin/update_product.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(updateData)
+                    });
+                }
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Reset button state
+                submitBtn.disabled = false;
+                loadingDiv.classList.remove('show');
+                submitText.style.display = 'inline';
+
+                if (data.success) {
+                    showNotification('Product updated successfully!', 'success');
+                    document.getElementById('editProductModal').classList.remove('show');
+                    document.getElementById('editProductForm').reset();
+                    document.getElementById('editImagePreview').innerHTML = '';
+                    document.getElementById('currentImageDisplay').innerHTML = '';
+                    
+                    // Reload products to reflect changes
+                    await loadProducts();
+                    displayProducts();
+                } else {
+                    showNotification(data.message || 'Failed to update product', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating product:', error);
+                
+                // Reset button state
+                submitBtn.disabled = false;
+                loadingDiv.classList.remove('show');
+                submitText.style.display = 'inline';
+                
+                showNotification('Failed to update product: ' + error.message, 'error');
+            }
+        });
+
+        // Handle edit modal cancel
+        document.getElementById('editProductCancelBtn').addEventListener('click', function() {
+            document.getElementById('editProductModal').classList.remove('show');
+            document.getElementById('editProductForm').reset();
+            document.getElementById('editImagePreview').innerHTML = '';
+            document.getElementById('currentImageDisplay').innerHTML = '';
+        });
 
         // Delete product
         function deleteProduct(productId) {
