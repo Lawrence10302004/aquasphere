@@ -1923,6 +1923,15 @@
         // Initialize dark mode toggle on DOM ready
         document.addEventListener('DOMContentLoaded', function () {
             initializeDarkMode();
+            
+            // Also initialize dark mode after navbar loads (in case navbar.js loads later)
+            setTimeout(function() {
+                const savedTheme = localStorage.getItem('darkMode');
+                if (savedTheme === 'true' && !document.body.classList.contains('dark')) {
+                    document.body.classList.add('dark');
+                }
+                initializeDarkMode();
+            }, 500);
         });
         
         // Update cart count
