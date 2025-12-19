@@ -3134,8 +3134,8 @@
             
             if (subtotal > 0) {
                 if (needsPrediction && !predictionReady) {
-                    // Prediction needed but not ready yet - show loading state for all values
-                    subtotalDisplay = '₱--';
+                    // Prediction needed but not ready yet - show subtotal but loading for delivery fee and total
+                    // Keep subtotalDisplay as calculated (don't hide it)
                     deliveryFeeDisplay = '₱--';
                     totalDisplay = '₱--';
                 } else if (predictionReady) {
@@ -3151,6 +3151,7 @@
                 }
             } else {
                 // No items selected - show zeros
+                subtotalDisplay = '₱0.00';
                 totalDisplay = '₱0.00';
             }
             
