@@ -1703,10 +1703,19 @@
                 }
 
                 if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('API Error:', errorText);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                const data = await response.json();
+                const responseText = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('Failed to parse JSON response:', responseText);
+                    throw new Error('Invalid response from server');
+                }
 
                 // Reset button state
                 submitBtn.disabled = false;
