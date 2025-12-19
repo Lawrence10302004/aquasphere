@@ -44,8 +44,8 @@
         }
         
         /* Navbar Styles */
-        .navbar {
-            background: rgba(255, 255, 255, 0.95) !important;
+          .navbar {
+             background:rgba(240, 248, 255, 0.8) !important;
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
@@ -57,20 +57,20 @@
         }
         
         .navbar-brand {
-            font-weight: 700;
+            font-weight: 400;
             font-size: 1.5rem;
-            color: #256892 !important;
+            color: #1a4a6b !important;
             transition: all 0.3s ease;
         }
         
         .navbar-brand:hover {
-            color: #1a4a6b !important;
+            color: #256892 !important;
             transform: scale(1.05);
         }
         
         .nav-link {
             font-weight: 500;
-            color: #4a5568 !important;
+            color: #1a4a6b !important;
             margin: 0 0.5rem;
             transition: all 0.3s ease;
             position: relative;
@@ -95,256 +95,292 @@
         
         .nav-link:hover,
         .nav-link.active {
-            color: #256892 !important;
+            color: #1a4a6b !important;
+            font-weight: 900;
         }
         
         /* Registration Card */
-        .register-card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
-            padding: 2rem;
-            max-width: 700px;
-            width: 100%;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .register-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #1a4a6b;
-            margin-bottom: 0.5rem;
-            text-align: center;
-        }
-        
-        .register-subtitle {
-            color: #4a5568;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-        }
-        
-        /* Form Styles */
-        .form-label {
-            font-weight: 600;
-            color: #1a4a6b;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-        
-        .form-control, .form-select {
-            border-radius: 10px;
-            border: 2px solid #e2e8f0;
-            padding: 10px 12px;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-        
-        .form-control:focus, .form-select:focus {
-            border-color: #256892;
-            box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25);
-        }
-        
-        .custom-error {
-            background-color: #fee;
-            color: #c33;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 13px;
-            margin-top: 8px;
-            display: none;
-            border-left: 3px solid #dc3545;
-            font-weight: 500;
-        }
-        /* Space stacked errors */
-        .custom-error + .custom-error {
-            margin-top: 6px;
-        }
-        
-        .form-control.error, .form-select.error {
-            border-color: #dc3545;
-            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-        }
-        
-        .form-control.success {
-            border-color: #256892;
-            background: #f0f9ff;
-            box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25);
-        }
-        
-        .btn-register {
-            background: linear-gradient(135deg, #256892, #1e4f73);
-            border: none;
-            color: white;
-            padding: 12px 30px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-        
-        .btn-register:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.4);
-        }
-        
-        .input-group .btn-outline-secondary {
-            border-left: 0;
-            border-color: #ced4da;
-        }
-        
-        .input-group .btn-outline-secondary:hover {
-            background-color: #e9ecef;
-            border-color: #ced4da;
-        }
-        
-        /* Date Input Wrapper with Custom Calendar Icon - Using input-group */
-        .date-input-wrapper input[type="date"] {
-            padding-right: 0;
-        }
-        
-        .date-icon-btn {
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .date-icon-overlay {
-            color: #4a5568;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        /* Floating hover effect for calendar icon - will be animated via CSS */
-        .date-icon-btn:hover .date-icon-overlay {
-            color: #1a4a6b;
-        }
-        
-        body.dark .date-icon-btn:hover .date-icon-overlay {
-            color: var(--accent-blue-light);
-        }
-        
-        body.dark .date-icon-overlay {
-            color: var(--text-dark) !important;
-        }
-        
-        /* Completely hide native calendar icon but keep it clickable */
-        .date-input-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
-            position: absolute;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0 !important;
-            cursor: pointer;
-            z-index: 2;
-            background: transparent !important;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-        
-        /* Hide native calendar icon for all browsers */
-        .date-input-wrapper input[type="date"]::-moz-calendar-picker-indicator {
-            opacity: 0 !important;
-            width: 0 !important;
-            height: 0 !important;
-            position: absolute;
-            right: 0;
-            cursor: pointer;
-            z-index: 2;
-        }
-        
-        /* Additional hiding for Edge/IE */
-        .date-input-wrapper input[type="date"]::-ms-clear,
-        .date-input-wrapper input[type="date"]::-ms-reveal {
-            display: none;
-        }
-        
-        /* Make button trigger date picker */
-        .date-icon-btn {
-            pointer-events: auto;
-        }
-        
-        .date-input-wrapper input[type="date"] {
-            position: relative;
-        }
-        
-        .login-link {
-            text-align: center;
-            margin-top: 1rem;
-            color: #4a5568;
-            font-size: 0.95rem;
-        }
-        
-        .login-link a {
-            color: #256892;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .login-link a:hover {
-            text-decoration: underline;
-        }
+        /* --- Registration Card Container --- */
+.register-card {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem;
+    max-width: 750px;
+    width: 100%;
+    border: none;
+    margin-bottom: 3rem;
+}
+
+.register-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1a4a6b;
+    margin-bottom: 0.25rem;
+}
+
+.register-subtitle {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+}
+
+/* --- Form Label Styling --- */
+.form-label {
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- Input & Select Styling --- */
+.custom-input, .form-select {
+    border-radius: 12px !important;
+    border: 2px solid #e2e8f0;
+    background-color: #f8fbff;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    color: #1e293b;
+    transition: all 0.2s ease-in-out;
+}
+
+.custom-input:focus, .form-select:focus {
+    background-color: #fff;
+    border-color: #256892;
+    box-shadow: 0 0 0 4px rgba(37, 104, 146, 0.1);
+    outline: none;
+}
+
+/* --- Input Groups (Password & Date) --- */
+.input-group .custom-input {
+    z-index: 1;
+}
+
+.btn-password-toggle, .date-icon-btn {
+    border: 2px solid #e2e8f0;
+    border-left: none;
+    background-color: #f8fbff;
+    border-top-right-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.btn-password-toggle:hover, .date-icon-btn:hover {
+    background-color: #f1f5f9;
+}
+
+/* --- Error States --- */
+.custom-error {
+    color: #e11d48;
+    font-size: 0.8rem;
+    margin-top: 6px;
+    font-weight: 600;
+    display: none;
+    padding-left: 4px;
+}
+
+.form-control.error, .form-select.error {
+    border-color: #fb7185;
+    background-color: #fff1f2;
+}
+
+.form-control.error:focus {
+    box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1);
+}
+
+/* Success state for valid inputs */
+.form-control.success {
+    border-color: #256892;
+    background-color: #f0f9ff;
+}
+
+/* --- Primary Action Button --- */
+.btn-register {
+    background: #256892;
+    border: none;
+    color: white;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 1rem;
+}
+
+.btn-register:hover {
+    background: #1e4f73;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 104, 146, 0.3);
+}
+
+.btn-register:active {
+    transform: translateY(0);
+}
+
+/* --- Date Picker specific hack --- */
+/* This makes the whole input clickable for the date picker while keeping your custom icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+
+/* --- Login Link Section --- */
+.login-link-container {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.login-link-container p {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.login-link-container a {
+    color: #256892;
+    text-decoration: none;
+    font-weight: 700;
+    margin-left: 5px;
+}
+
+.login-link-container a:hover {
+    text-decoration: underline;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .register-card {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .register-title {
+        font-size: 1.75rem;
+    }
+}
         
         /* Footer */
-        .footer {
-            background: #1a4a6b;
+               .footer {
+            background: #0f2a3d; 
             color: white;
-            padding: 20px 0 15px;
-            margin-top: 40px;
-            width: 100%;
-            margin-left: 0;
-            margin-right: 0;
-            margin-bottom: 0;
+            padding: 80px 0 40px;
+            font-family: 'Inter', sans-serif;
         }
-        
-        .footer .container-fluid {
-            padding-left: 0;
-            padding-right: 0;
+
+        .footer-logo {
+            height: 40px;
+            margin-right: 12px;
         }
-        
+
+        .footer-logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .footer-desc {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            max-width: 320px;
+        }
+
         .footer-title {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            margin-bottom: 0.7rem;
-        }
-        
-        .footer-link {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: block;
-            margin-bottom: 0.3rem;
-            font-size: 0.85rem;
-        }
-        
-        .footer-link:hover {
+            margin-bottom: 1.5rem;
             color: white;
-            transform: translateX(5px);
         }
-        
+
+        .footer-links-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #3b7fb8;
+            transform: translateX(8px);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .footer-icon {
+            width: 20px;
+            color: #3b7fb8;
+            margin-right: 12px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+        }
+
         .social-icons a {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            display: inline-flex;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 50%;
             color: white;
-            margin-right: 8px;
+            text-decoration: none;
             transition: all 0.3s ease;
-            font-size: 0.85rem;
         }
-        
+
         .social-icons a:hover {
-            background: white;
-            color: #256892;
+            background: #3b7fb8;
             transform: translateY(-5px);
         }
-        
-        .footer p {
+
+        .footer-bottom {
+            margin-top: 60px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.5);
             font-size: 0.85rem;
-            line-height: 1.5;
+        }
+
+        .footer-legal a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .footer-legal a:hover {
+            color: white;
         }
     </style>
 </head>
@@ -367,113 +403,115 @@
     <div id="navbar-container"></div>
 
     <!-- Registration Form -->
-    <div class="main-content">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 col-md-10">
-                    <div class="register-card mx-auto" style="margin-top: 40px;">
-                        <h1 class="register-title">Create Account</h1>
-                        <p class="register-subtitle">Join AquaSphere and start ordering clean water</p>
-                        
-                        <form method="post" action="api/register.php" id="registerForm" novalidate>
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    <label for="username" class="form-label">Username</label>
-                                    <input type="text" class="form-control" id="username" name="username" 
-                                           placeholder="Choose a username" autocomplete="off" required>
-                                    <div class="custom-error" id="username-error">Username is required.</div>
-                                    <div class="custom-error" id="username-unique-error" style="display: none;">Username already exists.</div>
-                                </div>
-                                
-                                <div class="col-md-6 mb-2">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" 
-                                           placeholder="Enter your email" autocomplete="off" required>
-                                    <div class="custom-error" id="email-error">Email is required.</div>
-                                    <div class="custom-error" id="email-unique-error" style="display: none;">Email already exists.</div>
-                                </div>
+    <div class="main-content py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="register-card shadow-sm mx-auto">
+                    <div class="text-center mb-4">
+                         <h1 class="register-title fw-bold">Create Account</h1>
+                         <p class="register-subtitle text-muted">Join AquaSphere and start ordering clean water</p>
+                    </div>
+                    
+                    <form method="post" action="api/register.php" id="registerForm" novalidate>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="username" class="form-label small fw-bold text-uppercase">Username</label>
+                                <input type="text" class="form-control custom-input" id="username" name="username" 
+                                       placeholder="Choose a username" autocomplete="off" required>
+                                <div class="custom-error" id="username-error">Username is required.</div>
+                                <div class="custom-error" id="username-unique-error" style="display: none;">Username already exists.</div>
                             </div>
                             
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    <label for="first_name" class="form-label">First Name</label>
-                                    <input type="text" class="form-control" id="first_name" name="first_name" 
-                                           placeholder="Enter your first name" autocomplete="off" required>
-                                    <div class="custom-error" id="first_name-error">First name is required.</div>
-                                </div>
-                                
-                                <div class="col-md-6 mb-2">
-                                    <label for="last_name" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" id="last_name" name="last_name" 
-                                           placeholder="Enter your last name" autocomplete="off" required>
-                                    <div class="custom-error" id="last_name-error">Last name is required.</div>
-                                </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label small fw-bold text-uppercase">Email Address</label>
+                                <input type="email" class="form-control custom-input" id="email" name="email" 
+                                       placeholder="name@example.com" autocomplete="off" required>
+                                <div class="custom-error" id="email-error">Email is required.</div>
+                                <div class="custom-error" id="email-unique-error" style="display: none;">Email already exists.</div>
                             </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    <label for="gender" class="form-label">Gender</label>
-                                    <select class="form-select" id="gender" name="gender" required>
-                                        <option value="" disabled selected>Select Gender</option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                    </select>
-                                    <div class="custom-error" id="gender-error">Gender is required.</div>
-                                </div>
-                                
-                                <div class="col-md-6 mb-2">
-                                    <label for="birthday" class="form-label">Birthday</label>
-                                    <div class="input-group date-input-wrapper">
-                                        <input type="date" class="form-control" id="birthday" name="birthday" required>
-                                        <button class="btn btn-outline-secondary date-icon-btn" type="button" id="datePickerBtn">
-                                            <i class="fas fa-calendar-alt date-icon-overlay"></i>
-                                        </button>
-                                    </div>
-                                    <div class="custom-error" id="birthday-error">Birthday is required.</div>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    <label for="password" class="form-label">Password</label>
-                                    <div class="input-group">
-                                        <input type="password" class="form-control" id="password" name="password" 
-                                               placeholder="Choose a password (min. 8 characters)" autocomplete="off" required>
-                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                            <i class="fas fa-eye" id="passwordIcon"></i>
-                                        </button>
-                                    </div>
-                                    <div class="custom-error" id="password-error">Password is required.</div>
-                                </div>
-                                
-                                <div class="col-md-6 mb-2">
-                                    <label for="confirm_password" class="form-label">Confirm Password</label>
-                                    <div class="input-group">
-                                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
-                                               placeholder="Confirm your password" autocomplete="off" required>
-                                        <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
-                                            <i class="fas fa-eye" id="confirmPasswordIcon"></i>
-                                        </button>
-                                    </div>
-                                    <div class="custom-error" id="confirm_password-error">Password confirmation is required.</div>
-                                </div>
-                            </div>
-                            
-                            <div class="d-grid gap-2 mt-3">
-                                <button type="submit" class="btn btn-register">
-                                    <i class="fas fa-user-plus me-2"></i>Create Account
-                                </button>
-                            </div>
-                        </form>
-                        
-                        <div class="login-link">
-                            <p>Already have an account? <a href="login.html">Log in here</a></p>
                         </div>
+                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="first_name" class="form-label small fw-bold text-uppercase">First Name</label>
+                                <input type="text" class="form-control custom-input" id="first_name" name="first_name" 
+                                       placeholder="John" required>
+                                <div class="custom-error" id="first_name-error">First name is required.</div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="last_name" class="form-label small fw-bold text-uppercase">Last Name</label>
+                                <input type="text" class="form-control custom-input" id="last_name" name="last_name" 
+                                       placeholder="Doe" required>
+                                <div class="custom-error" id="last_name-error">Last name is required.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="gender" class="form-label small fw-bold text-uppercase">Gender</label>
+                                <select class="form-select custom-input" id="gender" name="gender" required>
+                                    <option value="" disabled selected>Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                                <div class="custom-error" id="gender-error">Gender is required.</div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="birthday" class="form-label small fw-bold text-uppercase">Birthday</label>
+                                <div class="input-group">
+                                    <input type="date" class="form-control custom-input" id="birthday" name="birthday" required>
+                                    <button class="btn btn-outline-light-blue date-icon-btn" type="button">
+                                        <i class="fas fa-calendar-alt text-muted"></i>
+                                    </button>
+                                </div>
+                                <div class="custom-error" id="birthday-error">Birthday is required.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="password" class="form-label small fw-bold text-uppercase">Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control custom-input border-end-0" id="password" name="password" 
+                                           placeholder="Min. 8 characters" required>
+                                    <button class="btn btn-password-toggle border-start-0" type="button" id="togglePassword">
+                                        <i class="fas fa-eye text-muted" id="passwordIcon"></i>
+                                    </button>
+                                </div>
+                                <div class="custom-error" id="password-error">Password is required.</div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="confirm_password" class="form-label small fw-bold text-uppercase">Confirm Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control custom-input border-end-0" id="confirm_password" name="confirm_password" 
+                                           placeholder="Repeat password" required>
+                                    <button class="btn btn-password-toggle border-start-0" type="button" id="toggleConfirmPassword">
+                                        <i class="fas fa-eye text-muted" id="confirmPasswordIcon"></i>
+                                    </button>
+                                </div>
+                                <div class="custom-error" id="confirm_password-error">Confirmation is required.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-register py-3 fw-bold">
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="text-center mt-4 pt-2 border-top">
+                        <p class="text-muted small">Already have an account? <a href="login.html" class="text-aqua fw-bold text-decoration-none">Log in here</a></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1019,56 +1057,77 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-3">
-                    <h4 class="footer-title" style="display: flex; align-items: center;">
-                        <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 40px; margin-right: 10px;">
-                        AquaSphere
-                    </h4>
-                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.7;">
-                        Your trusted water delivery service. Fast delivery, clean quality water, and reliable service. 
-                        Everything you need for your hydration needs, all in one platform.
-                    </p>
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-4 col-md-12 mb-2">
+                <div class="footer-brand mb-3">
+                    <img src="systemlogo.png" alt="AquaSphere Logo" class="footer-logo">
+                    <span class="footer-logo-text">AquaSphere</span>
                 </div>
-                
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h5 class="footer-title">Quick Links</h5>
-                    <a href="index.html#home" class="footer-link">Home</a>
-                    <a href="index.html#features" class="footer-link">Features</a>
-                    <a href="index.html#how-it-works" class="footer-link">How It Works</a>
-                    <a href="index.html#contact" class="footer-link">Contact</a>
-                </div>
-                
-                <div class="col-lg-3 col-md-6 mb-3">
-                    <h5 class="footer-title">Features</h5>
-                    <a href="#" class="footer-link">Easy Ordering</a>
-                    <a href="#" class="footer-link">Delivery Tracking</a>
-                    <a href="#" class="footer-link">Payment Options</a>
-                    <a href="#" class="footer-link">Customer Support</a>
-                </div>
-                
-                <div class="col-lg-3 mb-3">
-                    <h5 class="footer-title">Connect With Us</h5>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                    <p class="mt-1" style="color: rgba(255, 255, 255, 0.8);">
-                        <i class="fas fa-envelope me-2"></i>support@aquasphere.com
-                    </p>
+                <p class="footer-desc">
+                    Bringing nature's purest hydration to your doorstep. We combine smart ordering technology with reliable, eco-friendly delivery to keep your life flowing.
+                </p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
-            
-            <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 1rem 0 0.8rem;">
-            
-            <div class="text-center" style="color: rgba(255, 255, 255, 0.8); font-size: 0.8rem;">
-                <p>&copy; 2024 AquaSphere. Made with ❤️ for clean water delivery. All rights reserved.</p>
+
+            <div class="col-lg-2 col-md-4 col-6">
+                <h5 class="footer-title">Explore</h5>
+                <ul class="footer-links-list">
+                    <li><a href="#home" class="footer-link">Home</a></li>
+                    <li><a href="#features" class="footer-link">Features</a></li>
+                    <li><a href="#how-it-works" class="footer-link">How It Works</a></li>
+                    <li><a href="#pricing" class="footer-link">Pricing</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-6">
+                <h5 class="footer-title">Our Services</h5>
+                <ul class="footer-links-list">
+                    <li><a href="#" class="footer-link">Mineral Refills</a></li>
+                    <li><a href="#" class="footer-link">Alkaline Water</a></li>
+                    <li><a href="#" class="footer-link">Bulk Delivery</a></li>
+                    <li><a href="#" class="footer-link">Express Support</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-4">
+                <h5 class="footer-title">Contact Us</h5>
+                <div class="contact-item mb-2">
+                    <i class="fas fa-envelope footer-icon"></i>
+                    <span>support@aquasphere.com</span>
+                </div>
+                <div class="contact-item mb-2">
+                    <i class="fas fa-phone-alt footer-icon"></i>
+                    <span>+63 (2) 123-4567</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-location-dot footer-icon"></i>
+                    <span>123 Water St, Metro Manila</span>
+                </div>
             </div>
         </div>
-    </footer>
+
+        <div class="footer-bottom">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="copyright mb-0">&copy; 2024 <strong>AquaSphere</strong>. Pure health in every drop.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-legal">
+                        <a href="#">Privacy Policy</a>
+                        <span class="mx-2">|</span>
+                        <a href="#">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
 </body>
 </html>
 
