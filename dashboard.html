@@ -458,11 +458,7 @@
             z-index: 1;
         }
         
-        /* When image is present via inline style, override background and hide overlays */
-        .product-image[style*="background-image"] {
-            background: none !important;
-        }
-        
+        /* When image is present via inline style, hide overlays but keep the image */
         .product-image[style*="background-image"]::after {
             display: none !important;
         }
@@ -473,6 +469,11 @@
         
         .product-image[style*="background-image"]::before {
             display: none !important;
+        }
+        
+        /* Ensure inline background-image takes precedence over CSS gradient */
+        .product-image[style*="background-image"] {
+            background-color: transparent;
         }
         
         .product-image i {
