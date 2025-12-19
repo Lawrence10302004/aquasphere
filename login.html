@@ -1010,19 +1010,24 @@
                 }
                 
                 if (fieldName === 'password') {
-                    // Strong password regex: at least 8 chars with upper, lower, number, and special char
-                    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-\.\/:;<=>?@\[\]^_`{|}~]).{8,}$/;
+                    // Check if this is admin login - admin can use simpler password
+                    const usernameField = document.getElementById('username');
+                    const isAdmin = usernameField && usernameField.value.trim().toLowerCase() === 'admin';
                     
                     if (value.length < 8) {
                         showError(fieldName, 'Min 8 chars with upper, lower, number, special.');
                         return false;
-                    } else if (!strongPasswordRegex.test(value)) {
-                        showError(fieldName, 'Min 8 chars with upper, lower, number, special.');
-                        return false;
-                    } else {
-                        hideError(fieldName);
-                        markSuccess(fieldName);
+                    } else if (!isAdmin) {
+                        // For non-admin users, require strong password
+                        const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-\.\/:;<=>?@\[\]^_`{|}~]).{8,}$/;
+                        if (!strongPasswordRegex.test(value)) {
+                            showError(fieldName, 'Min 8 chars with upper, lower, number, special.');
+                            return false;
+                        }
                     }
+                    // Admin or valid strong password - allow
+                    hideError(fieldName);
+                    markSuccess(fieldName);
                 }
                 
                 return true;
@@ -1523,11 +1528,14 @@
             
             // Real-time password validation on login form
             const passwordEl = document.getElementById('password');
+            const usernameEl = document.getElementById('username');
             if (passwordEl) {
                 const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-\.\/:;<=>?@\[\]^_`{|}~]).{8,}$/;
                 
-                passwordEl.addEventListener('input', function() {
-                    const password = this.value;
+                function validatePasswordInput() {
+                    const password = passwordEl.value;
+                    const username = usernameEl ? usernameEl.value.trim().toLowerCase() : '';
+                    const isAdmin = username === 'admin';
                     const errorDiv = document.getElementById('password-error');
                     
                     if (!password) {
@@ -1535,31 +1543,39 @@
                             errorDiv.textContent = 'Password is required.';
                             errorDiv.style.display = 'block';
                         }
-                        this.classList.add('error');
-                        this.classList.remove('success');
+                        passwordEl.classList.add('error');
+                        passwordEl.classList.remove('success');
                     } else if (password.length < 8) {
                         if (errorDiv) {
                             errorDiv.textContent = 'Min 8 chars with upper, lower, number, special.';
                             errorDiv.style.display = 'block';
                         }
-                        this.classList.add('error');
-                        this.classList.remove('success');
-                    } else if (!strongPasswordRegex.test(password)) {
+                        passwordEl.classList.add('error');
+                        passwordEl.classList.remove('success');
+                    } else if (!isAdmin && !strongPasswordRegex.test(password)) {
+                        // Only check strength for non-admin users
                         if (errorDiv) {
                             errorDiv.textContent = 'Min 8 chars with upper, lower, number, special.';
                             errorDiv.style.display = 'block';
                         }
-                        this.classList.add('error');
-                        this.classList.remove('success');
+                        passwordEl.classList.add('error');
+                        passwordEl.classList.remove('success');
                     } else {
                         if (errorDiv) errorDiv.style.display = 'none';
-                        this.classList.remove('error');
-                        this.classList.add('success');
+                        passwordEl.classList.remove('error');
+                        passwordEl.classList.add('success');
                         setTimeout(() => {
-                            this.classList.remove('success');
+                            passwordEl.classList.remove('success');
                         }, 3000);
                     }
-                });
+                }
+                
+                passwordEl.addEventListener('input', validatePasswordInput);
+                
+                // Also re-validate password when username changes (in case user switches to/from admin)
+                if (usernameEl) {
+                    usernameEl.addEventListener('input', validatePasswordInput);
+                }
             }
             
             // New Password Form Handler
