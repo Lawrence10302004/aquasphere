@@ -1376,7 +1376,12 @@
                     imageUrl = encodeURI(imageUrl);
                 }
                 
-                const imageStyle = imageUrl ? `background-image: url('${imageUrl}') !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important;` : '';
+                // Build the style string for the image - use background shorthand to override CSS gradient
+                let imageStyle = '';
+                if (imageUrl) {
+                    // Use background shorthand to completely override the CSS gradient
+                    imageStyle = `background: url('${imageUrl}') center center / cover no-repeat !important; background-color: transparent !important;`;
+                }
                 
                 return `
                     <div class="product-card" data-category="${escapeHtml(category)}">
