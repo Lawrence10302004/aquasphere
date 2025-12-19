@@ -161,6 +161,7 @@ body {
 .dropdown-item {
     padding: 0.5rem 1rem;
     transition: all 0.2s ease;
+    font-size: 0.95rem;
 }
 
 .dropdown-item:hover {
@@ -171,6 +172,21 @@ body {
 .dropdown-item i {
     width: 20px;
     text-align: center;
+}
+
+/* Ensure Dark Mode button text matches other dropdown items */
+#themeToggle {
+    font-size: 0.95rem;
+    font-weight: 400;
+}
+
+#themeToggle #themeIcon {
+    font-size: 1rem;
+    display: inline-block;
+    width: 20px;
+    text-align: center;
+    margin-right: 0.5rem;
+    vertical-align: middle;
 }
 
 .cart-badge {
