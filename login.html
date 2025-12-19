@@ -1455,23 +1455,51 @@
                         
                         if (data.success) {
                             resetEmail = email;
-                            // Hide forgot password modal
-                            const forgotModal = bootstrap.Modal.getInstance(document.getElementById('forgotPasswordModal'));
-                            if (forgotModal) {
-                                forgotModal.hide();
+                            
+                            // Hide forgot password modal first
+                            const forgotModalElement = document.getElementById('forgotPasswordModal');
+                            if (forgotModalElement) {
+                                const forgotModal = bootstrap.Modal.getInstance(forgotModalElement);
+                                if (forgotModal) {
+                                    forgotModal.hide();
+                                } else {
+                                    // If no instance exists, hide it manually
+                                    forgotModalElement.classList.remove('show');
+                                    forgotModalElement.style.display = 'none';
+                                    document.body.classList.remove('modal-open');
+                                    const backdrop = document.querySelector('.modal-backdrop');
+                                    if (backdrop) backdrop.remove();
+                                }
                             }
                             
-                            // Show OTP verification modal
-                            const otpModalElement = document.getElementById('otpVerificationModal');
-                            if (otpModalElement) {
-                                const otpModal = new bootstrap.Modal(otpModalElement);
-                                otpModal.show();
-                                startOTPTimer();
-                            } else {
-                                console.error('OTP modal element not found');
-                                errorDiv.textContent = 'Error: OTP modal not found. Please refresh the page.';
-                                errorDiv.style.display = 'block';
-                            }
+                            // Wait a bit for modal to close, then show OTP modal
+                            setTimeout(() => {
+                                const otpModalElement = document.getElementById('otpVerificationModal');
+                                if (otpModalElement) {
+                                    try {
+                                        const otpModal = new bootstrap.Modal(otpModalElement, {
+                                            backdrop: true,
+                                            keyboard: true
+                                        });
+                                        otpModal.show();
+                                        startOTPTimer();
+                                    } catch (error) {
+                                        console.error('Error showing OTP modal:', error);
+                                        // Fallback: show modal directly
+                                        otpModalElement.classList.add('show');
+                                        otpModalElement.style.display = 'block';
+                                        document.body.classList.add('modal-open');
+                                        const backdrop = document.createElement('div');
+                                        backdrop.className = 'modal-backdrop fade show';
+                                        document.body.appendChild(backdrop);
+                                        startOTPTimer();
+                                    }
+                                } else {
+                                    console.error('OTP modal element not found');
+                                    errorDiv.textContent = 'Error: OTP modal not found. Please refresh the page.';
+                                    errorDiv.style.display = 'block';
+                                }
+                            }, 300);
                         } else {
                             errorDiv.textContent = data.error || 'Failed to send reset code. Please try again.';
                             errorDiv.style.display = 'block';
