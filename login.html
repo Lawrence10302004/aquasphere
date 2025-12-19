@@ -178,20 +178,15 @@
 
         /* --- Error Styling --- */
         .custom-error {
-            color: #e11d48;
-            font-size: 0.8rem;
-            margin-top: 6px;
-            font-weight: 600;
+            background-color: #fef2f2;
+            color: #b91c1c;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            border-left: 4px solid #ef4444;
+            font-weight: 500;
             display: none;
-            padding-left: 4px;
-        }
-
-        .custom-input.error {
-            border-color: #fb7185 !important;
-        }
-
-        .custom-input.error:focus {
-            box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1) !important;
         }
 
         /* --- Login Button --- */
@@ -428,8 +423,7 @@
             background: #f7fafc;
             color: #4a5568;
         }
-        
-        
+               
         /* Forgot Password Modal Styles */
         .forgot-password-modal-content {
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
@@ -503,7 +497,7 @@
         }
         
         .illustration-icon {
-            width: 120px; 
+            width: 120px;
             height: 120px;
             margin: 0 auto;
             background: linear-gradient(135deg, #256892, #1e4f73);
@@ -514,13 +508,10 @@
             box-shadow: 0 10px 30px rgba(14, 165, 233, 0.3);
             animation: iconFloat 3s ease-in-out infinite;
         }
-
+        
         .illustration-icon i {
+            font-size: 3.5rem;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1; 
         }
         
         .illustration-icon.verification-icon {
@@ -531,7 +522,80 @@
             height: 140px;
             position: relative;
         }
-         
+        
+        .water-droplets {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .water-droplet {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+            animation: dropletFloat 3s ease-in-out infinite;
+        }
+        
+        .water-droplet:nth-child(1) {
+            top: 20%;
+            left: 30%;
+            animation-delay: 0s;
+        }
+        
+        .water-droplet:nth-child(2) {
+            top: 50%;
+            left: 50%;
+            margin-top: -25px;
+            margin-left: -25px;
+            width: 50px;
+            height: 50px;
+            animation-delay: 0.3s;
+            z-index: 2;
+        }
+        
+        .water-droplet:nth-child(3) {
+            top: 60%;
+            right: 25%;
+            animation-delay: 0.6s;
+        }
+        
+        .water-droplet::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+        }
+        
+        .water-droplet:nth-child(2)::before {
+            width: 15px;
+            height: 15px;
+        }
+        
+        @keyframes dropletFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(-45deg);
+            }
+            50% {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+        }
+        
+        .water-droplet:nth-child(2)::before {
+            width: 15px;
+            height: 15px;
+        }
+        
         .illustration-icon.reset-icon {
             background: linear-gradient(135deg, #1e4f73, #1a4a6b);
         }
@@ -768,24 +832,15 @@
     <script>
         // Redirect logged-in users away from login page
         document.addEventListener('DOMContentLoaded', async () => {
-            // Don't auto-redirect if user is already on login page (they should stay here to log in)
-            // Only redirect if they're already logged in and shouldn't be on login page
             try {
                 const resp = await fetch('api/get_current_user.php', { credentials: 'include' });
                 if (resp.ok) {
                     const data = await resp.json();
-                    // Only redirect if user is logged in and not coming from password change
-                    // Check URL parameters - if no redirect param, allow normal redirect
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const fromPasswordChange = urlParams.has('from') && urlParams.get('from') === 'password_change';
-                    
-                    if (!fromPasswordChange) {
-                        // Check if user is admin and redirect accordingly
-                        if (data.user && data.user.is_admin) {
-                            window.location.href = 'admin/dashboard.html';
-                        } else {
-                            window.location.href = 'dashboard.html';
-                        }
+                    // Check if user is admin and redirect accordingly
+                    if (data.user && data.user.is_admin) {
+                        window.location.href = 'admin/dashboard.html';
+                    } else {
+                        window.location.href = 'dashboard.html';
                     }
                     return;
                 }
@@ -831,7 +886,6 @@
                                 </button>
                             </div>
                             <div class="custom-error" id="password-error">Password is required.</div>
-                            <div class="custom-error" id="auth-error" style="display: none;"></div>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -1079,19 +1133,8 @@
                 })
                 .then(data => {
                     if (data && data.success === true) {
-                        // Check if there's a redirect parameter in URL (from password change)
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const redirectParam = urlParams.get('redirect');
-                        
-                        // If redirect parameter is 'stay', don't redirect (user should stay on login page)
-                        if (redirectParam === 'stay') {
-                            // Just reload the page to show logged in state
-                            window.location.reload();
-                            return;
-                        }
-                        
-                        // Use redirect parameter if present, otherwise use API redirect
-                        const redirectUrl = redirectParam || data.redirect || 'dashboard.html';
+                        // Redirect to dashboard or home
+                        const redirectUrl = data.redirect || 'dashboard.html';
                         // Force redirect immediately
                         window.location.replace(redirectUrl);
                     } else {
@@ -1104,13 +1147,12 @@
                             showSuspendedNotice();
                             return;
                         } else if (data.message) {
-                            // Show authentication error below password field
+                            // Show authentication error below password field (like AnemoCheck)
                             const authError = document.getElementById('auth-error');
                             const usernameField = document.getElementById('username');
                             const passwordField = document.getElementById('password');
                             
                             if (authError) {
-                                authError.textContent = data.message;
                                 authError.style.display = 'block';
                                 // Make both fields red immediately
                                 if (usernameField) {
@@ -1121,6 +1163,8 @@
                                     passwordField.classList.add('error');
                                     passwordField.classList.remove('success');
                                 }
+                            } else {
+                                alert(data.message);
                             }
                         }
                     }
@@ -1356,18 +1400,9 @@
                         return;
                     }
                     const spinner = sendResetButton.querySelector('.fa-spinner');
-                    const paperPlaneIcon = sendResetButton.querySelector('.fa-paper-plane');
-                    const buttonText = sendResetButton.querySelector('span');
-                    
                     sendResetButton.disabled = true;
                     if (spinner) {
                         spinner.style.display = 'inline-block';
-                    }
-                    if (paperPlaneIcon) {
-                        paperPlaneIcon.style.display = 'none';
-                    }
-                    if (buttonText) {
-                        buttonText.textContent = 'Sending...';
                     }
                     
                     try {
@@ -1462,16 +1497,9 @@
                             errorDiv.style.display = 'block';
                         }
                     } finally {
-                        const sendResetButtonFinal = document.getElementById('sendResetButton');
-                        if (sendResetButtonFinal) {
-                            sendResetButtonFinal.disabled = false;
-                            const spinnerFinal = sendResetButtonFinal.querySelector('.fa-spinner');
-                            const paperPlaneIconFinal = sendResetButtonFinal.querySelector('.fa-paper-plane');
-                            const buttonTextFinal = sendResetButtonFinal.querySelector('span');
-                            
-                            if (spinnerFinal) spinnerFinal.style.display = 'none';
-                            if (paperPlaneIconFinal) paperPlaneIconFinal.style.display = 'inline-block';
-                            if (buttonTextFinal) buttonTextFinal.textContent = 'Send Reset Code';
+                        if (sendResetButton) {
+                            sendResetButton.disabled = false;
+                            if (spinner) spinner.style.display = 'none';
                         }
                     }
                 });
@@ -1804,18 +1832,9 @@
                     }
                     
                     const verifyButton = document.getElementById('verifyButton');
-                    if (!verifyButton) {
-                        console.error('Verify button not found');
-                        return;
-                    }
-                    
                     const spinner = verifyButton.querySelector('.fa-spinner');
-                    const buttonText = verifyButton.querySelector('span');
-                    
-                    // Show loading state - keep button visible
                     verifyButton.disabled = true;
-                    if (spinner) spinner.style.display = 'inline-block';
-                    if (buttonText) buttonText.textContent = 'Verifying...';
+                    spinner.style.display = 'inline-block';
                     
                     try {
                         const [response] = await Promise.all([
@@ -1832,120 +1851,43 @@
                             new Promise(resolve => setTimeout(resolve, 1500))
                         ]);
                         
-                        // Check if response is ok
-                        if (!response.ok) {
-                            const errorText = await response.text();
-                            let errorData;
-                            try {
-                                errorData = JSON.parse(errorText);
-                            } catch (e) {
-                                errorData = { error: 'Server error. Please try again.' };
-                            }
-                            const otpError = document.getElementById('otp-error');
-                            if (otpError) {
-                                otpError.textContent = errorData.error || 'Invalid or expired verification code. Please try again.';
-                                otpError.style.display = 'block';
-                            }
-                            return;
-                        }
-                        
-                        const text = await response.text();
-                        let data;
-                        try {
-                            data = JSON.parse(text);
-                        } catch (e) {
-                            console.error('JSON parse error:', e, 'Response text:', text);
-                            const otpError = document.getElementById('otp-error');
-                            if (otpError) {
-                                otpError.textContent = 'Invalid response from server. Please try again.';
-                                otpError.style.display = 'block';
-                            }
-                            return;
-                        }
+                        const data = await response.json();
                         
                         if (data.success) {
                             // Store the OTP code before closing the modal
                             resetOTPCode = otpCode;
-                            
-                            // Hide OTP modal and show new password modal
-                            const otpModalElement = document.getElementById('otpVerificationModal');
-                            if (otpModalElement) {
-                                const otpModal = bootstrap.Modal.getInstance(otpModalElement);
-                                if (otpModal) {
-                                    otpModal.hide();
-                                }
-                            }
-                            
-                            // Wait a bit for modal to close, then show new password modal
-                            setTimeout(() => {
-                                const newPasswordModalElement = document.getElementById('newPasswordModal');
-                                if (newPasswordModalElement) {
-                                    try {
-                                        const newPasswordModal = new bootstrap.Modal(newPasswordModalElement, {
-                                            backdrop: true,
-                                            keyboard: true
-                                        });
-                                        newPasswordModal.show();
-                                    } catch (error) {
-                                        console.error('Error showing new password modal:', error);
-                                        // Fallback: show modal directly
-                                        newPasswordModalElement.classList.add('show');
-                                        newPasswordModalElement.style.display = 'block';
-                                        document.body.classList.add('modal-open');
-                                        const backdrop = document.createElement('div');
-                                        backdrop.className = 'modal-backdrop fade show';
-                                        document.body.appendChild(backdrop);
-                                    }
-                                }
-                            }, 300);
+                            bootstrap.Modal.getInstance(document.getElementById('otpVerificationModal')).hide();
+                            const newPasswordModal = new bootstrap.Modal(document.getElementById('newPasswordModal'));
+                            newPasswordModal.show();
                         } else {
-                            // Show error message - this is important for invalid code
-                            const otpError = document.getElementById('otp-error');
-                            if (otpError) {
-                                otpError.textContent = data.error || 'Invalid or expired verification code. Please try again.';
-                                otpError.style.display = 'block';
-                            }
+                            document.getElementById('otp-error').textContent = data.error || 'Invalid or expired verification code. Please try again.';
+                            document.getElementById('otp-error').style.display = 'block';
                         }
                     } catch (error) {
-                        console.error('Error verifying OTP:', error);
+                        // Removed console.error('Error:', error);
                         const otpError = document.getElementById('otp-error');
                         if (otpError) {
                             otpError.textContent = 'An error occurred. Please try again.';
                             otpError.style.display = 'block';
                         }
                     } finally {
-                        // Reset button state - keep it visible
-                        verifyButton.disabled = false;
-                        if (spinner) spinner.style.display = 'none';
-                        if (buttonText) buttonText.textContent = 'Verify and Continue';
+                        if (verifyButton) {
+                            verifyButton.disabled = false;
+                            if (spinner) spinner.style.display = 'none';
+                        }
                     }
                 });
             }
             
             // Resend OTP
             async function resendOTP() {
-                if (!resetEmail) {
-                    createFeedbackContainer('Email not found. Please start the password reset process again.');
-                    return;
-                }
+                if (!resetEmail) return;
                 
                 const resendLink = document.getElementById('resendOTPLink');
-                if (!resendLink) {
-                    console.error('Resend OTP link not found');
-                    return;
-                }
-                
                 const spinner = resendLink.querySelector('.fa-spinner');
-                if (!spinner) {
-                    console.error('Spinner element not found in resend link');
-                }
                 
-                // Disable link and show spinner
                 resendLink.style.pointerEvents = 'none';
-                resendLink.style.opacity = '0.6';
-                if (spinner) {
-                    spinner.style.display = 'inline-block';
-                }
+                spinner.style.display = 'inline-block';
                 
                 try {
                     const response = await fetch('api/forgot_password.php', {
@@ -1956,46 +1898,20 @@
                         body: JSON.stringify({ email: resetEmail })
                     });
                     
-                    // Check if response is ok
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        let errorData;
-                        try {
-                            errorData = JSON.parse(errorText);
-                        } catch (e) {
-                            errorData = { error: 'Server error. Please try again.' };
-                        }
-                        createFeedbackContainer(errorData.error || 'Failed to resend code. Please try again.');
-                        return;
-                    }
-                    
-                    const text = await response.text();
-                    let data;
-                    try {
-                        data = JSON.parse(text);
-                    } catch (e) {
-                        console.error('JSON parse error:', e, 'Response text:', text);
-                        createFeedbackContainer('Invalid response from server. Please try again.');
-                        return;
-                    }
+                    const data = await response.json();
                     
                     if (data.success) {
-                        // Reset timer and show success message
                         startOTPTimer();
                         createFeedbackContainer('Verification code has been resent to your email.');
                     } else {
-                        createFeedbackContainer(data.error || 'Failed to resend code. Please try again.');
+                        createFeedbackContainer('Failed to resend code. Please try again.');
                     }
                 } catch (error) {
-                    console.error('Error resending OTP:', error);
+                    // Removed console.error('Error:', error);
                     createFeedbackContainer('An error occurred. Please try again.');
                 } finally {
-                    // Re-enable link and hide spinner
                     resendLink.style.pointerEvents = 'auto';
-                    resendLink.style.opacity = '1';
-                    if (spinner) {
-                        spinner.style.display = 'none';
-                    }
+                    spinner.style.display = 'none';
                 }
             }
             
@@ -2219,18 +2135,17 @@
             <div class="modal-header border-0 pb-0">
             </div>
             
-               <div class="modal-body px-lg-5 pb-lg-5">
-                <div class="text-center mb-4">
-                    <div class="illustration-wrapper mb-3">
-                        <i class="fas fa-key fa-3x illustration-icon" style="color:white; "></i>
-                    </div>
-                    <h4 class="modal-title-custom mb-2">Forgot Password?</h4>
-                    <p class="text-muted small px-3">
-                        Don't worry! Enter your registered email below and we'll send you a secure code to reset your password.
-                    </p>
-                </div>
+            <div class="modal-body px-lg-5 pb-lg-5">
+                <div class="text-center mb-4">
+                    <div class="illustration-wrapper mb-3">
+                        <i class="fas fa-key fa-3x illustration-icon" style="color:white; "></i>
+                    </div>
+                    <h4 class="modal-title-custom mb-2">Forgot Password?</h4>
+                    <p class="text-muted small px-3">
+                        Don't worry! Enter your registered email below and we'll send you a secure code to reset your password.
+                    </p>
+                </div>
 
-                
                 <form id="forgotPasswordForm">
                     <div class="mb-4">
                         <label for="resetEmail" class="form-label fw-bold text-dark small">Email Address</label>
@@ -2244,7 +2159,6 @@
 
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-login-submit py-3" id="sendResetButton">
-                            <i class="fas fa-spinner fa-spin me-2" style="display: none;"></i>
                             <i class="fas fa-paper-plane me-2"></i>
                             <span>Send Reset Code</span>
                         </button>
@@ -2297,17 +2211,13 @@
 
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-verify-submit py-3" id="verifyButton">
-                            <i class="fas fa-spinner fa-spin me-2" style="display: none;"></i>
                             <span>Verify and Continue</span>
                         </button>
                         
                         <div class="text-center mt-3">
                             <p class="otp-resend-text">
                                 Didn't receive the code? 
-                                <a href="#" class="otp-resend-link" id="resendOTPLink">
-                                    <i class="fas fa-spinner fa-spin me-1" style="display: none;"></i>
-                                    Resend OTP
-                                </a> 
+                                <a href="#" class="otp-resend-link" id="resendOTPLink">Resend OTP</a> 
                                 <span id="otpTimer" class="otp-timer ms-1"></span>
                             </p>
                         </div>
@@ -2323,70 +2233,70 @@
 </div>
 
     <!-- New Password Modal -->
-  <div class="modal fade" id="newPasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="newPasswordModal" tabindex="-1" aria-labelledby="newPasswordModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content forgot-password-modal-content border-0">
-            <div class="modal-header border-0 pb-0 justify-content-end">
-            </div>
-
-            <div class="modal-body px-lg-5 pb-lg-5 text-center">
-            <div class="forgot-password-illustration">
-                <div class="illustration-icon">
-                    <i class="fas fa-lock-open fa-3x" style="color: white;"></i>
-                </div>
+        <div class="modal-content forgot-card">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
-            <h3 class="fw-bold text-dark mb-2">Reset Password</h3>
-            <p class="forgot-password-instruction">
-                Your new password must be different from your previous password.
-            </p>
-            </div>
+            <div class="modal-body px-lg-5 pb-lg-5">
+                <div class="text-center mb-4">
+                    <div class="illustration-wrapper mb-3">
+                        <i class="fas fa-lock-open fa-3x illustration-icon" style="color:white;"></i>
+                    </div>
+                    <h4 class="modal-title-custom mb-2">Reset Password</h4>
+                    <p class="text-muted small px-3">
+                        Your new password must be different from your previous password.
+                    </p>
+                </div>
 
-                <form id="newPasswordForm" class="text-start">
+                <form id="newPasswordForm">
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-uppercase text-muted">New Password</label>
+                        <label for="newPassword" class="form-label fw-bold text-dark small">New Password</label>
                         <div class="input-group-custom">
                             <i class="fas fa-lock input-icon"></i>
-                            <input type="password" class="form-control custom-input" 
-                                   id="newPassword" placeholder="Enter new password" required>
-                            <button class="password-toggle" type="button" id="toggleNewPassword">
-                                <i class="fas fa-eye" id="newPasswordIcon"></i>
+                            <input type="password" class="form-control custom-input" id="newPassword" 
+                                   placeholder="Enter new password" autocomplete="off" required>
+                            <button class="btn btn-password-toggle" type="button" id="toggleNewPassword" style="position: absolute; right: 15px; border: none; background: transparent; z-index: 10; top: 50%; transform: translateY(-50%);">
+                                <i class="fas fa-eye text-muted" id="newPasswordIcon"></i>
                             </button>
                         </div>
-                        <div class="custom-error" id="newPassword-error">Min 8 chars with upper, lower, number, special.</div>
+                        <div class="custom-error mt-1" id="newPassword-error" style="font-size: 0.75rem; color: #dc3545; display: none;">
+                            Min 8 chars with upper, lower, number, special.
+                        </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label small fw-bold text-uppercase text-muted">Confirm New Password</label>
+                        <label for="confirmPassword" class="form-label fw-bold text-dark small">Confirm New Password</label>
                         <div class="input-group-custom">
-                            <i class="fas fa-check-circle input-icon"></i>
-                            <input type="password" class="form-control custom-input" 
-                                   id="confirmPassword" placeholder="Confirm new password" required>
-                            <button class="password-toggle" type="button" id="toggleConfirmPassword">
-                                <i class="fas fa-eye" id="confirmPasswordIcon"></i>
+                            <i class="fas fa-check-double input-icon"></i>
+                            <input type="password" class="form-control custom-input" id="confirmPassword" 
+                                   placeholder="Confirm new password" autocomplete="off" required>
+                            <button class="btn btn-password-toggle" type="button" id="toggleConfirmPassword" style="position: absolute; right: 15px; border: none; background: transparent; z-index: 10; top: 50%; transform: translateY(-50%);">
+                                <i class="fas fa-eye text-muted" id="confirmPasswordIcon"></i>
                             </button>
                         </div>
-                        <div class="custom-error" id="confirmPassword-error">Passwords do not match.</div>
+                        <div class="custom-error mt-1" id="confirmPassword-error" style="font-size: 0.75rem; color: #dc3545; display: none;">
+                            Passwords must match.
+                        </div>
                     </div>
 
-                    <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-login-submit" id="proceedButton">
-                            <i class="fas fa-spinner fa-spin me-2" style="display: none;"></i>
-                            Reset Password
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-login-submit py-3" id="proceedButton">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            <span>Reset Password</span>
                         </button>
-                    </div>
-
-                    <div class="text-center mt-4">
-                        <a href="#" class="forgot-link small" data-bs-dismiss="modal">
-                            <i class="fas fa-arrow-left me-2"></i>Back to Login
-                        </a>
+                        
+                        <button type="button" class="btn btn-link text-decoration-none text-muted small mt-2 text-center" data-bs-dismiss="modal">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Login
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
 
     <!-- Password Reset Success Toast -->
     <div id="passwordResetSuccessToast" class="toast-notification" style="display: none;">
