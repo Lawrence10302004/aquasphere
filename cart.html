@@ -2704,6 +2704,14 @@
         function loadCart() {
             const cart = UserState.getCart();
             const cartItemsList = document.getElementById('cartItemsList');
+            
+            // Auto-select all items that aren't already selected (for new items added to cart)
+            cart.forEach(item => {
+                if (!selectedItems.has(item.id)) {
+                    selectedItems.add(item.id);
+                }
+            });
+            UserState.setSelectedCartItems(Array.from(selectedItems));
             const emptyCart = document.getElementById('emptyCart');
             const itemCount = document.getElementById('itemCount');
             const checkoutBtn = document.getElementById('checkoutBtn');
