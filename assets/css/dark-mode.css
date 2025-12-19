@@ -733,6 +733,7 @@ body.dark .table-responsive {
 
 /* Cart page */
 body.dark .cart-container,
+body.dark .cart-summary-wrapper,
 body.dark .cart-summary,
 body.dark .delivery-address-section,
 body.dark .address-content,
@@ -742,13 +743,6 @@ body.dark .pagination-container {
   border: 1px solid var(--border-dark) !important;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45) !important;
   color: var(--text-dark) !important;
-}
-
-/* Remove border from wrapper to eliminate connecting line around both containers */
-body.dark .cart-summary-wrapper {
-  border: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
 }
   overflow: hidden !important;
 }
