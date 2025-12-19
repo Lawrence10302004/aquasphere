@@ -556,6 +556,55 @@
             if (typeof initDarkModeOnLoad === 'function') {
                 initDarkModeOnLoad();
             }
+            
+            // Force dark mode styling on gender select to prevent light color flash
+            const genderSelect = document.getElementById('gender');
+            if (genderSelect) {
+                // Function to apply dark styles immediately
+                const applyDarkStyles = function() {
+                    if (document.body.classList.contains('dark')) {
+                        genderSelect.style.setProperty('background-color', '#334155', 'important');
+                        genderSelect.style.setProperty('border-color', '#334155', 'important');
+                        genderSelect.style.setProperty('color', '#f1f5f9', 'important');
+                        genderSelect.style.setProperty('transition', 'none', 'important');
+                    }
+                };
+                
+                // Apply immediately on load
+                applyDarkStyles();
+                
+                // Re-apply on change to prevent flash
+                genderSelect.addEventListener('change', function() {
+                    applyDarkStyles();
+                });
+                
+                // Also apply on focus/blur
+                genderSelect.addEventListener('focus', function() {
+                    if (document.body.classList.contains('dark')) {
+                        this.style.setProperty('background-color', '#334155', 'important');
+                        this.style.setProperty('border-color', '#256892', 'important');
+                        this.style.setProperty('color', '#f1f5f9', 'important');
+                    }
+                });
+                
+                genderSelect.addEventListener('blur', function() {
+                    applyDarkStyles();
+                });
+                
+                // Use MutationObserver to watch for class changes on body
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                            applyDarkStyles();
+                        }
+                    });
+                });
+                
+                observer.observe(document.body, {
+                    attributes: true,
+                    attributeFilter: ['class']
+                });
+            }
         });
     </script>
     

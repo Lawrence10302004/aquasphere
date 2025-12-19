@@ -1829,11 +1829,25 @@ body.dark .register-card .form-select {
   -o-transition: none !important;
 }
 
-/* Force immediate dark styling on select change */
-body.dark .register-card .form-select:not(:disabled):not([disabled]) {
+/* Force immediate dark styling on select - prevent any light color flash */
+body.dark .register-card .form-select,
+body.dark .register-card .form-select:hover,
+body.dark .register-card .form-select:focus,
+body.dark .register-card .form-select:active,
+body.dark .register-card .form-select:focus-visible,
+body.dark .register-card .form-select:not(:disabled):not([disabled]),
+body.dark .register-card .form-select[value],
+body.dark .register-card .form-select option:checked {
   background: var(--panel-bg-dark-alt) !important;
+  background-color: var(--panel-bg-dark-alt) !important;
   border-color: var(--border-dark) !important;
   color: var(--text-dark) !important;
+  transition: none !important;
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+  animation: none !important;
+  -webkit-animation: none !important;
 }
 
 /* Custom dropdown arrow for gender field only in dark mode */
