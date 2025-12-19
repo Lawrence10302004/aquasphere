@@ -1803,6 +1803,7 @@ body.dark .register-card .form-select {
   background: var(--panel-bg-dark-alt) !important;
   border-color: var(--border-dark) !important;
   color: var(--text-dark) !important;
+  transition: none !important;
 }
 
 /* Custom dropdown arrow for gender field only in dark mode */
@@ -1813,6 +1814,17 @@ body.dark .register-card #gender.form-select {
   background-position: right 15px center !important;
   padding-right: 40px !important;
   appearance: none !important;
+  transition: none !important;
+}
+
+/* Ensure select stays dark when focused/open */
+body.dark .register-card .form-select:focus,
+body.dark .register-card .form-select:active,
+body.dark .register-card .form-select:focus-visible {
+  background: var(--panel-bg-dark-alt) !important;
+  border-color: var(--accent-blue) !important;
+  color: var(--text-dark) !important;
+  transition: none !important;
 }
 
 body.dark .register-card .form-control::placeholder,
