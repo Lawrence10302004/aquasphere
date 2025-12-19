@@ -462,21 +462,20 @@ body.dark .stat-info p {
 }
 
 body.dark .search-box {
-  background: var(--panel-bg-dark-alt) !important;
-  border: 1px solid var(--border-dark) !important;
-  border-radius: 12px !important;
+  background: transparent !important;
 }
 
 body.dark .search-box input {
   background: var(--panel-bg-dark-alt) !important;
   color: var(--text-dark) !important;
-  border: none !important;
+  border: 2px solid var(--border-dark) !important;
+  border-radius: 12px !important;
   box-shadow: none !important;
 }
 
 body.dark .search-box input:focus {
-  border: none !important;
-  box-shadow: none !important;
+  border-color: var(--accent-blue) !important;
+  box-shadow: 0 0 0 0.2rem rgba(37, 104, 146, 0.25) !important;
   outline: none !important;
   background: var(--panel-bg-dark-alt) !important;
 }
