@@ -57,30 +57,14 @@ if (isset($_FILES['image'])) {
         exit;
     }
     
-    // Upload directory should be at web root level, not relative to api/admin/
-    // Try multiple possible paths
-    $possible_paths = [
-        __DIR__ . '/../../uploads/products/',  // From api/admin/ to root/uploads/products/
-        __DIR__ . '/../../../uploads/products/', // Alternative path
-        dirname(__DIR__, 2) . '/uploads/products/', // Using dirname to go up 2 levels
-    ];
+    // Upload directory should be at web root level
+    // __DIR__ is api/admin/, so we need to go up 2 levels to reach root
+    $root_dir = dirname(__DIR__, 2); // Go from api/admin/ to root
+    $upload_dir = $root_dir . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'products' . DIRECTORY_SEPARATOR;
     
-    $upload_dir = null;
-    foreach ($possible_paths as $path) {
-        if (file_exists(dirname($path)) || @mkdir(dirname($path), 0777, true)) {
-            $upload_dir = $path;
-            break;
-        }
-    }
-    
-    // Fallback: use relative path from current file
-    if (!$upload_dir) {
-        $upload_dir = __DIR__ . '/../../uploads/products/';
-    }
-    
-    // Normalize path separators
-    $upload_dir = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $upload_dir);
-    $upload_dir = rtrim($upload_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    // Normalize path separators for logging
+    $normalized_path = str_replace('\\', '/', $upload_dir);
+    error_log("Upload directory path: " . $normalized_path);
     
     // Create directory if it doesn't exist
     if (!file_exists($upload_dir)) {
