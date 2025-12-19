@@ -1311,7 +1311,7 @@
                 
                 return `
                     <div class="product-card" data-category="${escapeHtml(category)}">
-                        <div class="product-image" style="background-image: url('${escapeHtml(imageUrl)}'); background-size: cover; background-position: center;">
+                        <div class="product-image" style="${imageUrl ? `background-image: url('${escapeHtml(imageUrl)}'); background-size: cover; background-position: center;` : ''}">
                             ${!imageUrl ? '<i class="fas fa-box"></i>' : ''}
                         </div>
                         <div class="product-info">
