@@ -40,6 +40,7 @@
         }
         
         .main-content {
+            background: linear-gradient(135deg, #16405c 0%, #256892 100%);
             flex: 1;
         }
         
@@ -156,6 +157,27 @@
 /* --- Input Groups (Password & Date) --- */
 .input-group .custom-input {
     z-index: 1;
+}
+
+/* Flatten the right side of the input */
+.input-group > .custom-input.border-end-0 {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+/* Flatten the left side of the toggle button */
+.input-group > .btn-password-toggle.border-start-0 {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+/* Match the border colors during focus */
+.input-group:focus-within .custom-input {
+    border-color: #256892;
+}
+
+.input-group:focus-within .btn-password-toggle {
+    border-color: #256892;
 }
 
 .btn-password-toggle, .date-icon-btn {
