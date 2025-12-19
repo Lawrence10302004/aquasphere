@@ -17,17 +17,25 @@ header('Content-Type: application/json');
 init_db();
 $conn = get_db_connection();
 
-$query = "SELECT * FROM products ORDER BY created_at DESC";
+$query = "SELECT id, label, description, price, image_url, category, unit, created_at, updated_at FROM products ORDER BY created_at DESC";
 $result = execute_sql($conn, $query);
 
 $products = [];
 if ($result !== false) {
     if ($GLOBALS['use_postgres']) {
         while ($row = pg_fetch_assoc($result)) {
+            // Ensure image_url is included and not null
+            if (!isset($row['image_url'])) {
+                $row['image_url'] = '';
+            }
             $products[] = $row;
         }
     } else {
         while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            // Ensure image_url is included and not null
+            if (!isset($row['image_url'])) {
+                $row['image_url'] = '';
+            }
             $products[] = $row;
         }
     }
