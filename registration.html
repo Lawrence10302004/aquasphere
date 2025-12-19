@@ -146,6 +146,12 @@
             transition: all 0.2s ease-in-out;
         }
         
+        /* Remove transitions from select to prevent color flash in dark mode */
+        body.dark .form-select,
+        body.dark .form-select * {
+            transition: none !important;
+        }
+        
         /* Select dropdown arrow styling - only for gender field */
         #gender.form-select {
             appearance: none;

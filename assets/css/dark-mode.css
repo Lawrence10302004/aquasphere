@@ -41,8 +41,13 @@ body.dark * {
 body.dark .form-select,
 body.dark .form-select *,
 body.dark select,
-body.dark select * {
+body.dark select *,
+body.dark .register-card .form-select,
+body.dark .register-card .form-select * {
   transition: none !important;
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
 }
 
 /* Navbar dark mode */
@@ -1819,6 +1824,16 @@ body.dark .register-card .form-select {
   border-color: var(--border-dark) !important;
   color: var(--text-dark) !important;
   transition: none !important;
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+}
+
+/* Force immediate dark styling on select change */
+body.dark .register-card .form-select:not(:disabled):not([disabled]) {
+  background: var(--panel-bg-dark-alt) !important;
+  border-color: var(--border-dark) !important;
+  color: var(--text-dark) !important;
 }
 
 /* Custom dropdown arrow for gender field only in dark mode */
