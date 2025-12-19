@@ -1322,7 +1322,12 @@
             productsGrid.innerHTML = productsList.map(product => {
                 const category = product.category || '';
                 const unit = product.unit || '';
-                const imageUrl = product.image_url || '';
+                let imageUrl = product.image_url || '';
+                
+                // Ensure image URL has correct path
+                if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
+                    imageUrl = '/' + imageUrl;
+                }
                 
                 return `
                     <div class="product-card" data-category="${escapeHtml(category)}">
