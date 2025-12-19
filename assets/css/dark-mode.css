@@ -733,6 +733,18 @@ body.dark .table-responsive {
 
 /* Cart page */
 body.dark .cart-container,
+body.dark .cart-summary-wrapper {
+  border: none !important;
+}
+
+body.dark .cart-summary-wrapper > .cart-summary {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
 body.dark .cart-summary-wrapper,
 body.dark .cart-summary,
 body.dark .delivery-address-section,
