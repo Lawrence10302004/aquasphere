@@ -2465,8 +2465,8 @@
                         setTimeout(() => {
                             localStorage.removeItem('loggedInUser');
                             sessionStorage.removeItem('userData');
-                            // Redirect to login with parameter to go to index.html after login
-                            window.location.href = 'login.html?redirect=index.html';
+                            // Redirect to login page with parameter to prevent auto-redirect
+                            window.location.href = 'login.html?from=password_change';
                         }, 5000);
                     } else {
                         showNotification('Profile updated successfully!', 'success');

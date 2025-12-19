@@ -838,15 +838,24 @@
     <script>
         // Redirect logged-in users away from login page
         document.addEventListener('DOMContentLoaded', async () => {
+            // Don't auto-redirect if user is already on login page (they should stay here to log in)
+            // Only redirect if they're already logged in and shouldn't be on login page
             try {
                 const resp = await fetch('api/get_current_user.php', { credentials: 'include' });
                 if (resp.ok) {
                     const data = await resp.json();
-                    // Check if user is admin and redirect accordingly
-                    if (data.user && data.user.is_admin) {
-                        window.location.href = 'admin/dashboard.html';
-                    } else {
-                        window.location.href = 'dashboard.html';
+                    // Only redirect if user is logged in and not coming from password change
+                    // Check URL parameters - if no redirect param, allow normal redirect
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const fromPasswordChange = urlParams.has('from') && urlParams.get('from') === 'password_change';
+                    
+                    if (!fromPasswordChange) {
+                        // Check if user is admin and redirect accordingly
+                        if (data.user && data.user.is_admin) {
+                            window.location.href = 'admin/dashboard.html';
+                        } else {
+                            window.location.href = 'dashboard.html';
+                        }
                     }
                     return;
                 }
@@ -1142,6 +1151,13 @@
                         // Check if there's a redirect parameter in URL (from password change)
                         const urlParams = new URLSearchParams(window.location.search);
                         const redirectParam = urlParams.get('redirect');
+                        
+                        // If redirect parameter is 'stay', don't redirect (user should stay on login page)
+                        if (redirectParam === 'stay') {
+                            // Just reload the page to show logged in state
+                            window.location.reload();
+                            return;
+                        }
                         
                         // Use redirect parameter if present, otherwise use API redirect
                         const redirectUrl = redirectParam || data.redirect || 'dashboard.html';
