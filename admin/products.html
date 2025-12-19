@@ -254,16 +254,25 @@
         
         /* Actions column - keep buttons side by side */
         .products-table table td:nth-child(6) {
-            white-space: nowrap;
+            white-space: nowrap !important;
         }
         
         .products-table table td:nth-child(6) .btn {
-            display: inline-block;
-            margin-right: 5px;
+            display: inline-block !important;
+            margin-right: 5px !important;
+            vertical-align: middle !important;
+            float: none !important;
         }
         
         .products-table table td:nth-child(6) .btn:last-child {
-            margin-right: 0;
+            margin-right: 0 !important;
+        }
+        
+        /* Ensure buttons don't stack */
+        .products-table table td:nth-child(6) .btn-primary,
+        .products-table table td:nth-child(6) .btn-danger {
+            display: inline-block !important;
+            width: auto !important;
         }
 
         /* Description column formatting */
@@ -987,11 +996,11 @@
                         </td>
                         <td>₱${parseFloat(product.price).toFixed(2)}${product.unit ? '<span style="color: #256892; font-weight: 700;">' + escapeHtml(product.unit) + '</span>' : ''}</td>
                         <td><span class="badge bg-secondary">${escapeHtml(product.category || 'N/A')}</span></td>
-                        <td style="white-space: nowrap;">
-                            <button class="btn btn-primary btn-sm" onclick="editProduct(${product.id})" title="Edit product" style="margin-right: 5px;">
+                        <td style="white-space: nowrap !important;">
+                            <button class="btn btn-primary btn-sm" onclick="editProduct(${product.id})" title="Edit product" style="display: inline-block !important; margin-right: 5px !important; vertical-align: middle !important;">
                                 <i class="fas fa-edit"></i> Edit
                             </button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})">
+                            <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})" style="display: inline-block !important; vertical-align: middle !important;">
                                 <i class="fas fa-trash"></i> Delete
                             </button>
                         </td>
@@ -1213,11 +1222,26 @@
         // Edit product
         function editProduct(productId) {
             try {
-                const product = allProducts.find(p => p.id === productId);
+                // Convert to number for comparison (handle both string and number IDs)
+                const id = parseInt(productId);
+                
+                // Debug: Log the search
+                console.log('Searching for product ID:', id, 'Type:', typeof id);
+                console.log('All products:', allProducts);
+                console.log('Product IDs in array:', allProducts.map(p => ({ id: p.id, type: typeof p.id })));
+                
+                const product = allProducts.find(p => {
+                    const productIdNum = parseInt(p.id);
+                    return productIdNum === id;
+                });
+                
                 if (!product) {
-                    showNotification('Product not found', 'error');
+                    console.error('Product not found. Searched ID:', id, 'Available IDs:', allProducts.map(p => p.id));
+                    showNotification('Product not found. Please refresh the page.', 'error');
                     return;
                 }
+                
+                console.log('Found product:', product);
 
                 // Populate form with product data
                 document.getElementById('editProductId').value = product.id;
