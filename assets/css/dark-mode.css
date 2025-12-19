@@ -1846,6 +1846,7 @@ body.dark .register-card .form-select:focus {
   border-color: var(--accent-blue) !important;
   color: var(--text-dark) !important;
   box-shadow: 0 0 0 0.2rem rgba(37, 104, 146, 0.25) !important;
+  transition: none !important;
 }
 
 body.dark .register-card .form-control.success,
