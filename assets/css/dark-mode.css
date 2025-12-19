@@ -1688,9 +1688,7 @@ body.dark .form-control.error {
 }
 
 body.dark .custom-error {
-  background-color: rgba(239, 68, 68, 0.2) !important;
   color: #fca5a5 !important;
-  border-left-color: #ef4444 !important;
 }
 
 body.dark .input-group .btn-outline-secondary {
