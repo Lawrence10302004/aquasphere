@@ -35,7 +35,17 @@ if ($result !== false) {
 
 close_connection($conn);
 ob_end_clean(); // Clear output buffer before sending JSON
-echo json_encode(['success' => true, 'products' => $products]);
+
+// Ensure proper JSON encoding with no errors
+$json = json_encode(['success' => true, 'products' => $products], JSON_UNESCAPED_SLASHES);
+
+if ($json === false) {
+    $error = json_last_error_msg();
+    error_log("JSON encoding error: " . $error);
+    echo json_encode(['success' => false, 'message' => 'Error encoding products data']);
+    exit;
+}
+
+echo $json;
 exit;
-?>
 

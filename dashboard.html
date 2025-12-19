@@ -1322,11 +1322,19 @@
                 const text = await response.text();
                 let data;
                 
+                // Trim whitespace that might cause parsing issues
+                const trimmedText = text.trim();
+                
+                if (!trimmedText) {
+                    throw new Error('Empty response from server');
+                }
+                
                 try {
-                    data = JSON.parse(text);
+                    data = JSON.parse(trimmedText);
                 } catch (e) {
-                    console.error('Invalid JSON response:', text);
-                    throw new Error('Invalid JSON response from server');
+                    console.error('JSON parse error:', e);
+                    console.error('Response text (first 500 chars):', trimmedText.substring(0, 500));
+                    throw new Error('Invalid JSON response from server: ' + e.message);
                 }
                 
                 if (data.success && data.products) {
@@ -1357,14 +1365,22 @@
                 const unit = product.unit || '';
                 let imageUrl = product.image_url || '';
                 
-                // Ensure image URL has correct path
-                if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
-                    imageUrl = '/' + imageUrl;
+                // Ensure image URL has correct path and encode it properly
+                if (imageUrl) {
+                    // Remove leading slash if present, then add it back
+                    imageUrl = imageUrl.replace(/^\/+/, '');
+                    if (!imageUrl.startsWith('http')) {
+                        imageUrl = '/' + imageUrl;
+                    }
+                    // Encode the URL properly to handle spaces and special characters
+                    imageUrl = encodeURI(imageUrl);
                 }
+                
+                const imageStyle = imageUrl ? `background-image: url('${imageUrl}') !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important;` : '';
                 
                 return `
                     <div class="product-card" data-category="${escapeHtml(category)}">
-                        <div class="product-image" style="${imageUrl ? `background-image: url('${escapeHtml(imageUrl)}') !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important;` : ''}">
+                        <div class="product-image" style="${imageStyle}">
                             ${!imageUrl ? '<i class="fas fa-box"></i>' : ''}
                         </div>
                         <div class="product-info">
