@@ -1932,8 +1932,25 @@
                 if (savedTheme === 'true' && !document.body.classList.contains('dark')) {
                     document.body.classList.add('dark');
                 }
-                initializeDarkMode();
+                // Update theme icon if it exists
+                const themeIcon = document.getElementById('themeIcon');
+                if (themeIcon) {
+                    themeIcon.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+                }
             }, 500);
+            
+            // Listen for navbar loaded event
+            window.addEventListener('navbarLoaded', function() {
+                const savedTheme = localStorage.getItem('darkMode');
+                if (savedTheme === 'true' && !document.body.classList.contains('dark')) {
+                    document.body.classList.add('dark');
+                }
+                // Update theme icon if it exists
+                const themeIcon = document.getElementById('themeIcon');
+                if (themeIcon) {
+                    themeIcon.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+                }
+            });
         });
         
         // Update cart count
