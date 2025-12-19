@@ -438,8 +438,9 @@ function init_db() {
             error_log("Failed to create products table: " . pg_last_error($conn));
         }
         
-        // Remove icon_class column if it exists (migration)
+        // Migration: Remove icon_class column if it exists, make image_url NOT NULL if it isn't
         @execute_sql($conn, "ALTER TABLE products DROP COLUMN IF EXISTS icon_class");
+        @execute_sql($conn, "ALTER TABLE products ALTER COLUMN image_url SET NOT NULL");
     } else {
         $query = "
         CREATE TABLE IF NOT EXISTS products (
@@ -461,6 +462,8 @@ function init_db() {
         
         // SQLite doesn't support DROP COLUMN easily, so we'll just ignore it
         // The icon_class field will remain but won't be used
+        // For SQLite, we need to ensure image_url exists and is not null
+        @execute_sql($conn, "ALTER TABLE products ADD COLUMN image_url TEXT");
     }
     
     close_connection($conn);
