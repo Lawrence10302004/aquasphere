@@ -434,8 +434,7 @@
             width: 40%;
             min-width: 200px;
             height: 240px;
-            background-color: #256892;
-            background-image: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #1a4a6b 100%);
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #1a4a6b 100%);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -459,21 +458,21 @@
             z-index: 1;
         }
         
-        /* When image is present, hide the gradient overlay and icon */
+        /* When image is present via inline style, override background and hide overlays */
         .product-image[style*="background-image"] {
-            background-image: var(--product-bg-image) !important;
+            background: none !important;
         }
         
         .product-image[style*="background-image"]::after {
-            display: none;
+            display: none !important;
         }
         
         .product-image[style*="background-image"] i {
-            display: none;
+            display: none !important;
         }
         
         .product-image[style*="background-image"]::before {
-            display: none;
+            display: none !important;
         }
         
         .product-image i {
