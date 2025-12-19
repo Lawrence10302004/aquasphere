@@ -180,16 +180,17 @@
         .order-items {
             background: white;
             border-radius: 16px;
-            padding: 1rem 1.25rem;
+            padding: 1.5rem 1.5rem;
             margin-bottom: 1rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
         }
         
         .items-title {
             font-size: 1rem;
             font-weight: 700;
             color: #1a4a6b;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -199,7 +200,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.75rem 0;
+            padding: 1rem 0;
             border-bottom: 1px solid #f1f5f9;
         }
         
@@ -209,23 +210,31 @@
         
         .item-info {
             flex: 1;
+            min-width: 0;
+            padding-right: 1rem;
         }
         
         .item-name {
             font-weight: 600;
             color: #0f172a;
             margin-bottom: 0.25rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         
         .item-details {
             font-size: 0.9rem;
             color: #64748b;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         
         .item-total {
             font-weight: 700;
             color: #1a4a6b;
             font-size: 1.1rem;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
         
         .order-summary {
