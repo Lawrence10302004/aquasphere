@@ -101,199 +101,197 @@
         }
         
         /* Registration Card */
-        /* --- Registration Card Container --- */
-.register-card {
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    padding: 2.5rem;
-    max-width: 750px;
-    width: 100%;
-    border: none;
-    margin-bottom: 3rem;
-}
+        .register-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            max-width: 750px;
+            width: 100%;
+            border: none;
+            margin-bottom: 3rem;
+        }
 
-.register-title {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #1a4a6b;
-    margin-bottom: 0.25rem;
-}
+        .register-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1a4a6b;
+            margin-bottom: 0.25rem;
+        }
 
-.register-subtitle {
-    color: #64748b;
-    font-size: 0.95rem;
-    margin-bottom: 2rem;
-}
+        .register-subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
 
-/* --- Form Label Styling --- */
-.form-label {
-    font-weight: 700;
-    color: #334155;
-    margin-bottom: 0.5rem;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
+        /* --- Form Label Styling --- */
+        .form-label {
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
-/* --- Input & Select Styling --- */
-.custom-input, .form-select {
-    border-radius: 12px !important;
-    border: 2px solid #e2e8f0;
-    background-color: #f8fbff;
-    padding: 12px 16px;
-    font-size: 0.95rem;
-    color: #1e293b;
-    transition: all 0.2s ease-in-out;
-}
+        /* --- Input & Select Styling --- */
+        .custom-input, .form-select {
+            border-radius: 12px !important;
+            border: 2px solid #e2e8f0;
+            background-color: #f8fbff;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            color: #1e293b;
+            transition: all 0.2s ease-in-out;
+        }
 
-.custom-input:focus, .form-select:focus {
-    background-color: #fff;
-    border-color: #256892;
-    box-shadow: 0 0 0 4px rgba(37, 104, 146, 0.1);
-    outline: none;
-}
+        .custom-input:focus, .form-select:focus {
+            background-color: #fff;
+            border-color: #256892;
+            box-shadow: 0 0 0 4px rgba(37, 104, 146, 0.1);
+            outline: none;
+        }
 
-/* --- Input Groups (Password & Date) --- */
-.input-group .custom-input {
-    z-index: 1;
-}
+        /* --- Input Groups (Password & Date) --- */
+        .input-group .custom-input {
+            z-index: 1;
+        }
 
-/* Flatten the right side of the input */
-.input-group > .custom-input.border-end-0 {
-    border-top-right-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-}
+        /* Flatten the right side of the input */
+        .input-group > .custom-input.border-end-0 {
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
 
-/* Flatten the left side of the toggle button */
-.input-group > .btn-password-toggle.border-start-0 {
-    border-top-left-radius: 0 !important;
-    border-bottom-left-radius: 0 !important;
-}
+        /* Flatten the left side of the toggle button */
+        .input-group > .btn-password-toggle.border-start-0 {
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+        }
 
-/* Match the border colors during focus */
-.input-group:focus-within .custom-input {
-    border-color: #256892;
-}
+        /* Match the border colors during focus */
+        .input-group:focus-within .custom-input {
+            border-color: #256892;
+        }
 
-.input-group:focus-within .btn-password-toggle {
-    border-color: #256892;
-}
+        .input-group:focus-within .btn-password-toggle {
+            border-color: #256892;
+        }
 
-.btn-password-toggle, .date-icon-btn {
-    border: 2px solid #e2e8f0;
-    border-left: none;
-    background-color: #f8fbff;
-    border-top-right-radius: 12px !important;
-    border-bottom-right-radius: 12px !important;
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
-    transition: all 0.2s;
-}
+        .btn-password-toggle, .date-icon-btn {
+            border: 2px solid #e2e8f0;
+            border-left: none;
+            background-color: #f8fbff;
+            border-top-right-radius: 12px !important;
+            border-bottom-right-radius: 12px !important;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
 
-.btn-password-toggle:hover, .date-icon-btn:hover {
-    background-color: #f1f5f9;
-}
+        .btn-password-toggle:hover, .date-icon-btn:hover {
+            background-color: #f1f5f9;
+        }
 
-/* --- Error States --- */
-.custom-error {
-    color: #e11d48;
-    font-size: 0.8rem;
-    margin-top: 6px;
-    font-weight: 600;
-    display: none;
-    padding-left: 4px;
-}
+        /* --- Error States --- */
+        .custom-error {
+            color: #e11d48;
+            font-size: 0.8rem;
+            margin-top: 6px;
+            font-weight: 600;
+            display: none;
+            padding-left: 4px;
+        }
 
-.form-control.error, .form-select.error {
-    border-color: #fb7185;
-    background-color: #fff1f2;
-}
+        .form-control.error, .form-select.error {
+            border-color: #fb7185;
+            background-color: #fff1f2;
+        }
 
-.form-control.error:focus {
-    box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1);
-}
+        .form-control.error:focus {
+            box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1);
+        }
 
-/* Success state for valid inputs */
-.form-control.success {
-    border-color: #256892;
-    background-color: #f0f9ff;
-}
+        /* Success state for valid inputs */
+        .form-control.success {
+            border-color: #256892;
+            background-color: #f0f9ff;
+        }
 
-/* --- Primary Action Button --- */
-.btn-register {
-    background: #256892;
-    border: none;
-    color: white;
-    padding: 14px;
-    font-size: 1rem;
-    font-weight: 700;
-    border-radius: 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-top: 1rem;
-}
+        /* --- Primary Action Button --- */
+        .btn-register {
+            background: #256892;
+            border: none;
+            color: white;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 1rem;
+        }
 
-.btn-register:hover {
-    background: #1e4f73;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(37, 104, 146, 0.3);
-}
+        .btn-register:hover {
+            background: #1e4f73;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 104, 146, 0.3);
+        }
 
-.btn-register:active {
-    transform: translateY(0);
-}
+        .btn-register:active {
+            transform: translateY(0);
+        }
 
-/* --- Date Picker specific hack --- */
-/* This makes the whole input clickable for the date picker while keeping your custom icon */
-input[type="date"]::-webkit-calendar-picker-indicator {
-    background: transparent;
-    bottom: 0;
-    color: transparent;
-    cursor: pointer;
-    height: auto;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: auto;
-}
+        /* --- Date Picker specific hack --- */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
+        }
 
-/* --- Login Link Section --- */
-.login-link-container {
-    text-align: center;
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #f1f5f9;
-}
+        /* --- Login Link Section --- */
+        .login-link-container {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f1f5f9;
+        }
 
-.login-link-container p {
-    color: #64748b;
-    font-size: 0.9rem;
-}
+        .login-link-container p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
 
-.login-link-container a {
-    color: #256892;
-    text-decoration: none;
-    font-weight: 700;
-    margin-left: 5px;
-}
+        .login-link-container a {
+            color: #256892;
+            text-decoration: none;
+            font-weight: 700;
+            margin-left: 5px;
+        }
 
-.login-link-container a:hover {
-    text-decoration: underline;
-}
+        .login-link-container a:hover {
+            text-decoration: underline;
+        }
 
-/* --- Responsive Adjustments --- */
-@media (max-width: 768px) {
-    .register-card {
-        padding: 1.5rem;
-        margin: 1rem;
-    }
-    
-    .register-title {
-        font-size: 1.75rem;
-    }
-}
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            .register-card {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            .register-title {
+                font-size: 1.75rem;
+            }
+        }
         
         /* Footer */
                .footer {
@@ -482,15 +480,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                             </div>
                             
                             <div class="col-md-6">
-                                <label for="birthday" class="form-label small fw-bold text-uppercase">Birthday</label>
-                                <div class="input-group">
-                                    <input type="date" class="form-control custom-input" id="birthday" name="birthday" required>
-                                    <button class="btn btn-outline-light-blue date-icon-btn" type="button">
-                                        <i class="fas fa-calendar-alt text-muted"></i>
-                                    </button>
-                                </div>
-                                <div class="custom-error" id="birthday-error">Birthday is required.</div>
+                            <label for="birthday" class="form-label small fw-bold text-uppercase">Birthday</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control custom-input border-end-0" id="birthday" name="birthday" required>
+                                <button class="btn btn-outline-light-blue date-icon-btn border-start-0" type="button">
+                                    <i class="fas fa-calendar-alt text-muted"></i>
+                                </button>
                             </div>
+                            <div class="custom-error" id="birthday-error">Birthday is required.</div>
                         </div>
                         
                         <div class="row g-3 mb-4">
