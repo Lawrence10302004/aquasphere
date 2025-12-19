@@ -161,7 +161,6 @@ body {
 .dropdown-item {
     padding: 0.5rem 1rem;
     transition: all 0.2s ease;
-    font-size: 0.95rem;
 }
 
 .dropdown-item:hover {
@@ -174,14 +173,20 @@ body {
     text-align: center;
 }
 
-/* Ensure Dark Mode button text matches other dropdown items */
+/* Ensure Dark Mode button text matches other dropdown items exactly */
 #themeToggle {
-    font-size: 0.95rem;
-    font-weight: 400;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+}
+
+#themeToggle span:not(#themeIcon) {
+    font-size: inherit !important;
+    font-weight: inherit !important;
 }
 
 #themeToggle #themeIcon {
-    font-size: 1rem;
+    font-size: 1em;
     display: inline-block;
     width: 20px;
     text-align: center;
