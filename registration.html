@@ -483,7 +483,7 @@
                             <label for="birthday" class="form-label small fw-bold text-uppercase">Birthday</label>
                             <div class="input-group">
                                 <input type="date" class="form-control custom-input border-end-0" id="birthday" name="birthday" required>
-                                <button class="btn btn-outline-light-blue date-icon-btn border-start-0" type="button">
+                                <button class="btn btn-outline-light-blue date-icon-btn border-start-0" type="button" id="datePickerBtn">
                                     <i class="fas fa-calendar-alt text-muted"></i>
                                 </button>
                             </div>
@@ -922,10 +922,23 @@
             togglePasswordVisibility('confirm_password', 'toggleConfirmPassword', 'confirmPasswordIcon');
             
             // Date picker button trigger
-            const datePickerBtn = document.getElementById('datePickerBtn');
+            const datePickerBtn = document.querySelector('.date-icon-btn');
             if (datePickerBtn && birthdayInput) {
-                datePickerBtn.addEventListener('click', function() {
-                    birthdayInput.showPicker ? birthdayInput.showPicker() : birthdayInput.focus();
+                datePickerBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // Try modern showPicker() API first (Chrome, Edge, Safari 16+)
+                    if (typeof birthdayInput.showPicker === 'function') {
+                        birthdayInput.showPicker().catch(err => {
+                            // Fallback to focus if showPicker fails
+                            birthdayInput.focus();
+                            birthdayInput.click();
+                        });
+                    } else {
+                        // Fallback for older browsers
+                        birthdayInput.focus();
+                        birthdayInput.click();
+                    }
                 });
             }
             
