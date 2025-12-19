@@ -2162,12 +2162,12 @@
                     <div class="mb-4 text-center">
                         <label class="form-label forgot-password-label mb-3">Verification Code</label>
                         <div class="otp-input-container">
-                            <input type="text" class="otp-input-box" maxlength="1" inputmode="numeric" required>
-                            <input type="text" class="otp-input-box" maxlength="1" inputmode="numeric" required>
-                            <input type="text" class="otp-input-box" maxlength="1" inputmode="numeric" required>
-                            <input type="text" class="otp-input-box" maxlength="1" inputmode="numeric" required>
-                            <input type="text" class="otp-input-box" maxlength="1" inputmode="numeric" required>
-                            <input type="text" class="otp-input-box" maxlength="1" inputmode="numeric" required>
+                            <input type="text" class="otp-input-box otp-input" maxlength="1" inputmode="numeric" autocomplete="off" required>
+                            <input type="text" class="otp-input-box otp-input" maxlength="1" inputmode="numeric" autocomplete="off" required>
+                            <input type="text" class="otp-input-box otp-input" maxlength="1" inputmode="numeric" autocomplete="off" required>
+                            <input type="text" class="otp-input-box otp-input" maxlength="1" inputmode="numeric" autocomplete="off" required>
+                            <input type="text" class="otp-input-box otp-input" maxlength="1" inputmode="numeric" autocomplete="off" required>
+                            <input type="text" class="otp-input-box otp-input" maxlength="1" inputmode="numeric" autocomplete="off" required>
                         </div>
                         <input type="hidden" id="otpCode" name="otp_code">
                         <div class="custom-error" id="otp-error" style="display: none;">
@@ -2247,58 +2247,6 @@
         </div>
     </div>
 
-    <!-- OTP Verification Modal (duplicate removed - using first instance) -->
-    <div class="modal fade" id="otpVerificationModal" tabindex="-1" aria-labelledby="otpVerificationModalLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content forgot-password-modal-content">
-                <div class="modal-header forgot-password-modal-header">
-                    <h5 class="modal-title" id="otpVerificationModalLabel">Verification</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body forgot-password-modal-body">
-                    <div class="forgot-password-illustration">
-                        <div class="illustration-icon verification-icon">
-                            <div class="water-droplets">
-                                <div class="water-droplet"></div>
-                                <div class="water-droplet"></div>
-                                <div class="water-droplet"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="forgot-password-instruction">Thank you for verifying — please check your email for the code.</p>
-                    <form id="otpVerificationForm">
-                        <div class="mb-4">
-                            <label class="form-label forgot-password-label">Enter Verification Code</label>
-                            <div class="otp-input-container">
-                                <input type="text" class="otp-input-box otp-input" maxlength="1" autocomplete="off" inputmode="numeric">
-                                <input type="text" class="otp-input-box otp-input" maxlength="1" autocomplete="off" inputmode="numeric">
-                                <input type="text" class="otp-input-box otp-input" maxlength="1" autocomplete="off" inputmode="numeric">
-                                <input type="text" class="otp-input-box otp-input" maxlength="1" autocomplete="off" inputmode="numeric">
-                                <input type="text" class="otp-input-box otp-input" maxlength="1" autocomplete="off" inputmode="numeric">
-                                <input type="text" class="otp-input-box otp-input" maxlength="1" autocomplete="off" inputmode="numeric">
-                            </div>
-                            <input type="hidden" id="otpCode" name="otp_code">
-                            <div class="custom-error" id="otp-error" style="display: none;">Invalid or expired verification code. Please try again.</div>
-                        </div>
-                        
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-forgot-password" id="verifyButton">
-                                <i class="fas fa-spinner fa-spin me-2" style="display: none;"></i>
-                                Verify Code
-                            </button>
-                        </div>
-                        
-                        <div class="text-center mt-4">
-                            <p class="otp-resend-text">Didn't receive the code? <a href="#" class="otp-resend-link" id="resendOTPLink">
-                                <i class="fas fa-spinner fa-spin me-1" style="display: none;"></i>
-                                Resend OTP
-                            </a> <span id="otpTimer" class="otp-timer"></span></p>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Password Reset Success Toast -->
     <div id="passwordResetSuccessToast" class="toast-notification" style="display: none;">
