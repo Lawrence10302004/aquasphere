@@ -624,23 +624,31 @@
         
         .item-info {
             flex: 1;
+            min-width: 0;
+            padding-right: 1rem;
         }
         
         .item-name {
             font-weight: 600;
             color: #0f172a;
             margin-bottom: 0.25rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         
         .item-details {
             font-size: 0.9rem;
             color: #64748b;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         
         .item-total {
             font-weight: 700;
             color: #1a4a6b;
             font-size: 1.1rem;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
         
         /* Order Summary */
