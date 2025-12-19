@@ -57,10 +57,22 @@ if (isset($_FILES['image'])) {
         exit;
     }
     
-    // Upload directory should be at web root level
-    // __DIR__ is api/admin/, so we need to go up 2 levels to reach root
-    $root_dir = dirname(__DIR__, 2); // Go from api/admin/ to root
-    $upload_dir = $root_dir . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'products' . DIRECTORY_SEPARATOR;
+    // Upload directory - check for Railway volume or persistent storage path
+    // Priority: 1) RAILWAY_VOLUME_PATH, 2) UPLOAD_DIR env var, 3) default to web root
+    $upload_base = '';
+    if (!empty($_ENV['RAILWAY_VOLUME_PATH'])) {
+        // Railway Volume mount path (persistent storage)
+        $upload_base = rtrim($_ENV['RAILWAY_VOLUME_PATH'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    } elseif (!empty($_ENV['UPLOAD_DIR'])) {
+        // Custom upload directory from environment variable
+        $upload_base = rtrim($_ENV['UPLOAD_DIR'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    } else {
+        // Default: web root level (ephemeral - will be lost on redeploy)
+        $root_dir = dirname(__DIR__, 2); // Go from api/admin/ to root
+        $upload_base = $root_dir . DIRECTORY_SEPARATOR;
+    }
+    
+    $upload_dir = $upload_base . 'uploads' . DIRECTORY_SEPARATOR . 'products' . DIRECTORY_SEPARATOR;
     
     // Normalize path separators for logging
     $normalized_path = str_replace('\\', '/', $upload_dir);
