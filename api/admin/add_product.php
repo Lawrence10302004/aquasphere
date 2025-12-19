@@ -113,9 +113,12 @@ if (isset($_FILES['image'])) {
     
     // Move uploaded file
     if (move_uploaded_file($_FILES['image']['tmp_name'], $file_path)) {
-        // Store relative path from web root (without leading slash for flexibility)
+        // Always store relative path from web root for database
+        // The file is stored in the volume (if configured), but we reference it relatively
+        // Railway volumes are mounted and accessible via the web server, so relative paths work
         $image_url = 'uploads/products/' . $filename;
-        error_log("Image uploaded successfully: " . $image_url . " to " . $file_path);
+        
+        error_log("Image uploaded successfully: " . $image_url . " to " . $file_path . " (Volume: " . ($is_volume ? 'Yes' : 'No') . ")");
         
         // Verify file exists after move
         if (!file_exists($file_path)) {
