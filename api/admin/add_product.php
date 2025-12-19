@@ -25,12 +25,38 @@ if (empty($label) || empty($description) || $price <= 0 || empty($category) || e
 
 // Handle image upload
 $image_url = '';
-if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+if (isset($_FILES['image'])) {
+    $upload_error = $_FILES['image']['error'];
+    
+    if ($upload_error !== UPLOAD_ERR_OK) {
+        $error_messages = [
+            UPLOAD_ERR_INI_SIZE => 'File exceeds upload_max_filesize directive',
+            UPLOAD_ERR_FORM_SIZE => 'File exceeds MAX_FILE_SIZE directive',
+            UPLOAD_ERR_PARTIAL => 'File was only partially uploaded',
+            UPLOAD_ERR_NO_FILE => 'No file was uploaded',
+            UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder',
+            UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
+            UPLOAD_ERR_EXTENSION => 'File upload stopped by extension'
+        ];
+        $error_msg = $error_messages[$upload_error] ?? 'Unknown upload error: ' . $upload_error;
+        echo json_encode(['success' => false, 'message' => 'Image upload error: ' . $error_msg]);
+        exit;
+    }
+    
     $upload_dir = '../uploads/products/';
     
     // Create directory if it doesn't exist
     if (!file_exists($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
+        if (!mkdir($upload_dir, 0777, true)) {
+            echo json_encode(['success' => false, 'message' => 'Failed to create upload directory']);
+            exit;
+        }
+    }
+    
+    // Check if directory is writable
+    if (!is_writable($upload_dir)) {
+        echo json_encode(['success' => false, 'message' => 'Upload directory is not writable']);
+        exit;
     }
     
     $file_extension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
@@ -49,11 +75,13 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
     if (move_uploaded_file($_FILES['image']['tmp_name'], $file_path)) {
         $image_url = 'uploads/products/' . $filename;
     } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to upload image']);
+        $error = error_get_last();
+        $error_msg = $error ? $error['message'] : 'Unknown error';
+        echo json_encode(['success' => false, 'message' => 'Failed to upload image: ' . $error_msg]);
         exit;
     }
 } else {
-    echo json_encode(['success' => false, 'message' => 'Please upload an image']);
+    echo json_encode(['success' => false, 'message' => 'No image file provided']);
     exit;
 }
 
