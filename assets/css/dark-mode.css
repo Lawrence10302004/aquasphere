@@ -580,11 +580,6 @@ body.dark .order-header {
   color: var(--text-dark) !important;
 }
 
-body.dark .order-items,
-body.dark .order-summary {
-  background: var(--panel-bg-dark) !important;
-  border-color: var(--border-dark) !important;
-}
 
 /* Orders empty state container (recent_orders & orders pages) */
 body.dark .orders-empty,
