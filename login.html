@@ -1521,6 +1521,47 @@
                 });
             }
             
+            // Real-time password validation on login form
+            const passwordEl = document.getElementById('password');
+            if (passwordEl) {
+                const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-\.\/:;<=>?@\[\]^_`{|}~]).{8,}$/;
+                
+                passwordEl.addEventListener('input', function() {
+                    const password = this.value;
+                    const errorDiv = document.getElementById('password-error');
+                    
+                    if (!password) {
+                        if (errorDiv) {
+                            errorDiv.textContent = 'Password is required.';
+                            errorDiv.style.display = 'block';
+                        }
+                        this.classList.add('error');
+                        this.classList.remove('success');
+                    } else if (password.length < 8) {
+                        if (errorDiv) {
+                            errorDiv.textContent = 'Min 8 chars with upper, lower, number, special.';
+                            errorDiv.style.display = 'block';
+                        }
+                        this.classList.add('error');
+                        this.classList.remove('success');
+                    } else if (!strongPasswordRegex.test(password)) {
+                        if (errorDiv) {
+                            errorDiv.textContent = 'Min 8 chars with upper, lower, number, special.';
+                            errorDiv.style.display = 'block';
+                        }
+                        this.classList.add('error');
+                        this.classList.remove('success');
+                    } else {
+                        if (errorDiv) errorDiv.style.display = 'none';
+                        this.classList.remove('error');
+                        this.classList.add('success');
+                        setTimeout(() => {
+                            this.classList.remove('success');
+                        }, 3000);
+                    }
+                });
+            }
+            
             // New Password Form Handler
             const newPasswordForm = document.getElementById('newPasswordForm');
             if (newPasswordForm) {
