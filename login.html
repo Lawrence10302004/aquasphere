@@ -177,21 +177,13 @@
         }
 
         /* --- Error Styling --- */
-        .custom-error {
+         .custom-error {
             color: #e11d48;
             font-size: 0.8rem;
             margin-top: 6px;
             font-weight: 600;
             display: none;
             padding-left: 4px;
-        }
-
-        .custom-input.error {
-            border-color: #fb7185 !important;
-        }
-
-        .custom-input.error:focus {
-            box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1) !important;
         }
 
         /* --- Login Button --- */
@@ -838,24 +830,15 @@
     <script>
         // Redirect logged-in users away from login page
         document.addEventListener('DOMContentLoaded', async () => {
-            // Don't auto-redirect if user is already on login page (they should stay here to log in)
-            // Only redirect if they're already logged in and shouldn't be on login page
             try {
                 const resp = await fetch('api/get_current_user.php', { credentials: 'include' });
                 if (resp.ok) {
                     const data = await resp.json();
-                    // Only redirect if user is logged in and not coming from password change
-                    // Check URL parameters - if no redirect param, allow normal redirect
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const fromPasswordChange = urlParams.has('from') && urlParams.get('from') === 'password_change';
-                    
-                    if (!fromPasswordChange) {
-                        // Check if user is admin and redirect accordingly
-                        if (data.user && data.user.is_admin) {
-                            window.location.href = 'admin/dashboard.html';
-                        } else {
-                            window.location.href = 'dashboard.html';
-                        }
+                    // Check if user is admin and redirect accordingly
+                    if (data.user && data.user.is_admin) {
+                        window.location.href = 'admin/dashboard.html';
+                    } else {
+                        window.location.href = 'dashboard.html';
                     }
                     return;
                 }
@@ -901,7 +884,6 @@
                                 </button>
                             </div>
                             <div class="custom-error" id="password-error">Password is required.</div>
-                            <div class="custom-error" id="auth-error" style="display: none;"></div>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -1149,19 +1131,8 @@
                 })
                 .then(data => {
                     if (data && data.success === true) {
-                        // Check if there's a redirect parameter in URL (from password change)
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const redirectParam = urlParams.get('redirect');
-                        
-                        // If redirect parameter is 'stay', don't redirect (user should stay on login page)
-                        if (redirectParam === 'stay') {
-                            // Just reload the page to show logged in state
-                            window.location.reload();
-                            return;
-                        }
-                        
-                        // Use redirect parameter if present, otherwise use API redirect
-                        const redirectUrl = redirectParam || data.redirect || 'dashboard.html';
+                        // Redirect to dashboard or home
+                        const redirectUrl = data.redirect || 'dashboard.html';
                         // Force redirect immediately
                         window.location.replace(redirectUrl);
                     } else {
@@ -1174,13 +1145,12 @@
                             showSuspendedNotice();
                             return;
                         } else if (data.message) {
-                            // Show authentication error below password field
+                            // Show authentication error below password field (like AnemoCheck)
                             const authError = document.getElementById('auth-error');
                             const usernameField = document.getElementById('username');
                             const passwordField = document.getElementById('password');
                             
                             if (authError) {
-                                authError.textContent = data.message;
                                 authError.style.display = 'block';
                                 // Make both fields red immediately
                                 if (usernameField) {
@@ -1191,6 +1161,8 @@
                                     passwordField.classList.add('error');
                                     passwordField.classList.remove('success');
                                 }
+                            } else {
+                                alert(data.message);
                             }
                         }
                     }
@@ -2333,7 +2305,6 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content otp-modal-card">
             <div class="modal-header border-0 pb-0">
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body px-lg-5 pb-lg-5">

@@ -41,164 +41,209 @@
         }
         
         /* Main Content */
-        .main-content {
-            padding: 1.5rem 0;
-            flex: 1;
-        }
         
-        .profile-container {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
-            border-radius: 28px;
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            overflow: hidden;
-            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1);
-            position: relative;
-        }
+       /* --- Main Content & Container --- */
+.main-content {
+    padding: 2.5rem 0;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.profile-container {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
+    border-radius: 28px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* --- Animated Gradient Top Bar --- */
+.profile-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #1e4f73, #3b7fb8, #60a5fa, #1e4f73);
+    background-size: 200% 100%;
+    animation: gradientShift 3s linear infinite;
+    z-index: 10;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+/* --- Header --- */
+.profile-header {
+    background: #1e4f73; 
+    padding: 2rem;
+    border-radius: 28px 28px 0 0;
+    color: white;
+}
+
+.profile-header h2 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-header p {
+    margin: 5px 0 0 0;
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+/* --- Body & Sections --- */
+.profile-body {
+    padding: 2rem;
+}
+
+.profile-section {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 1.5rem;
+}
+
+.profile-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.profile-section h5 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #334155;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem !important;
+}
+
+/* --- Form Layout Fixes --- */
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #1e4f73;
+    margin-bottom: 0.5rem;
+}
+
+/* --- Input & Icon Alignment (Crucial Fix) --- */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper i, 
+.input-wrapper .icon {
+    position: absolute;
+    left: 14px;
+    color: #64748b;
+    pointer-events: none;
+    font-size: 1rem;
+}
+
+/* Password Toggle Eye Icon */
+.input-wrapper .toggle-password {
+    position: absolute;
+    right: 14px;
+    left: auto;
+    cursor: pointer;
+    pointer-events: auto;
+    color: #94a3b8;
+}
+
+.form-group input, 
+.form-group select {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem; /* Left padding makes room for icon */
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+/* Adjust padding for inputs WITHOUT icons (like Birthday) */
+.form-group input:not([class*="icon"]), 
+.form-group select:not([class*="icon"]) {
+     padding-left: 1rem;
+}
+
+/* --- Interaction States --- */
+.form-group input:focus {
+    outline: none;
+    border-color: #3b7fb8;
+    box-shadow: 0 0 0 4px rgba(59, 127, 184, 0.15);
+}
+
+/* Error State (Matching your image) */
+.form-group.error input {
+    border-color: #ef4444;
+    background: #fffcfc;
+}
+
+.error-message {
+    font-size: 0.75rem;
+    color: #ef4444;
+    margin-top: 4px;
+}
+
+/* Success State */
+.form-group input.success {
+    border-color: #10b981;
+    background: #f0fdf4;
+}
+
+/* --- Buttons --- */
+#updateProfileBtn {
+    background: #1e4f73;
+    color: white;
+    padding: 0.8rem 2.5rem;
+    border-radius: 12px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#updateProfileBtn:hover:not(:disabled) {
+    background: #256892;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(30, 79, 115, 0.2);
+}
+
+#updateProfileBtn:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
         
-        .profile-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #256892, #1e4f73, #3b7fb8, #256892, #256892);
-            background-size: 200% 100%;
-            animation: gradientShift 3s ease infinite;
-            z-index: 1;
-        }
-        
-        @keyframes gradientShift {
-            0%, 100% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-        }
-        
-        .profile-header {
-            background: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #3b7fb8 100%);
-            padding: 1.25rem 1.5rem 1rem;
-            border-bottom: none;
-            border-radius: 28px 28px 0 0;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .profile-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
-            animation: rotateGradient 15s linear infinite;
-        }
-        
-        @keyframes rotateGradient {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        
-        .profile-header h2 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: white;
-            margin: 0;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            position: relative;
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        
-        .profile-header h2::before {
-            content: '👤';
-            font-size: 1.5rem;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) brightness(0) invert(1);
-            animation: iconFloat 3s ease-in-out infinite;
-        }
-        
-        @keyframes iconFloat {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-5px);
-            }
-        }
-        
-        .profile-body {
-            background: transparent;
-            padding: 1.25rem 1.5rem 1rem;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .form-group {
-            margin-bottom: 0.5rem;
-            position: relative;
-        }
-        
-        .form-group.error input,
-        .form-group.error select {
-            border-color: #fb7185;
-        }
-        
-        .form-group.error input:focus,
-        .form-group.error select:focus {
-            box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1);
-        }
-        
-        .form-group input.success,
-        .form-group select.success {
-            border-color: #256892;
-            background: #f0f9ff;
-            box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25);
-        }
-        
-        .profile-section {
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .profile-section:last-of-type {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-        
-        .profile-section h5 {
-            margin-bottom: 0.75rem !important;
-            font-size: 1rem !important;
-        }
-        
-        #updateProfileBtn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            background: #94a3b8 !important;
-        }
-        
-        #updateProfileBtn:disabled:hover {
-            background: #94a3b8 !important;
-            transform: none;
-        }
         
         /* Match login error styling */
         .custom-error {
@@ -257,12 +302,22 @@
             transform: translateY(-1px);
         }
         
+        .form-group.error input:focus,
+        .form-group.error select:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12), 0 4px 12px rgba(239, 68, 68, 0.15);
+        }
+        
         .form-group input:hover,
         .form-group select:hover {
             border-color: #cbd5e1;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
+        .form-group.error input:hover,
+        .form-group.error select:hover {
+            border-color: #f87171;
+        }
         
         .form-group.full-width {
             grid-column: 1 / -1;
@@ -997,15 +1052,18 @@
             box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25);
         }
         
-        /* Match registration validation design */
+        /* Match login validation bar design */
         .form-group .error-message,
         .custom-error {
-            color: #e11d48;
-            font-size: 0.8rem;
-            margin-top: 6px;
-            font-weight: 600;
+            background-color: #fee;
+            color: #c33;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 8px;
             display: none;
-            padding-left: 4px;
+            border-left: 3px solid #dc3545;
+            font-weight: 500;
         }
         .form-group .error-message + .error-message {
             margin-top: 8px;
@@ -1231,6 +1289,277 @@
             font-weight: 600;
             color: #1a4a6b;
         }
+
+        /* Profile Body Custom Styles */
+        .profile-body-custom {
+            padding: 2rem;
+        }
+
+        /* Profile Section Card */
+        .profile-section-card {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .profile-section-card.no-border {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1a4a6b;
+            margin-bottom: 1.5rem !important;
+        }
+
+        .section-title i {
+            font-size: 1.2rem;
+        }
+
+        /* Input Group Custom */
+        .input-group-custom {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            color: #64748b;
+            font-size: 0.95rem;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .custom-input {
+            width: 100% !important;
+            padding: 10px 12px 10px 36px !important;
+            border: 2px solid #e2e8f0 !important;
+            border-radius: 8px !important;
+            font-size: 0.95rem !important;
+            transition: all 0.3s ease !important;
+            background: white !important;
+            color: #1a4a6b !important;
+        }
+
+        .custom-input::placeholder {
+            color: #cbd5e1;
+        }
+
+        .custom-input:focus {
+            outline: none !important;
+            border-color: #256892 !important;
+            box-shadow: 0 0 0 3px rgba(37, 104, 146, 0.1) !important;
+        }
+
+        .custom-input:hover {
+            border-color: #cbd5e1 !important;
+        }
+
+        .custom-input.disabled-field {
+            background: #f1f5f9 !important;
+            color: #64748b !important;
+            cursor: not-allowed !important;
+            padding-left: 12px !important;
+        }
+
+        .custom-input.disabled-field:focus {
+            border-color: #e2e8f0 !important;
+            box-shadow: none !important;
+        }
+
+        /* Form Row Layout */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-row.mt-3 {
+            margin-top: 1.5rem;
+        }
+
+        /* Form Group */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1a4a6b;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group small {
+            color: #64748b !important;
+            margin-top: 0.25rem;
+        }
+
+        /* Password Toggle Button */
+        .btn-password-toggle-inside {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #64748b;
+            font-size: 0.95rem;
+            padding: 0;
+            z-index: 3;
+            transition: color 0.3s ease;
+        }
+
+        .btn-password-toggle-inside:hover {
+            color: #256892;
+        }
+
+        /* Profile Footer Custom */
+        .profile-footer-custom {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .btn-login-submit {
+            padding: 10px 24px !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            font-size: 0.95rem !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            background: linear-gradient(135deg, #256892, #1e4f73) !important;
+            color: white !important;
+            border: none !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-login-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 104, 146, 0.3) !important;
+        }
+
+        .btn-login-submit:disabled {
+            background: #cbd5e1 !important;
+            cursor: not-allowed !important;
+            opacity: 0.7 !important;
+        }
+
+        .btn-cancel {
+            padding: 10px 24px !important;
+            border: 2px solid #e2e8f0 !important;
+            background: white !important;
+            color: #64748b !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            font-size: 0.95rem !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            text-decoration: none !important;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-cancel:hover {
+            background: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+            color: #475569 !important;
+            transform: translateY(-2px);
+        }
+
+        /* Error State */
+        .form-group.error .custom-input {
+            border-color: #ef4444 !important;
+            background: #fffcfc !important;
+        }
+
+        .form-group.error .custom-input:focus {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+        }
+
+        .error-message {
+            font-size: 0.75rem;
+            color: #ef4444;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        /* Success State */
+        .form-group input.success {
+            border-color: #10b981 !important;
+            background: #f0fdf4 !important;
+        }
+
+        /* Header Content */
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-icon-wrapper {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        /* Profile Card Custom */
+        .profile-card-custom {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .profile-body-custom {
+                padding: 1.5rem 1rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-footer-custom {
+                flex-direction: column;
+            }
+
+            .btn-cancel,
+            .btn-login-submit {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+
+            .section-title {
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1238,124 +1567,117 @@
     <div id="navbar-container"></div>
     
     <!-- Main Content -->
-    <div class="main-content">
-        <div class="container">
-            <div class="profile-container">
-                    <div class="profile-header">
-                        <h2>Profile</h2>
+   <div class="main-content">
+    <div class="container">
+        <div class="profile-card-custom" style="margin-top:4rem; margin-bottom:4rem;">
+            <div class="profile-header">
+                <div class="header-content">
+                    <div class="header-icon-wrapper">
+                        <i class="fas fa-user-cog"></i>
                     </div>
-                    <div class="profile-body">
-                        <form id="profileForm" onsubmit="saveProfile(event)" novalidate>
-                        <div class="profile-section">
-                            <h5 style="font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem;">Account Information</h5>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="profileUsername">Username</label>
-                                    <input type="text" id="profileUsername" name="username" placeholder="Choose a username" autocomplete="off" required>
-                                    <div class="error-message" id="profileUsername-error" style="display: none;">Username is required.</div>
-                                    <div class="error-message" id="profileUsername-length-error" style="display: none;">Username must be between 4 and 64 characters long.</div>
-                                    <div class="error-message" id="profileUsername-unique-error" style="display: none;">Username already exists.</div>
-                                    <small style="color: #64748b; font-size: 0.85rem;">Usernames must be 4-64 characters.</small>
-                                </div>
-                                <div class="form-group">
-                                    <label for="profileEmail">Email</label>
-                                    <input type="email" id="profileEmail" name="email" placeholder="Enter your email" autocomplete="off" required>
-                                    <div class="error-message" id="profileEmail-error" style="display: none;">Email is required.</div>
-                                    <div class="error-message" id="profileEmail-format-error" style="display: none;">Please enter a valid email.</div>
-                                    <div class="error-message" id="profileEmail-exists-error" style="display: none;">Email already exists.</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="profile-section">
-                            <h5 style="font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem;">Personal Information</h5>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="profileFirstName">First Name</label>
-                                    <input type="text" id="profileFirstName" name="firstName" placeholder="Enter your first name" autocomplete="off" required disabled style="background: #f8f9fa; cursor: not-allowed;">
-                                    <div class="error-message" id="profileFirstName-error" style="display: none;">First Name is required.</div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="profileLastName">Last Name</label>
-                                    <input type="text" id="profileLastName" name="lastName" placeholder="Enter your last name" autocomplete="off" required disabled style="background: #f8f9fa; cursor: not-allowed;">
-                                    <div class="error-message" id="profileLastName-error" style="display: none;">Last Name is required.</div>
-                                </div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="profileGender">Gender</label>
-                                    <select id="profileGender" name="gender" autocomplete="off" required disabled style="background: #f8f9fa; cursor: not-allowed;">
-                                        <option value="">Select Gender</option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                    </select>
-                                    <div class="error-message" id="profileGender-error" style="display: none;">Please select an item in the list</div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="profileBirthday">Birthday</label>
-                                    <input type="date" id="profileBirthday" name="birthday" autocomplete="off" required disabled style="background: #f8f9fa; cursor: not-allowed;">
-                                    <div class="error-message" id="profileBirthday-error" style="display: none;">Date of birth is required.</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="profile-section">
-                            <h5 style="font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem;">Change Password</h5>
-                            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem; font-style: italic;">
-                                Leave these fields blank if you don't want to change your password.
-                            </p>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="profilePassword">Current Password</label>
-                                    <div style="position: relative;">
-                                        <input type="password" id="profilePassword" name="password" placeholder="Enter your current password" autocomplete="off" minlength="8">
-                                        <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility('profilePassword', this.querySelector('i'))" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; padding: 8px 12px;">
-                                            <i class="fas fa-eye" id="iconProfilePassword"></i>
-                                        </button>
-                                    </div>
-                                    <div class="error-message" id="profilePassword-required" style="display: none;">Password is required.</div>
-                                    <div class="error-message" id="profilePassword-min" style="display: none;">Password must be at least 8 characters.</div>
-                                    <div class="error-message" id="profilePassword-incorrect" style="display: none;">Current password is incorrect.</div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="profileNewPassword">New Password</label>
-                                    <div style="position: relative;">
-                                        <input type="password" id="profileNewPassword" name="newPassword" placeholder="Enter your new password" autocomplete="off" minlength="8">
-                                        <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility('profileNewPassword', this.querySelector('i'))" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; padding: 8px 12px;">
-                                            <i class="fas fa-eye" id="iconProfileNewPassword"></i>
-                                        </button>
-                                    </div>
-                                    <div class="error-message" id="profileNewPassword-required" style="display: none;">Password is required.</div>
-                                    <div class="error-message" id="profileNewPassword-min" style="display: none;">Password must be at least 8 characters.</div>
-                                    <div class="error-message" id="profileNewPassword-same" style="display: none;">You've already used this password before.</div>
-                                    
-                                    <label for="profileConfirmPassword" style="margin-top: 1rem;">Confirm New Password</label>
-                                    <div style="position: relative;">
-                                        <input type="password" id="profileConfirmPassword" name="confirmPassword" placeholder="Confirm your new password" autocomplete="off" minlength="8">
-                                        <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility('profileConfirmPassword', this.querySelector('i'))" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; padding: 8px 12px;">
-                                            <i class="fas fa-eye" id="iconProfileConfirmPassword"></i>
-                                        </button>
-                                    </div>
-                                    <div class="error-message" id="profileConfirmPassword-required" style="display: none;">Password is required.</div>
-                                    <div class="error-message" id="profileConfirmPassword-min" style="display: none;">Password must be at least 8 characters.</div>
-                                    <div class="error-message" id="profileConfirmPassword-same" style="display: none;">You've already used this password before.</div>
-                                    <div class="error-message" id="profileConfirmPassword-mismatch" style="display: none;">Passwords do not match.</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="profile-footer">
-                            <a href="dashboard.html" class="btn-cancel">Cancel</a>
-                            <button type="submit" class="btn-submit" id="updateProfileBtn" disabled>Save Changes</button>
-                        </div>
-                        </form>
+                    <div>
+                        <h2 class="m-0">User Profile</h2>
+                        <p class="text-white-50 small m-0">Manage your account and security settings</p>
                     </div>
                 </div>
             </div>
+
+            <div class="profile-body-custom">
+                <form id="profileForm" onsubmit="saveProfile(event)" novalidate>
+                    
+                    <div class="profile-section-card">
+                        <h5 class="section-title"><i class="fas fa-id-card me-2"></i>Account Information</h5>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profileUsername">Username</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-at input-icon"></i>
+                                    <input type="text" id="profileUsername" class="custom-input" placeholder="Choose a username" required>
+                                </div>
+                                <small class="text-muted" style="font-size: 0.75rem;">Usernames must be 4-64 characters.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileEmail">Email Address</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-envelope input-icon"></i>
+                                    <input type="email" id="profileEmail" class="custom-input" placeholder="Enter your email" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-section-card">
+                        <h5 class="section-title"><i class="fas fa-user-circle me-2"></i>Personal Details</h5>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" id="profileFirstName" class="custom-input disabled-field" value="First Name" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" id="profileLastName" class="custom-input disabled-field" value="Last Name" disabled>
+                            </div>
+                        </div>
+                        <div class="form-row mt-3">
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <select id="profileGender" class="custom-input disabled-field" disabled>
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Birthday</label>
+                                <input type="date" id="profileBirthday" class="custom-input disabled-field" disabled>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-section-card no-border">
+                        <h5 class="section-title text-danger"><i class="fas fa-shield-alt me-2"></i>Security</h5>
+                        <p class="text-muted small mb-3">Leave blank if you don't want to change your password.</p>
+                        
+                        <div class="form-group mb-3">
+                            <label>Current Password</label>
+                            <div class="input-group-custom">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="profilePassword" class="custom-input" placeholder="••••••••">
+                                <button type="button" class="btn-password-toggle-inside" onclick="togglePasswordVisibility('profilePassword', this.querySelector('i'))">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-key input-icon"></i>
+                                    <input type="password" id="profileNewPassword" class="custom-input" placeholder="New Password">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm New Password</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-check-double input-icon"></i>
+                                    <input type="password" id="profileConfirmPassword" class="custom-input" placeholder="Confirm Password">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-footer-custom">
+                        <a href="dashboard.html" class="btn-cancel">Cancel</a>
+                        <button type="submit" class="btn-login-submit px-4" id="updateProfileBtn" disabled>
+                            <i class="fas fa-save me-2"></i>Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+</div>
     
     <!-- Password Change Success Modal -->
     <div class="password-change-modal" id="passwordChangeModal">
@@ -2465,8 +2787,7 @@
                         setTimeout(() => {
                             localStorage.removeItem('loggedInUser');
                             sessionStorage.removeItem('userData');
-                            // Redirect to login page with parameter to prevent auto-redirect
-                            window.location.href = 'login.html?from=password_change';
+                            window.location.href = 'login.html';
                         }, 5000);
                     } else {
                         showNotification('Profile updated successfully!', 'success');
