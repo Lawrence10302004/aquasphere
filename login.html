@@ -1005,14 +1005,22 @@
                 }
                 
                 if (fieldName === 'password') {
-                    // Check if this is admin login - admin can bypass strong password validation
+                    // Check if this is admin login - admin can bypass ALL password validation
                     const usernameField = document.getElementById('username');
                     const isAdmin = usernameField && usernameField.value.trim().toLowerCase() === 'aquasphereph@gmail.com';
                     
+                    // Admin bypass - no validation required
+                    if (isAdmin) {
+                        hideError(fieldName);
+                        markSuccess(fieldName);
+                        return true;
+                    }
+                    
+                    // Regular user validation
                     if (value.length < 8) {
                         showError(fieldName, 'Min 8 chars with upper, lower, number, special.');
                         return false;
-                    } else if (!isAdmin) {
+                    } else {
                         // Require strong password for non-admin users
                         const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-\.\/:;<=>?@\[\]^_`{|}~]).{8,}$/;
                         if (!strongPasswordRegex.test(value)) {
@@ -1020,7 +1028,7 @@
                             return false;
                         }
                     }
-                    // Admin or valid strong password - allow
+                    // Valid strong password - allow
                     hideError(fieldName);
                     markSuccess(fieldName);
                 }
@@ -1063,6 +1071,11 @@
                         const passwordField = document.getElementById('password');
                         if (usernameField) usernameField.classList.remove('error');
                         if (passwordField) passwordField.classList.remove('error');
+                        
+                        // If username field changes, re-validate password to check for admin bypass
+                        if (fieldName === 'username') {
+                            validateField('password');
+                        }
                     });
                 }
             });
@@ -1534,6 +1547,18 @@
                     const isAdmin = username === 'aquasphereph@gmail.com';
                     const errorDiv = document.getElementById('password-error');
                     
+                    // Admin bypass - no validation required, just clear any errors
+                    if (isAdmin) {
+                        if (errorDiv) errorDiv.style.display = 'none';
+                        passwordEl.classList.remove('error');
+                        passwordEl.classList.add('success');
+                        setTimeout(() => {
+                            passwordEl.classList.remove('success');
+                        }, 3000);
+                        return;
+                    }
+                    
+                    // Regular user validation
                     if (!password) {
                         if (errorDiv) {
                             errorDiv.textContent = 'Password is required.';
@@ -1548,7 +1573,7 @@
                         }
                         passwordEl.classList.add('error');
                         passwordEl.classList.remove('success');
-                    } else if (!isAdmin && !strongPasswordRegex.test(password)) {
+                    } else if (!strongPasswordRegex.test(password)) {
                         // Require strong password for non-admin users
                         if (errorDiv) {
                             errorDiv.textContent = 'Min 8 chars with upper, lower, number, special.';
