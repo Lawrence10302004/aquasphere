@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recent Orders - AquaSphere</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="navbar.css">
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    <style>
+        body {
+            font-family: Inter, system-ui, Segoe UI, sans-serif !important;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            scrollbar-gutter: stable;
+            display: flex;
+            flex-direction: column;
+        }
+        .main-content {
+            padding: 2rem 0;
+            padding-top: 3rem;
+            flex: 1;
+        }
+        .page-header {
+            margin-top: 4rem;
+            text-align: left;
+            margin-bottom: 2rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 60px;
+        }
+        .page-header h1 {
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+        .page-header p {
+            color: #64748b;
+            margin: 0;
+        }
+        .orders-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 80px;
+        }
+        .orders-wrapper {
+            position: relative;
+        }
+        
+        .order-carousel {
+            position: relative;
+            min-height: 500px;
+        }
+        
+        .order-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
+            border-radius: 28px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInSlide 0.5s ease;
+        }
+        
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .order-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #256892, #1e4f73, #3b7fb8, #256892, #256892);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease infinite;
+            z-index: 1;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        .order-header {
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #3b7fb8 100%);
+            padding: 2rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .order-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            animation: rotateGradient 15s linear infinite;
+        }
+        
+        @keyframes rotateGradient {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .order-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .order-info h3 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+            margin: 0 0 0.5rem 0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .order-date {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .order-date i {
+            font-size: 0.85rem;
+        }
+        
+        .status-pill {
+            padding: 0.6rem 1.2rem;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .order-body {
+            padding: 2rem 2.5rem;
+        }
+        
+        .order-items {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .items-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a4a6b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-info {
+            flex: 1;
+            min-width: 0;
+            padding-right: 1rem;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.25rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .item-details {
+            font-size: 0.9rem;
+            color: #64748b;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .item-total {
+            font-weight: 700;
+            color: #1a4a6b;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        
+        .order-summary {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            border: 2px solid #256892;
+        }
+        
+        .summary-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a4a6b;
+            margin-bottom: 0.75rem;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .summary-label {
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        .summary-value {
+            color: #0f172a;
+            font-weight: 600;
+        }
+        
+        .summary-row.total {
+            margin-top: 0.4rem;
+            padding-top: 0.75rem;
+            border-top: 2px solid #cbd5e1;
+        }
+        
+        .summary-row.total .summary-label {
+            font-size: 1rem;
+            color: #1a4a6b;
+            font-weight: 700;
+        }
+        
+        .summary-row.total .summary-value {
+            font-size: 1.3rem;
+            color: #256892;
+            font-weight: 800;
+        }
+        
+        
+        .nav-arrows {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-arrows:hover {
+            background: #256892;
+            border-color: #256892;
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
+        }
+        
+        .nav-arrows:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+        
+        .nav-arrows.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        .nav-arrows.prev {
+            left: 0;
+        }
+        
+        .nav-arrows.next {
+            right: 0;
+        }
+        
+        .nav-arrows i {
+            font-size: 1.2rem;
+            color: #1a4a6b;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-arrows:hover i {
+            color: white;
+        }
+        
+        .order-counter {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+        }
+        .empty-state i {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 0;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeInModal 0.3s ease;
+        }
+        
+        @keyframes fadeInModal {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .address-modal {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 92vh;
+            overflow: hidden;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            animation: addressModalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        @keyframes addressModalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .address-modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #256892, #1e4f73, #3b7fb8, #256892, #256892);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease infinite;
+            z-index: 1;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #3b7fb8 100%);
+            padding: 2rem 2rem 1.5rem;
+            border-bottom: none;
+            border-radius: 28px 28px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modal-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            animation: rotateGradient 15s linear infinite;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+            margin: 0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .modal-header h2::before {
+            content: '📍';
+            font-size: 1.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes rotateGradient {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .modal-body {
+            background: transparent;
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 2rem 1.5rem;
+            max-height: calc(92vh - 250px);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        .btn-cancel {
+            padding: 10px 24px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-cancel:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+        
+        /* Logout Modal Styles */
+        .logout-confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .logout-confirm-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            max-width: 420px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+            animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: center;
+        }
+        
+        .logout-confirm-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #256892 0%, #1e4f73 50%, #1a4a6b 100%);
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        .logout-confirm-icon-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 2rem 1rem;
+            position: relative;
+        }
+        
+        .logout-confirm-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.3);
+            position: relative;
+            animation: iconFloat 2s ease-in-out infinite;
+        }
+        
+        .logout-confirm-icon::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            opacity: 0.2;
+            animation: iconPulseBlue 2s ease-in-out infinite;
+        }
+        
+        .logout-confirm-icon i {
+            font-size: 2.5rem;
+            color: #256892;
+            position: relative;
+            z-index: 1;
+            animation: iconBounce 0.6s ease;
+        }
+        
+        .logout-confirm-body {
+            padding: 1rem 2rem 1.5rem;
+            text-align: center;
+        }
+        
+        .logout-confirm-body h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .logout-confirm-body p {
+            font-size: 1rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .logout-confirm-footer {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem 2rem 2rem;
+            justify-content: center;
+        }
+        
+        .btn-logout-cancel,
+        .btn-logout-confirm {
+            padding: 12px 32px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            outline: none;
+            min-width: 120px;
+        }
+        
+        .btn-logout-cancel {
+            background: #f1f5f9;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .btn-logout-cancel:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-logout-confirm {
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+        }
+        
+        .btn-logout-confirm:hover {
+            background: linear-gradient(135deg, #1e4f73 0%, #1a4a6b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+        }
+        
+        .btn-logout-confirm:active {
+            transform: translateY(0);
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+        
+        @keyframes iconPulseBlue {
+            0%, 100% {
+                opacity: 0.2;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes iconBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes modalScaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        /* Footer Styles */
+        .footer {
+            background: #1a4a6b;
+            color: white;
+            padding: 20px 0 15px;
+            margin-top: auto;
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
+            margin-right: calc(50% - 50vw);
+        }
+        
+        .footer-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.7rem;
+        }
+        
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+        }
+        
+        .footer-link:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .footer p {
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 style="color: #1e4f73;">Recent Orders</h1>
+                <p>Your completed and delivered orders in one place.</p>
+            </div>
+            <div class="orders-container">
+                <button class="nav-arrows prev" id="prevBtn" onclick="navigateOrder(-1)" style="display: none;">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="orders-wrapper">
+                    <div class="order-carousel" id="orderCarousel">
+                        <div class="loader" id="ordersLoader">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div id="ordersWrapper"></div>
+                        <div class="order-counter" id="orderCounter" style="display: none;"></div>
+                    </div>
+                </div>
+                <button class="nav-arrows next" id="nextBtn" onclick="navigateOrder(1)" style="display: none;">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script src="navbar.js"></script>
+    <script src="js/user_state.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Preload cart count immediately to prevent showing "0" briefly
+        (async function() {
+            try {
+                await UserState.loadState();
+                const cart = UserState.getCart();
+                const cartCount = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                
+                // Update cart count badge in navbar immediately
+                const cartCountElement = document.getElementById('cartCount');
+                if (cartCountElement) {
+                    cartCountElement.textContent = cartCount;
+                    if (cartCount === 0) {
+                        cartCountElement.style.display = 'none';
+                    } else {
+                        cartCountElement.style.display = 'flex';
+                    }
+                }
+            } catch(e) {
+                console.error('Error preloading cart:', e);
+            }
+        })();
+        
+        let allOrders = [];
+        let currentOrderIndex = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadRecentOrders();
+        });
+
+        async function loadRecentOrders() {
+            const wrapper = document.getElementById('ordersWrapper');
+            const loader = document.getElementById('ordersLoader');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const counter = document.getElementById('orderCounter');
+            
+            let orders = [];
+            try {
+                const res = await fetch('api/get_orders.php?limit=1000');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success && Array.isArray(data.orders)) {
+                        orders = data.orders;
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to load orders', e);
+            }
+
+            if (loader) loader.remove();
+
+            // Filter delivered / completed
+            const filtered = orders.filter(o => {
+                const s = (o.status || '').toLowerCase();
+                return s === 'delivered' || s === 'completed';
+            });
+
+            if (filtered.length === 0) {
+                wrapper.innerHTML = `
+                    <div class="order-card">
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>No completed or delivered orders yet.</p>
+                        </div>
+                    </div>
+                `;
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+                counter.style.display = 'none';
+                return;
+            }
+
+            // Store orders and display first one
+            allOrders = filtered;
+            currentOrderIndex = 0;
+            displayOrder(currentOrderIndex);
+            updateNavigation();
+        }
+
+        function displayOrder(index) {
+            const wrapper = document.getElementById('ordersWrapper');
+            if (index < 0 || index >= allOrders.length) return;
+            
+            const order = allOrders[index];
+            wrapper.innerHTML = renderOrderCard(order);
+        }
+
+        function navigateOrder(direction) {
+            const newIndex = currentOrderIndex + direction;
+            if (newIndex >= 0 && newIndex < allOrders.length) {
+                currentOrderIndex = newIndex;
+                displayOrder(currentOrderIndex);
+                updateNavigation();
+            }
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const counter = document.getElementById('orderCounter');
+            
+            // Show/hide navigation buttons
+            if (allOrders.length > 1) {
+                prevBtn.style.display = 'flex';
+                nextBtn.style.display = 'flex';
+                counter.style.display = 'block';
+                
+                // Update button states
+                prevBtn.classList.toggle('disabled', currentOrderIndex === 0);
+                nextBtn.classList.toggle('disabled', currentOrderIndex === allOrders.length - 1);
+                
+                // Update counter
+                counter.textContent = `Order ${currentOrderIndex + 1} of ${allOrders.length}`;
+            } else {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+                counter.style.display = 'none';
+            }
+        }
+
+        function renderOrderCard(order) {
+            const items = Array.isArray(order.items) ? order.items : [];
+            const status = (order.status || '').toLowerCase();
+            const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
+            const totalAmount = parseFloat(order.total_amount || 0);
+            const date = formatDate(order.order_date);
+
+            // Calculate subtotal from items
+            const subtotal = items.reduce((sum, item) => {
+                const itemSubtotal = parseFloat(item?.subtotal || 0);
+                return sum + (isFinite(itemSubtotal) ? itemSubtotal : 0);
+            }, 0);
+            
+            // Use saved delivery_fee from order, or calculate as fallback
+            const deliveryFee = order.delivery_fee !== null && order.delivery_fee !== undefined 
+                ? parseFloat(order.delivery_fee) 
+                : Math.max(0, totalAmount - subtotal);
+
+            const itemsHtml = items.map(item => `
+                <div class="order-item">
+                    <div class="item-info">
+                        <div class="item-name">${escapeHtml(item.product_name || 'Item')}</div>
+                        <div class="item-details">Quantity: ${item.quantity || 0} × ₱${parseFloat(item.product_price || 0).toFixed(2)}</div>
+                    </div>
+                    <div class="item-total">₱${parseFloat(item.subtotal || 0).toFixed(2)}</div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-header-content">
+                            <div class="order-info">
+                                <h3>Order #${order.id}</h3>
+                                <p class="order-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    ${date}
+                                </p>
+                            </div>
+                            <span class="status-pill">${statusLabel}</span>
+                        </div>
+                    </div>
+                    <div class="order-body">
+                        <div class="order-items">
+                            <div class="items-title">
+                                <i class="fas fa-box"></i>
+                                Order Items
+                            </div>
+                            ${itemsHtml || '<p class="text-muted mb-0">No items found.</p>'}
+                        </div>
+                        <div class="order-summary">
+                            <div class="summary-title">Order Summary</div>
+                            <div class="summary-row">
+                                <span class="summary-label">Subtotal</span>
+                                <span class="summary-value">₱${subtotal.toFixed(2)}</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Delivery Fee</span>
+                                <span class="summary-value">₱${deliveryFee.toFixed(2)}</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span class="summary-label">Total</span>
+                                <span class="summary-value">₱${totalAmount.toFixed(2)}</span>
+                            </div>
+                            <div class="summary-row" style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #cbd5e1;">
+                                <span class="summary-label"><i class="fas fa-credit-card me-1"></i>Payment Method</span>
+                                <span class="summary-value">${escapeHtml(order.payment_method || 'COD')}</span>
+                            </div>
+                            ${order.delivered_at ? `
+                            <div class="summary-row" style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #cbd5e1;">
+                                <span class="summary-label"><i class="fas fa-check-circle me-1"></i>Delivered On</span>
+                                <span class="summary-value">${formatDate(order.delivered_at)}</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Format date in PH time format (matches admin side and other sections)
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const normalized = dateString.match(/Z|[\\+\\-]\\d\\d:?\\d\\d$/) ? dateString : `${dateString}Z`;
+            const date = new Date(normalized);
+            if (isNaN(date)) return 'N/A';
+            return date.toLocaleString('en-PH', {
+                timeZone: 'Asia/Manila',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Get scrollbar width helper
+        function getScrollbarWidth() {
+            const outer = document.createElement('div');
+            outer.style.visibility = 'hidden';
+            outer.style.overflow = 'scroll';
+            outer.style.msOverflowStyle = 'scrollbar';
+            outer.style.width = '100px';
+            outer.style.position = 'absolute';
+            outer.style.top = '-9999px';
+            document.body.appendChild(outer);
+            const inner = document.createElement('div');
+            inner.style.width = '100%';
+            outer.appendChild(inner);
+            const scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
+            outer.parentNode.removeChild(outer);
+            return scrollbarWidth;
+        }
+        
+        // Prevent body scroll while keeping scrollbar space (no layout shift)
+        function lockBodyScroll() {
+            const scrollbarWidth = getScrollbarWidth();
+            const scrollY = window.scrollY;
+            
+            document.body.style.paddingRight = scrollbarWidth + 'px';
+            document.body.style.overflow = 'hidden';
+            
+            document.body.dataset.scrollY = scrollY;
+            document.body.dataset.scrollbarWidth = scrollbarWidth;
+        }
+        
+        // Restore body scroll
+        function unlockBodyScroll() {
+            const scrollY = document.body.dataset.scrollY || 0;
+            
+            document.body.style.paddingRight = '';
+            document.body.style.overflow = '';
+            
+            delete document.body.dataset.scrollY;
+            delete document.body.dataset.scrollbarWidth;
+            
+            window.scrollTo(0, parseInt(scrollY) || 0);
+        }
+        
+        // Open Settings Modal
+        function openSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            if (!modal) return;
+            
+            lockBodyScroll();
+            modal.style.display = 'flex';
+        }
+        
+        // Close Settings Modal
+        function closeSettingsModal(event) {
+            if (event && event.target.id !== 'settingsModal' && !event.target.closest('.address-modal')) return;
+            const modal = document.getElementById('settingsModal');
+            if (modal) {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+            }
+        }
+        
+        // Show Logout Confirmation Modal
+        function showLogoutConfirmModal() {
+            const modal = document.getElementById('logoutConfirmModal');
+            const confirmBtn = document.getElementById('logoutConfirmBtn');
+            const cancelBtn = document.getElementById('logoutCancelBtn');
+            
+            if (!modal) return;
+            
+            lockBodyScroll();
+            modal.style.display = 'flex';
+            
+            // Remove existing event listeners
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+            
+            // Add new event listeners
+            newConfirmBtn.addEventListener('click', function confirmHandler() {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+                performLogout();
+                newConfirmBtn.removeEventListener('click', confirmHandler);
+            });
+            
+            newCancelBtn.addEventListener('click', function cancelHandler() {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+                newCancelBtn.removeEventListener('click', cancelHandler);
+            });
+        }
+        
+        // Perform Logout
+        function performLogout() {
+            fetch('api/logout.php', {
+                method: 'POST'
+            })
+            .then(() => {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            })
+            .catch(() => {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            });
+        }
+        
+        // Logout function
+        function logout() {
+            showLogoutConfirmModal();
+        }
+        
+        // Make functions globally available
+        window.openSettingsModal = openSettingsModal;
+        window.closeSettingsModal = closeSettingsModal;
+        window.logout = logout;
+    </script>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h4 class="footer-title" style="display: flex; align-items: center;">
+                        <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 40px; margin-right: 10px;">
+                        AquaSphere
+                    </h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.7;">
+                        Your trusted water delivery service. Fast delivery, clean quality water, and reliable service. 
+                        Everything you need for your hydration needs, all in one platform.
+                    </p>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <a href="dashboard.html" class="footer-link">Home</a>
+                    <a href="orders.html" class="footer-link">My Orders</a>
+                    <a href="profile.html" class="footer-link">Profile</a>
+                    <a href="cart.html" class="footer-link">Cart</a>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Features</h5>
+                    <a href="#" class="footer-link">Easy Ordering</a>
+                    <a href="#" class="footer-link">Delivery Tracking</a>
+                    <a href="#" class="footer-link">Payment Options</a>
+                    <a href="#" class="footer-link">Customer Support</a>
+                </div>
+                
+                <div class="col-lg-3 mb-4">
+                    <h5 class="footer-title">Connect With Us</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <p class="mt-1" style="color: rgba(255, 255, 255, 0.8);">
+                        <i class="fas fa-envelope me-2"></i>support@aquasphere.com
+                    </p>
+                </div>
+            </div>
+            
+            <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 1rem 0 0.8rem;">
+            
+            <div class="text-center" style="color: rgba(255, 255, 255, 0.8); font-size: 0.8rem;">
+                <p>&copy; 2024 AquaSphere. Made with ❤️ for clean water delivery. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal" onclick="closeSettingsModal(event)" style="display: none;">
+        <div class="address-modal" onclick="event.stopPropagation()" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Settings</h2>
+            </div>
+            <div class="modal-body">
+                <p style="color: #64748b; text-align: center; padding: 2rem 0;">Settings page coming soon...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeSettingsModal(event)">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutConfirmModal" class="logout-confirm-modal" style="display: none;">
+        <div class="logout-confirm-content">
+            <div class="logout-confirm-icon-wrapper">
+                <div class="logout-confirm-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+            </div>
+            <div class="logout-confirm-body">
+                <h3>Confirm Logout</h3>
+                <p id="logoutConfirmMessage">Are you sure you want to logout?</p>
+            </div>
+            <div class="logout-confirm-footer">
+                <button type="button" class="btn-logout-cancel" id="logoutCancelBtn">Cancel</button>
+                <button type="button" class="btn-logout-confirm" id="logoutConfirmBtn">Logout</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

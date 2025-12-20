@@ -1,0 +1,2630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - AquaSphere</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Shared Navbar CSS -->
+    <link rel="stylesheet" href="navbar.css">
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Inter, system-ui, Segoe UI, sans-serif !important;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+            flex: 1;
+        }
+
+        /* Orders Container */
+        .orders-container-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 80px;
+        }
+
+        .orders-container {
+            position: relative;
+        }
+
+        .orders-header {
+            margin-top:4rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .orders-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1a4a6b;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 8px rgba(3, 105, 161, 0.1);
+        }
+
+        .orders-header p {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Order Card */
+        .order-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+        }
+
+        .order-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #256892, #1e4f73, #3b7fb8, #256892, #256892);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease infinite;
+            z-index: 1;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .order-header {
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #3b7fb8 100%);
+            padding: 1rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .order-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            animation: rotateGradient 15s linear infinite;
+        }
+
+        @keyframes rotateGradient {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .order-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .order-info h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: white;
+            margin: 0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .order-info p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0.15rem 0 0 0;
+            font-size: 0.85rem;
+        }
+
+        .order-status-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .order-status-badge.pending {
+            background: rgba(251, 191, 36, 0.3);
+            border-color: rgba(251, 191, 36, 0.5);
+        }
+
+        .order-status-badge.preparing {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .order-status-badge.out_for_delivery {
+            background: rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+
+        .order-status-badge.delivered {
+            background: rgba(34, 197, 94, 0.3);
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+
+        .order-status-badge.cancelled {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
+        .order-status-badge.paid {
+            background: rgba(34, 197, 94, 0.3);
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+
+        /* Cancellation approved modal */
+        .cancel-approved-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .cancel-approved-content {
+            background: linear-gradient(135deg, #ffffff 0%, #ecfdf3 100%);
+            border-radius: 20px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            max-width: 420px;
+            width: 90%;
+            padding: 1.5rem 1.75rem;
+            position: relative;
+            overflow: hidden;
+            animation: modalScaleIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .cancel-approved-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #22c55e 0%, #16a34a 50%, #256892 100%);
+            animation: gradientShift 3s ease infinite;
+        }
+
+        .cancel-approved-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cancel-approved-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            color: #16a34a;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.25);
+            animation: iconFloat 2s ease-in-out infinite;
+        }
+
+        .cancel-approved-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .cancel-approved-body {
+            color: #475569;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .cancel-approved-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .cancel-approved-close:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        /* Order cancelled successfully modal */
+        .order-cancelled-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .order-cancelled-content {
+            background: linear-gradient(135deg, #ffffff 0%, #ecfdf3 100%);
+            border-radius: 20px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            max-width: 420px;
+            width: 90%;
+            padding: 1.5rem 1.75rem;
+            position: relative;
+            overflow: hidden;
+            animation: modalScaleIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .order-cancelled-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #22c55e 0%, #16a34a 50%, #256892 100%);
+            animation: gradientShift 3s ease infinite;
+        }
+
+        .order-cancelled-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .order-cancelled-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            color: #16a34a;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.25);
+            animation: iconFloat 2s ease-in-out infinite;
+        }
+
+        .order-cancelled-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .order-cancelled-body {
+            color: #475569;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin: 0 0 1rem 0;
+        }
+
+        .order-cancelled-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            color: #256892;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .order-cancelled-spinner {
+            width: 18px;
+            height: 18px;
+            border: 3px solid #e0f2fe;
+            border-top-color: #256892;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Cancellation request submitted modal */
+        .cancel-request-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .cancel-request-content {
+            background: linear-gradient(135deg, #ffffff 0%, #ecfdf3 100%);
+            border-radius: 20px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            max-width: 420px;
+            width: 90%;
+            padding: 1.5rem 1.75rem;
+            position: relative;
+            overflow: hidden;
+            animation: modalScaleIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .cancel-request-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #22c55e 0%, #16a34a 50%, #256892 100%);
+            animation: gradientShift 3s ease infinite;
+        }
+
+        .cancel-request-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cancel-request-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            color: #16a34a;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.25);
+            animation: iconFloat 2s ease-in-out infinite;
+        }
+
+        .cancel-request-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .cancel-request-body {
+            color: #475569;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin: 0 0 1rem 0;
+        }
+
+        .cancel-request-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            color: #256892;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .cancel-request-spinner {
+            width: 18px;
+            height: 18px;
+            border: 3px solid #e0f2fe;
+            border-top-color: #256892;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .order-status-badge.cancellation_requested {
+            background: rgba(251, 191, 36, 0.3);
+            border-color: rgba(251, 191, 36, 0.5);
+        }
+
+        .order-body {
+            padding: 1.25rem 1.5rem;
+        }
+
+        /* Delivery Tracking */
+        .delivery-tracking {
+            background: white;
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .tracking-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a4a6b;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tracking-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            padding: 0 1rem;
+        }
+
+        .tracking-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: #e2e8f0;
+            z-index: 0;
+        }
+
+        .tracking-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .tracking-step.active .step-icon {
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+            animation: pulse 2s ease infinite;
+        }
+
+        .tracking-step.completed .step-icon {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .step-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tracking-step.active .step-label {
+            color: #1a4a6b;
+        }
+
+        .tracking-step.completed .step-label {
+            color: #22c55e;
+        }
+
+        /* Order Items */
+        .order-items {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .items-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a4a6b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-info {
+            flex: 1;
+            min-width: 0;
+            padding-right: 1rem;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.25rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .item-details {
+            font-size: 0.9rem;
+            color: #64748b;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .item-total {
+            font-weight: 700;
+            color: #1a4a6b;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            border: 2px solid #256892;
+        }
+
+        .summary-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a4a6b;
+            margin-bottom: 0.75rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+        }
+
+        .summary-label {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .summary-value {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .summary-row.total {
+            margin-top: 0.4rem;
+            padding-top: 0.75rem;
+            border-top: 2px solid #cbd5e1;
+        }
+
+        .summary-row.total .summary-label {
+            font-size: 1rem;
+            color: #1a4a6b;
+            font-weight: 700;
+        }
+
+        .summary-row.total .summary-value {
+            font-size: 1.3rem;
+            color: #256892;
+            font-weight: 800;
+        }
+
+        /* Order Actions */
+        .order-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel {
+            background: white;
+            border: 2px solid #ef4444;
+            color: #ef4444;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-cancel:hover {
+            background: #ef4444;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-cancel:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Neutral close button inside Settings modal */
+        .modal-footer .btn-cancel {
+            background: #f8fafc;
+            border: 2px solid #d6dce5;
+            color: #556070;
+            padding: 0.75rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        }
+
+        .modal-footer .btn-cancel:hover {
+            background: #eef2f7;
+            color: #39424e;
+            border-color: #c4ccda;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Empty State */
+        .empty-orders {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        .empty-orders-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #256892;
+        }
+
+        .empty-orders h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a4a6b;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-orders p {
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        .btn-shop {
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            border: none;
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-shop:hover {
+            background: #477a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.4);
+            color: white;
+        }
+
+        /* Pagination Styles */
+        .pagination {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pagination .page-item {
+            display: inline-block;
+        }
+
+        .pagination .page-link {
+            background: white;
+            border: 2px solid #e2e8f0;
+            color: #1a4a6b;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            min-width: 44px;
+            text-align: center;
+        }
+
+        .pagination .page-link:hover {
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+            border-color: #256892;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+
+        .pagination .page-item.active .page-link {
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+            border-color: #256892;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+
+        .pagination .page-item.disabled .page-link {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Navigation Arrows */
+        .nav-arrows {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-arrows:hover {
+            background: #256892;
+            border-color: #256892;
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
+        }
+
+        .nav-arrows:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .nav-arrows.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .nav-arrows.prev {
+            left: 0;
+        }
+
+        .nav-arrows.next {
+            right: 0;
+        }
+
+        .nav-arrows i {
+            font-size: 1.2rem;
+            color: #1a4a6b;
+            transition: color 0.3s ease;
+        }
+
+        .nav-arrows:hover i {
+            color: white;
+        }
+
+        .order-counter {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: #1a4a6b;
+            color: white;
+            padding: 20px 0 15px;
+            margin-top: auto;
+            width: 100%;
+        }
+
+        .footer-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .footer-link:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .orders-header h1 {
+                font-size: 2rem;
+            }
+
+            .order-header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .tracking-steps {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .tracking-steps::before {
+                display: none;
+            }
+
+            .order-actions {
+                flex-direction: column;
+            }
+
+            .btn-cancel {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Settings Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .address-modal {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 92vh;
+            overflow: hidden;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            animation: addressModalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        @keyframes addressModalSlideIn {
+            from {
+                transform: scale(0.9) translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .address-modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #256892, #1e4f73, #3b7fb8, #256892, #256892);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease infinite;
+            z-index: 1;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #3b7fb8 100%);
+            padding: 2rem 2rem 1.5rem;
+            border-bottom: none;
+            border-radius: 28px 28px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            animation: rotateGradient 15s linear infinite;
+        }
+
+        @keyframes rotateGradient {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .modal-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+            margin: 0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-header h2::before {
+            content: '';
+            font-size: 1.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .modal-body {
+            background: transparent;
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 2rem 1.5rem;
+            max-height: calc(92vh - 250px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem 2rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            background: transparent;
+        }
+
+        .btn-cancel-modal {
+            background: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            color: #475569;
+            padding: 0.75rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel-modal:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Logout Confirm Modal Styles */
+        .logout-confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .logout-confirm-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            max-width: 420px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+            animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: center;
+        }
+
+        .logout-confirm-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #256892 0%, #1e4f73 50%, #1a4a6b 100%);
+            animation: gradientShift 0.3s ease infinite;
+        }
+
+        @keyframes modalScaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .logout-confirm-icon-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 2rem 1rem;
+            position: relative;
+        }
+
+        .logout-confirm-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.3);
+            position: relative;
+            animation: iconFloat 2s ease-in-out infinite;
+        }
+
+        .logout-confirm-icon::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            opacity: 0.2;
+            animation: iconPulseBlue 2s ease-in-out infinite;
+        }
+
+        .logout-confirm-icon i {
+            font-size: 2.5rem;
+            color: #256892;
+            position: relative;
+            z-index: 1;
+            animation: iconBounce 0.6s ease;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes iconPulseBlue {
+            0%, 100% {
+                opacity: 0.2;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes iconBounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .logout-confirm-body {
+            padding: 1rem 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .logout-confirm-body h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .logout-confirm-body p {
+            font-size: 1rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .logout-confirm-footer {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem 2rem 2rem;
+            justify-content: center;
+        }
+
+        .btn-logout-cancel,
+        .btn-logout-confirm {
+            padding: 12px 32px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            outline: none;
+            min-width: 120px;
+        }
+
+        .btn-logout-cancel {
+            background: #f1f5f9;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-logout-cancel:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-logout-confirm {
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+        }
+
+        .btn-logout-confirm:hover {
+            background: linear-gradient(135deg, #1e4f73 0%, #1a4a6b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+        }
+
+        .btn-logout-confirm:active {
+            transform: translateY(0);
+        }
+
+        /* Cancel Order Confirmation Modal Styles */
+        .cancel-order-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .cancel-order-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+            animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: center;
+        }
+
+        .cancel-order-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
+            animation: gradientShift 3s ease infinite;
+        }
+
+        .cancel-order-icon-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 2rem 1rem;
+            position: relative;
+        }
+
+        .cancel-order-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
+            position: relative;
+            animation: iconFloat 2s ease-in-out infinite;
+        }
+
+        .cancel-order-icon::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            opacity: 0.2;
+            animation: iconPulseRed 2s ease-in-out infinite;
+        }
+
+        .cancel-order-icon i {
+            font-size: 2.5rem;
+            color: #ef4444;
+            position: relative;
+            z-index: 1;
+            animation: iconBounce 0.6s ease;
+        }
+
+        @keyframes iconPulseRed {
+            0%, 100% {
+                opacity: 0.2;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(1.05);
+            }
+        }
+
+        .cancel-order-body {
+            padding: 1rem 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .cancel-order-body h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .cancel-order-body p {
+            font-size: 1rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin: 0.5rem 0;
+        }
+
+        .cancel-order-footer {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem 2rem 2rem;
+            justify-content: center;
+        }
+
+        .btn-cancel-order-cancel,
+        .btn-cancel-order-confirm {
+            padding: 12px 32px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            outline: none;
+            min-width: 140px;
+        }
+
+        .btn-cancel-order-cancel {
+            background: #f1f5f9;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-cancel-order-cancel:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-cancel-order-confirm {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-cancel-order-confirm:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+        }
+
+        .btn-cancel-order-confirm:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar Container -->
+    <div id="navbar-container"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="orders-container-wrapper">
+                <!-- Header -->
+                <div class="orders-header">
+                    <h1>My Orders</h1>
+                    <p>Track your water delivery orders and manage them here</p>
+                </div>
+
+                <button class="nav-arrows prev" id="prevBtn" style="display: none;" type="button" onclick="changeOrder(-1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <div class="orders-container">
+                <!-- Orders List -->
+                <div id="ordersList">
+                    <!-- Orders will be dynamically inserted here -->
+                    <div class="empty-orders" id="emptyOrders" style="display: none;">
+                        <div class="empty-orders-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <h3>No Orders Yet</h3>
+                        <p>You haven't placed any orders. Start shopping to see your orders here!</p>
+                        <a href="dashboard.html" class="btn-shop">
+                            <i class="fas fa-store"></i>
+                            Start Shopping
+                        </a>
+                    </div>
+                </div>
+
+                    <!-- Order Counter -->
+                    <div class="order-counter" id="orderCounter" style="display: none;"></div>
+                </div>
+
+                <button class="nav-arrows next" id="nextBtn" style="display: none;" type="button" onclick="changeOrder(1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h4 class="footer-title" style="display: flex; align-items: center;">
+                        <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 40px; margin-right: 10px;">
+                        AquaSphere
+                    </h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.7;">
+                        Your trusted water delivery service. Fast delivery, clean quality water, and reliable service. 
+                        Everything you need for your hydration needs, all in one platform.
+                    </p>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <a href="dashboard.html" class="footer-link">Home</a>
+                    <a href="orders.html" class="footer-link">My Orders</a>
+                    <a href="profile.html" class="footer-link">Profile</a>
+                    <a href="cart.html" class="footer-link">Cart</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Features</h5>
+                    <a href="#" class="footer-link">Easy Ordering</a>
+                    <a href="#" class="footer-link">Delivery Tracking</a>
+                    <a href="#" class="footer-link">Payment Options</a>
+                    <a href="#" class="footer-link">Customer Support</a>
+                </div>
+
+                <div class="col-lg-3 mb-4">
+                    <h5 class="footer-title">Connect With Us</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <p class="mt-1" style="color: rgba(255, 255, 255, 0.8);">
+                        <i class="fas fa-envelope me-2"></i>support@aquasphere.com
+                    </p>
+                </div>
+            </div>
+
+            <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 1rem 0 0.8rem;">
+
+            <div class="text-center" style="color: rgba(255, 255, 255, 0.8); font-size: 0.8rem;">
+                <p>&copy; 2024 AquaSphere. Made with ❤️ for clean water delivery. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Navbar JS -->
+    <script src="navbar.js"></script>
+
+    <!-- User State Management -->
+    <script src="js/user_state.js"></script>
+
+    <script>
+        // Preload cart count immediately to prevent showing "0" briefly
+        (async function() {
+            try {
+                await UserState.loadState();
+                const cart = UserState.getCart();
+                const cartCount = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+
+                // Update cart count badge in navbar immediately
+                const cartCountElement = document.getElementById('cartCount');
+                if (cartCountElement) {
+                    cartCountElement.textContent = cartCount;
+                    if (cartCount === 0) {
+                        cartCountElement.style.display = 'none';
+                    } else {
+                        cartCountElement.style.display = 'flex';
+                    }
+                }
+            } catch(e) {
+                console.error('Error preloading cart:', e);
+            }
+        })();
+
+        // Carousel variables (client-side)
+        let allOrders = [];
+        let currentIndex = 0;
+        const FETCH_LIMIT = 1000; // fetch up to 1000 orders in one request
+        const SELECTED_ORDER_KEY = 'ordersPageSelectedOrderId';
+
+        // Load orders (fetch all, then navigate client-side)
+        async function loadOrders() {
+            try {
+                const response = await fetch(`api/get_orders.php?page=1&limit=${FETCH_LIMIT}`);
+
+                // Check if response is ok
+                if (!response.ok) {
+                    // If 401, user is not logged in - don't show error, just return silently
+                    if (response.status === 401) {
+                        console.log('User not logged in, skipping order load');
+                        // Clear any existing error notifications
+                        const existingNotifications = document.querySelectorAll('.alert-danger');
+                        existingNotifications.forEach(notif => {
+                            if (notif.textContent.includes('Failed to load orders') || notif.textContent.includes('load orders')) {
+                                notif.remove();
+                            }
+                        });
+                        return;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Try to parse JSON
+                let result;
+                try {
+                    result = await response.json();
+                } catch (jsonError) {
+                    console.error('Failed to parse JSON:', jsonError);
+                    throw new Error('Invalid response from server');
+                }
+
+                if (!result.success) {
+                    // Only show error if it's not a "no orders" case
+                    if (result.message && !result.message.toLowerCase().includes('no orders')) {
+                        showNotification(result.message || 'Failed to load orders', 'error');
+                    }
+                    allOrders = [];
+                    renderOrders();
+                    return;
+                }
+
+                // Clear any existing error notifications on successful load
+                const existingNotifications = document.querySelectorAll('.alert-danger');
+                existingNotifications.forEach(notif => {
+                    // Check if it's an error notification about loading orders
+                    if (notif.textContent.includes('Failed to load orders') || notif.textContent.includes('load orders')) {
+                        notif.style.opacity = '0';
+                        notif.style.transition = 'opacity 0.3s';
+                        setTimeout(() => notif.remove(), 300);
+                    }
+                });
+
+                const fetchedOrders = result.orders || [];
+
+                // Handle approvals: if a pending cancellation ID no longer appears (or is cancelled), show approved modal
+                await handleApprovedCancellations(fetchedOrders);
+
+                // Preserve current order ID before filtering; also check stored selection
+                const currentOrderId = allOrders[currentIndex]?.id;
+                const storedOrderId = sessionStorage.getItem(SELECTED_ORDER_KEY);
+
+                // Exclude cancelled and delivered orders so they disappear from My Orders
+                const cleaned = (fetchedOrders || [])
+                    .filter(o => {
+                        const status = (o.status || '').toLowerCase();
+                        return status !== 'cancelled' && status !== 'delivered';
+                    })
+                    // Sort newest first for consistency
+                    .sort((a, b) => {
+                        const dateA = new Date(a.order_date || a.created_at || 0).getTime();
+                        const dateB = new Date(b.order_date || b.created_at || 0).getTime();
+                        return dateB - dateA;
+                    });
+
+                // Store all filtered orders
+                allOrders = cleaned;
+
+                // Share with navbar to avoid duplicate fetch for badge (already filtered - no delivered/cancelled)
+                window.__ordersCache = allOrders;
+
+                // Update navbar badge count immediately
+                if (typeof window.updateOrderCount === 'function') {
+                    window.updateOrderCount();
+                }
+
+                // Check if redirecting from payment - if so, show latest order
+                const urlParams = new URLSearchParams(window.location.search);
+                const fromPayment = urlParams.get('from_payment') === 'true' || sessionStorage.getItem('from_payment') === 'true';
+
+                if (fromPayment) {
+                    // Clear the flag after using it
+                    urlParams.delete('from_payment');
+                    sessionStorage.removeItem('from_payment');
+                    // Update URL without the parameter (without page reload)
+                    const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+                    window.history.replaceState({}, '', newUrl);
+                    // Show latest order (index 0, since orders are sorted newest first)
+                    currentIndex = 0;
+                } else {
+                    // Preserve the currently viewed order if still present (priority: stored -> current)
+                    let targetOrderId = storedOrderId || currentOrderId;
+                    if (targetOrderId && allOrders.length > 0) {
+                        const foundIndex = allOrders.findIndex(o => String(o.id) === String(targetOrderId));
+                        currentIndex = foundIndex >= 0 ? foundIndex : 0;
+                    } else {
+                        currentIndex = 0;
+                    }
+                }
+
+                // Ensure index is valid
+                if (currentIndex >= allOrders.length) {
+                    currentIndex = Math.max(0, allOrders.length - 1);
+                }
+
+                renderOrders();
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                // Only show notification for actual errors, not network issues that might be temporary
+                // Also don't show if it's a 401 (handled above)
+                if (error.message && !error.message.includes('fetch') && !error.message.includes('401')) {
+                    showNotification('Failed to load orders. Please try again.', 'error');
+                }
+            }
+        }
+
+        // Render orders with navigation arrows (show one at a time)
+        function renderOrders() {
+            const ordersList = document.getElementById('ordersList');
+            const emptyOrders = document.getElementById('emptyOrders');
+            const counter = document.getElementById('orderCounter');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            console.debug('renderOrders - currentIndex:', currentIndex, 'total:', allOrders.length);
+
+            // Wait once if DOM not ready
+            if (!ordersList || !emptyOrders) {
+                if (!window.__ordersDomWaited) {
+                    window.__ordersDomWaited = true;
+                    return setTimeout(renderOrders, 120);
+                }
+                return;
+            }
+
+            if (allOrders.length === 0) {
+                emptyOrders.style.display = 'block';
+                ordersList.innerHTML = '';
+                ordersList.appendChild(emptyOrders);
+                if (prevBtn) prevBtn.style.display = 'none';
+                if (nextBtn) nextBtn.style.display = 'none';
+                if (counter) counter.style.display = 'none';
+                return;
+            }
+
+            emptyOrders.style.display = 'none';
+
+            // Clamp index to range
+            if (currentIndex < 0) currentIndex = 0;
+            if (currentIndex >= allOrders.length) currentIndex = allOrders.length - 1;
+
+            displayOrder(currentIndex);
+            updateNavigation();
+        }
+
+        function displayOrder(index) {
+            const ordersList = document.getElementById('ordersList');
+            if (!ordersList) return;
+            if (index < 0 || index >= allOrders.length) return;
+
+            const order = allOrders[index];
+            if (!order) return;
+
+            // Remember selection across refreshes
+            try {
+                sessionStorage.setItem(SELECTED_ORDER_KEY, String(order.id));
+            } catch (_) {}
+
+            ordersList.innerHTML = '';
+                const orderCard = createOrderCard(order);
+            if (orderCard) {
+                ordersList.appendChild(orderCard);
+            }
+        }
+
+        // Update navigation arrows and counter
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const counter = document.getElementById('orderCounter');
+
+            if (allOrders.length > 1) {
+                if (prevBtn) {
+                    prevBtn.style.display = 'flex';
+                    prevBtn.classList.toggle('disabled', currentIndex === 0);
+                }
+                if (nextBtn) {
+                    nextBtn.style.display = 'flex';
+                    nextBtn.classList.toggle('disabled', currentIndex === allOrders.length - 1);
+                }
+                if (counter) {
+                    counter.style.display = 'block';
+                    counter.textContent = `Order ${currentIndex + 1} of ${allOrders.length}`;
+                }
+            } else {
+                if (prevBtn) prevBtn.style.display = 'none';
+                if (nextBtn) nextBtn.style.display = 'none';
+                if (counter) counter.style.display = 'none';
+            }
+        }
+
+        // Navigate to next/previous order
+        function changeOrder(delta) {
+            if (allOrders.length <= 1) return;
+
+            const newIndex = currentIndex + delta;
+            if (newIndex < 0 || newIndex >= allOrders.length) return;
+
+            console.debug('changeOrder from', currentIndex, 'to', newIndex, 'of', allOrders.length);
+            currentIndex = newIndex;
+            displayOrder(currentIndex);
+            updateNavigation();
+
+            // Scroll to top of orders list for better UX
+            const ordersList = document.getElementById('ordersList');
+            if (ordersList) {
+                ordersList.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        // Make navigation callable from inline handlers
+        window.changeOrder = changeOrder;
+
+        // Create order card
+        function createOrderCard(order) {
+            const card = document.createElement('div');
+            card.className = 'order-card';
+
+            // Normalize data to avoid runtime errors on missing fields
+            const safeStatus = typeof order.status === 'string' && order.status.trim() ? order.status : 'pending';
+            const status = safeStatus.toLowerCase();
+            const items = Array.isArray(order.items) ? order.items : [];
+            const totalAmount = parseFloat(order.total_amount || 0);
+
+            let statusLabel = status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+            // Special handling for cancellation_requested
+            if (status === 'cancellation_requested') {
+                statusLabel = 'Waiting for Approval';
+            }
+
+            // Calculate subtotal from items
+            const subtotal = items.reduce((sum, item) => {
+                const itemSubtotal = parseFloat(item?.subtotal || 0);
+                return sum + (isFinite(itemSubtotal) ? itemSubtotal : 0);
+            }, 0);
+            // Use saved delivery_fee from order, or calculate as fallback
+            const deliveryFee = order.delivery_fee !== null && order.delivery_fee !== undefined 
+                ? parseFloat(order.delivery_fee) 
+                : Math.max(0, totalAmount - subtotal);
+
+            // Determine tracking steps
+            const trackingSteps = getTrackingSteps(status);
+
+            card.innerHTML = `
+                <div class="order-header">
+                    <div class="order-header-content">
+                        <div class="order-info">
+                            <h3>Order #${order.id}</h3>
+                            <p><i class="fas fa-calendar me-1"></i> ${formatDate(order.order_date)}</p>
+                            ${order.delivery_date_range ? `<p style="margin-top: 0.5rem; color: rgba(255, 255, 255, 0.95); font-size: 0.9rem; font-weight: 600; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 0.4rem 0.75rem; border-radius: 12px; display: inline-block; border: 1px solid rgba(255, 255, 255, 0.2);"><i class="fas fa-truck me-1"></i> Estimated delivery: ${escapeHtml(order.delivery_date_range)}</p>` : ''}
+                        </div>
+                        <div class="order-status-badge ${status}">${statusLabel}</div>
+                    </div>
+                </div>
+                <div class="order-body">
+                    <!-- Delivery Tracking -->
+                    <div class="delivery-tracking">
+                        <div class="tracking-title">
+                            <i class="fas fa-truck"></i>
+                            Delivery Tracking
+                        </div>
+                        <div class="tracking-steps">
+                            ${trackingSteps.map((step, index) => `
+                                <div class="tracking-step ${step.class}">
+                                    <div class="step-icon">
+                                        <i class="${step.icon}"></i>
+                                    </div>
+                                    <div class="step-label">${step.label}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Order Items -->
+                    <div class="order-items">
+                        <div class="items-title">
+                            <i class="fas fa-box"></i>
+                            Order Items
+                        </div>
+                        ${items.map(item => `
+                            <div class="order-item">
+                                <div class="item-info">
+                                    <div class="item-name">${escapeHtml(item.product_name)}</div>
+                                    <div class="item-details">Quantity: ${item.quantity} × ₱${parseFloat(item.product_price).toFixed(2)}</div>
+                                </div>
+                                <div class="item-total">₱${parseFloat(item.subtotal).toFixed(2)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <!-- Order Summary -->
+                    <div class="order-summary">
+                        <div class="summary-title">Order Summary</div>
+                        <div class="summary-row">
+                            <span class="summary-label">Subtotal</span>
+                            <span class="summary-value">₱${subtotal.toFixed(2)}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Delivery Fee</span>
+                            <span class="summary-value">₱${deliveryFee.toFixed(2)}</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span class="summary-label">Total</span>
+                            <span class="summary-value">₱${totalAmount.toFixed(2)}</span>
+                        </div>
+                        <div class="summary-row" style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #cbd5e1;">
+                            <span class="summary-label"><i class="fas fa-credit-card me-1"></i>Payment Method</span>
+                            <span class="summary-value">${escapeHtml(order.payment_method || 'COD')}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Order Actions -->
+                    <div class="order-actions">
+                        ${status === 'cancellation_requested' ? `
+                            <div style="display: flex; align-items: center; gap: 0.5rem; color: #f59e0b; font-weight: 600; font-size: 0.9rem;">
+                                <i class="fas fa-clock" style="animation: pulse 2s ease infinite;"></i>
+                                Waiting for admin approval
+                            </div>
+                        ` : canCancelOrder(status) ? `
+                            <button class="btn-cancel" onclick="showCancelOrderModal(${order.id}, '${status}')">
+                                <i class="fas fa-times-circle"></i>
+                                Cancel Order
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Get tracking steps based on status
+        function getTrackingSteps(status) {
+            const steps = [
+                { label: 'Pending', icon: 'fas fa-clock', class: '' },
+                { label: 'Preparing', icon: 'fas fa-box', class: '' },
+                { label: 'Shipped', icon: 'fas fa-shipping-fast', class: '' },
+                { label: 'Out for Delivery', icon: 'fas fa-truck', class: '' },
+                { label: 'Delivered', icon: 'fas fa-check-circle', class: '' }
+            ];
+
+            const statusMap = {
+                'pending': 0,
+                'preparing': 1,
+                'shipped': 2,
+                'out_for_delivery': 3,
+                'delivered': 4,
+                'paid': 1,
+                'cancelled': -1
+            };
+
+            const currentStep = statusMap[status] ?? 0;
+
+            if (currentStep === -1) {
+                // Cancelled - all steps inactive
+                return steps;
+            }
+
+            return steps.map((step, index) => {
+                if (index < currentStep) {
+                    return { ...step, class: 'completed' };
+                } else if (index === currentStep) {
+                    return { ...step, class: 'active' };
+                } else {
+                    return { ...step, class: '' };
+                }
+            });
+        }
+
+        // Check if order can be cancelled
+        function canCancelOrder(status) {
+            const cancellable = ['pending', 'preparing'];
+            return cancellable.includes(status.toLowerCase());
+        }
+
+        // Show approved cancellation modal (when admin approves a preparing cancel)
+        let cancelApprovedTimer = null;
+        function showCancellationApprovedModal(message = 'Your cancellation request was approved.') {
+            const modal = document.getElementById('cancelApprovedModal');
+            const body = document.getElementById('cancelApprovedBody');
+            if (!modal || !body) return;
+
+            body.textContent = message;
+            modal.style.display = 'flex';
+
+            // Auto close after 4 seconds, then refresh to sync UI
+            if (cancelApprovedTimer) clearTimeout(cancelApprovedTimer);
+            cancelApprovedTimer = setTimeout(() => {
+                modal.style.display = 'none';
+                // Small delay before refresh to ensure UI hides cleanly
+                setTimeout(() => window.location.reload(), 150);
+            }, 4000);
+        }
+
+        function closeCancellationApprovedModal() {
+            const modal = document.getElementById('cancelApprovedModal');
+            if (modal) modal.style.display = 'none';
+            if (cancelApprovedTimer) clearTimeout(cancelApprovedTimer);
+            // Refresh after manual close to keep UI in sync
+            setTimeout(() => window.location.reload(), 150);
+        }
+
+        // Show order cancelled successfully modal
+        function showOrderCancelledModal() {
+            const modal = document.getElementById('orderCancelledModal');
+            if (!modal) return;
+
+            modal.style.display = 'flex';
+
+            // Refresh page after 3 seconds (with loading animation)
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000);
+        }
+
+        // Show cancellation request submitted modal
+        function showCancellationRequestModal() {
+            const modal = document.getElementById('cancelRequestModal');
+            if (!modal) return;
+
+            modal.style.display = 'flex';
+
+            // Auto-close after 3 seconds and refresh
+            setTimeout(() => {
+                modal.style.display = 'none';
+                window.location.reload();
+            }, 3000);
+        }
+
+        // Persist pending cancellation requests (for preparing -> approval flow)
+        async function getPendingCancellationIds() {
+            try {
+                await UserState.loadState();
+                return UserState.getPendingCancellationOrders();
+            } catch (_) {
+                return [];
+            }
+        }
+
+        function setPendingCancellationIds(ids) {
+            UserState.setPendingCancellationOrders(ids);
+        }
+
+        async function addPendingCancellationId(id) {
+            const ids = await getPendingCancellationIds();
+            if (!ids.includes(id)) {
+                ids.push(id);
+                setPendingCancellationIds(ids);
+            }
+        }
+
+        async function removePendingCancellationIds(idsToRemove) {
+            const ids = (await getPendingCancellationIds()).filter(id => !idsToRemove.includes(id));
+            setPendingCancellationIds(ids);
+        }
+
+        // Detect approvals: if a pending cancellation ID disappears (or becomes cancelled) show modal
+        async function handleApprovedCancellations(fetchedOrders) {
+            const pendingIds = await getPendingCancellationIds();
+            if (!pendingIds.length) return;
+
+            const approvedIds = [];
+            pendingIds.forEach(id => {
+                const found = fetchedOrders.find(o => o.id == id);
+                if (!found || (found.status && found.status.toLowerCase() === 'cancelled')) {
+                    approvedIds.push(id);
+                }
+            });
+
+            if (approvedIds.length) {
+                showCancellationApprovedModal('Your cancellation request was approved.');
+                removePendingCancellationIds(approvedIds);
+            }
+        }
+
+        // Show cancel order confirmation modal
+        function showCancelOrderModal(orderId, currentStatus) {
+            const modal = document.getElementById('cancelOrderModal');
+            const confirmBtn = document.getElementById('cancelOrderConfirmBtn');
+            const cancelBtn = document.getElementById('cancelOrderCancelBtn');
+            const modalMessage = document.getElementById('cancelOrderMessage');
+
+            if (!modal) return;
+
+            // Update message based on status
+            const requiresApproval = currentStatus === 'preparing';
+            if (requiresApproval) {
+                modalMessage.innerHTML = `
+                    <p>This order is currently being prepared. Cancellation requires admin approval.</p>
+                    <p style="margin-top: 0.5rem; color: #f59e0b; font-weight: 600;">
+                        <i class="fas fa-info-circle"></i> Your cancellation request will be reviewed by our team.
+                    </p>
+                `;
+            } else {
+                modalMessage.innerHTML = '<p>Are you sure you want to cancel this order? This action cannot be undone.</p>';
+            }
+
+            // Store order ID and approval requirement
+            modal.dataset.orderId = orderId;
+            modal.dataset.requiresApproval = requiresApproval;
+
+            // Lock body scroll
+            lockBodyScroll();
+
+            // Show modal
+            modal.style.display = 'flex';
+
+            // Remove existing event listeners
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+            // Add new event listeners
+            newConfirmBtn.addEventListener('click', function confirmHandler() {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+                performCancelOrder(orderId, requiresApproval);
+                newConfirmBtn.removeEventListener('click', confirmHandler);
+            });
+
+            newCancelBtn.addEventListener('click', function cancelHandler() {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+                newCancelBtn.removeEventListener('click', cancelHandler);
+            });
+        }
+
+        // Perform cancel order
+        async function performCancelOrder(orderId, requiresApproval) {
+            try {
+                const response = await fetch('api/cancel_order.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        order_id: orderId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const matchIndex = (idToFind) => allOrders.findIndex(o => String(o.id) === String(idToFind));
+                    if (requiresApproval) {
+                        // Mark as pending approval immediately in UI
+                        await addPendingCancellationId(orderId);
+                        const idx = matchIndex(orderId);
+                        if (idx >= 0) {
+                            allOrders[idx].status = 'cancellation_requested';
+                        }
+                        // Share updated list with navbar cache
+                        window.__ordersCache = allOrders;
+                        // Show cancellation request submitted modal
+                        showCancellationRequestModal();
+                        renderOrders();
+                    } else {
+                        // Remove cancelled order from list immediately
+                        const idx = matchIndex(orderId);
+                        if (idx >= 0) {
+                            allOrders.splice(idx, 1);
+                            if (currentIndex >= allOrders.length) {
+                                currentIndex = Math.max(0, allOrders.length - 1);
+                            }
+                    }
+                        // Share updated list with navbar cache and update badge
+                        window.__ordersCache = allOrders;
+                        if (typeof window.updateOrderCount === 'function') {
+                            window.updateOrderCount();
+                        }
+                        // Show order cancelled success modal (will refresh page after 3 seconds)
+                        showOrderCancelledModal();
+                    }
+                } else {
+                    showNotification(result.message || 'Failed to cancel order', 'error');
+                }
+            } catch (error) {
+                console.error('Error cancelling order:', error);
+                showNotification('Failed to cancel order. Please try again.', 'error');
+            }
+        }
+
+        // Close cancel order modal
+        function closeCancelOrderModal(event) {
+            if (event && event.target.id !== 'cancelOrderModal' && !event.target.closest('.cancel-order-content')) return;
+            const modal = document.getElementById('cancelOrderModal');
+            if (modal) {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+            }
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            // Treat incoming timestamp as UTC if it lacks timezone info
+            const normalized = dateString.match(/Z|[\\+\\-]\\d\\d:?\\d\\d$/) ? dateString : `${dateString}Z`;
+            const date = new Date(normalized);
+            if (isNaN(date)) return 'N/A';
+            return date.toLocaleString('en-PH', {
+                timeZone: 'Asia/Manila',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            // Clear any existing error notifications about loading orders before showing a new one
+            if (type === 'error' && message.includes('load orders')) {
+                const existingNotifications = document.querySelectorAll('.alert-danger');
+                existingNotifications.forEach(notif => {
+                    if (notif.textContent.includes('Failed to load orders') || notif.textContent.includes('load orders')) {
+                        notif.remove();
+                    }
+                });
+            }
+
+            let alertClass = 'alert-success';
+            let iconClass = 'fa-check-circle';
+
+            if (type === 'error' || type === 'danger') {
+                alertClass = 'alert-danger';
+                iconClass = 'fa-exclamation-circle';
+            } else if (type === 'warning') {
+                alertClass = 'alert-warning';
+                iconClass = 'fa-exclamation-triangle';
+            }
+
+            const notification = document.createElement('div');
+            notification.className = `alert ${alertClass}`;
+        notification.style.cssText = 'position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px;';
+
+        const icon = document.createElement('i');
+        icon.className = `fas ${iconClass} me-2`;
+
+        const text = document.createElement('span');
+        text.textContent = message;
+
+        notification.appendChild(icon);
+        notification.appendChild(text);
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Get scrollbar width
+        function getScrollbarWidth() {
+            const outer = document.createElement('div');
+            outer.style.visibility = 'hidden';
+            outer.style.overflow = 'scroll';
+            outer.style.msOverflowStyle = 'scrollbar';
+            outer.style.width = '100px';
+            outer.style.position = 'absolute';
+            outer.style.top = '-9999px';
+            document.body.appendChild(outer);
+            const inner = document.createElement('div');
+            inner.style.width = '100%';
+            outer.appendChild(inner);
+            const scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
+            outer.parentNode.removeChild(outer);
+            return scrollbarWidth;
+        }
+
+        // Prevent body scroll while keeping scrollbar space (no layout shift)
+        function lockBodyScroll() {
+            // Calculate scrollbar width and add padding BEFORE hiding overflow
+            const scrollbarWidth = getScrollbarWidth();
+            const scrollY = window.scrollY;
+
+            // Add padding to preserve scrollbar space
+            document.body.style.paddingRight = scrollbarWidth + 'px';
+            // Hide overflow (scrollbar disappears but space remains)
+            document.body.style.overflow = 'hidden';
+
+            // Store values for restoration
+            document.body.dataset.scrollY = scrollY;
+            document.body.dataset.scrollbarWidth = scrollbarWidth;
+        }
+
+        // Restore body scroll
+        function unlockBodyScroll() {
+            const scrollY = document.body.dataset.scrollY || 0;
+
+            // Remove padding and restore overflow
+            document.body.style.paddingRight = '';
+            document.body.style.overflow = '';
+
+            // Clean up stored values
+            delete document.body.dataset.scrollY;
+            delete document.body.dataset.scrollbarWidth;
+
+            // Restore scroll position
+            window.scrollTo(0, parseInt(scrollY) || 0);
+        }
+
+        // Open Settings Modal
+        function openSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            if (!modal) return;
+
+            // Lock body scroll but keep scrollbar visible
+            lockBodyScroll();
+
+            modal.style.display = 'flex';
+        }
+
+        // Close Settings Modal
+        function closeSettingsModal(event) {
+            if (event && event.target.id !== 'settingsModal' && !event.target.closest('.address-modal')) return;
+            const modal = document.getElementById('settingsModal');
+            if (modal) {
+                modal.style.display = 'none';
+                // Unlock body scroll
+                unlockBodyScroll();
+            }
+        }
+
+        // Show Logout Confirmation Modal
+        function showLogoutConfirmModal() {
+            const modal = document.getElementById('logoutConfirmModal');
+            const confirmBtn = document.getElementById('logoutConfirmBtn');
+            const cancelBtn = document.getElementById('logoutCancelBtn');
+
+            if (!modal) return;
+
+            // Lock body scroll but keep scrollbar visible
+            lockBodyScroll();
+
+            modal.style.display = 'flex';
+
+            // Remove existing event listeners
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+            // Add new event listeners
+            newConfirmBtn.addEventListener('click', function confirmHandler() {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+                performLogout();
+                newConfirmBtn.removeEventListener('click', confirmHandler);
+            });
+
+            newCancelBtn.addEventListener('click', function cancelHandler() {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+                newCancelBtn.removeEventListener('click', cancelHandler);
+            });
+        }
+
+        // Perform Logout
+        function performLogout() {
+            fetch('api/logout.php', {
+                method: 'POST'
+            })
+            .then(() => {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            })
+            .catch(() => {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            });
+        }
+
+        // Logout function
+        function logout() {
+            showLogoutConfirmModal();
+        }
+
+        // Make functions globally available
+        window.openSettingsModal = openSettingsModal;
+        window.closeSettingsModal = closeSettingsModal;
+        window.logout = logout;
+        window.showLogoutConfirmModal = showLogoutConfirmModal;
+        window.performLogout = performLogout;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up navigation button event listeners
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    changeOrder(-1);
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    changeOrder(1);
+                });
+            }
+
+            // Wait a bit for DOM to fully render before loading orders
+            setTimeout(() => {
+                loadOrders();
+            }, 100);
+
+            // Auto-refresh every 60 seconds to update tracking (reduced load)
+            let refreshTimer = setInterval(loadOrders, 60000);
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    if (refreshTimer) {
+                        clearInterval(refreshTimer);
+                        refreshTimer = null;
+                    }
+                } else if (!refreshTimer) {
+                    refreshTimer = setInterval(loadOrders, 60000);
+                    loadOrders();
+                }
+            });
+        });
+    </script>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal" onclick="closeSettingsModal(event)" style="display: none;">
+        <div class="address-modal" onclick="event.stopPropagation()" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Settings</h2>
+            </div>
+            <div class="modal-body">
+                <p style="color: #556070; text-align: center; padding: 2rem 0;">Settings page coming soon...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeSettingsModal(event)">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutConfirmModal" class="logout-confirm-modal" style="display: none;">
+        <div class="logout-confirm-content">
+            <div class="logout-confirm-icon-wrapper">
+                <div class="logout-confirm-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+            </div>
+            <div class="logout-confirm-body">
+                <h3>Confirm Logout</h3>
+                <p id="logoutConfirmMessage">Are you sure you want to logout?</p>
+            </div>
+            <div class="logout-confirm-footer">
+                <button type="button" class="btn-logout-cancel" id="logoutCancelBtn">Cancel</button>
+                <button type="button" class="btn-logout-confirm" id="logoutConfirmBtn">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Order Confirmation Modal -->
+    <div id="cancelOrderModal" class="cancel-order-modal" onclick="closeCancelOrderModal(event)" style="display: none;">
+        <div class="cancel-order-content" onclick="event.stopPropagation()">
+            <div class="cancel-order-icon-wrapper">
+                <div class="cancel-order-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+            </div>
+            <div class="cancel-order-body">
+                <h3>Cancel Order</h3>
+                <div id="cancelOrderMessage">
+                    <p>Are you sure you want to cancel this order? This action cannot be undone.</p>
+                </div>
+            </div>
+            <div class="cancel-order-footer">
+                <button type="button" class="btn-cancel-order-cancel" id="cancelOrderCancelBtn">No, Keep Order</button>
+                <button type="button" class="btn-cancel-order-confirm" id="cancelOrderConfirmBtn">Yes, Cancel Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancellation Approved Modal -->
+    <div id="cancelApprovedModal" class="cancel-approved-modal" onclick="closeCancellationApprovedModal()" style="display: none;">
+        <div class="cancel-approved-content" onclick="event.stopPropagation()">
+            <button class="cancel-approved-close" onclick="closeCancellationApprovedModal()" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="cancel-approved-header">
+                <div class="cancel-approved-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="cancel-approved-title">Cancellation Approved</h3>
+            </div>
+            <p class="cancel-approved-body" id="cancelApprovedBody">
+                Your cancellation request was approved.
+            </p>
+        </div>
+    </div>
+
+    <!-- Order Cancelled Successfully Modal -->
+    <div id="orderCancelledModal" class="order-cancelled-modal" style="display: none;">
+        <div class="order-cancelled-content">
+            <div class="order-cancelled-header">
+                <div class="order-cancelled-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="order-cancelled-title">Order Cancelled Successfully</h3>
+            </div>
+            <p class="order-cancelled-body">
+                Your order has been cancelled.
+            </p>
+            <div class="order-cancelled-loading">
+                <div class="order-cancelled-spinner"></div>
+                <span>Refreshing page...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancellation Request Submitted Modal -->
+    <div id="cancelRequestModal" class="cancel-request-modal" style="display: none;">
+        <div class="cancel-request-content">
+            <div class="cancel-request-header">
+                <div class="cancel-request-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="cancel-request-title">Cancellation Request Submitted</h3>
+            </div>
+            <p class="cancel-request-body">
+                Waiting for admin approval.
+            </p>
+            <div class="cancel-request-loading">
+                <div class="cancel-request-spinner"></div>
+                <span>Refreshing page...</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

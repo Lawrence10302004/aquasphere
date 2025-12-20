@@ -1,0 +1,2011 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management - AquaSphere Admin</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Inter, system-ui, Segoe UI, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 250px;
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 100%);
+            color: white;
+            padding-top: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .sidebar-brand {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-brand img {
+            height: 50px;
+            width: auto;
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-brand h4 {
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-left: 4px solid white;
+        }
+        
+        .sidebar-menu a i {
+            width: 25px;
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+        
+        .page-header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a4a6b;
+            margin: 0;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #1a4a6b;
+            margin-bottom: 8px;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #256892;
+            box-shadow: 0 0 0 0.2rem rgba(37, 104, 146, 0.25);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1e4f73, #256892);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 104, 146, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-loading.show {
+            display: flex;
+        }
+
+        .btn-loading-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .products-table {
+            margin-top: 30px;
+        }
+        
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #1a4a6b;
+        }
+
+        /* Table column widths */
+        .products-table table {
+            table-layout: auto;
+            width: 100%;
+        }
+
+        .products-table table th:nth-child(1),
+        .products-table table td:nth-child(1) {
+            width: 5%;
+            min-width: 60px;
+        }
+
+        .products-table table th:nth-child(2),
+        .products-table table td:nth-child(2) {
+            width: 12%;
+            min-width: 120px;
+        }
+
+        .products-table table th:nth-child(3),
+        .products-table table td:nth-child(3) {
+            width: 35%;
+            min-width: 300px;
+            max-width: 500px;
+        }
+
+        .products-table table th:nth-child(4),
+        .products-table table td:nth-child(4) {
+            width: 12%;
+            min-width: 100px;
+        }
+
+        .products-table table th:nth-child(5),
+        .products-table table td:nth-child(5) {
+            width: 12%;
+            min-width: 100px;
+        }
+
+        .products-table table th:nth-child(6),
+        .products-table table td:nth-child(6) {
+            width: 15%;
+            min-width: 150px;
+        }
+        
+        /* Actions column - keep buttons side by side */
+        .products-table table td:nth-child(6) {
+            white-space: nowrap !important;
+        }
+        
+        .products-table table td:nth-child(6) .btn {
+            display: inline-block !important;
+            margin-right: 5px !important;
+            vertical-align: middle !important;
+            float: none !important;
+        }
+        
+        .products-table table td:nth-child(6) .btn:last-child {
+            margin-right: 0 !important;
+        }
+        
+        /* Ensure buttons don't stack */
+        .products-table table td:nth-child(6) .btn-primary,
+        .products-table table td:nth-child(6) .btn-danger {
+            display: inline-block !important;
+            width: auto !important;
+        }
+
+        /* Description column formatting */
+        .table td.description-cell {
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            line-height: 1.6;
+            padding: 12px 16px;
+            vertical-align: top;
+        }
+
+        .description-text {
+            display: block;
+            color: #475569;
+            font-size: 0.9rem;
+            text-align: left;
+            hyphens: auto;
+            -webkit-hyphens: auto;
+            -moz-hyphens: auto;
+            margin: 0;
+        }
+        
+        /* Custom Notification Toast */
+        .custom-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 320px;
+            max-width: 400px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: toastSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-left: 4px solid;
+        }
+
+        .custom-toast.success {
+            border-left-color: #22c55e;
+        }
+
+        .custom-toast.error {
+            border-left-color: #ef4444;
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-icon-wrapper {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .toast-icon-wrapper.success {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+        }
+
+        .toast-icon-wrapper.error {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        }
+
+        .toast-icon-wrapper i {
+            font-size: 1.25rem;
+        }
+
+        .toast-icon-wrapper.success i {
+            color: #22c55e;
+        }
+
+        .toast-icon-wrapper.error i {
+            color: #ef4444;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-message {
+            font-weight: 600;
+            color: #1a4a6b;
+            font-size: 0.95rem;
+            margin: 0;
+            line-height: 1.4;
+        }
+        
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+        }
+
+        /* Pagination Styles */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .pagination-info {
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .pagination-btn {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #1a4a6b;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: #256892;
+            color: white;
+            border-color: #256892;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 104, 146, 0.3);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pagination-btn.active {
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+            border-color: #256892;
+        }
+
+        .pagination-page-numbers {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        /* Delete Confirmation Modal */
+        .delete-confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeInModal 0.25s ease;
+        }
+
+        .delete-confirm-modal.show {
+            display: flex;
+        }
+
+        @keyframes fadeInModal {
+            from {
+                opacity: 0;
+                backdrop-filter: blur(0px);
+            }
+            to {
+                opacity: 1;
+                backdrop-filter: blur(8px);
+            }
+        }
+
+        .delete-confirm-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            max-width: 420px;
+            width: 90%;
+            animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes modalScaleIn {
+            from {
+                transform: scale(0.85) translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .delete-confirm-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ef4444, #f59e0b, #ef4444);
+            background-size: 200% 100%;
+            animation: gradientShift 2s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .delete-confirm-icon-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 2rem 1rem;
+            position: relative;
+        }
+
+        .delete-confirm-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25);
+            position: relative;
+            animation: deletePulse 2s ease infinite;
+        }
+
+        @keyframes deletePulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
+            }
+        }
+
+        .delete-confirm-icon::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            opacity: 0.2;
+            animation: iconPulseRed 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulseRed {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.2;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.3;
+            }
+        }
+
+        .delete-confirm-icon i {
+            font-size: 2.5rem;
+            color: #ef4444;
+            position: relative;
+            z-index: 1;
+        }
+
+        .delete-confirm-body {
+            padding: 0 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .delete-confirm-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a4a6b;
+            margin-bottom: 0.75rem;
+        }
+
+        .delete-confirm-message {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .delete-confirm-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-delete-confirm,
+        .btn-delete-cancel {
+            padding: 12px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-delete-confirm {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn-delete-confirm:hover:not(:disabled) {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-delete-confirm:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-delete-cancel {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-delete-cancel:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        /* Loading Animation */
+        .delete-loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .delete-loading.show {
+            display: flex;
+        }
+
+        .delete-loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .delete-loading-text {
+            color: white;
+            font-weight: 600;
+        }
+
+        .delete-confirm-icon-wrapper.loading .delete-confirm-icon {
+            animation: none;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        }
+
+        .delete-confirm-icon-wrapper.loading .delete-confirm-icon::before {
+            animation: none;
+            display: none;
+        }
+
+        .delete-confirm-icon-wrapper.loading .delete-confirm-icon i {
+            display: none;
+        }
+
+        .delete-confirm-icon-wrapper.loading .delete-loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(239, 68, 68, 0.3);
+            border-top-color: #ef4444;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Edit Product Modal Styles */
+        .edit-product-modal-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .edit-product-modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #256892, #1e4f73, #256892);
+            background-size: 200% 100%;
+            animation: gradientShift 2s ease infinite;
+        }
+
+        .edit-product-modal-header {
+            padding: 2rem 2rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        }
+
+        .edit-product-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(37, 104, 146, 0.25);
+        }
+
+        .edit-product-icon-wrapper i {
+            font-size: 1.75rem;
+            color: white;
+        }
+
+        .edit-product-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .edit-product-subtitle {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+        .edit-product-modal-body {
+            padding: 2rem;
+        }
+
+        .edit-form-label {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #334155;
+            margin-bottom: 0.5rem;
+        }
+
+        .edit-form-label i {
+            color: #256892;
+            font-size: 0.85rem;
+        }
+
+        .edit-form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: #1e293b;
+            background: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .edit-form-control:focus {
+            outline: none;
+            border-color: #256892;
+            box-shadow: 0 0 0 3px rgba(37, 104, 146, 0.1);
+            background: #ffffff;
+        }
+
+        .edit-form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        .edit-image-section {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+        }
+
+        .edit-image-upload-wrapper {
+            margin-bottom: 1rem;
+        }
+
+        .edit-file-input {
+            display: none;
+        }
+
+        .edit-file-label {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .edit-file-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 104, 146, 0.3);
+        }
+
+        .edit-image-hint {
+            display: block;
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .edit-current-image,
+        .edit-preview-image {
+            margin-top: 1rem;
+        }
+
+        .edit-current-image .alert,
+        .edit-preview-image .alert {
+            border-radius: 12px;
+            border: none;
+            padding: 1rem;
+            margin: 0;
+        }
+
+        .edit-current-image img,
+        .edit-preview-image img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-top: 0.75rem;
+        }
+
+        .edit-product-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .btn-edit-submit,
+        .btn-edit-cancel {
+            padding: 0.875rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-edit-submit {
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+        }
+
+        .btn-edit-submit:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1e4f73, #153d5a);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 104, 146, 0.4);
+        }
+
+        .btn-edit-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-edit-cancel {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-edit-cancel:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .edit-btn-text {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* Dark mode support for edit modal */
+        body.dark .edit-product-modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        body.dark .edit-product-modal-header {
+            border-bottom-color: #334155;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        body.dark .edit-product-title {
+            color: #f1f5f9;
+        }
+
+        body.dark .edit-product-subtitle {
+            color: #94a3b8;
+        }
+
+        body.dark .edit-form-label {
+            color: #e2e8f0;
+        }
+
+        body.dark .edit-form-control {
+            background: #1e293b;
+            border-color: #334155;
+            color: #f1f5f9;
+        }
+
+        body.dark .edit-form-control:focus {
+            border-color: #256892;
+            background: #1e293b;
+        }
+
+        body.dark .edit-image-section {
+            background: #0f172a;
+            border-color: #334155;
+        }
+
+        body.dark .btn-edit-cancel {
+            background: #334155;
+            color: #e2e8f0;
+        }
+
+        body.dark .btn-edit-cancel:hover {
+            background: #475569;
+        }
+
+        body.dark .edit-product-actions {
+            border-top-color: #334155;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <img src="../systemlogo.png" alt="AquaSphere Logo">
+            <h4>AquaSphere Admin</h4>
+        </div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="dashboard.html">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="users.html">
+                    <i class="fas fa-users"></i>
+                    User Management
+                </a>
+            </li>
+            <li>
+                <a href="orders.html">
+                    <i class="fas fa-shopping-cart"></i>
+                    Order Management
+                </a>
+            </li>
+            <li>
+                <a href="products.html" class="active">
+                    <i class="fas fa-box"></i>
+                    Product Management
+                </a>
+            </li>
+            <li>
+                <a href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    System Settings
+                </a>
+            </li>
+            <li>
+                <a href="../api/logout.php?redirect=index.html">
+                    <i class="fas fa-home"></i>
+                    Back to Site
+                </a>
+            </li>
+            <li>
+                <a href="../api/logout.php">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1><i class="fas fa-box me-2"></i>Product Management</h1>
+            <div>
+                <span class="badge bg-primary" id="totalProductsCount">0 Products</span>
+            </div>
+        </div>
+
+        <!-- Add Product Form -->
+        <div class="content-card">
+            <h5 class="mb-4" style="color: #1a4a6b; font-weight: 600;">Add New Product</h5>
+            <form id="addProductForm">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="productLabel" class="form-label">Product Label/Name</label>
+                        <input type="text" class="form-control" id="productLabel" required placeholder="e.g., 5-Gallon Refill">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="productPrice" class="form-label">Price (₱)</label>
+                        <input type="number" class="form-control" id="productPrice" required step="0.01" min="0" placeholder="e.g., 25.00">
+                    </div>
+                    <div class="col-md-12">
+                        <label for="productDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="productDescription" rows="3" required placeholder="Product description..."></textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="productImage" class="form-label">Product Image</label>
+                        <input type="file" class="form-control" id="productImage" accept="image/*">
+                        <small class="text-muted">Upload an image for the product (JPG, PNG, GIF)</small>
+                        <div id="imagePreview" style="margin-top: 10px;"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="productCategory" class="form-label">Category</label>
+                        <select class="form-select" id="productCategory" required>
+                            <option value="">Select category...</option>
+                            <option value="refill gallon">Refill Gallon</option>
+                            <option value="gallon">Gallon</option>
+                            <option value="bottle">Bottle</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="productUnit" class="form-label">Price Unit</label>
+                        <input type="text" class="form-control" id="productUnit" required placeholder="e.g., /refill, /unit, /pack">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary" id="addProductBtn">
+                            <span class="btn-text">
+                                <i class="fas fa-plus me-2"></i>Add Product
+                            </span>
+                            <span class="btn-loading" id="addProductLoading">
+                                <span class="btn-loading-spinner"></span>
+                                <span>Adding...</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Products List -->
+        <div class="content-card products-table">
+            <h5 class="mb-4" style="color: #1a4a6b; font-weight: 600;">All Products</h5>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Label</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">Loading products...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Pagination -->
+            <div class="pagination-container" id="paginationContainer" style="display: none;">
+                <div class="pagination-info" id="paginationInfo"></div>
+                <div class="pagination-controls" id="paginationControls"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div id="editProductModal" class="delete-confirm-modal">
+        <div class="edit-product-modal-content">
+            <div class="edit-product-modal-header">
+                <div class="edit-product-icon-wrapper">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <h3 class="edit-product-title">Edit Product</h3>
+                <p class="edit-product-subtitle">Update product information below</p>
+            </div>
+            <div class="edit-product-modal-body">
+                <form id="editProductForm">
+                    <input type="hidden" id="editProductId">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label for="editProductLabel" class="edit-form-label">
+                                <i class="fas fa-tag me-2"></i>Product Label/Name
+                            </label>
+                            <input type="text" class="edit-form-control" id="editProductLabel" required placeholder="e.g., 5-Gallon Refill">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="editProductPrice" class="edit-form-label">
+                                <i class="fas fa-peso-sign me-2"></i>Price (₱)
+                            </label>
+                            <input type="number" class="edit-form-control" id="editProductPrice" required step="0.01" min="0" placeholder="e.g., 25.00">
+                        </div>
+                        <div class="col-md-12">
+                            <label for="editProductDescription" class="edit-form-label">
+                                <i class="fas fa-align-left me-2"></i>Description
+                            </label>
+                            <textarea class="edit-form-control" id="editProductDescription" rows="4" required placeholder="Enter a detailed product description..."></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="edit-image-section">
+                                <label for="editProductImage" class="edit-form-label">
+                                    <i class="fas fa-image me-2"></i>Product Image
+                                </label>
+                                <div class="edit-image-upload-wrapper">
+                                    <input type="file" class="edit-file-input" id="editProductImage" accept="image/*">
+                                    <label for="editProductImage" class="edit-file-label">
+                                        <i class="fas fa-cloud-upload-alt me-2"></i>
+                                        <span>Choose new image</span>
+                                    </label>
+                                    <small class="edit-image-hint">Leave empty to keep current image</small>
+                                </div>
+                                <div id="currentImageDisplay" class="edit-current-image"></div>
+                                <div id="editImagePreview" class="edit-preview-image"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="editProductCategory" class="edit-form-label">
+                                <i class="fas fa-folder me-2"></i>Category
+                            </label>
+                            <select class="edit-form-control" id="editProductCategory" required>
+                                <option value="">Select category...</option>
+                                <option value="refill gallon">Refill Gallon</option>
+                                <option value="gallon">Gallon</option>
+                                <option value="bottle">Bottle</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="editProductUnit" class="edit-form-label">
+                                <i class="fas fa-ruler me-2"></i>Price Unit
+                            </label>
+                            <input type="text" class="edit-form-control" id="editProductUnit" required placeholder="e.g., /refill, /unit, /pack">
+                        </div>
+                        <div class="col-12">
+                            <div class="edit-product-actions">
+                                <button type="submit" class="btn-edit-submit" id="editProductSubmitBtn">
+                                    <span class="edit-btn-text">
+                                        <i class="fas fa-save me-2"></i>Update Product
+                                    </span>
+                                    <span class="delete-loading" id="editProductLoading">
+                                        <span class="delete-loading-spinner"></span>
+                                        <span class="delete-loading-text">Updating...</span>
+                                    </span>
+                                </button>
+                                <button type="button" class="btn-edit-cancel" id="editProductCancelBtn">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="delete-confirm-modal">
+        <div class="delete-confirm-content">
+            <div class="delete-confirm-icon-wrapper" id="deleteIconWrapper">
+                <div class="delete-confirm-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            </div>
+            <div class="delete-confirm-body">
+                <h3 class="delete-confirm-title">Delete Product</h3>
+                <p class="delete-confirm-message" id="deleteConfirmMessage">
+                    Are you sure you want to delete this product? This action cannot be undone.
+                </p>
+                <div class="delete-confirm-actions">
+                    <button class="btn-delete-confirm" id="deleteConfirmBtn">
+                        <span class="delete-confirm-text">Delete</span>
+                        <span class="delete-loading" id="deleteLoading">
+                            <span class="delete-loading-spinner"></span>
+                            <span class="delete-loading-text">Deleting...</span>
+                        </span>
+                    </button>
+                    <button class="btn-delete-cancel" id="deleteCancelBtn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Pagination state
+        let currentPage = 1;
+        const itemsPerPage = 5;
+        let allProducts = [];
+
+        // Load products on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+        });
+
+        // Handle form submission
+        document.getElementById('addProductForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            addProduct();
+        });
+
+        // Load products
+        function loadProducts() {
+            return fetch('../api/admin/get_products.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        allProducts = data.products;
+                        document.getElementById('totalProductsCount').textContent = `${allProducts.length} Products`;
+                        currentPage = 1; // Reset to first page when reloading
+                        displayProducts();
+                    } else {
+                        showNotification(data.message || 'Failed to load products', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading products:', error);
+                    showNotification('Failed to load products', 'error');
+                });
+        }
+
+        // Display products with pagination
+        function displayProducts() {
+            const tbody = document.getElementById('productsTableBody');
+            const paginationContainer = document.getElementById('paginationContainer');
+            const paginationInfo = document.getElementById('paginationInfo');
+            const paginationControls = document.getElementById('paginationControls');
+            
+            if (allProducts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No products found. Add your first product above.</td></tr>';
+                paginationContainer.style.display = 'none';
+                return;
+            }
+
+            // Calculate pagination
+            const totalPages = Math.ceil(allProducts.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const currentProducts = allProducts.slice(startIndex, endIndex);
+
+            // Display current page products
+            tbody.innerHTML = currentProducts.map(product => {
+                const description = escapeHtml(product.description || 'No description');
+                return `
+                    <tr>
+                        <td>${product.id}</td>
+                        <td><strong>${escapeHtml(product.label)}</strong></td>
+                        <td class="description-cell">
+                            <span class="description-text">${description}</span>
+                        </td>
+                        <td>₱${parseFloat(product.price).toFixed(2)}${product.unit ? '<span style="color: #256892; font-weight: 700;">' + escapeHtml(product.unit) + '</span>' : ''}</td>
+                        <td><span class="badge bg-secondary">${escapeHtml(product.category || 'N/A')}</span></td>
+                        <td style="white-space: nowrap !important;">
+                            <button class="btn btn-primary btn-sm" onclick="editProduct(${product.id})" title="Edit product" style="display: inline-block !important; margin-right: 5px !important; vertical-align: middle !important;">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})" style="display: inline-block !important; vertical-align: middle !important;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Update pagination info
+            const startItem = allProducts.length > 0 ? startIndex + 1 : 0;
+            const endItem = Math.min(endIndex, allProducts.length);
+            paginationInfo.textContent = `Showing ${startItem}-${endItem} of ${allProducts.length} products`;
+
+            // Build pagination controls
+            paginationControls.innerHTML = '';
+
+            // Previous button
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'pagination-btn';
+            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i> Previous';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayProducts();
+                }
+            };
+            paginationControls.appendChild(prevBtn);
+
+            // Page numbers
+            const pageNumbers = document.createElement('div');
+            pageNumbers.className = 'pagination-page-numbers';
+            
+            // Show page numbers (max 5 visible)
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+            
+            // Adjust if near start or end
+            if (endPage - startPage < 4) {
+                if (startPage === 1) {
+                    endPage = Math.min(5, totalPages);
+                } else {
+                    startPage = Math.max(1, totalPages - 4);
+                }
+            }
+
+            // First page
+            if (startPage > 1) {
+                const firstBtn = document.createElement('button');
+                firstBtn.className = 'pagination-btn';
+                firstBtn.textContent = '1';
+                firstBtn.onclick = () => {
+                    currentPage = 1;
+                    displayProducts();
+                };
+                pageNumbers.appendChild(firstBtn);
+                if (startPage > 2) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.textContent = '...';
+                    ellipsis.style.padding = '8px 4px';
+                    ellipsis.style.color = '#64748b';
+                    pageNumbers.appendChild(ellipsis);
+                }
+            }
+
+            // Page number buttons
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => {
+                    currentPage = i;
+                    displayProducts();
+                };
+                pageNumbers.appendChild(pageBtn);
+            }
+
+            // Last page
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.textContent = '...';
+                    ellipsis.style.padding = '8px 4px';
+                    ellipsis.style.color = '#64748b';
+                    pageNumbers.appendChild(ellipsis);
+                }
+                const lastBtn = document.createElement('button');
+                lastBtn.className = 'pagination-btn';
+                lastBtn.textContent = totalPages;
+                lastBtn.onclick = () => {
+                    currentPage = totalPages;
+                    displayProducts();
+                };
+                pageNumbers.appendChild(lastBtn);
+            }
+
+            paginationControls.appendChild(pageNumbers);
+
+            // Next button
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'pagination-btn';
+            nextBtn.innerHTML = 'Next <i class="fas fa-chevron-right"></i>';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayProducts();
+                }
+            };
+            paginationControls.appendChild(nextBtn);
+
+            // Show pagination if more than one page
+            paginationContainer.style.display = totalPages > 1 ? 'flex' : 'none';
+        }
+
+        // Preview image
+        document.getElementById('productImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('imagePreview');
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" class="image-preview" alt="Preview">`;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.innerHTML = '';
+            }
+        });
+
+        // Add product
+        async function addProduct() {
+            const addBtn = document.getElementById('addProductBtn');
+            const btnText = addBtn.querySelector('.btn-text');
+            const btnLoading = document.getElementById('addProductLoading');
+
+            const label = document.getElementById('productLabel').value.trim();
+            const description = document.getElementById('productDescription').value.trim();
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const imageFile = document.getElementById('productImage').files[0];
+            const category = document.getElementById('productCategory').value;
+            const unit = document.getElementById('productUnit').value.trim();
+
+            // Validation
+            if (!label || !description || !price || !category || !unit) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+
+            if (price <= 0) {
+                showNotification('Price must be greater than 0', 'error');
+                return;
+            }
+
+            if (!imageFile) {
+                showNotification('Please select an image file', 'error');
+                return;
+            }
+
+            // Show loading state immediately
+            addBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoading.classList.add('show');
+
+            try {
+                // Create FormData for file upload
+                const formData = new FormData();
+                formData.append('label', label);
+                formData.append('description', description);
+                formData.append('price', price);
+                formData.append('image', imageFile);
+                formData.append('category', category);
+                formData.append('unit', unit);
+
+                const response = await fetch('../api/admin/add_product.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Reset button state
+                addBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoading.classList.remove('show');
+
+                if (data.success) {
+                    showNotification('Product added successfully!', 'success');
+                    document.getElementById('addProductForm').reset();
+                    document.getElementById('imagePreview').innerHTML = '';
+                    // Reload products
+                    loadProducts().then(() => {
+                        // Navigate to last page to show the newly added product
+                        const totalPages = Math.ceil(allProducts.length / itemsPerPage);
+                        if (totalPages > 0) {
+                            currentPage = totalPages;
+                            displayProducts();
+                        }
+                    });
+                } else {
+                    showNotification(data.message || 'Failed to add product', 'error');
+                }
+            } catch (error) {
+                console.error('Error adding product:', error);
+                
+                // Reset button state
+                addBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoading.classList.remove('show');
+                
+                showNotification('Failed to add product', 'error');
+            }
+        }
+
+        // Edit product
+        function editProduct(productId) {
+            try {
+                // Convert to number for comparison (handle both string and number IDs)
+                const id = parseInt(productId);
+                
+                // Debug: Log the search
+                console.log('Searching for product ID:', id, 'Type:', typeof id);
+                console.log('All products:', allProducts);
+                console.log('Product IDs in array:', allProducts.map(p => ({ id: p.id, type: typeof p.id })));
+                
+                const product = allProducts.find(p => {
+                    const productIdNum = parseInt(p.id);
+                    return productIdNum === id;
+                });
+                
+                if (!product) {
+                    console.error('Product not found. Searched ID:', id, 'Available IDs:', allProducts.map(p => p.id));
+                    showNotification('Product not found. Please refresh the page.', 'error');
+                    return;
+                }
+                
+                console.log('Found product:', product);
+
+                // Populate form with product data
+                document.getElementById('editProductId').value = product.id;
+                document.getElementById('editProductLabel').value = product.label || '';
+                document.getElementById('editProductPrice').value = product.price || '';
+                document.getElementById('editProductDescription').value = product.description || '';
+                document.getElementById('editProductCategory').value = product.category || '';
+                document.getElementById('editProductUnit').value = product.unit || '';
+
+                // Show current image if exists
+                const currentImageDisplay = document.getElementById('currentImageDisplay');
+                if (product.image_url) {
+                    let imageUrl = product.image_url;
+                    // Fix image URL path
+                    if (!imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
+                        imageUrl = '../' + imageUrl;
+                    } else if (imageUrl.startsWith('/')) {
+                        imageUrl = '..' + imageUrl;
+                    }
+                    currentImageDisplay.innerHTML = `
+                        <div class="alert alert-info">
+                            <strong><i class="fas fa-image me-2"></i>Current Image:</strong><br>
+                            <img src="${escapeHtml(imageUrl)}" alt="Current product image" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'alert alert-warning\\'><i class=\\'fas fa-exclamation-triangle me-2\\'></i>Image not found</div>';">
+                        </div>
+                    `;
+                } else {
+                    currentImageDisplay.innerHTML = '<div class="alert alert-warning"><i class="fas fa-exclamation-circle me-2"></i>No image currently set</div>';
+                }
+
+                // Clear edit image preview and reset file label
+                document.getElementById('editImagePreview').innerHTML = '';
+                document.getElementById('editProductImage').value = '';
+                const fileLabel = document.querySelector('label[for="editProductImage"]');
+                if (fileLabel) {
+                    const span = fileLabel.querySelector('span');
+                    if (span) {
+                        span.textContent = 'Choose new image';
+                    }
+                }
+
+                // Show modal
+                const modal = document.getElementById('editProductModal');
+                if (!modal) {
+                    showNotification('Edit modal not found', 'error');
+                    return;
+                }
+                modal.classList.add('show');
+
+                // Handle image preview for new image
+                const imageInput = document.getElementById('editProductImage');
+                if (imageInput) {
+                    // Remove existing listeners
+                    const newImageInput = imageInput.cloneNode(true);
+                    imageInput.parentNode.replaceChild(newImageInput, imageInput);
+                    
+                    newImageInput.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (file) {
+                            // Update file label to show selected file name
+                            const fileLabel = document.querySelector('label[for="editProductImage"]');
+                            if (fileLabel) {
+                                const span = fileLabel.querySelector('span');
+                                if (span) {
+                                    span.textContent = file.name;
+                                }
+                            }
+                            
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const preview = document.getElementById('editImagePreview');
+                                preview.innerHTML = `<div class="alert alert-success"><strong><i class="fas fa-check-circle me-2"></i>New Image Preview:</strong><br><img src="${e.target.result}" alt="Preview"></div>`;
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            // Reset label if no file selected
+                            const fileLabel = document.querySelector('label[for="editProductImage"]');
+                            if (fileLabel) {
+                                const span = fileLabel.querySelector('span');
+                                if (span) {
+                                    span.textContent = 'Choose new image';
+                                }
+                            }
+                            document.getElementById('editImagePreview').innerHTML = '';
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error opening edit modal:', error);
+                showNotification('Failed to open edit form. Please try again.', 'error');
+            }
+        }
+
+        // Handle edit form submission
+        document.getElementById('editProductForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('editProductSubmitBtn');
+            const loadingDiv = document.getElementById('editProductLoading');
+            const submitText = submitBtn.querySelector('.edit-btn-text');
+            const productId = parseInt(document.getElementById('editProductId').value);
+
+            // Get form data
+            const label = document.getElementById('editProductLabel').value.trim();
+            const description = document.getElementById('editProductDescription').value.trim();
+            const price = parseFloat(document.getElementById('editProductPrice').value);
+            const category = document.getElementById('editProductCategory').value;
+            const unit = document.getElementById('editProductUnit').value.trim();
+            const imageFile = document.getElementById('editProductImage').files[0];
+
+            // Validate
+            if (!label || !description || !price || price <= 0 || !category || !unit) {
+                showNotification('All required fields must be filled', 'error');
+                return;
+            }
+
+            // Show loading state
+            submitBtn.disabled = true;
+            loadingDiv.classList.add('show');
+            submitText.style.display = 'none';
+
+            try {
+                let response;
+                
+                // If new image is uploaded, use FormData
+                if (imageFile) {
+                    const formData = new FormData();
+                    formData.append('id', productId);
+                    formData.append('label', label);
+                    formData.append('description', description);
+                    formData.append('price', price);
+                    formData.append('category', category);
+                    formData.append('unit', unit);
+                    formData.append('image', imageFile);
+
+                    response = await fetch('../api/admin/update_product.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                } else {
+                    // Use JSON if no new image
+                    const updateData = {
+                        id: productId,
+                        label: label,
+                        description: description,
+                        price: price,
+                        category: category,
+                        unit: unit
+                    };
+
+                    response = await fetch('../api/admin/update_product.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(updateData)
+                    });
+                }
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('API Error:', errorText);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const responseText = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('Failed to parse JSON response:', responseText);
+                    throw new Error('Invalid response from server');
+                }
+
+                // Reset button state
+                submitBtn.disabled = false;
+                loadingDiv.classList.remove('show');
+                submitText.style.display = 'inline';
+
+                if (data.success) {
+                    showNotification('Product updated successfully!', 'success');
+                    document.getElementById('editProductModal').classList.remove('show');
+                    resetEditForm();
+                    
+                    // Reload products to reflect changes
+                    await loadProducts();
+                    displayProducts();
+                } else {
+                    showNotification(data.message || 'Failed to update product', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating product:', error);
+                
+                // Reset button state
+                submitBtn.disabled = false;
+                loadingDiv.classList.remove('show');
+                submitText.style.display = 'inline';
+                
+                showNotification('Failed to update product: ' + error.message, 'error');
+            }
+        });
+
+        // Helper function to reset edit form
+        function resetEditForm() {
+            document.getElementById('editProductForm').reset();
+            document.getElementById('editImagePreview').innerHTML = '';
+            document.getElementById('currentImageDisplay').innerHTML = '';
+            // Reset file label
+            const fileLabel = document.querySelector('label[for="editProductImage"]');
+            if (fileLabel) {
+                const span = fileLabel.querySelector('span');
+                if (span) {
+                    span.textContent = 'Choose new image';
+                }
+            }
+        }
+
+        // Handle edit modal cancel
+        document.getElementById('editProductCancelBtn').addEventListener('click', function() {
+            document.getElementById('editProductModal').classList.remove('show');
+            resetEditForm();
+        });
+        
+        // Close edit modal when clicking outside
+        document.getElementById('editProductModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('show');
+                document.getElementById('editProductForm').reset();
+                document.getElementById('editImagePreview').innerHTML = '';
+                document.getElementById('currentImageDisplay').innerHTML = '';
+            }
+        });
+
+        // Delete product
+        function deleteProduct(productId) {
+            const modal = document.getElementById('deleteConfirmModal');
+            const confirmBtn = document.getElementById('deleteConfirmBtn');
+            const cancelBtn = document.getElementById('deleteCancelBtn');
+            const loadingDiv = document.getElementById('deleteLoading');
+            const confirmText = confirmBtn.querySelector('.delete-confirm-text');
+            const iconWrapper = document.getElementById('deleteIconWrapper');
+
+            // Show modal
+            modal.classList.add('show');
+
+            // Remove existing event listeners by cloning buttons
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+            // Update references
+            const newConfirmBtnRef = document.getElementById('deleteConfirmBtn');
+            const newCancelBtnRef = document.getElementById('deleteCancelBtn');
+            const newLoadingDiv = document.getElementById('deleteLoading');
+            const newConfirmText = newConfirmBtnRef.querySelector('.delete-confirm-text');
+
+            // Cancel button handler
+            newCancelBtnRef.addEventListener('click', function() {
+                modal.classList.remove('show');
+                // Reset button state in case it was in loading state
+                newConfirmBtnRef.disabled = false;
+                newLoadingDiv.classList.remove('show');
+                newConfirmText.style.display = 'inline';
+                iconWrapper.classList.remove('loading');
+                iconWrapper.innerHTML = '<div class="delete-confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>';
+            });
+
+            // Confirm button handler
+            newConfirmBtnRef.addEventListener('click', async function() {
+                // Show loading state
+                newConfirmBtnRef.disabled = true;
+                newLoadingDiv.classList.add('show');
+                newConfirmText.style.display = 'none';
+                iconWrapper.classList.add('loading');
+                iconWrapper.innerHTML = '<div class="delete-confirm-icon"><div class="delete-loading-spinner"></div></div>';
+
+                try {
+                    const response = await fetch('../api/admin/delete_product.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ id: productId })
+                    });
+
+                    // Check if response is ok
+                    if (!response.ok) {
+                        // Try to get error message from response
+                        let errorMessage = `HTTP error! status: ${response.status}`;
+                        try {
+                            const errorData = await response.json();
+                            if (errorData && errorData.message) {
+                                errorMessage = errorData.message;
+                            }
+                        } catch (e) {
+                            // If response is not JSON, use status text
+                            errorMessage = response.statusText || errorMessage;
+                        }
+                        throw new Error(errorMessage);
+                    }
+
+                    // Get response text first to check if it's valid JSON
+                    const responseText = await response.text();
+                    let data;
+                    
+                    try {
+                        data = JSON.parse(responseText);
+                    } catch (parseError) {
+                        console.error('Invalid JSON response:', responseText);
+                        throw new Error('Invalid response from server. Please try again.');
+                    }
+                    
+                    // Validate response structure
+                    if (!data || typeof data !== 'object') {
+                        throw new Error('Invalid response from server');
+                    }
+
+                    if (data.success) {
+                        // Hide modal immediately
+                        modal.classList.remove('show');
+
+                        // Reset button state
+                        newConfirmBtnRef.disabled = false;
+                        newLoadingDiv.classList.remove('show');
+                        newConfirmText.style.display = 'inline';
+                        iconWrapper.classList.remove('loading');
+                        iconWrapper.innerHTML = '<div class="delete-confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>';
+
+                        // Remove deleted product from allProducts array immediately
+                        const initialLength = allProducts.length;
+                        allProducts = allProducts.filter(p => p.id !== productId);
+                        
+                        // Check if product was actually removed
+                        if (allProducts.length === initialLength) {
+                            // Product not found in array, reload from server
+                            loadProducts();
+                            showNotification('Product deleted successfully!', 'success');
+                            return;
+                        }
+                        
+                        // Update total count
+                        document.getElementById('totalProductsCount').textContent = `${allProducts.length} Products`;
+                        
+                        // Calculate new total pages
+                        const totalPages = Math.ceil(allProducts.length / itemsPerPage);
+                        
+                        // If current page is empty and not first page, go to previous page
+                        if (allProducts.length > 0 && currentPage > totalPages) {
+                            currentPage = Math.max(1, totalPages);
+                        } else if (allProducts.length === 0) {
+                            currentPage = 1;
+                        }
+                        
+                        // Immediately remove the product row from the table with animation
+                        const tbody = document.getElementById('productsTableBody');
+                        const rows = Array.from(tbody.querySelectorAll('tr'));
+                        let rowFound = false;
+                        
+                        rows.forEach(row => {
+                            // Check if this row contains the product ID
+                            const firstCell = row.querySelector('td:first-child');
+                            if (firstCell && firstCell.textContent.trim() === String(productId)) {
+                                rowFound = true;
+                                // Add fade-out animation
+                                row.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                                row.style.opacity = '0';
+                                row.style.transform = 'translateX(-20px)';
+                                
+                                setTimeout(() => {
+                                    // Update display with new pagination
+                                    displayProducts();
+                                }, 300);
+                            }
+                        });
+                        
+                        // If row not found, update display immediately
+                        if (!rowFound) {
+                            displayProducts();
+                        }
+
+                        showNotification('Product deleted successfully!', 'success');
+                    } else {
+                        // Hide modal
+                        modal.classList.remove('show');
+
+                        // Reset button state
+                        newConfirmBtnRef.disabled = false;
+                        newLoadingDiv.classList.remove('show');
+                        newConfirmText.style.display = 'inline';
+                        iconWrapper.classList.remove('loading');
+                        iconWrapper.innerHTML = '<div class="delete-confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>';
+
+                        showNotification(data.message || 'Failed to delete product', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting product:', error);
+                    
+                    // Hide modal
+                    modal.classList.remove('show');
+
+                    // Reset button state
+                    newConfirmBtnRef.disabled = false;
+                    newLoadingDiv.classList.remove('show');
+                    newConfirmText.style.display = 'inline';
+                    iconWrapper.classList.remove('loading');
+                    iconWrapper.innerHTML = '<div class="delete-confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>';
+
+                    showNotification('Failed to delete product', 'error');
+                }
+            });
+
+            // Close on backdrop click
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            // Remove any existing notifications
+            document.querySelectorAll('.custom-toast').forEach(toast => toast.remove());
+
+            const notification = document.createElement('div');
+            notification.className = `custom-toast ${type}`;
+            
+            const iconWrapper = document.createElement('div');
+            iconWrapper.className = `toast-icon-wrapper ${type}`;
+            
+            const icon = document.createElement('i');
+            icon.className = `fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}`;
+            iconWrapper.appendChild(icon);
+            
+            const content = document.createElement('div');
+            content.className = 'toast-content';
+            
+            const text = document.createElement('p');
+            text.className = 'toast-message';
+            text.textContent = message;
+            content.appendChild(text);
+            
+            notification.appendChild(iconWrapper);
+            notification.appendChild(content);
+            document.body.appendChild(notification);
+            
+            // Auto remove after 4 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(400px)';
+                notification.style.transition = 'all 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
+

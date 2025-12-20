@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - AquaSphere</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    <!-- Shared Navbar CSS -->
+    <link rel="stylesheet" href="navbar.css">
+    
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            font-family: Inter, system-ui, Segoe UI, sans-serif !important;
+            background: #ffffff;
+            min-height: 100vh;
+            padding-top: 80px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            background: linear-gradient(135deg, #16405c 0%, #256892 100%);
+            flex: 1;
+        }
+        
+        /* Navbar Styles */
+          .navbar {
+             background:rgba(240, 248, 255, 0.8) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .navbar-brand {
+            font-weight: 400;
+            font-size: 1.5rem;
+            color: #1a4a6b !important;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            color: #256892 !important;
+            transform: scale(1.05);
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: #1a4a6b !important;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: 0;
+            left: 50%;
+            background: linear-gradient(90deg, #256892, #1a4a6b);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 80%;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            color: #1a4a6b !important;
+            font-weight: 900;
+        }
+        
+        /* Registration Card */
+        .register-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            max-width: 750px;
+            width: 100%;
+            border: none;
+            margin-bottom: 3rem;
+        }
+
+        .register-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1a4a6b;
+            margin-bottom: 0.25rem;
+        }
+
+        .register-subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        /* --- Form Label Styling --- */
+        .form-label {
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- Input & Select Styling --- */
+        .custom-input, .form-select {
+            border-radius: 12px !important;
+            border: 2px solid #e2e8f0;
+            background-color: #f8fbff;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            color: #1e293b;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        /* Remove transitions from select to prevent color flash in dark mode */
+        body.dark .form-select,
+        body.dark .form-select * {
+            transition: none !important;
+        }
+        
+        /* Select dropdown arrow styling - only for gender field */
+        #gender.form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+
+        .custom-input:focus, .form-select:focus {
+            background-color: #fff;
+            border-color: #256892;
+            box-shadow: 0 0 0 4px rgba(37, 104, 146, 0.1);
+            outline: none;
+        }
+
+        /* --- Input Groups (Password & Date) --- */
+        .input-group .custom-input {
+            z-index: 1;
+        }
+
+        /* Flatten the right side of the input */
+        .input-group > .custom-input.border-end-0 {
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+
+        /* Flatten the left side of the toggle button */
+        .input-group > .btn-password-toggle.border-start-0 {
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+        }
+
+        /* Match the border colors during focus */
+        .input-group:focus-within .custom-input {
+            border-color: #256892;
+        }
+
+        .input-group:focus-within .btn-password-toggle {
+            border-color: #256892;
+        }
+
+        .btn-password-toggle, .date-icon-btn {
+            border: 2px solid #e2e8f0;
+            border-left: none;
+            background-color: #f8fbff;
+            border-top-right-radius: 12px !important;
+            border-bottom-right-radius: 12px !important;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .btn-password-toggle:hover, .date-icon-btn:hover {
+            background-color: #f1f5f9;
+        }
+
+        /* --- Error States --- */
+        .custom-error {
+            color: #e11d48;
+            font-size: 0.8rem;
+            margin-top: 6px;
+            font-weight: 600;
+            display: none;
+            padding-left: 4px;
+        }
+
+        .form-control.error, .form-select.error {
+            border-color: #fb7185;
+        }
+
+        .form-control.error:focus {
+            box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1);
+        }
+
+        /* Success state for valid inputs */
+        .form-control.success {
+            border-color: #256892;
+            background-color: #f0f9ff;
+        }
+
+        /* --- Primary Action Button --- */
+        .btn-register {
+            background: #256892;
+            border: none;
+            color: white;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 1rem;
+        }
+
+        .btn-register:hover {
+            background: #1e4f73;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 104, 146, 0.3);
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
+        }
+
+        /* --- Date Picker specific hack --- */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
+        }
+
+        /* --- Login Link Section --- */
+        .login-link-container {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .login-link-container p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .login-link-container a {
+            color: #256892;
+            text-decoration: none;
+            font-weight: 700;
+            margin-left: 5px;
+        }
+
+        .login-link-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            .register-card {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            .register-title {
+                font-size: 1.75rem;
+            }
+        }
+        
+        /* Footer */
+               .footer {
+            background: #0f2a3d; 
+            color: white;
+            padding: 80px 0 40px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .footer-logo {
+            height: 40px;
+            margin-right: 12px;
+        }
+
+        .footer-logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .footer-desc {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            max-width: 320px;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .footer-links-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #3b7fb8;
+            transform: translateX(8px);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .footer-icon {
+            width: 20px;
+            color: #3b7fb8;
+            margin-right: 12px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-icons a {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: #3b7fb8;
+            transform: translateY(-5px);
+        }
+
+        .footer-bottom {
+            margin-top: 60px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+        }
+
+        .footer-legal a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .footer-legal a:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Redirect logged-in users away from registration page
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const resp = await fetch('api/get_current_user.php', { credentials: 'include' });
+                if (resp.ok) {
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+            } catch (e) {
+                console.warn('Auth check failed:', e);
+            }
+        });
+    </script>
+    <!-- Navbar -->
+    <div id="navbar-container"></div>
+
+    <!-- Registration Form -->
+    <div class="main-content py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="register-card shadow-sm mx-auto">
+                    <div class="text-center mb-4">
+                         <h1 class="register-title fw-bold">Create Account</h1>
+                         <p class="register-subtitle text-muted">Join AquaSphere and start ordering clean water</p>
+                    </div>
+                    
+                    <form method="post" action="api/register.php" id="registerForm" novalidate>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="username" class="form-label small fw-bold text-uppercase">Username</label>
+                                <input type="text" class="form-control custom-input" id="username" name="username" 
+                                       placeholder="Choose a username" autocomplete="off" required>
+                                <div class="custom-error" id="username-error">Username is required.</div>
+                                <div class="custom-error" id="username-unique-error" style="display: none;">Username already exists.</div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="email" class="form-label small fw-bold text-uppercase">Email Address</label>
+                                <input type="email" class="form-control custom-input" id="email" name="email" 
+                                       placeholder="name@example.com" autocomplete="off" required>
+                                <div class="custom-error" id="email-error">Email is required.</div>
+                                <div class="custom-error" id="email-unique-error" style="display: none;">Email already exists.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="first_name" class="form-label small fw-bold text-uppercase">First Name</label>
+                                <input type="text" class="form-control custom-input" id="first_name" name="first_name" 
+                                       placeholder="John" required>
+                                <div class="custom-error" id="first_name-error">First name is required.</div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="last_name" class="form-label small fw-bold text-uppercase">Last Name</label>
+                                <input type="text" class="form-control custom-input" id="last_name" name="last_name" 
+                                       placeholder="Doe" required>
+                                <div class="custom-error" id="last_name-error">Last name is required.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="gender" class="form-label small fw-bold text-uppercase">Gender</label>
+                                <select class="form-select custom-input" id="gender" name="gender" required>
+                                    <option value="" disabled selected>Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                                <div class="custom-error" id="gender-error">Gender is required.</div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                            <label for="birthday" class="form-label small fw-bold text-uppercase">Birthday</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control custom-input border-end-0" id="birthday" name="birthday" required>
+                                <button class="btn btn-outline-light-blue date-icon-btn border-start-0" type="button" id="datePickerBtn">
+                                    <i class="fas fa-calendar-alt text-muted"></i>
+                                </button>
+                            </div>
+                            <div class="custom-error" id="birthday-error">Birthday is required.</div>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="password" class="form-label small fw-bold text-uppercase">Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control custom-input border-end-0" id="password" name="password" 
+                                           placeholder="Min. 8 characters" required>
+                                    <button class="btn btn-password-toggle border-start-0" type="button" id="togglePassword">
+                                        <i class="fas fa-eye text-muted" id="passwordIcon"></i>
+                                    </button>
+                                </div>
+                                <div class="custom-error" id="password-error">Password is required.</div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="confirm_password" class="form-label small fw-bold text-uppercase">Confirm Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control custom-input border-end-0" id="confirm_password" name="confirm_password" 
+                                           placeholder="Repeat password" required>
+                                    <button class="btn btn-password-toggle border-start-0" type="button" id="toggleConfirmPassword">
+                                        <i class="fas fa-eye text-muted" id="confirmPasswordIcon"></i>
+                                    </button>
+                                </div>
+                                <div class="custom-error" id="confirm_password-error">Confirmation is required.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-register py-3 fw-bold">
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="text-center mt-4 pt-2 border-top">
+                        <p class="text-muted small">Already have an account? <a href="login.html" class="text-aqua fw-bold text-decoration-none">Log in here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Shared Navbar JS -->
+    <script src="navbar_logreg.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            loadNavbar();
+            if (typeof initDarkModeOnLoad === 'function') {
+                initDarkModeOnLoad();
+            }
+            
+            // Force dark mode styling on gender select to prevent light color flash
+            const genderSelect = document.getElementById('gender');
+            if (genderSelect) {
+                // Function to apply dark styles immediately
+                const applyDarkStyles = function() {
+                    if (document.body.classList.contains('dark')) {
+                        genderSelect.style.setProperty('background-color', '#334155', 'important');
+                        genderSelect.style.setProperty('border-color', '#334155', 'important');
+                        genderSelect.style.setProperty('color', '#f1f5f9', 'important');
+                        genderSelect.style.setProperty('transition', 'none', 'important');
+                    }
+                };
+                
+                // Apply immediately on load
+                applyDarkStyles();
+                
+                // Re-apply on change to prevent flash
+                genderSelect.addEventListener('change', function() {
+                    applyDarkStyles();
+                });
+                
+                // Also apply on focus/blur
+                genderSelect.addEventListener('focus', function() {
+                    if (document.body.classList.contains('dark')) {
+                        this.style.setProperty('background-color', '#334155', 'important');
+                        this.style.setProperty('border-color', '#256892', 'important');
+                        this.style.setProperty('color', '#f1f5f9', 'important');
+                    }
+                });
+                
+                genderSelect.addEventListener('blur', function() {
+                    applyDarkStyles();
+                });
+                
+                // Use MutationObserver to watch for class changes on body
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                            applyDarkStyles();
+                        }
+                    });
+                });
+                
+                observer.observe(document.body, {
+                    attributes: true,
+                    attributeFilter: ['class']
+                });
+            }
+        });
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registerForm');
+            const birthdayInput = document.getElementById('birthday');
+            const firstNameInput = document.getElementById('first_name');
+            const lastNameInput = document.getElementById('last_name');
+            
+            const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
+            const nameSanitizeRegex = /[^A-Za-zÀ-ÖØ-öø-ÿ' -]/g;
+
+            function sanitizeNameInput(input) {
+                if (!input) return;
+                const start = input.selectionStart;
+                const end = input.selectionEnd;
+                const before = input.value;
+                input.value = before.replace(nameSanitizeRegex, '');
+                const delta = before.length - input.value.length;
+                if (delta !== 0 && start !== null && end !== null) {
+                    const pos = Math.max(start - delta, 0);
+                    input.setSelectionRange(pos, pos);
+                }
+            }
+
+            if (firstNameInput) {
+                firstNameInput.addEventListener('input', () => sanitizeNameInput(firstNameInput));
+            }
+            if (lastNameInput) {
+                lastNameInput.addEventListener('input', () => sanitizeNameInput(lastNameInput));
+            }
+
+            // Set birthday max to 18 years ago
+            if (birthdayInput) {
+                const today = new Date();
+                const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+                const yyyy = maxDate.getFullYear();
+                const mm = String(maxDate.getMonth() + 1).padStart(2, '0');
+                const dd = String(maxDate.getDate()).padStart(2, '0');
+                birthdayInput.max = `${yyyy}-${mm}-${dd}`;
+                
+                // Force calendar icon to be white in dark mode
+                function applyCalendarIconStyle() {
+                    if (document.body.classList.contains('dark')) {
+                        const style = document.createElement('style');
+                        style.id = 'calendar-icon-dark-fix';
+                        style.textContent = `
+                            body.dark #birthday::-webkit-calendar-picker-indicator,
+                            body.dark .register-card input[type="date"]::-webkit-calendar-picker-indicator {
+                                filter: invert(1) brightness(2) !important;
+                                opacity: 1 !important;
+                                width: 20px !important;
+                                height: 20px !important;
+                            }
+                        `;
+                        // Remove existing style if any
+                        const existing = document.getElementById('calendar-icon-dark-fix');
+                        if (existing) existing.remove();
+                        document.head.appendChild(style);
+                    }
+                }
+                
+                // Apply immediately
+                applyCalendarIconStyle();
+                
+                // Re-apply when dark mode toggles
+                const observer = new MutationObserver(() => {
+                    applyCalendarIconStyle();
+                });
+                observer.observe(document.body, {
+                    attributes: true,
+                    attributeFilter: ['class']
+                });
+            }
+            
+            // Success timers to revert the green glow after 3s
+            const successTimers = {};
+            function markSuccess(fieldName) {
+                const field = document.getElementById(fieldName);
+                if (!field) return;
+                field.classList.remove('error');
+                field.classList.add('success');
+                if (successTimers[fieldName]) clearTimeout(successTimers[fieldName]);
+                successTimers[fieldName] = setTimeout(() => {
+                    field.classList.remove('success');
+                }, 3000);
+            }
+
+            // Required fields
+            const requiredFields = [
+                'username', 'email', 'first_name', 'last_name', 
+                'gender', 'birthday', 'password', 'confirm_password'
+            ];
+            
+            // Function to show error
+            function showError(fieldName, message) {
+                const field = document.getElementById(fieldName);
+                const errorDiv = document.getElementById(fieldName + '-error');
+                
+                if (field && errorDiv) {
+                    field.classList.add('error');
+                    field.classList.remove('success');
+                    errorDiv.textContent = message;
+                    errorDiv.style.display = 'block';
+                }
+            }
+            
+            // Function to hide error
+            function hideError(fieldName) {
+                const field = document.getElementById(fieldName);
+                const errorDiv = document.getElementById(fieldName + '-error');
+                
+                if (field && errorDiv) {
+                    field.classList.remove('error');
+                    errorDiv.style.display = 'none';
+                }
+            }
+            
+            // Function to validate individual field
+            function validateField(fieldName) {
+                const field = document.getElementById(fieldName);
+                if (!field) return true;
+                
+                const value = field.value.trim();
+                
+                if (!value) {
+                    showError(fieldName, getFieldLabel(fieldName) + ' is required.');
+                    return false;
+                }
+                
+                // Name validation (no digits)
+                if (['first_name','last_name'].includes(fieldName)) {
+                    if (!nameRegex.test(value)) {
+                        showError(fieldName, 'Only letters, spaces, apostrophes, and hyphens are allowed.');
+                        return false;
+                    }
+                }
+
+                // Additional validations
+                if (fieldName === 'username') {
+                    if (value.length < 4 || value.length > 64) {
+                        showError(fieldName, 'Username must be between 4 and 64 characters long.');
+                        return false;
+                    } else {
+                        hideError(fieldName);
+                        markSuccess(fieldName);
+                    }
+                }
+                
+                if (fieldName === 'email') {
+                    if (!isValidEmail(value)) {
+                        showError(fieldName, 'Please enter a valid email.');
+                        return false;
+                    } else {
+                        hideError(fieldName);
+                        markSuccess(fieldName);
+                    }
+                }
+                
+                if (fieldName === 'password') {
+                    if (!isStrongPassword(value)) {
+                        showError(fieldName, 'Min 8 chars with upper, lower, number, special.');
+                        return false;
+                    } else {
+                        hideError(fieldName);
+                        // Do not mark success yet; wait for confirm to match
+                    }
+                }
+                
+                if (fieldName === 'confirm_password') {
+                    const password = document.getElementById('password').value;
+                    if (!isStrongPassword(password)) {
+                        showError('password', 'Min 8 chars with upper, lower, number, special.');
+                        showError(fieldName, 'Min 8 chars with upper, lower, number, special.');
+                        return false;
+                    }
+                    if (value !== password) {
+                        hideError('password');
+                        showError(fieldName, 'Passwords do not match.');
+                        return false;
+                    } else {
+                        hideError(fieldName);
+                        hideError('password');
+                        markSuccess(fieldName);
+                        markSuccess('password');
+                    }
+                }
+                
+                if (fieldName === 'birthday') {
+                    if (!isAtLeast18(value)) {
+                        showError(fieldName, 'You must be at least 18 years old.');
+                        return false;
+                    }
+                }
+
+                // For other fields, if not failing, mark success
+                if (!['username','email','password','confirm_password'].includes(fieldName)) {
+                    hideError(fieldName);
+                    markSuccess(fieldName);
+                }
+                return true;
+            }
+            
+            // Function to get field label
+            function getFieldLabel(fieldName) {
+                const labels = {
+                    'username': 'Username',
+                    'email': 'Email',
+                    'first_name': 'First name',
+                    'last_name': 'Last name',
+                    'gender': 'Gender',
+                    'birthday': 'Birthday',
+                    'password': 'Password',
+                    'confirm_password': 'Password confirmation'
+                };
+                return labels[fieldName] || fieldName;
+            }
+            
+            // Function to validate email
+            function isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+            
+            function isStrongPassword(pwd) {
+                const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]).{8,}$/;
+                return strongRegex.test(pwd);
+            }
+            
+            function isAtLeast18(dateStr) {
+                const dob = new Date(dateStr);
+                if (isNaN(dob.getTime())) return false;
+                const today = new Date();
+                let age = today.getFullYear() - dob.getFullYear();
+                const m = today.getMonth() - dob.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                    age--;
+                }
+                return age >= 18;
+            }
+            
+            // Function to validate all fields
+            function validateForm() {
+                let isValid = true;
+                
+                requiredFields.forEach(fieldName => {
+                    if (!validateField(fieldName)) {
+                        isValid = false;
+                    }
+                });
+                
+                return isValid;
+            }
+            
+            // Add event listeners to all required fields
+            requiredFields.forEach(fieldName => {
+                const field = document.getElementById(fieldName);
+                if (field) {
+                    field.addEventListener('blur', () => validateField(fieldName));
+                    field.addEventListener('input', () => {
+                        validateField(fieldName);
+                        // Hide uniqueness errors as user edits
+                        const uniqueIdMap = {
+                            'username': 'username-unique-error',
+                            'email': 'email-unique-error'
+                        };
+                        const ue = uniqueIdMap[fieldName];
+                        if (ue) {
+                            const el = document.getElementById(ue);
+                            if (el) el.style.display = 'none';
+                            field.classList.remove('error');
+                        }
+                    });
+                }
+            });
+            
+            // Debounced check for username availability
+            const usernameField = document.getElementById('username');
+            const usernameUniqueError = document.getElementById('username-unique-error');
+            let usernameDebounce;
+            async function checkUsernameAvailability(value){
+                try {
+                    const resp = await fetch(`api/check_username.php?username=${encodeURIComponent(value)}`);
+                    const data = await resp.json();
+                    if (data && data.success) {
+                        if (data.exists) {
+                            if (usernameUniqueError) usernameUniqueError.style.display = 'block';
+                            if (usernameField) {
+                                usernameField.classList.add('error');
+                                usernameField.classList.remove('success');
+                            }
+                        } else {
+                            if (usernameUniqueError) usernameUniqueError.style.display = 'none';
+                            if (usernameField && value.length >= 4) markSuccess('username');
+                        }
+                    }
+                } catch(e) {
+                    // Ignore network errors silently for UX
+                }
+            }
+            if (usernameField) {
+                usernameField.addEventListener('input', function(){
+                    const v = this.value.trim();
+                    if (usernameUniqueError) usernameUniqueError.style.display = 'none';
+                    if (!v || v.length < 4) return;
+                    clearTimeout(usernameDebounce);
+                    usernameDebounce = setTimeout(() => checkUsernameAvailability(v), 350);
+                });
+                usernameField.addEventListener('blur', function(){
+                    const v = this.value.trim();
+                    if (!v || v.length < 4) return;
+                    checkUsernameAvailability(v);
+                });
+            }
+
+            // Debounced check for email availability
+            const emailField = document.getElementById('email');
+            const emailUniqueError = document.getElementById('email-unique-error');
+            let emailDebounce;
+            async function checkEmailAvailability(value){
+                try {
+                    const resp = await fetch(`api/check_email.php?email=${encodeURIComponent(value)}`);
+                    const data = await resp.json();
+                    if (data && data.success) {
+                        if (data.exists) {
+                            if (emailUniqueError) emailUniqueError.style.display = 'block';
+                            if (emailField) {
+                                emailField.classList.add('error');
+                                emailField.classList.remove('success');
+                            }
+                        } else {
+                            if (emailUniqueError) emailUniqueError.style.display = 'none';
+                            if (emailField && isValidEmail(value)) markSuccess('email');
+                        }
+                    }
+                } catch(e) {
+                    // Ignore network errors silently for UX
+                }
+            }
+            if (emailField) {
+                emailField.addEventListener('input', function(){
+                    const v = this.value.trim();
+                    if (emailUniqueError) emailUniqueError.style.display = 'none';
+                    if (!v || !isValidEmail(v)) return;
+                    clearTimeout(emailDebounce);
+                    emailDebounce = setTimeout(() => checkEmailAvailability(v), 350);
+                });
+                emailField.addEventListener('blur', function(){
+                    const v = this.value.trim();
+                    if (!v || !isValidEmail(v)) return;
+                    checkEmailAvailability(v);
+                });
+            }
+
+            // Password toggle functionality
+            function togglePasswordVisibility(passwordFieldId, toggleButtonId, iconId) {
+                const passwordField = document.getElementById(passwordFieldId);
+                const toggleButton = document.getElementById(toggleButtonId);
+                const icon = document.getElementById(iconId);
+                
+                if (passwordField && toggleButton && icon) {
+                    toggleButton.addEventListener('click', function() {
+                        if (passwordField.type === 'password') {
+                            passwordField.type = 'text';
+                            icon.classList.remove('fa-eye');
+                            icon.classList.add('fa-eye-slash');
+                        } else {
+                            passwordField.type = 'password';
+                            icon.classList.remove('fa-eye-slash');
+                            icon.classList.add('fa-eye');
+                        }
+                    });
+                }
+            }
+            
+            togglePasswordVisibility('password', 'togglePassword', 'passwordIcon');
+            togglePasswordVisibility('confirm_password', 'toggleConfirmPassword', 'confirmPasswordIcon');
+            
+            // Date picker button trigger
+            const datePickerBtn = document.querySelector('.date-icon-btn');
+            if (datePickerBtn && birthdayInput) {
+                datePickerBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // Try modern showPicker() API first (Chrome, Edge, Safari 16+)
+                    if (typeof birthdayInput.showPicker === 'function') {
+                        birthdayInput.showPicker().catch(err => {
+                            // Fallback to focus if showPicker fails
+                            birthdayInput.focus();
+                            birthdayInput.click();
+                        });
+                    } else {
+                        // Fallback for older browsers
+                        birthdayInput.focus();
+                        birthdayInput.click();
+                    }
+                });
+            }
+            
+            // Form submission handler
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate form first
+                if (!validateForm()) {
+                    // Scroll to first error
+                    const firstError = form.querySelector('.error');
+                    if (firstError && firstError.scrollIntoView) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    return;
+                }
+                
+                // Submit form
+                const formData = new FormData(form);
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Account...';
+                
+                fetch('api/register.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    // Check if response is ok
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
+                        });
+                    }
+                    // Try to parse as JSON
+                    return response.text().then(text => {
+                        try {
+                            return JSON.parse(text);
+                        } catch (e) {
+                            console.error('JSON parse error:', e);
+                            console.error('Response text:', text);
+                            throw new Error('Invalid JSON response from server: ' + text.substring(0, 100));
+                        }
+                    });
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Redirect to OTP verification page
+                        let redirectUrl = data.redirect || 'verify.html';
+                        
+                        // If in development mode with OTP, append it to URL
+                        if (data.dev_mode && data.otp) {
+                            redirectUrl += '?otp=' + data.otp;
+                        }
+                        
+                        window.location.href = redirectUrl;
+                    } else {
+                        // Show error messages
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
+                        
+                        if (data.errors) {
+                            Object.keys(data.errors).forEach(field => {
+                                showError(field, data.errors[field]);
+                            });
+                        } else if (data.message) {
+                            // Show error in a more user-friendly way
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'alert alert-danger mt-3';
+                            errorDiv.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>' + data.message;
+                            form.appendChild(errorDiv);
+                            setTimeout(() => errorDiv.remove(), 5000);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                    alert('An error occurred. Please try again. Check console for details.');
+                });
+            });
+            
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+            
+            // Set active nav link for current page
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === 'registration.html' || link.getAttribute('href').includes('registration')) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        });
+    </script>
+    <script>
+        // Client-side guard: scrub obvious XSS/SQLi patterns as user types/pastes
+        (function guardInputs() {
+            const BAD_PATTERNS = [
+                /<|>/g,
+                /javascript:/gi,
+                /onerror\s*=/gi,
+                /onload\s*=/gi,
+                /onclick\s*=/gi,
+                /onmouseover\s*=/gi,
+                /--/g,
+                /\/\*/g,
+                /\*\//g,
+                /'\s*or\s*1=1/gi,
+                /"\s*or\s*1=1/gi
+            ];
+            function scrub(v) {
+                let out = v;
+                BAD_PATTERNS.forEach(re => { out = out.replace(re, ''); });
+                return out;
+            }
+            function attach(el) {
+                if (!el) return;
+                const handler = (e) => {
+                    const before = el.value;
+                    const after = scrub(before);
+                    if (after !== before) {
+                        const start = el.selectionStart;
+                        const delta = before.length - after.length;
+                        el.value = after;
+                        const pos = Math.max(0, (start ?? after.length) - delta);
+                        el.setSelectionRange(pos, pos);
+                        e.preventDefault();
+                    }
+                };
+                el.addEventListener('input', handler);
+                el.addEventListener('paste', () => setTimeout(handler, 0));
+            }
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], textarea').forEach(attach);
+            });
+        })();
+    </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-4 col-md-12 mb-2">
+                <div class="footer-brand mb-3">
+                    <img src="systemlogo.png" alt="AquaSphere Logo" class="footer-logo">
+                    <span class="footer-logo-text">AquaSphere</span>
+                </div>
+                <p class="footer-desc">
+                    Bringing nature's purest hydration to your doorstep. We combine smart ordering technology with reliable, eco-friendly delivery to keep your life flowing.
+                </p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-6">
+                <h5 class="footer-title">Explore</h5>
+                <ul class="footer-links-list">
+                    <li><a href="#home" class="footer-link">Home</a></li>
+                    <li><a href="#features" class="footer-link">Features</a></li>
+                    <li><a href="#how-it-works" class="footer-link">How It Works</a></li>
+                    <li><a href="#pricing" class="footer-link">Pricing</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-6">
+                <h5 class="footer-title">Our Services</h5>
+                <ul class="footer-links-list">
+                    <li><a href="#" class="footer-link">Mineral Refills</a></li>
+                    <li><a href="#" class="footer-link">Alkaline Water</a></li>
+                    <li><a href="#" class="footer-link">Bulk Delivery</a></li>
+                    <li><a href="#" class="footer-link">Express Support</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-4">
+                <h5 class="footer-title">Contact Us</h5>
+                <div class="contact-item mb-2">
+                    <i class="fas fa-envelope footer-icon"></i>
+                    <span>support@aquasphere.com</span>
+                </div>
+                <div class="contact-item mb-2">
+                    <i class="fas fa-phone-alt footer-icon"></i>
+                    <span>+63 (2) 123-4567</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-location-dot footer-icon"></i>
+                    <span>123 Water St, Metro Manila</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="copyright mb-0">&copy; 2024 <strong>AquaSphere</strong>. Pure health in every drop.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-legal">
+                        <a href="#">Privacy Policy</a>
+                        <span class="mx-2">|</span>
+                        <a href="#">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
+

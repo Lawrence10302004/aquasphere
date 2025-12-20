@@ -1,0 +1,2477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Method - AquaSphere</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Shared Navbar CSS -->
+    <link rel="stylesheet" href="navbar.css">
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Inter, system-ui, Segoe UI, sans-serif !important;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            scrollbar-gutter: stable;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+            flex: 1;
+        }
+        
+        /* Payment Container */
+        .payment-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .payment-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .payment-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1a4a6b;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 8px rgba(3, 105, 161, 0.1);
+        }
+        
+        .payment-header p {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin: 0;
+        }
+        
+        /* Payment Card */
+        .payment-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
+            border-radius: 28px;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .payment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #256892, #1e4f73, #3b7fb8, #256892, #256892);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease infinite;
+            z-index: 1;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        .payment-card-header {
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #3b7fb8 100%);
+            padding: 2rem 2rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .payment-card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            animation: rotateGradient 15s linear infinite;
+        }
+        
+        @keyframes rotateGradient {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .payment-card-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+            margin: 0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .payment-card-header h2::before {
+            content: '💳';
+            font-size: 1.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .payment-card-body {
+            padding: 2rem;
+        }
+        
+        /* Payment Methods Grid */
+        .payment-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* Payment Method Card */
+        .payment-method-card {
+            background: white;
+            border: 3px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .payment-method-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, rgba(2, 132, 199, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .payment-method-card:hover {
+            border-color: #256892;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(14, 165, 233, 0.2);
+        }
+        
+        .payment-method-card:hover::before {
+            opacity: 1;
+        }
+        
+        .payment-method-card.selected {
+            border-color: #256892;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.25);
+        }
+        
+        .payment-method-card.selected::before {
+            opacity: 1;
+        }
+        
+        .payment-method-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f8f9fa;
+        }
+        
+        .payment-method-card.disabled:hover {
+            transform: none;
+            border-color: #e2e8f0;
+            box-shadow: none;
+        }
+        
+        .payment-method-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .payment-method-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+        
+        .payment-method-card.disabled .payment-method-icon {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+            box-shadow: 0 4px 12px rgba(148, 163, 184, 0.2);
+        }
+        
+        .payment-method-radio {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #cbd5e1;
+            border-radius: 50%;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method-card.selected .payment-method-radio {
+            border-color: #256892;
+            background: #256892;
+        }
+        
+        .payment-method-card.selected .payment-method-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .payment-method-card.disabled .payment-method-radio {
+            border-color: #cbd5e1;
+            background: #f1f5f9;
+        }
+        
+        .payment-method-info {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .payment-method-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .payment-method-card.disabled .payment-method-name {
+            color: #94a3b8;
+        }
+        
+        .payment-method-description {
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+        
+        .payment-method-card.disabled .payment-method-description {
+            color: #cbd5e1;
+        }
+        
+        .coming-soon-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            color: #64748b;
+            padding: 0.4rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Order Summary */
+        .order-summary {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .order-summary h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a4a6b;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            font-size: 0.95rem;
+        }
+        
+        .summary-row:not(:last-child) {
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .summary-label {
+            color: #64748b;
+            font-weight: 500;
+        }
+        
+        .summary-value {
+            color: #0f172a;
+            font-weight: 600;
+        }
+        
+        .summary-row.total {
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid #e2e8f0;
+        }
+        
+        .summary-row.total .summary-label {
+            font-size: 1.1rem;
+            color: #1a4a6b;
+            font-weight: 700;
+        }
+        
+        .summary-row.total .summary-value {
+            font-size: 1.5rem;
+            color: #256892;
+            font-weight: 800;
+        }
+        
+        /* Action Buttons */
+        .payment-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+        }
+        
+        .btn-back {
+            background: white;
+            border: 2px solid #e2e8f0;
+            color: #64748b;
+            padding: 0.875rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-back:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            color: #475569;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-place-order {
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            border: none;
+            color: white;
+            padding: 0.875rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.3);
+        }
+        
+        .btn-place-order:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.4);
+        }
+        
+        .btn-place-order:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Payment Error Modal */
+        .payment-error-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .payment-error-modal.show {
+            opacity: 1;
+        }
+        
+        /* When modal is displayed as flex, ensure centering */
+        .payment-error-modal[style*="flex"],
+        .payment-error-modal.show {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .payment-error-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
+        
+        .payment-error-container {
+            position: relative;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            z-index: 10001;
+        }
+        
+        .payment-error-modal.show .payment-error-container {
+            transform: scale(1);
+        }
+        
+        .payment-error-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: #64748b;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-error-close:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            transform: rotate(90deg);
+        }
+        
+        .payment-error-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulseError 2s ease infinite;
+        }
+        
+        @keyframes pulseError {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+            }
+        }
+        
+        .payment-error-icon i {
+            font-size: 3.5rem;
+            color: #ef4444;
+        }
+        
+        .payment-error-container h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.75rem;
+        }
+        
+        .payment-error-container p {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .payment-error-btn {
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            border: none;
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+        
+        .payment-error-btn:hover {
+            background: linear-gradient(135deg, #1e4f73, #256892);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.4);
+        }
+        
+        /* Ensure dropdown appears above other elements */
+        .dropdown-menu {
+            z-index: 1050 !important;
+        }
+        
+        .nav-item.dropdown {
+            z-index: 1051 !important;
+        }
+        
+        /* Settings Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .address-modal {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 92vh;
+            overflow: hidden;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            animation: addressModalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        @keyframes addressModalSlideIn {
+            from {
+                transform: scale(0.9) translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .address-modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #256892, #1e4f73, #3b7fb8, #256892, #256892);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease infinite;
+            z-index: 1;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #3b7fb8 100%);
+            padding: 2rem 2rem 1.5rem;
+            border-bottom: none;
+            border-radius: 28px 28px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modal-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+            animation: rotateGradient 15s linear infinite;
+        }
+        
+        @keyframes rotateGradient {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .modal-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+            margin: 0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .modal-header h2::before {
+            content: '📍';
+            font-size: 1.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .modal-body {
+            background: transparent;
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 2rem 1.5rem;
+            max-height: calc(92vh - 250px);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem 2rem 2rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            background: transparent;
+        }
+        
+        .btn-cancel {
+            background: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            color: #475569;
+            padding: 0.75rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-cancel:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Logout Confirm Modal Styles - Blue Theme */
+        .logout-confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .logout-confirm-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            max-width: 420px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+            animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: center;
+        }
+        
+        @keyframes modalScaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .logout-confirm-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #256892 0%, #1e4f73 50%, #1a4a6b 100%);
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        .logout-confirm-icon-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 2rem 1rem;
+            position: relative;
+        }
+        
+        .logout-confirm-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.3);
+            position: relative;
+            animation: iconFloat 2s ease-in-out infinite;
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+        
+        .logout-confirm-icon::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            opacity: 0.2;
+            animation: iconPulseBlue 2s ease-in-out infinite;
+        }
+        
+        @keyframes iconPulseBlue {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.2;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.3;
+            }
+        }
+        
+        .logout-confirm-icon i {
+            font-size: 2.5rem;
+            color: #256892;
+            position: relative;
+            z-index: 1;
+            animation: iconBounce 0.6s ease;
+        }
+        
+        @keyframes iconBounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        
+        .logout-confirm-body {
+            padding: 1rem 2rem 1.5rem;
+            text-align: center;
+        }
+        
+        .logout-confirm-body h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .logout-confirm-body p {
+            font-size: 1rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .logout-confirm-footer {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem 2rem 2rem;
+            justify-content: center;
+        }
+        
+        .btn-logout-cancel,
+        .btn-logout-confirm {
+            padding: 12px 32px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            outline: none;
+            min-width: 120px;
+        }
+        
+        .btn-logout-cancel {
+            background: #f1f5f9;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .btn-logout-cancel:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-logout-confirm {
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+        }
+        
+        .btn-logout-confirm:hover {
+            background: linear-gradient(135deg, #1e4f73 0%, #1a4a6b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+        }
+        
+        .btn-logout-confirm:active {
+            transform: translateY(0);
+        }
+        
+        /* Footer Styles */
+        .footer {
+            background: #1a4a6b;
+            color: white;
+            padding: 20px 0 15px;
+            margin-top: auto;
+            width: 100%;
+        }
+        
+        .footer-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.7rem;
+        }
+        
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        
+        .footer-link:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        /* Payment Success Modal */
+        .payment-success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+        }
+        
+        .payment-success-modal.show {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .payment-success-container {
+            position: relative;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            z-index: 10001;
+        }
+        
+        .payment-success-modal.show .payment-success-container {
+            transform: scale(1);
+        }
+        
+        .payment-success-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: successPulse 2s ease infinite;
+            position: relative;
+        }
+        
+        @keyframes successPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 20px rgba(16, 185, 129, 0);
+            }
+        }
+        
+        .payment-success-icon::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            opacity: 0.2;
+            animation: iconPulseGreen 2s ease-in-out infinite;
+        }
+        
+        @keyframes iconPulseGreen {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.2;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.3;
+            }
+        }
+        
+        .payment-success-icon i {
+            font-size: 4rem;
+            color: #10b981;
+            position: relative;
+            z-index: 1;
+            animation: checkmarkDraw 0.6s ease;
+        }
+        
+        @keyframes checkmarkDraw {
+            0% {
+                transform: scale(0) rotate(-45deg);
+            }
+            50% {
+                transform: scale(1.2) rotate(-45deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+        }
+        
+        .payment-success-container h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.75rem;
+        }
+        
+        .payment-success-container p {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .payment-success-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            color: #256892;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        
+        .payment-success-spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e0f2fe;
+            border-top-color: #256892;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .payment-header h1 {
+                font-size: 2rem;
+            }
+            
+            .payment-methods-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-actions {
+                flex-direction: column;
+            }
+            
+            .btn-back,
+            .btn-place-order {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .payment-success-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .payment-success-icon {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .payment-success-icon i {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar Container -->
+    <div id="navbar-container"></div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="payment-container">
+                <!-- Header -->
+                <div class="payment-header">
+                    <h1>Select Payment Method</h1>
+                    <p>Choose your preferred payment option to complete your order</p>
+                </div>
+                
+                <!-- Payment Card -->
+                <div class="payment-card">
+                    <div class="payment-card-header">
+                        <h2>Payment Options</h2>
+                    </div>
+                    <div class="payment-card-body">
+                        <div class="payment-methods-grid">
+                            <!-- Cash on Delivery -->
+                            <div class="payment-method-card" onclick="selectPaymentMethod('cod')" id="paymentMethodCod">
+                                <div class="payment-method-header">
+                                    <div class="payment-method-icon">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    </div>
+                                    <div class="payment-method-radio"></div>
+                                </div>
+                                <div class="payment-method-info">
+                                    <div class="payment-method-name">Cash on Delivery</div>
+                                    <div class="payment-method-description">
+                                        Pay with cash when your order arrives. No need for online payment.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- GCASH -->
+                            <div class="payment-method-card selected" onclick="selectPaymentMethod('gcash')" id="paymentMethodGcash">
+                                <div class="payment-method-header">
+                                    <div class="payment-method-icon" style="background: linear-gradient(135deg, #0070ba, #005ba1);">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <div class="payment-method-radio"></div>
+                                </div>
+                                <div class="payment-method-info">
+                                    <div class="payment-method-name">GCASH</div>
+                                    <div class="payment-method-description">
+                                        Pay securely using your GCASH wallet. Fast and convenient.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Maya (Coming Soon) -->
+                            <div class="payment-method-card disabled" id="paymentMethodMaya" onclick="selectPaymentMethod('maya')">
+                                <div class="payment-method-header">
+                                    <div class="payment-method-icon">
+                                        <i class="fas fa-wallet"></i>
+                                    </div>
+                                    <div class="payment-method-radio"></div>
+                                </div>
+                                <div class="payment-method-info">
+                                    <div class="payment-method-name">Maya</div>
+                                    <div class="payment-method-description">
+                                        Pay using your Maya wallet. Coming soon!
+                                    </div>
+                                    <span class="coming-soon-badge">Coming Soon</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Order Summary -->
+                        <div class="order-summary">
+                            <h3>Order Summary</h3>
+                            <div class="summary-row">
+                                <span class="summary-label">Subtotal</span>
+                                <span class="summary-value" id="orderSubtotal">₱0.00</span>
+                            </div>
+                            <div class="summary-row" id="orderDeliveryTimeRow" style="display: none;">
+                                <span class="summary-label">
+                                    <i class="fas fa-truck me-1"></i>Estimated Delivery
+                                </span>
+                                <span class="summary-value" id="orderDeliveryTime">--</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Delivery Fee</span>
+                                <span class="summary-value" id="orderDeliveryFee">₱--</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span class="summary-label">Total</span>
+                                <span class="summary-value" id="orderTotal">₱0.00</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="payment-actions">
+                            <a href="cart.html" class="btn-back">
+                                <i class="fas fa-arrow-left"></i>
+                                Back to Cart
+                            </a>
+                            <button class="btn-place-order" id="placeOrderBtn" onclick="placeOrder()">
+                                <i class="fas fa-check-circle"></i>
+                                Place Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h4 class="footer-title" style="display: flex; align-items: center;">
+                        <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 40px; margin-right: 10px;">
+                        AquaSphere
+                    </h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.7;">
+                        Your trusted water delivery service. Fast delivery, clean quality water, and reliable service. 
+                        Everything you need for your hydration needs, all in one platform.
+                    </p>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <a href="dashboard.html" class="footer-link">Home</a>
+                    <a href="orders.html" class="footer-link">My Orders</a>
+                    <a href="profile.html" class="footer-link">Profile</a>
+                    <a href="cart.html" class="footer-link">Cart</a>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Features</h5>
+                    <a href="#" class="footer-link">Easy Ordering</a>
+                    <a href="#" class="footer-link">Delivery Tracking</a>
+                    <a href="#" class="footer-link">Payment Options</a>
+                    <a href="#" class="footer-link">Customer Support</a>
+                </div>
+                
+                <div class="col-lg-3 mb-4">
+                    <h5 class="footer-title">Connect With Us</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <p class="mt-1" style="color: rgba(255, 255, 255, 0.8);">
+                        <i class="fas fa-envelope me-2"></i>support@aquasphere.com
+                    </p>
+                </div>
+            </div>
+            
+            <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 1rem 0 0.8rem;">
+            
+            <div class="text-center" style="color: rgba(255, 255, 255, 0.8); font-size: 0.8rem;">
+                <p>&copy; 2024 AquaSphere. Made with ❤️ for clean water delivery. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Navbar JS -->
+    <script src="navbar.js"></script>
+    
+    <!-- User State Management -->
+    <script src="js/user_state.js"></script>
+    
+    <script>
+        // Preload cart count immediately to prevent showing "0" briefly
+        (async function() {
+            try {
+                await UserState.loadState();
+                const cart = UserState.getCart();
+                const cartCount = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                
+                // Update cart count badge in navbar immediately
+                const cartCountElement = document.getElementById('cartCount');
+                if (cartCountElement) {
+                    cartCountElement.textContent = cartCount;
+                    if (cartCount === 0) {
+                        cartCountElement.style.display = 'none';
+                    } else {
+                        cartCountElement.style.display = 'flex';
+                    }
+                }
+            } catch(e) {
+                console.error('Error preloading cart:', e);
+            }
+        })();
+        
+        // Clear order summary immediately if payment was successful (runs before DOMContentLoaded)
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+            if (status === 'success') {
+                // Clear values immediately when DOM is ready
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const subtotalEl = document.getElementById('orderSubtotal');
+                        const deliveryFeeEl = document.getElementById('orderDeliveryFee');
+                        const totalEl = document.getElementById('orderTotal');
+                        const placeOrderBtn = document.getElementById('placeOrderBtn');
+                        
+                        if (subtotalEl) subtotalEl.textContent = '₱0.00';
+                        if (deliveryFeeEl) deliveryFeeEl.textContent = '₱--';
+                        if (totalEl) totalEl.textContent = '₱0.00';
+                        if (placeOrderBtn) placeOrderBtn.disabled = true;
+                    }, { once: true });
+                } else {
+                    // DOM already loaded, clear immediately
+                    const subtotalEl = document.getElementById('orderSubtotal');
+                    const deliveryFeeEl = document.getElementById('orderDeliveryFee');
+                    const totalEl = document.getElementById('orderTotal');
+                    const placeOrderBtn = document.getElementById('placeOrderBtn');
+                    
+                    if (subtotalEl) subtotalEl.textContent = '₱0.00';
+                    if (deliveryFeeEl) deliveryFeeEl.textContent = '₱--';
+                    if (totalEl) totalEl.textContent = '₱0.00';
+                    if (placeOrderBtn) placeOrderBtn.disabled = true;
+                }
+            }
+        })();
+    </script>
+    <script>
+        let selectedPaymentMethod = 'gcash'; // Default to GCASH
+        
+        // Flag to prevent multiple modals from showing
+        let paymentErrorModalShown = false;
+        
+        // Variable to store payment monitoring interval (if needed)
+        let paymentMonitoringInterval = null;
+        
+        // Store ML prediction results
+        let mlPrediction = {
+            deliveryTimeMinutes: null,
+            shippingFee: null,
+            deliveryTimeHours: null,
+            deliveryDateRange: null
+        };
+        
+        // Predict delivery time and shipping fee
+        async function predictDeliveryTime() {
+            const deliveryAddress = UserState.getDeliveryAddress();
+            const checkoutItems = UserState.getCheckoutItems();
+            
+            // Check if we have address and items
+            if (!deliveryAddress || !deliveryAddress.latitude || !deliveryAddress.longitude) {
+                mlPrediction = { 
+                    deliveryTimeMinutes: null, 
+                    shippingFee: null, 
+                    deliveryTimeHours: null,
+                    deliveryDateRange: null
+                };
+                loadOrderSummary();
+                return;
+            }
+            
+            // Calculate total order size
+            let orderSize = 0;
+            checkoutItems.forEach(item => {
+                orderSize += item.quantity;
+            });
+            
+            if (orderSize === 0) {
+                mlPrediction = { 
+                    deliveryTimeMinutes: null, 
+                    shippingFee: null, 
+                    deliveryTimeHours: null,
+                    deliveryDateRange: null
+                };
+                loadOrderSummary();
+                return;
+            }
+            
+            try {
+                const now = new Date();
+                const timeOfOrder = now.getHours();
+                const dayOfWeek = (now.getDay() + 6) % 7;
+                const orderDatetime = now.toISOString();
+                
+                const response = await fetch('api/predict_delivery.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        latitude: parseFloat(deliveryAddress.latitude),
+                        longitude: parseFloat(deliveryAddress.longitude),
+                        municipality: deliveryAddress.city || '',
+                        barangay: deliveryAddress.barangay || '',
+                        postal_code: deliveryAddress.postalCode || '',
+                        order_size: orderSize,
+                        time_of_order: timeOfOrder,
+                        day_of_week: dayOfWeek,
+                        order_datetime: orderDatetime
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        mlPrediction = {
+                            deliveryTimeMinutes: data.delivery_time_minutes,
+                            shippingFee: data.shipping_fee,
+                            deliveryTimeHours: data.delivery_time_hours,
+                            deliveryDateRange: data.delivery_date_range || null
+                        };
+                    }
+                }
+            } catch (error) {
+                console.error('Error predicting delivery time:', error);
+            }
+            
+            loadOrderSummary();
+        }
+        
+        // Load order summary from checkout items
+        async function loadOrderSummary() {
+            // Don't load order summary if payment was successful
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+            if (status === 'success') {
+                // Keep values at 0/empty - don't load actual order data
+                return;
+            }
+            
+            await UserState.loadState();
+            const checkoutItems = UserState.getCheckoutItems();
+            const deliveryAddress = UserState.getDeliveryAddress();
+            
+            if (checkoutItems.length === 0) {
+                // Redirect back to cart if no items
+                window.location.href = 'cart.html';
+                return;
+            }
+            
+            // Calculate subtotal
+            let subtotal = 0;
+            checkoutItems.forEach(item => {
+                subtotal += item.price * item.quantity;
+            });
+            
+            // Check if we need to wait for prediction
+            const needsPrediction = subtotal > 0 && deliveryAddress && deliveryAddress.latitude && deliveryAddress.longitude;
+            const predictionReady = mlPrediction.shippingFee !== null;
+            
+            // Use predicted shipping fee if available, otherwise show loading state
+            let deliveryFee = 0;
+            let deliveryFeeDisplay = '₱--';
+            let subtotalDisplay = `₱${subtotal.toFixed(2)}`;
+            let totalDisplay = '₱--';
+            
+            if (subtotal > 0) {
+                if (needsPrediction && !predictionReady) {
+                    // Prediction needed but not ready yet - show loading state for all values
+                    subtotalDisplay = '₱--';
+                    deliveryFeeDisplay = '₱--';
+                    totalDisplay = '₱--';
+                } else if (predictionReady) {
+                    // Prediction is ready - show all values
+                    deliveryFee = mlPrediction.shippingFee;
+                    deliveryFeeDisplay = `₱${deliveryFee.toFixed(2)}`;
+                    const total = subtotal + deliveryFee;
+                    totalDisplay = `₱${total.toFixed(2)}`;
+                } else {
+                    // No prediction needed (no address or no items) - show calculated values
+                    const total = subtotal + deliveryFee;
+                    totalDisplay = `₱${total.toFixed(2)}`;
+                }
+            } else {
+                // No items - show zeros
+                totalDisplay = '₱0.00';
+            }
+            
+            document.getElementById('orderSubtotal').textContent = subtotalDisplay;
+            document.getElementById('orderDeliveryFee').textContent = deliveryFeeDisplay;
+            document.getElementById('orderTotal').textContent = totalDisplay;
+            
+            // Update delivery date range display
+            const deliveryTimeRow = document.getElementById('orderDeliveryTimeRow');
+            const deliveryTimeEl = document.getElementById('orderDeliveryTime');
+            
+            if (mlPrediction.deliveryDateRange && subtotal > 0 && predictionReady) {
+                // Display delivery date range (e.g., "Dec 13 - Dec 17")
+                if (deliveryTimeEl) {
+                    deliveryTimeEl.textContent = mlPrediction.deliveryDateRange;
+                }
+                if (deliveryTimeRow) {
+                    deliveryTimeRow.style.display = 'flex';
+                }
+            } else {
+                if (deliveryTimeRow) {
+                    deliveryTimeRow.style.display = 'none';
+                }
+            }
+        }
+        
+        // Select payment method
+        function selectPaymentMethod(method) {
+            // Don't allow selection of disabled methods
+            const methodCard = document.getElementById(`paymentMethod${method.charAt(0).toUpperCase() + method.slice(1)}`);
+            if (methodCard && methodCard.classList.contains('disabled')) {
+                return;
+            }
+            
+            selectedPaymentMethod = method;
+            
+            // Remove selected class from all cards
+            document.querySelectorAll('.payment-method-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked card
+            if (methodCard) {
+                methodCard.classList.add('selected');
+            }
+        }
+        
+        // Place order
+        async function placeOrder() {
+            const checkoutItems = UserState.getCheckoutItems();
+            const deliveryAddress = UserState.getDeliveryAddress();
+            
+            if (checkoutItems.length === 0) {
+                showNotification('No items selected for checkout', 'error');
+                return;
+            }
+            
+            if (!deliveryAddress) {
+                showNotification('Please set a delivery address first', 'error');
+                setTimeout(() => {
+                    window.location.href = 'cart.html';
+                }, 2000);
+                return;
+            }
+            
+            // Get current user ID from API
+            let userId = null;
+            try {
+                const userResponse = await fetch('api/get_current_user.php');
+                const userResult = await userResponse.json();
+                
+                if (userResult.success && userResult.user) {
+                    userId = userResult.user.id;
+                } else {
+                    throw new Error('Not logged in');
+                }
+            } catch (error) {
+                showNotification('Please login to place an order', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return;
+            }
+            
+            const subtotal = calculateSubtotal(checkoutItems);
+            // Use predicted shipping fee if available, otherwise default to 50
+            const deliveryFee = mlPrediction.shippingFee !== null && subtotal > 0 
+                ? mlPrediction.shippingFee 
+                : 50;
+            const total = subtotal + deliveryFee;
+            
+            // Disable button during processing
+            const placeOrderBtn = document.getElementById('placeOrderBtn');
+            placeOrderBtn.disabled = true;
+            placeOrderBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            
+            try {
+                // If GCash is selected, create PayMongo payment source first (don't create order yet)
+                if (selectedPaymentMethod === 'gcash') {
+                    // Store order data temporarily (will create order after successful payment)
+                    const pendingOrderData = {
+                            user_id: userId,
+                            items: checkoutItems.map(item => ({
+                                name: item.name || item.product_name,
+                                price: item.price,
+                                quantity: item.quantity
+                            })),
+                            delivery_address: deliveryAddress,
+                            payment_method: 'GCASH',
+                            delivery_date: null,
+                            delivery_time: null,
+                            delivery_fee: deliveryFee,
+                            delivery_date_range: mlPrediction.deliveryDateRange || null,
+                            total_amount: total
+                    };
+                    
+                    // Store pending order data in UserState
+                    UserState.setPendingCheckoutItems(checkoutItems);
+                    UserState.setPaymentRedirectTime(Date.now().toString());
+                    
+                    // Create PayMongo payment source (without order_id - order will be created after payment)
+                    const redirectUrl = window.location.origin + window.location.pathname;
+                    const paymentResponse = await fetch('api/create_payment.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            amount: total,
+                            order_id: null, // Don't create order yet
+                            redirect_url: redirectUrl
+                        })
+                    });
+                    
+                    const paymentResult = await paymentResponse.json();
+                    
+                    if (!paymentResult.success) {
+                        // Show detailed error message
+                        let errorMsg = paymentResult.message || 'Failed to create payment';
+                        
+                        // If debug info is available, log it
+                        if (paymentResult.debug) {
+                            console.error('PayMongo Error Details:', paymentResult.debug);
+                            // In sandbox mode, show more details
+                            if (paymentResult.debug.response) {
+                                errorMsg += ' (Check console for details)';
+                            }
+                        }
+                        
+                        throw new Error(errorMsg);
+                    }
+                    
+                    // Store payment source ID and checkout items for later reference
+                    UserState.setPendingOrderId(null); // No order ID yet
+                    UserState.setPaymongoSourceId(paymentResult.source_id);
+                    UserState.setPaymongoCheckoutUrl(paymentResult.checkout_url);
+                    UserState.setPendingOrderData(JSON.stringify(pendingOrderData));
+                    
+                    // Store the payment page URL for redirect back
+                    UserState.setPaymentPageUrl(window.location.href);
+                    
+                    // Store flag in sessionStorage to detect PayMongo redirect
+                    sessionStorage.setItem('paymongo_redirect', 'true');
+                    sessionStorage.setItem('paymongo_redirect_time', Date.now().toString());
+                    
+                    // Redirect to PayMongo checkout
+                    window.location.href = paymentResult.checkout_url;
+                } else {
+                    // For COD, create order and redirect to orders page
+                    const orderResponse = await fetch('api/create_order.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            user_id: userId,
+                            items: checkoutItems.map(item => ({
+                                name: item.name || item.product_name,
+                                price: item.price,
+                                quantity: item.quantity
+                            })),
+                            delivery_address: deliveryAddress,
+                            payment_method: 'COD',
+                            delivery_date: null,
+                            delivery_time: null,
+                            delivery_fee: deliveryFee,
+                            delivery_date_range: mlPrediction.deliveryDateRange || null
+                        })
+                    });
+                    
+                    const orderResult = await orderResponse.json();
+                    
+                    if (!orderResult.success) {
+                        throw new Error(orderResult.message || 'Failed to create order');
+                    }
+                    
+                    // Remove ordered items from cart
+                    removeOrderedItemsFromCart(checkoutItems);
+                    
+                    // Clear checkout items
+                    UserState.setCheckoutItems([]);
+                    
+                    // Clear orders cache to force fresh fetch
+                    window.__ordersCache = null;
+                    
+                    // Update order count badge (with delay to ensure order is saved in database)
+                    if (typeof updateOrderCount === 'function') {
+                        setTimeout(() => {
+                            updateOrderCount();
+                        }, 1000);
+                    }
+                    
+                    // Show success modal
+                    showPaymentSuccessModal();
+                }
+            } catch (error) {
+                console.error('Order placement error:', error);
+                showNotification(error.message || 'Failed to place order. Please try again.', 'error');
+                placeOrderBtn.disabled = false;
+                placeOrderBtn.innerHTML = '<i class="fas fa-check-circle"></i> Place Order';
+            }
+        }
+        
+        // Handle PayMongo redirect - Check URL params and referrer once
+        async function handlePaymentRedirect() {
+            console.log('handlePaymentRedirect called');
+            
+            // Prevent multiple checks
+            if (paymentErrorModalShown) {
+                console.log('Modal already shown, skipping');
+                return;
+            }
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlHash = window.location.hash;
+            const status = urlParams.get('status') || (urlHash.includes('failed') ? 'failed' : null);
+            
+            console.log('URL status:', status);
+            console.log('URL params:', window.location.search);
+            console.log('URL hash:', window.location.hash);
+            console.log('Referrer:', document.referrer);
+            
+            // Check sessionStorage for PayMongo redirect flag
+            const paymongoRedirect = sessionStorage.getItem('paymongo_redirect') === 'true';
+            const paymongoRedirectTime = parseInt(sessionStorage.getItem('paymongo_redirect_time') || '0');
+            const timeSinceRedirect = Date.now() - paymongoRedirectTime;
+            
+            console.log('PayMongo redirect flag:', paymongoRedirect);
+            console.log('Time since redirect:', timeSinceRedirect, 'ms');
+            
+            // Handle success case FIRST - before checking referrer
+                if (status === 'success') {
+                // Clear order breakdown values immediately (keep container visible)
+                clearOrderBreakdown();
+                
+                // Clear PayMongo redirect flag
+                sessionStorage.removeItem('paymongo_redirect');
+                sessionStorage.removeItem('paymongo_redirect_time');
+                
+                await UserState.loadState();
+                const pendingCheckoutItems = UserState.getPendingCheckoutItems() || [];
+                const pendingOrderData = UserState.getPendingOrderData();
+                const paymongoSourceId = UserState.getPaymongoSourceId();
+                
+                // Create order now that payment is successful
+                if (pendingOrderData) {
+                    try {
+                        const orderData = JSON.parse(pendingOrderData);
+                        const orderResponse = await fetch('api/create_order.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(orderData)
+                        });
+                        
+                        const orderResult = await orderResponse.json();
+                        
+                        if (orderResult.success && paymongoSourceId) {
+                            // Link order with PayMongo source ID
+                            await fetch('api/create_payment.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    link_order: true,
+                                    order_id: orderResult.order_id,
+                                    source_id: paymongoSourceId
+                                })
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error creating order after payment:', error);
+                    }
+                }
+                    
+                    // Remove ordered items from cart
+                    if (pendingCheckoutItems.length > 0) {
+                        removeOrderedItemsFromCart(pendingCheckoutItems);
+                    }
+                    
+                    // Clear checkout items and pending data
+                UserState.setCheckoutItems([]);
+                UserState.setPendingOrderId(null);
+                UserState.setPendingCheckoutItems(null);
+                UserState.setPaymentRedirectTime(null);
+                UserState.setPaymongoSourceId(null);
+                UserState.setPendingOrderData(null);
+                
+                // Clear orders cache to force fresh fetch
+                window.__ordersCache = null;
+                
+                // Update order count badge (with delay to ensure order is saved in database)
+                if (typeof updateOrderCount === 'function') {
+                    setTimeout(() => {
+                        updateOrderCount();
+                    }, 1000);
+                }
+                    
+                    // Show success modal
+                    showPaymentSuccessModal();
+                return;
+            }
+            
+            // Check for failed payment in URL params (PayMongo redirects with ?status=failed)
+            if (status === 'failed' || urlHash.includes('failed')) {
+                // Clear PayMongo redirect flag
+                sessionStorage.removeItem('paymongo_redirect');
+                sessionStorage.removeItem('paymongo_redirect_time');
+                showPaymentErrorModal();
+                    // Clean URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                return;
+            }
+            
+            // Load state to check for pending payment
+            await UserState.loadState();
+            const pendingOrderId = UserState.getPendingOrderId();
+            const paymentRedirectTime = UserState.getPaymentRedirectTime();
+            const referrer = document.referrer;
+            
+            // Check if coming from PayMongo (user clicked fail/back)
+            // Only show modal if there's clear evidence of PayMongo redirect
+            const isFromPayMongo = paymongoRedirect || (referrer && (
+                referrer.includes('paymongo.com') || 
+                referrer.includes('secure-authentication') ||
+                referrer.includes('paymongo')
+            ));
+            
+            console.log('isFromPayMongo:', isFromPayMongo);
+            console.log('pendingOrderId:', pendingOrderId);
+            console.log('timeSinceRedirect:', timeSinceRedirect, 'ms');
+            
+            // Show error modal ONLY if:
+            // 1. SessionStorage flag exists (user went to PayMongo) AND no success status
+            // 2. OR referrer indicates PayMongo AND no success status
+            // Do NOT show just because there's a pendingOrderId - it might be stale
+            const shouldShowModal = (paymongoRedirect && !status) || 
+                                   (isFromPayMongo && !status);
+            
+            console.log('shouldShowModal:', shouldShowModal);
+            
+            if (shouldShowModal) {
+                console.log('Showing payment error modal');
+                // Clear PayMongo redirect flag
+                sessionStorage.removeItem('paymongo_redirect');
+                sessionStorage.removeItem('paymongo_redirect_time');
+                
+                // User came from PayMongo but no success status = payment failed/cancelled
+                        showPaymentErrorModal();
+                        return;
+            } else {
+                console.log('Conditions not met for showing modal');
+                
+                // Clear stale pending order state if user is just on payment page normally
+                // (not returning from PayMongo)
+                if (pendingOrderId && !isFromPayMongo && !paymongoRedirect) {
+                    console.log('Clearing stale pending order state');
+                    UserState.setPendingOrderId(null);
+                    UserState.setPendingCheckoutItems(null);
+                    UserState.setPaymentRedirectTime(null);
+                }
+            }
+        }
+        
+        // Show payment error modal
+        function showPaymentErrorModal() {
+            console.log('showPaymentErrorModal called');
+            
+            // Prevent multiple modals
+            if (paymentErrorModalShown) {
+                console.log('Modal already shown, returning');
+                return;
+            }
+            
+            // Reset "Processing..." button state
+            const placeOrderBtn = document.getElementById('placeOrderBtn');
+            if (placeOrderBtn) {
+                placeOrderBtn.disabled = false;
+                placeOrderBtn.innerHTML = '<i class="fas fa-check-circle"></i> Place Order';
+            }
+            
+            // Clear state IMMEDIATELY (synchronously) before showing modal
+            UserState.setPendingOrderId(null);
+            UserState.setPendingCheckoutItems(null);
+            UserState.setPaymentRedirectTime(null);
+            UserState.setPaymongoCheckoutUrl(null);
+            UserState.setPaymentPageUrl(null);
+            
+            // Stop any monitoring intervals (if they exist)
+            if (typeof paymentMonitoringInterval !== 'undefined' && paymentMonitoringInterval) {
+                clearInterval(paymentMonitoringInterval);
+                paymentMonitoringInterval = null;
+            }
+            
+            // Set flag to prevent multiple modals
+            paymentErrorModalShown = true;
+            
+            // Remove any existing modal first
+            const existingModal = document.getElementById('paymentErrorModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Create modal
+            const errorModal = document.createElement('div');
+            errorModal.id = 'paymentErrorModal';
+            errorModal.className = 'payment-error-modal';
+            errorModal.innerHTML = `
+                <div class="payment-error-overlay"></div>
+                <div class="payment-error-container">
+                    <button class="payment-error-close" onclick="closePaymentErrorModal()" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="payment-error-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h3>Payment Unsuccessful</h3>
+                    <p>Please try again or choose another payment method.</p>
+                    <button class="payment-error-btn" onclick="closePaymentErrorModal()">
+                        <i class="fas fa-check me-2"></i>OK, I Understand
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(errorModal);
+            
+            // Show modal with animation (centered)
+            console.log('Modal created, showing in 100ms');
+            setTimeout(() => {
+                console.log('Setting modal display to flex');
+                errorModal.style.display = 'flex';
+                errorModal.style.alignItems = 'center';
+                errorModal.style.justifyContent = 'center';
+                setTimeout(() => {
+                    console.log('Adding show class to modal');
+                    errorModal.classList.add('show');
+                    console.log('Modal should now be visible');
+                }, 10);
+            }, 100);
+            
+            // Auto-close after 5 seconds (give user time to read)
+            const autoCloseTimer = setTimeout(() => {
+                if (errorModal && errorModal.classList.contains('show')) {
+                    closePaymentErrorModal();
+                }
+            }, 5000);
+            
+            // Store timer reference for cleanup
+            errorModal._autoCloseTimer = autoCloseTimer;
+            
+            // Close on overlay click
+            const overlay = errorModal.querySelector('.payment-error-overlay');
+            if (overlay) {
+                overlay.addEventListener('click', closePaymentErrorModal);
+            }
+        }
+        
+        // Close payment error modal
+        function closePaymentErrorModal() {
+            const errorModal = document.getElementById('paymentErrorModal');
+            if (errorModal) {
+                // Clear auto-close timer if it exists
+                if (errorModal._autoCloseTimer) {
+                    clearTimeout(errorModal._autoCloseTimer);
+                }
+                
+                // Clear state
+                UserState.setPendingOrderId(null);
+                UserState.setPendingCheckoutItems(null);
+                UserState.setPaymentRedirectTime(null);
+                UserState.setPaymongoCheckoutUrl(null);
+                UserState.setPaymentPageUrl(null);
+                
+                // Clear PayMongo redirect flag
+                sessionStorage.removeItem('paymongo_redirect');
+                sessionStorage.removeItem('paymongo_redirect_time');
+                
+                errorModal.classList.remove('show');
+                setTimeout(() => {
+                    if (errorModal.parentNode) {
+                        errorModal.remove();
+                    }
+                    // Reset flag
+                    paymentErrorModalShown = false;
+                    // Don't refresh the page - just close the modal
+                }, 300);
+            }
+        }
+        
+        // Make function globally available
+        window.closePaymentErrorModal = closePaymentErrorModal;
+        
+        // Get scrollbar width
+        function getScrollbarWidth() {
+            const outer = document.createElement('div');
+            outer.style.visibility = 'hidden';
+            outer.style.overflow = 'scroll';
+            outer.style.msOverflowStyle = 'scrollbar';
+            outer.style.width = '100px';
+            outer.style.position = 'absolute';
+            outer.style.top = '-9999px';
+            document.body.appendChild(outer);
+            const inner = document.createElement('div');
+            inner.style.width = '100%';
+            outer.appendChild(inner);
+            const scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
+            outer.parentNode.removeChild(outer);
+            return scrollbarWidth;
+        }
+        
+        // Prevent body scroll while keeping scrollbar space (no layout shift)
+        function lockBodyScroll() {
+            // Calculate scrollbar width and add padding BEFORE hiding overflow
+            const scrollbarWidth = getScrollbarWidth();
+            const scrollY = window.scrollY;
+            
+            // Add padding to preserve scrollbar space
+            document.body.style.paddingRight = scrollbarWidth + 'px';
+            // Hide overflow (scrollbar disappears but space remains)
+            document.body.style.overflow = 'hidden';
+            
+            // Store values for restoration
+            document.body.dataset.scrollY = scrollY;
+            document.body.dataset.scrollbarWidth = scrollbarWidth;
+        }
+        
+        // Restore body scroll
+        function unlockBodyScroll() {
+            const scrollY = document.body.dataset.scrollY || 0;
+            
+            // Remove padding and restore overflow
+            document.body.style.paddingRight = '';
+            document.body.style.overflow = '';
+            
+            // Clean up stored values
+            delete document.body.dataset.scrollY;
+            delete document.body.dataset.scrollbarWidth;
+            
+            // Restore scroll position
+            window.scrollTo(0, parseInt(scrollY) || 0);
+        }
+        
+        // Open Settings Modal
+        function openSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            if (!modal) return;
+            
+            // Lock body scroll but keep scrollbar visible
+            lockBodyScroll();
+            
+            modal.style.display = 'flex';
+        }
+        
+        // Close Settings Modal
+        function closeSettingsModal(event) {
+            if (event && event.target.id !== 'settingsModal' && !event.target.closest('.address-modal')) return;
+            const modal = document.getElementById('settingsModal');
+            if (modal) {
+                modal.style.display = 'none';
+                // Unlock body scroll
+                unlockBodyScroll();
+            }
+        }
+        
+        // Show Logout Confirmation Modal
+        function showLogoutConfirmModal() {
+            const modal = document.getElementById('logoutConfirmModal');
+            const confirmBtn = document.getElementById('logoutConfirmBtn');
+            const cancelBtn = document.getElementById('logoutCancelBtn');
+            
+            if (!modal) return;
+            
+            // Lock body scroll but keep scrollbar visible
+            lockBodyScroll();
+            
+            modal.style.display = 'flex';
+            
+            // Remove existing event listeners
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+            
+            // Add new event listeners
+            newConfirmBtn.addEventListener('click', function confirmHandler() {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+                performLogout();
+                newConfirmBtn.removeEventListener('click', confirmHandler);
+            });
+            
+            newCancelBtn.addEventListener('click', function cancelHandler() {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+                newCancelBtn.removeEventListener('click', cancelHandler);
+            });
+        }
+        
+        // Perform Logout
+        function performLogout() {
+            fetch('api/logout.php', {
+                method: 'POST'
+            })
+            .then(() => {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            })
+            .catch(() => {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            });
+        }
+        
+        // Logout function
+        function logout() {
+            showLogoutConfirmModal();
+        }
+        
+        // Make functions globally available
+        window.openSettingsModal = openSettingsModal;
+        window.closeSettingsModal = closeSettingsModal;
+        window.logout = logout;
+        window.showLogoutConfirmModal = showLogoutConfirmModal;
+        window.performLogout = performLogout;
+        
+        // Calculate subtotal
+        function calculateSubtotal(items) {
+            return items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        }
+        
+        // Remove ordered items from cart
+        function removeOrderedItemsFromCart(orderedItems) {
+            try {
+                const cart = UserState.getCart();
+                
+                // Create a map of ordered items by ID for quick lookup
+                const orderedMap = new Map();
+                orderedItems.forEach(item => {
+                    const key = item.id;
+                    if (orderedMap.has(key)) {
+                        orderedMap.set(key, orderedMap.get(key) + item.quantity);
+                    } else {
+                        orderedMap.set(key, item.quantity);
+                    }
+                });
+                
+                // Remove items from cart
+                const updatedCart = cart.filter(cartItem => {
+                    const orderedQty = orderedMap.get(cartItem.id) || 0;
+                    
+                    if (orderedQty > 0) {
+                        // Reduce quantity or remove item
+                        if (cartItem.quantity > orderedQty) {
+                            cartItem.quantity -= orderedQty;
+                            return true; // Keep item with reduced quantity
+                        } else {
+                            return false; // Remove item completely
+                        }
+                    }
+                    
+                    return true; // Keep item if not ordered
+                });
+                
+                // Update cart in server
+                UserState.setCart(updatedCart);
+                
+                // Update cart count in navbar if available
+                if (typeof updateCartCount === 'function') {
+                    updateCartCount();
+                }
+                
+                console.log('Removed ordered items from cart');
+            } catch (error) {
+                console.error('Error removing items from cart:', error);
+            }
+        }
+        
+        // Clear order breakdown values (keep container visible)
+        function clearOrderBreakdown() {
+            // Set all breakdown values to 0 or empty
+            const subtotalEl = document.getElementById('orderSubtotal');
+            const deliveryFeeEl = document.getElementById('orderDeliveryFee');
+            const totalEl = document.getElementById('orderTotal');
+            
+            if (subtotalEl) {
+                subtotalEl.textContent = '₱0.00';
+            }
+            if (deliveryFeeEl) {
+                deliveryFeeEl.textContent = '₱--';
+            }
+            if (totalEl) {
+                totalEl.textContent = '₱0.00';
+            }
+            
+            // Disable place order button
+            const placeOrderBtn = document.getElementById('placeOrderBtn');
+            if (placeOrderBtn) {
+                placeOrderBtn.disabled = true;
+            }
+        }
+        
+        // Hide payment content (order summary, payment methods, etc.)
+        function hidePaymentContent() {
+            // Hide main content
+            const mainContent = document.querySelector('.main-content');
+            if (mainContent) {
+                mainContent.style.display = 'none';
+            }
+            
+            // Hide footer
+            const footer = document.querySelector('.footer');
+            if (footer) {
+                footer.style.display = 'none';
+            }
+        }
+        
+        // Show payment success modal
+        function showPaymentSuccessModal() {
+            // Lock body scroll
+            lockBodyScroll();
+            
+            // Clear order breakdown (keep container visible)
+            clearOrderBreakdown();
+            
+            // Hide main content and footer (but keep payment container visible)
+            hidePaymentContent();
+            
+            // Show success modal
+            const successModal = document.getElementById('paymentSuccessModal');
+            if (successModal) {
+                successModal.style.display = 'flex';
+                setTimeout(() => {
+                    successModal.classList.add('show');
+                }, 10);
+                
+                // Redirect after 3 seconds with flag to show latest order
+                setTimeout(() => {
+                    // Set flag in sessionStorage as backup
+                    sessionStorage.setItem('from_payment', 'true');
+                    // Redirect with URL parameter
+                    window.location.href = 'orders.html?from_payment=true';
+                }, 3000);
+            }
+        }
+        
+        // Show notification (for errors)
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'}`;
+            notification.style.cssText = 'position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);';
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+                ${message}
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // Initialize dropdown after navbar loads
+        function initializeDropdown() {
+            // Wait for navbar to load
+            const checkNavbar = setInterval(() => {
+                const dropdownToggle = document.querySelector('#userDropdown');
+                if (dropdownToggle && typeof bootstrap !== 'undefined') {
+                    try {
+                        // Initialize dropdown if not already initialized
+                        if (!dropdownToggle.getAttribute('data-bs-toggle')) {
+                            dropdownToggle.setAttribute('data-bs-toggle', 'dropdown');
+                        }
+                        
+                        // Create Bootstrap dropdown instance
+                        const dropdown = new bootstrap.Dropdown(dropdownToggle);
+                        clearInterval(checkNavbar);
+                    } catch (error) {
+                        console.log('Dropdown initialization:', error);
+                    }
+                }
+            }, 100);
+            
+            // Stop checking after 5 seconds
+            setTimeout(() => clearInterval(checkNavbar), 5000);
+        }
+        
+        // Initialize on page load - SIMPLIFIED: Just check once
+                            document.addEventListener('DOMContentLoaded', function() {
+            // Reset modal flag on fresh page load
+            paymentErrorModalShown = false;
+            
+            // Check for success status immediately - clear order summary before it renders
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+            
+            if (status === 'success') {
+                // Clear order summary immediately before any loading happens
+                clearOrderBreakdown();
+                // Then handle the redirect (which will show success modal)
+                handlePaymentRedirect();
+                return; // Don't load order summary or predict delivery time
+            }
+            
+            predictDeliveryTime();
+            
+            // Check for payment redirect once on page load (with delay to ensure state is loaded)
+            setTimeout(() => {
+                    handlePaymentRedirect();
+            }, 500);
+            
+            // Initialize dropdown after navbar loads
+            initializeDropdown();
+            
+            // Also try after a delay to ensure navbar is fully loaded
+            setTimeout(() => {
+                initializeDropdown();
+            }, 1000);
+        });
+        
+        // Also check for payment failure on hash change
+        window.addEventListener('hashchange', function() {
+            if (window.location.hash.includes('failed') || window.location.search.includes('status=failed')) {
+                handlePaymentRedirect();
+            }
+        });
+        
+        // Check on page load if URL contains failed status
+        if (window.location.hash.includes('failed') || window.location.search.includes('status=failed')) {
+            setTimeout(() => {
+                handlePaymentRedirect();
+            }, 500);
+        }
+        
+        // Also check when page becomes visible (in case of redirect from PayMongo)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && !paymentErrorModalShown) {
+                setTimeout(() => {
+                    handlePaymentRedirect();
+                }, 500);
+            }
+        });
+        
+        // Additional check after page fully loads (for cases where referrer/state takes time)
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                if (!paymentErrorModalShown) {
+                    handlePaymentRedirect();
+                }
+            }, 1000);
+        });
+        
+        // Listen for navbar load event if available
+        window.addEventListener('navbarLoaded', function() {
+            initializeDropdown();
+        });
+    </script>
+    
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal" onclick="closeSettingsModal(event)" style="display: none;">
+        <div class="address-modal" onclick="event.stopPropagation()" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Settings</h2>
+            </div>
+            <div class="modal-body">
+                <p style="color: #556070; text-align: center; padding: 2rem 0;">Settings page coming soon...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeSettingsModal(event)">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Payment Success Modal -->
+    <div id="paymentSuccessModal" class="payment-success-modal">
+        <div class="payment-success-container">
+            <div class="payment-success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3>Payment Successful!</h3>
+            <p>Your order has been placed.</p>
+            <div class="payment-success-loading">
+                <div class="payment-success-spinner"></div>
+                <span>Redirecting to your orders...</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutConfirmModal" class="logout-confirm-modal" style="display: none;">
+        <div class="logout-confirm-content">
+            <div class="logout-confirm-icon-wrapper">
+                <div class="logout-confirm-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+            </div>
+            <div class="logout-confirm-body">
+                <h3>Confirm Logout</h3>
+                <p id="logoutConfirmMessage">Are you sure you want to logout?</p>
+            </div>
+            <div class="logout-confirm-footer">
+                <button type="button" class="btn-logout-cancel" id="logoutCancelBtn">Cancel</button>
+                <button type="button" class="btn-logout-confirm" id="logoutConfirmBtn">Logout</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

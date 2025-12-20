@@ -1,0 +1,3123 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaSphere - Clean Water, Delivered Fast</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Inter, system-ui, Segoe UI, sans-serif !important;
+            overflow-x: hidden;
+            scrollbar-gutter: stable;
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            background:rgba(240, 248, 255, 0.8) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        body.dark .navbar {
+            background: rgba(30, 41, 59, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3) !important;
+            border-bottom: 1px solid var(--border-dark);
+        }
+        
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        body.dark .navbar.scrolled {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5) !important;
+        }
+        
+        .navbar-brand {
+            font-weight: 400;
+            font-size: 1.5rem;
+            color: #1a4a6b !important;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark .navbar-brand {
+            color: var(--accent-blue-light) !important;
+        }
+        
+        .navbar-brand:hover {
+            color: #256892 !important;
+            transform: scale(1.05);
+        }
+        
+        body.dark .navbar-brand:hover {
+            color: var(--accent-blue) !important;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            font-size: 1 rem;
+            color: #1a4a6b !important;
+            padding: 0 16px !important;
+            margin: 0 !important;
+            height: 70px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            line-height: 70px !important;
+            transition: all 0.3s ease;
+            position: relative;
+            border-radius: 10px;
+        }
+        
+        body.dark .nav-link {
+            color: var(--text-dark) !important;
+        }
+        
+        body.dark .nav-link:hover,
+        body.dark .nav-link.active {
+            color: var(--accent-blue-light) !important;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: 0;
+            left: 50%;
+            background: linear-gradient(90deg, #256892, #1a4a6b);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 80%;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            color: #1a4a6b !important;
+            font-weight: 900;
+        }
+        
+        /* Dark Mode Toggle Button in Navbar */
+        #themeToggle {
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+        }
+        
+        #themeToggle:hover {
+            transform: scale(1.1);
+        }
+        
+        body.dark #themeToggle {
+            color: var(--text-dark) !important;
+        }
+        
+        body.dark #themeToggle:hover {
+            color: var(--accent-blue-light) !important;
+        }
+        
+        /* Navigation Icons Styles */
+        .nav-link i {
+            font-size: 20.8px;
+            display: block;
+        }
+        
+        /* Cart icon specific styling for badge positioning */
+        #navCart {
+            position: relative;
+        }
+        
+        #navCart i {
+            position: relative;
+        }
+        
+        /* Blue hover effect for icon nav links */
+        .nav-link[title]:hover {
+            background: rgba(37, 104, 146, 0.1) !important;
+            color: #256892 !important;
+            border-radius: 10px;
+        }
+        
+        .nav-link[title].active {
+            background: rgba(37, 104, 146, 0.1) !important;
+            color: #256892 !important;
+            border-radius: 10px;
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
+            min-width: 20px;
+            min-height: 20px;
+            box-sizing: border-box;
+            z-index: 1001;
+            pointer-events: none;
+        }
+        
+        /* Ensure badge is positioned relative to the cart icon, not the nav-link hover area */
+        #navCart .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+        
+        /* Orders icon specific styling for badge positioning */
+        #navOrders {
+            position: relative;
+        }
+        
+        #navOrders i {
+            position: relative;
+        }
+        
+        .orders-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: none; /* Hidden by default, shown when count > 0 */
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(37, 104, 146, 0.4);
+            min-width: 20px;
+            min-height: 20px;
+            box-sizing: border-box;
+            z-index: 1001;
+            pointer-events: none;
+        }
+        
+        /* Ensure badge is positioned relative to the orders icon */
+        #navOrders .orders-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+        
+        /* Notifications */
+        #navNotifications {
+            position: relative;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 800;
+            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.35);
+            min-width: 18px;
+            min-height: 18px;
+            box-sizing: border-box;
+            z-index: 1001;
+            pointer-events: none;
+        }
+        
+        .notification-menu {
+            width: 320px;
+            padding: 0;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        
+        .notification-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        .notification-header i {
+            color: #256892;
+        }
+        
+        .notification-header .btn-clear {
+            border: none;
+            background: rgba(37, 104, 146, 0.08);
+            color: #256892;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-header .btn-clear:hover {
+            background: rgba(37, 104, 146, 0.15);
+        }
+        
+        .notification-item {
+            padding: 0.75rem 1rem;
+            display: grid;
+            grid-template-columns: 44px 1fr;
+            gap: 0.75rem;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-item:hover {
+            background: rgba(37, 104, 146, 0.06);
+        }
+        
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+        
+        .notification-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+        
+        .notification-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #0f172a;
+            margin: 0;
+        }
+        
+        .notification-desc {
+            font-size: 0.9rem;
+            color: #475569;
+            margin: 2px 0 0 0;
+        }
+        
+        .notification-meta {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+        
+        .notification-empty {
+            padding: 1.25rem;
+            text-align: center;
+            color: #94a3b8;
+        }
+        
+        .notification-empty i {
+            font-size: 1.4rem;
+            margin-bottom: 0.25rem;
+            color: #cbd5e1;
+        }
+        
+        .notification-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .notification-pagination button {
+            border: none;
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(37, 104, 146, 0.25);
+            transition: all 0.2s ease;
+        }
+        
+        .notification-pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        .notification-pagination button:hover:not(:disabled) {
+            transform: translateY(-1px);
+        }
+        
+        .notification-pagination span {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 0.9rem;
+        }
+        
+        .navbar-nav {
+            gap: 0.5rem;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background-image: url('home_image.png');
+            background-position: center center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 120px 0 100px;
+            overflow: hidden;
+        }
+
+        /* Sophisticated Gradient Overlay: Clearer on the right, dark enough on the left */
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg, 
+                rgba(37, 104, 146, 0.95) 0%, 
+                rgba(37, 104, 146, 0.7) 40%, 
+                rgba(37, 104, 146, 0.2) 100%
+            );
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            text-align: left;
+        }
+
+        /* --- Typography --- */
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem); 
+            font-weight: 800;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-title-line2 {
+            display: block;
+            color: #e0f2ff; 
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.25rem); /* Improved readability size */
+            font-weight: 400;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 580px; /* Golden-ratio line length for eye comfort */
+        }
+
+        /* --- Buttons --- */
+        .btn-hero {
+            padding: 16px 36px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            border: none;
+            background: #ffffff;
+            color: #256892;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-hero:hover {
+            transform: translateY(-5px);
+            background: #212936;
+            color: #4299E1 !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-hero-outline {
+            padding: 16px 36px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px); /* Modern "Glass" effect */
+            color: white;
+            transition: all 0.4s ease;
+        }
+
+        .btn-hero-outline:hover {
+            background: white;
+            color: #256892;
+            transform: translateY(-5px);
+            border-color: white;
+        }
+
+        /* --- Animations & Visuals --- */
+        .hero-image {
+            animation: float 6s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 20px 50px rgba(0,0,0,0.3));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-25px); }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 991px) {
+            .hero-section {
+                text-align: center;
+                padding-top: 150px;
+            }
+            .hero-content {
+                text-align: center;
+            }
+            .hero-subtitle {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .d-flex {
+                justify-content: center;
+            }
+            .hero-section::before {
+                background: rgba(37, 104, 146, 0.8); /* Stronger overlay on mobile */
+            }
+        }
+        
+        /* Features Section */
+        .features-section {
+            padding: 100px 0;
+            background: #f8fafc;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a4a6b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #4a5568;
+            text-align: center;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            height: 100%;
+            transition: all 0.4s ease;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #256892, #1e4f73);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+            transition: all 0.4s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a4a6b;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-description {
+            color: #4a5568;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #1e4f73 0%, #256892 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-heading {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtext {
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Step Card - Balanced Glassmorphism */
+        .step-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Circular Number Step */
+        .step-number {
+            width: 70px;
+            height: 70px;
+            background: white;
+            color: #256892;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .step-title {
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .step-description {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* Subtle Animated Wave Background Decor */
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('https://www.transparenttextures.com/patterns/cubes.png');
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        /* CTA Section */
+        
+           .cta-section {
+        padding: 120px 0;
+        background: linear-gradient(
+            rgba(22, 64, 92, 0.85), 
+            rgba(30, 79, 115, 0.85)
+        ), 
+        url('https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&q=80&w=2000');
+        
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        text-align: center;
+        position: relative;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cta-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); 
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 750px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        /* The "Get Started" Button */
+        .btn-cta-glass {
+            background: white;
+            color: #256892 !important;
+            font-weight: 700;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 2px solid white;
+        }
+
+        .btn-cta-glass:hover {
+            background: #256892;
+            color: white !important;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Footer */
+        .footer {
+            background: #0f2a3d; /* Deeper, more modern navy */
+            color: white;
+            padding: 80px 0 40px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .footer-logo {
+            height: 40px;
+            margin-right: 12px;
+        }
+
+        .footer-logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .footer-desc {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            max-width: 320px;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .footer-links-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #3b7fb8;
+            transform: translateX(8px);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .footer-icon {
+            width: 20px;
+            color: #3b7fb8;
+            margin-right: 12px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-icons a {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: #3b7fb8;
+            transform: translateY(-5px);
+        }
+
+        .footer-bottom {
+            margin-top: 60px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+        }
+
+        .footer-legal a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .footer-legal a:hover {
+            color: white;
+        }
+        
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Responsive */
+        /* Override Bootstrap success alert colors to blue */
+        .alert-success {
+            background-color: #dbeafe !important;
+            border-color: #256892 !important;
+            color: #1a4a6b !important;
+        }
+        
+        .alert-success i {
+            color: #256892 !important;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.75rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.4rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .cta-title {
+                font-size: 2rem;
+            }
+        }
+        
+        /* User Dropdown Styles */
+        .nav-item.dropdown .nav-link {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem;
+        }
+        
+        .nav-item.dropdown .nav-link i.fa-user-circle {
+            font-size: 1.3rem;
+            color: #256892;
+        }
+        
+        .nav-item.dropdown .nav-link #usernameDisplay {
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+        
+        .nav-item.dropdown .nav-link:hover #usernameDisplay {
+            color: #256892;
+        }
+        
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+        }
+        
+        .dropdown-item {
+            padding: 0.75rem 1.5rem;
+            color: #4a5568;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(37, 104, 146, 0.1);
+            color: #256892;
+        }
+        
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Logout Confirmation Modal */
+        .logout-confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .logout-confirm-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            max-width: 420px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+            animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: center;
+        }
+        
+        .logout-confirm-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #256892 0%, #1e4f73 50%, #1a4a6b 100%);
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        .logout-confirm-icon-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 2rem 1rem;
+            position: relative;
+        }
+        
+        .logout-confirm-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(37, 104, 146, 0.3);
+            position: relative;
+            animation: iconFloat 2s ease-in-out infinite;
+        }
+        
+        .logout-confirm-icon::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            opacity: 0.2;
+            animation: iconPulseBlue 2s ease-in-out infinite;
+        }
+        
+        .logout-confirm-icon i {
+            font-size: 2.5rem;
+            color: #256892;
+            position: relative;
+            z-index: 1;
+            animation: iconBounce 0.6s ease;
+        }
+        
+        .logout-confirm-body {
+            padding: 1rem 2rem 1.5rem;
+            text-align: center;
+        }
+        
+        .logout-confirm-body h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .logout-confirm-body p {
+            font-size: 1rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .logout-confirm-footer {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem 2rem 2rem;
+            justify-content: center;
+        }
+        
+        .btn-logout-cancel,
+        .btn-logout-confirm {
+            padding: 12px 32px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            outline: none;
+            min-width: 120px;
+        }
+        
+        .btn-logout-cancel {
+            background: #f1f5f9;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .btn-logout-cancel:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+        }
+        
+        .btn-logout-confirm {
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(37, 104, 146, 0.4);
+        }
+        
+        .btn-logout-confirm:hover {
+            background: linear-gradient(135deg, #1e4f73 0%, #1a4a6b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 104, 146, 0.5);
+        }
+        
+        .btn-logout-confirm:active {
+            transform: translateY(0);
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes modalScaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+        
+        @keyframes iconPulseBlue {
+            0%, 100% {
+                opacity: 0.2;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes iconBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        /* Profile Modal Styles - Same as cart.html */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeInModal 0.3s ease;
+        }
+        
+        @keyframes fadeInModal {
+            from {
+                opacity: 0;
+                backdrop-filter: blur(0px);
+            }
+            to {
+                opacity: 1;
+                backdrop-filter: blur(12px);
+            }
+        }
+        
+        .address-modal {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 92vh;
+            overflow: hidden;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            animation: addressModalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        @keyframes addressModalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(30px) rotateX(10deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0) rotateX(0deg);
+            }
+        }
+        
+        .address-modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #256892, #1e4f73, #3b7fb8, #256892, #256892);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease infinite;
+            z-index: 1;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 50%, #3b7fb8 100%);
+            padding: 2rem 2rem 1.5rem;
+            border-bottom: none;
+            border-radius: 28px 28px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: white;
+            margin: 0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .modal-header h2::before {
+            content: '📍';
+            font-size: 1.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+        
+        .modal-body {
+            background: transparent;
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 2rem 1.5rem;
+            max-height: calc(92vh - 250px);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .form-group {
+            margin-bottom: 0.75rem;
+            position: relative;
+        }
+        
+        .form-group.error input,
+        .form-group.error select {
+            border-color: #fb7185;
+        }
+        
+        .form-group.error input:focus,
+        .form-group.error select:focus {
+            box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1);
+        }
+        
+        .form-group input.success,
+        .form-group select.success {
+            border-color: #28a745;
+            background: #f0fdf4;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+        
+        .form-group .error-message {
+            display: none;
+            margin-top: 0.4rem;
+            padding: 0.5rem 0.75rem;
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            color: #991b1b;
+            font-size: 0.85rem;
+            font-weight: 500;
+            position: relative;
+            animation: errorSlideIn 0.3s ease;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+        }
+        
+        @keyframes errorSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-group.error .error-message {
+            display: block;
+        }
+        
+        .form-group .error-message::before {
+            content: '⚠️';
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 0.9rem;
+            letter-spacing: 0.01em;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #256892;
+            box-shadow: 0 0 0 4px rgba(37, 104, 146, 0.12), 0 4px 12px rgba(37, 104, 146, 0.15);
+            background: linear-gradient(to bottom, #ffffff, #f8faff);
+            transform: translateY(-1px);
+        }
+        
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+        
+        .profile-section {
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-section:last-of-type {
+            border-bottom: none;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            border-top: 2px solid #f1f5f9;
+            background: linear-gradient(to bottom, #ffffff, #f8fafc);
+            border-radius: 0 0 28px 28px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .btn-cancel {
+            padding: 12px 28px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        
+        .btn-cancel:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-submit {
+            padding: 12px 28px;
+            border: none;
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(37, 104, 146, 0.35);
+        }
+        
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #1e4f73, #1a4a6b);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(37, 104, 146, 0.45);
+        }
+        
+        #updateProfileBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #94a3b8 !important;
+        }
+        
+        #updateProfileBtn:disabled:hover {
+            background: #94a3b8 !important;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html" style="display: flex; align-items: center;">
+                <img src="systemlogo.png" alt="AquaSphere Logo" style="height: 45px; margin-right: 10px;">
+                AquaSphere
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto" id="authNav">
+                    <!-- Navigation icons (shown when logged in) -->
+                    <li class="nav-item" id="navHomeItem" style="display: none;">
+                        <a class="nav-link" href="dashboard.html" id="navHome" title="Home">
+                            <i class="fas fa-home"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="navCartItem" style="display: none;">
+                        <a class="nav-link" href="cart.html" id="navCart" title="Shopping Cart" style="position: relative;">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-badge" id="cartCount">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="navOrdersItem" style="display: none;">
+                        <a class="nav-link" href="orders.html" id="navOrders" title="My Orders" style="position: relative;">
+                            <i class="fas fa-box"></i>
+                            <span class="orders-badge" id="ordersCount">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown" id="navNotificationsWrapper" style="display: none;">
+                        <a class="nav-link" href="#" id="navNotifications" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" title="Notifications" style="position: relative;">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notificationCount">0</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="navNotifications">
+                            <li class="notification-header">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fas fa-bell"></i>
+                                    <span>Notifications</span>
+                                </div>
+                                <button class="btn-clear" id="notifClearBtn" type="button" onclick="clearNotificationBadge()">Clear</button>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li id="notificationList">
+                                <div class="notification-empty">
+                                    <i class="fas fa-inbox"></i>
+                                    <p>No notifications yet.</p>
+                                </div>
+                            </li>
+                            <li class="notification-pagination">
+                                <button type="button" id="notifPrevBtn" onclick="paginateNotifications(-1)">Prev</button>
+                                <span id="notifPageInfo">Page 1 of 1</span>
+                                <button type="button" id="notifNextBtn" onclick="paginateNotifications(1)">Next</button>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Dark Mode Toggle (shown when not logged in) -->
+                    <li class="nav-item" id="themeToggleNavItem">
+                        <button id="themeToggle" class="nav-link" title="Toggle Dark Mode" style="border: none; background: transparent; padding: 0 16px; cursor: pointer;">
+                            <span id="themeIcon">🌙</span>
+                        </button>
+                    </li>
+                    <!-- Login/Register buttons (shown when not logged in) -->
+                    <li class="nav-item" id="loginNavItem">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item" id="registerNavItem">
+                        <a class="nav-link" href="registration.html">Register</a>
+                    </li>
+                    <!-- User dropdown (shown when logged in) -->
+                    <li class="nav-item dropdown user-dropdown" id="userDropdownNavItem" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="usernameDisplay">User</span>
+                            <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="recent_orders.html"><i class="fas fa-receipt me-2"></i>Recent Orders</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="openSettingsModal(); return false;"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <button id="themeToggle" class="dropdown-item" title="Toggle Dark Mode" style="border: none; background: transparent; width: 100%; text-align: left; padding: 0.5rem 1rem;">
+                                    <span id="themeIcon">🌙</span> <span style="margin-left: 0.5rem;">Dark Mode</span>
+                                </button>
+                            </li>
+                            <li><a class="dropdown-item" href="#" onclick="logout(); return false;"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+  <section id="home" class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 hero-content" data-aos="fade-right" data-aos-duration="1000">
+               <h1 class="hero-title">
+                    Stay Hydrated<br>
+                    <span class="hero-title-line2">Order Delivered</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Order fresh, high-quality water with real-time tracking and easy payments. 
+                    Fast, reliable service is just a click away—stay hydrated with ease.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="registration.html" class="btn btn-hero">
+                        <i class="fas fa-shopping-cart me-2"></i>Order Now
+                    </a>
+                    <a href="#features" class="btn btn-hero-outline">
+                        <i class="fas fa-arrow-down me-2"></i>Explore Features
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Features Section -->
+  <section id="features" class="features-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title" data-aos="fade-up">What You Can Do Today</h2>
+            <p class="section-subtitle mx-auto" data-aos="fade-up" data-aos-delay="100" style="max-width: 600px;">
+                Explore the current features of the AquaSphere ecosystem right now.
+            </p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="0">
+                <div class="feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-faucet-drip"></i>
+                    </div>
+                    <h3 class="feature-title">Streamlined Ordering</h3>
+                    <p class="feature-description">
+                        Browse our full catalog of gallons and refills. Select quantities and container types in just a few simple taps.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3 class="feature-title">Quick Checkout</h3>
+                    <p class="feature-description">
+                        Securely save your delivery addresses for a faster experience. No need to re-type details for every new order.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3 class="feature-title">Live Status Updates</h3>
+                    <p class="feature-description">
+                        Track your water delivery progress in real-time. Receive instant app updates from pending to successfully delivered.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3 class="feature-title">Flexible Payments</h3>
+                    <p class="feature-description">
+                        Choose between convenient Cash on Delivery or secure digital payments via GCash powered by our PayMongo integration.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="feature-title">Smart Product Search</h3>
+                    <p class="feature-description">
+                        Access clear pricing and detailed container descriptions. Use smart filters to find the right water size for your home.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                <div class="feature-card h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h3 class="feature-title">Order History</h3>
+                    <p class="feature-description">
+                        Review all your past transactions and receipts in one place. Easily re-order your favorites with total transparency.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="stats-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-heading" data-aos="fade-up">How It Works</h2>
+            <p class="section-subtext" data-aos="fade-up" data-aos-delay="100">
+                Pure water. Fast delivery. Four simple steps.
+            </p>
+        </div>
+        
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="0">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Select Products</h3>
+                    <p class="step-description">
+                        Browse our premium selection of gallons and refills. Pick the items that best fit your household needs.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="150">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Quick Checkout</h3>
+                    <p class="step-description">
+                        Set your delivery address and choose your payment method. Our streamlined process takes less than a minute.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Track Progress</h3>
+                    <p class="step-description">
+                        Stay informed with real-time status updates. Follow your order from preparation to out-for-delivery.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="450">
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Enjoy Delivery</h3>
+                    <p class="step-description">
+                        Receive your purified water right at your door. Pay conveniently and enjoy the refreshingly clean taste.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- CTA Section -->
+<section id="cta" class="cta-section">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-10">
+                <h2 class="cta-title" data-aos="fade-up">Pure Hydration, Delivered Fresh</h2>
+                
+                <p class="cta-subtitle" data-aos="fade-up" data-aos-delay="100">
+                    Smarter ordering. Faster delivery. Better water. <br>
+                    Experience a seamless way to keep your home or office perfectly hydrated.
+                </p>
+
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <a href="registration.html" class="btn btn-cta-glass btn-lg px-5 py-3 mb-4">
+                        <i class="fas fa-droplet me-2"></i>Dive Into AquaSphere
+                    </a>
+                    
+                    <p class="text-light opacity-75 small mt-2">
+                        <i class="fas fa-certificate me-1"></i> 
+                        <strong>Premium quality minerals at prices that fit your budget.</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Footer -->
+<footer id="contact" class="footer">
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-4 col-md-12 mb-2">
+                <div class="footer-brand mb-3">
+                    <img src="systemlogo.png" alt="AquaSphere Logo" class="footer-logo">
+                    <span class="footer-logo-text">AquaSphere</span>
+                </div>
+                <p class="footer-desc">
+                    Bringing nature's purest hydration to your doorstep. We combine smart ordering technology with reliable, eco-friendly delivery to keep your life flowing.
+                </p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-6">
+                <h5 class="footer-title">Explore</h5>
+                <ul class="footer-links-list">
+                    <li><a href="#home" class="footer-link">Home</a></li>
+                    <li><a href="#features" class="footer-link">Features</a></li>
+                    <li><a href="#how-it-works" class="footer-link">How It Works</a></li>
+                    <li><a href="#pricing" class="footer-link">Pricing</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-6">
+                <h5 class="footer-title">Our Services</h5>
+                <ul class="footer-links-list">
+                    <li><a href="#" class="footer-link">Mineral Refills</a></li>
+                    <li><a href="#" class="footer-link">Alkaline Water</a></li>
+                    <li><a href="#" class="footer-link">Bulk Delivery</a></li>
+                    <li><a href="#" class="footer-link">Express Support</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-4">
+                <h5 class="footer-title">Contact Us</h5>
+                <div class="contact-item mb-2">
+                    <i class="fas fa-envelope footer-icon"></i>
+                    <span>support@aquasphere.com</span>
+                </div>
+                <div class="contact-item mb-2">
+                    <i class="fas fa-phone-alt footer-icon"></i>
+                    <span>+63 (2) 123-4567</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-location-dot footer-icon"></i>
+                    <span>123 Water St, Metro Manila</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="copyright mb-0">&copy; 2024 <strong>AquaSphere</strong>. Pure health in every drop.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-legal">
+                        <a href="#">Privacy Policy</a>
+                        <span class="mx-2">|</span>
+                        <a href="#">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- User State and Navbar Scripts -->
+    <script src="js/user_state.js"></script>
+    <script src="navbar.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Update active nav link
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+        
+        // Update active nav link on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const scrollY = window.pageYOffset;
+            
+            sections.forEach(section => {
+                const sectionHeight = section.offsetHeight;
+                const sectionTop = section.offsetTop - 100;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+        
+        // Initialize dark mode toggle for static landing navbar
+        function initializeDarkMode() {
+            // Load dark mode preference from localStorage
+            const savedTheme = localStorage.getItem('darkMode');
+            if (savedTheme === 'true') {
+                document.body.classList.add('dark');
+            }
+            
+            // Update theme icon based on current state
+            const themeIcon = document.getElementById('themeIcon');
+            if (themeIcon) {
+                themeIcon.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+            }
+            
+            // Handle navbar theme toggle button (for both logged-in and non-logged-in users)
+            // Use event delegation to handle dynamically loaded navbar
+            document.addEventListener('click', function(e) {
+                const themeToggle = e.target.closest('#themeToggle');
+                if (themeToggle) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    document.body.classList.toggle('dark');
+                    const isDark = document.body.classList.contains('dark');
+                    const icon = document.getElementById('themeIcon');
+                    if (icon) {
+                        icon.textContent = isDark ? '☀️' : '🌙';
+                    }
+                    localStorage.setItem('darkMode', isDark ? 'true' : 'false');
+                }
+            });
+        }
+        
+        // Initialize dark mode immediately (before DOM ready)
+        (function() {
+            const savedTheme = localStorage.getItem('darkMode');
+            if (savedTheme === 'true') {
+                document.body.classList.add('dark');
+            }
+        })();
+        
+        // Initialize dark mode toggle on DOM ready
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeDarkMode();
+            
+            // Also initialize dark mode after navbar loads (in case navbar.js loads later)
+            setTimeout(function() {
+                const savedTheme = localStorage.getItem('darkMode');
+                if (savedTheme === 'true' && !document.body.classList.contains('dark')) {
+                    document.body.classList.add('dark');
+                }
+                // Update theme icon if it exists
+                const themeIcon = document.getElementById('themeIcon');
+                if (themeIcon) {
+                    themeIcon.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+                }
+            }, 500);
+            
+            // Listen for navbar loaded event
+            window.addEventListener('navbarLoaded', function() {
+                const savedTheme = localStorage.getItem('darkMode');
+                if (savedTheme === 'true' && !document.body.classList.contains('dark')) {
+                    document.body.classList.add('dark');
+                }
+                // Update theme icon if it exists
+                const themeIcon = document.getElementById('themeIcon');
+                if (themeIcon) {
+                    themeIcon.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+                }
+            });
+        });
+        
+        // Update cart count
+        function updateCartCount() {
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                const cartCountEl = document.getElementById('cartCount');
+                if (cartCountEl) {
+                    cartCountEl.textContent = totalItems;
+                    cartCountEl.style.display = totalItems > 0 ? 'flex' : 'none';
+                }
+            } catch (error) {
+                console.error('Error updating cart count:', error);
+            }
+        }
+        
+        // Update navbar badges (orders and notifications)
+        function updateNavbarBadges() {
+            // Update order count and notifications (with delay to ensure navbar is rendered)
+            setTimeout(() => {
+                if (typeof window.updateOrderCount === 'function') {
+                    window.updateOrderCount();
+                }
+                if (typeof window.loadNotifications === 'function') {
+                    window.loadNotifications();
+                }
+            }, 300);
+        }
+        
+        // Check if user is logged in and update navbar
+        function checkLoginStatus() {
+            fetch('api/get_current_user.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Not logged in');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success && data.user) {
+                        // User is logged in - show icons and user dropdown, hide login/register and theme toggle
+                        const loginNavItem = document.getElementById('loginNavItem');
+                        const registerNavItem = document.getElementById('registerNavItem');
+                        const themeToggleNavItem = document.getElementById('themeToggleNavItem');
+                        const userDropdownNavItem = document.getElementById('userDropdownNavItem');
+                        const navHomeItem = document.getElementById('navHomeItem');
+                        const navCartItem = document.getElementById('navCartItem');
+                        const navOrdersItem = document.getElementById('navOrdersItem');
+                        const navNotificationsWrapper = document.getElementById('navNotificationsWrapper');
+                        const usernameDisplay = document.getElementById('usernameDisplay');
+                        
+                        if (loginNavItem) loginNavItem.style.display = 'none';
+                        if (registerNavItem) registerNavItem.style.display = 'none';
+                        if (themeToggleNavItem) themeToggleNavItem.style.display = 'none';
+                        if (userDropdownNavItem) userDropdownNavItem.style.display = 'block';
+                        if (navHomeItem) navHomeItem.style.display = 'block';
+                        if (navCartItem) navCartItem.style.display = 'block';
+                        if (navOrdersItem) navOrdersItem.style.display = 'block';
+                        if (navNotificationsWrapper) navNotificationsWrapper.style.display = 'block';
+                        if (usernameDisplay) usernameDisplay.textContent = data.user.username || 'User';
+                        
+                        // Save to localStorage
+                        localStorage.setItem('loggedInUser', JSON.stringify(data.user));
+                        localStorage.setItem('userData', JSON.stringify(data.user));
+                        
+                        // Update cart count
+                        updateCartCount();
+                        
+                        // Update order count and notifications (with delay to ensure navbar.js is loaded)
+                        setTimeout(() => {
+                            updateNavbarBadges();
+                        }, 500);
+                    } else {
+                        // User is not logged in - show login/register and theme toggle, hide icons and user dropdown
+                        const loginNavItem = document.getElementById('loginNavItem');
+                        const registerNavItem = document.getElementById('registerNavItem');
+                        const themeToggleNavItem = document.getElementById('themeToggleNavItem');
+                        const userDropdownNavItem = document.getElementById('userDropdownNavItem');
+                        const navHomeItem = document.getElementById('navHomeItem');
+                        const navCartItem = document.getElementById('navCartItem');
+                        const navOrdersItem = document.getElementById('navOrdersItem');
+                        const navNotificationsWrapper = document.getElementById('navNotificationsWrapper');
+                        
+                        if (loginNavItem) loginNavItem.style.display = 'block';
+                        if (registerNavItem) registerNavItem.style.display = 'block';
+                        if (themeToggleNavItem) themeToggleNavItem.style.display = 'block';
+                        if (userDropdownNavItem) userDropdownNavItem.style.display = 'none';
+                        if (navHomeItem) navHomeItem.style.display = 'none';
+                        if (navCartItem) navCartItem.style.display = 'none';
+                        if (navOrdersItem) navOrdersItem.style.display = 'none';
+                        if (navNotificationsWrapper) navNotificationsWrapper.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    // Not logged in - show login/register and theme toggle, hide icons
+                    const loginNavItem = document.getElementById('loginNavItem');
+                    const registerNavItem = document.getElementById('registerNavItem');
+                    const themeToggleNavItem = document.getElementById('themeToggleNavItem');
+                    const userDropdownNavItem = document.getElementById('userDropdownNavItem');
+                    const navHomeItem = document.getElementById('navHomeItem');
+                    const navCartItem = document.getElementById('navCartItem');
+                    const navOrdersItem = document.getElementById('navOrdersItem');
+                    
+                    if (loginNavItem) loginNavItem.style.display = 'block';
+                    if (registerNavItem) registerNavItem.style.display = 'block';
+                    if (themeToggleNavItem) themeToggleNavItem.style.display = 'block';
+                    if (userDropdownNavItem) userDropdownNavItem.style.display = 'none';
+                    if (navHomeItem) navHomeItem.style.display = 'none';
+                    if (navCartItem) navCartItem.style.display = 'none';
+                    if (navOrdersItem) navOrdersItem.style.display = 'none';
+                });
+            
+            // Update badges after checking login status
+            updateNavbarBadges();
+        }
+        
+        // Also update badges when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', updateNavbarBadges);
+        } else {
+            updateNavbarBadges();
+        }
+        
+        // Profile Modal - redirect to cart page
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'}`;
+            notification.style.cssText = 'position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px;';
+            
+            const icon = document.createElement('i');
+            icon.className = `fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2`;
+            
+            const text = document.createElement('span');
+            text.textContent = message;
+            
+            notification.appendChild(icon);
+            notification.appendChild(text);
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        function openProfileModal() {
+            window.location.href = 'profile.html';
+            return;
+            
+            // Set flag to prevent success states on initial load
+            isInitialProfileLoad = true;
+            
+            // Reset button state
+            const updateBtn = document.getElementById('updateProfileBtn');
+            if (updateBtn) {
+                updateBtn.disabled = false;
+                updateBtn.textContent = 'Save Changes';
+            }
+            
+            // Clear all success and error states from form fields immediately
+            const allFields = modal.querySelectorAll('input, select');
+            allFields.forEach(field => {
+                field.classList.remove('success', 'error');
+                const formGroup = field.closest('.form-group');
+                if (formGroup) {
+                    formGroup.classList.remove('error');
+                }
+            });
+            
+            // Clear any pending success timers
+            if (typeof profileSuccessTimers !== 'undefined') {
+                Object.keys(profileSuccessTimers).forEach(key => {
+                    if (profileSuccessTimers[key]) {
+                        clearTimeout(profileSuccessTimers[key]);
+                        delete profileSuccessTimers[key];
+                    }
+                });
+            }
+            
+            // Show loading state
+            const form = document.getElementById('profileForm');
+            if (form) {
+                form.style.opacity = '0.5';
+                form.style.pointerEvents = 'none';
+            }
+            
+            // Fetch user data from server
+            fetch('api/get_current_user.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch user data');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success && data.user) {
+                        const userData = data.user;
+                        
+                        // Save to localStorage
+                        localStorage.setItem('loggedInUser', JSON.stringify(userData));
+                        localStorage.setItem('userData', JSON.stringify(userData));
+                        
+                        // Populate form with user data
+                        document.getElementById('profileUsername').value = userData.username || '';
+                        document.getElementById('profileEmail').value = userData.email || '';
+                        document.getElementById('profileFirstName').value = userData.firstName || userData.first_name || '';
+                        document.getElementById('profileLastName').value = userData.lastName || userData.last_name || '';
+                        document.getElementById('profileGender').value = userData.gender || '';
+                        
+                        // Handle date format
+                        let birthday = userData.birthday || userData.date_of_birth || '';
+                        if (birthday && birthday.includes('/')) {
+                            const parts = birthday.split('/');
+                            if (parts.length === 3) {
+                                birthday = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                            }
+                        }
+                        document.getElementById('profileBirthday').value = birthday;
+                        document.getElementById('profilePassword').value = '';
+                        document.getElementById('profileNewPassword').value = '';
+                        document.getElementById('profileConfirmPassword').value = '';
+                        
+                        // Set max date to today
+                        const today = new Date();
+                        const yyyy = today.getFullYear();
+                        const mm = String(today.getMonth() + 1).padStart(2, '0');
+                        const dd = String(today.getDate()).padStart(2, '0');
+                        document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
+                        
+                        // Add event listeners for real-time validation
+                        setupProfileValidation();
+                        
+                        // Initial validation check
+                        checkProfileRequiredFields();
+                        
+                        // Reset flag after a short delay
+                        setTimeout(() => {
+                            isInitialProfileLoad = false;
+                        }, 500);
+                        
+                        // Hide loading state
+                        if (form) {
+                            form.style.opacity = '1';
+                            form.style.pointerEvents = 'auto';
+                        }
+                        
+                        modal.style.display = 'flex';
+                        document.body.style.overflow = 'hidden';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                    // Fallback to localStorage
+                    let userData = JSON.parse(localStorage.getItem('loggedInUser')) || 
+                                  JSON.parse(localStorage.getItem('userData')) || {};
+                    
+                    document.getElementById('profileUsername').value = userData.username || '';
+                    document.getElementById('profileEmail').value = userData.email || '';
+                    document.getElementById('profileFirstName').value = userData.firstName || userData.first_name || '';
+                    document.getElementById('profileLastName').value = userData.lastName || userData.last_name || '';
+                    document.getElementById('profileGender').value = userData.gender || '';
+                    
+                    let birthday = userData.birthday || userData.date_of_birth || '';
+                    if (birthday && birthday.includes('/')) {
+                        const parts = birthday.split('/');
+                        if (parts.length === 3) {
+                            birthday = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                        }
+                    }
+                    document.getElementById('profileBirthday').value = birthday;
+                    document.getElementById('profilePassword').value = '';
+                    document.getElementById('profileNewPassword').value = '';
+                    document.getElementById('profileConfirmPassword').value = '';
+                    
+                    const today = new Date();
+                    const yyyy = today.getFullYear();
+                    const mm = String(today.getMonth() + 1).padStart(2, '0');
+                    const dd = String(today.getDate()).padStart(2, '0');
+                    document.getElementById('profileBirthday').max = `${yyyy}-${mm}-${dd}`;
+                    
+                    setupProfileValidation();
+                    checkProfileRequiredFields();
+                    
+                    setTimeout(() => {
+                        isInitialProfileLoad = false;
+                    }, 500);
+                    
+                    if (form) {
+                        form.style.opacity = '1';
+                        form.style.pointerEvents = 'auto';
+                    }
+                    
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
+        }
+        
+        // Close Profile Modal
+        function closeProfileModal(event) {
+            if (event && event.target.id !== 'profileModal' && !event.target.closest('.address-modal')) return;
+            const modal = document.getElementById('profileModal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // Profile validation functions
+        const profileSuccessTimers = {};
+        let isInitialProfileLoad = false;
+        
+        function markProfileSuccess(el, key) {
+            if (!el) return;
+            if (isInitialProfileLoad) return;
+            el.classList.remove('error');
+            el.classList.add('success');
+            if (profileSuccessTimers[key]) clearTimeout(profileSuccessTimers[key]);
+            profileSuccessTimers[key] = setTimeout(() => {
+                el.classList.remove('success');
+            }, 3000);
+        }
+        
+        function hideProfileErrors(idBase) {
+            const errors = ['error', 'format-error', 'required', 'min', 'same', 'mismatch', 'incorrect'];
+            errors.forEach(suffix => {
+                const errEl = document.getElementById(idBase + '-' + suffix);
+                if (errEl) errEl.style.display = 'none';
+            });
+        }
+        
+        function markProfileError(el) {
+            if (el) {
+                el.classList.add('error');
+                el.classList.remove('success');
+            }
+        }
+        
+        function markProfileClear(el) {
+            if (el) {
+                el.classList.remove('error');
+            }
+        }
+        
+        function validateProfileEmail() {
+            const emailInput = document.getElementById('profileEmail');
+            if (!emailInput) return true;
+            
+            hideProfileErrors('profileEmail');
+            const v = (emailInput.value || '').trim();
+            
+            if (!v) {
+                const errEl = document.getElementById('profileEmail-error');
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(emailInput);
+                return false;
+            }
+            
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+                const errEl = document.getElementById('profileEmail-format-error');
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(emailInput);
+                return false;
+            }
+            
+            markProfileClear(emailInput);
+            markProfileSuccess(emailInput, 'email');
+            return true;
+        }
+        
+        function validateProfileFirstName() {
+            const input = document.getElementById('profileFirstName');
+            if (!input) return true;
+            
+            const errEl = document.getElementById('profileFirstName-error');
+            if (errEl) errEl.style.display = 'none';
+            markProfileClear(input);
+            
+            const v = (input.value || '').trim();
+            if (!v) {
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(input);
+                return false;
+            }
+            
+            markProfileSuccess(input, 'firstName');
+            return true;
+        }
+        
+        function validateProfileLastName() {
+            const input = document.getElementById('profileLastName');
+            if (!input) return true;
+            
+            const errEl = document.getElementById('profileLastName-error');
+            if (errEl) errEl.style.display = 'none';
+            markProfileClear(input);
+            
+            const v = (input.value || '').trim();
+            if (!v) {
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(input);
+                return false;
+            }
+            
+            markProfileSuccess(input, 'lastName');
+            return true;
+        }
+        
+        function validateProfileGender() {
+            const input = document.getElementById('profileGender');
+            if (!input) return true;
+            
+            const errEl = document.getElementById('profileGender-error');
+            if (errEl) errEl.style.display = 'none';
+            markProfileClear(input);
+            
+            if (!input.value) {
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(input);
+                return false;
+            }
+            
+            markProfileSuccess(input, 'gender');
+            return true;
+        }
+        
+        function validateProfileBirthday() {
+            const input = document.getElementById('profileBirthday');
+            if (!input) return true;
+            
+            const errEl = document.getElementById('profileBirthday-error');
+            if (errEl) errEl.style.display = 'none';
+            markProfileClear(input);
+            
+            const v = (input.value || '').trim();
+            if (!v) {
+                if (errEl) errEl.style.display = 'block';
+                markProfileError(input);
+                return false;
+            }
+            
+            markProfileSuccess(input, 'birthday');
+            return true;
+        }
+        
+        function anyPasswordFilled() {
+            const current = document.getElementById('profilePassword');
+            const newPwd = document.getElementById('profileNewPassword');
+            const confirm = document.getElementById('profileConfirmPassword');
+            return ((current?.value || '').trim() || (newPwd?.value || '').trim() || (confirm?.value || '').trim()) ? true : false;
+        }
+        
+        function validateProfilePassword(el, idBase) {
+            if (!el) return true;
+            hideProfileErrors(idBase);
+            // Also hide incorrect password error when user types
+            if (idBase === 'profilePassword') {
+                const incorrectEl = document.getElementById('profilePassword-incorrect');
+                if (incorrectEl) incorrectEl.style.display = 'none';
+            }
+            const v = (el.value || '').trim();
+            const requireNow = anyPasswordFilled();
+            
+            if (!v) {
+                if (requireNow) {
+                    const req = document.getElementById(idBase + '-required');
+                    if (req) req.style.display = 'block';
+                    markProfileError(el);
+                    return false;
+                } else {
+                    markProfileClear(el);
+                    return true;
+                }
+            }
+            
+            if (v.length < 8) {
+                const min = document.getElementById(idBase + '-min');
+                if (min) min.style.display = 'block';
+                markProfileError(el);
+                return false;
+            }
+            
+            markProfileClear(el);
+            markProfileSuccess(el, idBase);
+            return true;
+        }
+        
+        function validatePasswordSameAsCurrent() {
+            const currentEl = document.getElementById('profilePassword');
+            const newEl = document.getElementById('profileNewPassword');
+            const confirmEl = document.getElementById('profileConfirmPassword');
+            
+            const curr = (currentEl?.value || '').trim();
+            const newv = (newEl?.value || '').trim();
+            const conf = (confirmEl?.value || '').trim();
+            let ok = true;
+            const requireNow = anyPasswordFilled();
+            
+            if (requireNow && curr && newv && curr === newv) {
+                const same = document.getElementById('profileNewPassword-same');
+                if (same) same.style.display = 'block';
+                markProfileError(newEl);
+                ok = false;
+            } else {
+                const same = document.getElementById('profileNewPassword-same');
+                if (same) same.style.display = 'none';
+            }
+            
+            if (requireNow && curr && conf && curr === conf) {
+                const same = document.getElementById('profileConfirmPassword-same');
+                if (same) same.style.display = 'block';
+                markProfileError(confirmEl);
+                ok = false;
+            } else {
+                const same = document.getElementById('profileConfirmPassword-same');
+                if (same) same.style.display = 'none';
+            }
+            
+            const mismatchEl = document.getElementById('profileConfirmPassword-mismatch');
+            if (requireNow && newv && conf && newv !== conf) {
+                if (mismatchEl) mismatchEl.style.display = 'block';
+                markProfileError(confirmEl);
+                ok = false;
+            } else {
+                if (mismatchEl) mismatchEl.style.display = 'none';
+            }
+            
+            if (ok && requireNow) {
+                if ((newEl?.value || '').trim().length >= 8) markProfileSuccess(newEl, 'profileNewPassword');
+                if ((confirmEl?.value || '').trim().length >= 8 && newv === conf) markProfileSuccess(confirmEl, 'profileConfirmPassword');
+            }
+            
+            return ok;
+        }
+        
+        function checkProfileRequiredFields() {
+            const updateBtn = document.getElementById('updateProfileBtn');
+            if (!updateBtn) return;
+            
+            const requiredFields = ['profileEmail', 'profileFirstName', 'profileLastName', 'profileGender', 'profileBirthday'];
+            let allValid = true;
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    const value = (field.value || '').trim();
+                    if (!value) {
+                        allValid = false;
+                    }
+                }
+            });
+            
+            if (allValid) {
+                allValid = validateProfileEmail();
+            }
+            
+            if (allValid && anyPasswordFilled()) {
+                const currentEl = document.getElementById('profilePassword');
+                const newEl = document.getElementById('profileNewPassword');
+                const confirmEl = document.getElementById('profileConfirmPassword');
+                
+                allValid = validateProfilePassword(currentEl, 'profilePassword') && allValid;
+                allValid = validateProfilePassword(newEl, 'profileNewPassword') && allValid;
+                allValid = validateProfilePassword(confirmEl, 'profileConfirmPassword') && allValid;
+                allValid = validatePasswordSameAsCurrent() && allValid;
+            }
+            
+            if (allValid) {
+                updateBtn.disabled = false;
+                updateBtn.style.opacity = '1';
+                updateBtn.style.cursor = 'pointer';
+            } else {
+                updateBtn.disabled = true;
+                updateBtn.style.opacity = '0.6';
+                updateBtn.style.cursor = 'not-allowed';
+            }
+        }
+        
+        function setupProfileValidation() {
+            const emailInput = document.getElementById('profileEmail');
+            const firstNameInput = document.getElementById('profileFirstName');
+            const lastNameInput = document.getElementById('profileLastName');
+            const genderInput = document.getElementById('profileGender');
+            const birthdayInput = document.getElementById('profileBirthday');
+            const passwordInput = document.getElementById('profilePassword');
+            const newPasswordInput = document.getElementById('profileNewPassword');
+            const confirmPasswordInput = document.getElementById('profileConfirmPassword');
+            
+            if (emailInput) {
+                emailInput.addEventListener('input', () => {
+                    validateProfileEmail();
+                    checkProfileRequiredFields();
+                });
+                emailInput.addEventListener('blur', () => {
+                    validateProfileEmail();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (firstNameInput) {
+                firstNameInput.addEventListener('input', () => {
+                    validateProfileFirstName();
+                    checkProfileRequiredFields();
+                });
+                firstNameInput.addEventListener('blur', () => {
+                    validateProfileFirstName();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (lastNameInput) {
+                lastNameInput.addEventListener('input', () => {
+                    validateProfileLastName();
+                    checkProfileRequiredFields();
+                });
+                lastNameInput.addEventListener('blur', () => {
+                    validateProfileLastName();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (genderInput) {
+                genderInput.addEventListener('change', () => {
+                    validateProfileGender();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (birthdayInput) {
+                birthdayInput.addEventListener('input', () => {
+                    validateProfileBirthday();
+                    checkProfileRequiredFields();
+                });
+                birthdayInput.addEventListener('blur', () => {
+                    validateProfileBirthday();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (passwordInput) {
+                passwordInput.addEventListener('input', () => {
+                    validateProfilePassword(passwordInput, 'profilePassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+                passwordInput.addEventListener('blur', () => {
+                    validateProfilePassword(passwordInput, 'profilePassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (newPasswordInput) {
+                newPasswordInput.addEventListener('input', () => {
+                    validateProfilePassword(newPasswordInput, 'profileNewPassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+                newPasswordInput.addEventListener('blur', () => {
+                    validateProfilePassword(newPasswordInput, 'profileNewPassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+            }
+            
+            if (confirmPasswordInput) {
+                confirmPasswordInput.addEventListener('input', () => {
+                    validateProfilePassword(confirmPasswordInput, 'profileConfirmPassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+                confirmPasswordInput.addEventListener('blur', () => {
+                    validateProfilePassword(confirmPasswordInput, 'profileConfirmPassword');
+                    validatePasswordSameAsCurrent();
+                    checkProfileRequiredFields();
+                });
+            }
+        }
+        
+        function togglePasswordVisibility(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (!input || !icon) return;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        function saveProfile(event) {
+            event.preventDefault();
+            
+            const updateBtn = document.getElementById('updateProfileBtn');
+            if (updateBtn && updateBtn.disabled) {
+                return;
+            }
+            
+            // Validate all required fields
+            let isValid = true;
+            isValid = validateProfileEmail() && isValid;
+            isValid = validateProfileFirstName() && isValid;
+            isValid = validateProfileLastName() && isValid;
+            isValid = validateProfileGender() && isValid;
+            isValid = validateProfileBirthday() && isValid;
+            
+            // Validate passwords if any are filled
+            if (anyPasswordFilled()) {
+                const currentEl = document.getElementById('profilePassword');
+                const newEl = document.getElementById('profileNewPassword');
+                const confirmEl = document.getElementById('profileConfirmPassword');
+                
+                isValid = validateProfilePassword(currentEl, 'profilePassword') && isValid;
+                isValid = validateProfilePassword(newEl, 'profileNewPassword') && isValid;
+                isValid = validateProfilePassword(confirmEl, 'profileConfirmPassword') && isValid;
+                isValid = validatePasswordSameAsCurrent() && isValid;
+            }
+            
+            if (!isValid) {
+                const firstError = document.querySelector('#profileModal .form-group.error, #profileModal input.error, #profileModal select.error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
+            }
+            
+            const currentPassword = document.getElementById('profilePassword').value.trim();
+            const newPassword = document.getElementById('profileNewPassword').value.trim();
+            const confirmPassword = document.getElementById('profileConfirmPassword').value.trim();
+            
+            // Validate passwords if provided
+            if (newPassword || confirmPassword || currentPassword) {
+                if (!currentPassword) {
+                    showNotification('Please enter your current password to change it', 'error');
+                    return;
+                }
+                
+                if (!newPassword) {
+                    showNotification('Please enter a new password', 'error');
+                    return;
+                }
+                
+                if (newPassword.length < 8) {
+                    showNotification('New password must be at least 8 characters', 'error');
+                    return;
+                }
+                
+                if (newPassword !== confirmPassword) {
+                    showNotification('New passwords do not match', 'error');
+                    return;
+                }
+            }
+            
+            // Prepare data for API
+            const userData = {
+                email: document.getElementById('profileEmail').value.trim(),
+                firstName: document.getElementById('profileFirstName').value.trim(),
+                lastName: document.getElementById('profileLastName').value.trim(),
+                gender: document.getElementById('profileGender').value,
+                birthday: document.getElementById('profileBirthday').value,
+                first_name: document.getElementById('profileFirstName').value.trim(),
+                last_name: document.getElementById('profileLastName').value.trim(),
+                date_of_birth: document.getElementById('profileBirthday').value
+            };
+            
+            // Only include password fields if provided
+            if (currentPassword) {
+                userData.password = currentPassword;
+            }
+            if (newPassword) {
+                userData.newPassword = newPassword;
+            }
+            
+            // Disable button during save
+            if (updateBtn) {
+                updateBtn.disabled = true;
+                updateBtn.textContent = 'Saving...';
+            }
+            
+            // Save to database via API
+            fetch('api/update_profile.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Check if password was changed
+                    const passwordChanged = newPassword && newPassword.length > 0;
+                    
+                    // Update localStorage
+                    const updatedUserData = {
+                        username: document.getElementById('profileUsername').value.trim(),
+                        email: userData.email,
+                        firstName: userData.firstName,
+                        lastName: userData.lastName,
+                        first_name: userData.first_name,
+                        last_name: userData.last_name,
+                        gender: userData.gender,
+                        birthday: userData.birthday,
+                        date_of_birth: userData.date_of_birth
+                    };
+                    
+                    localStorage.setItem('userData', JSON.stringify(updatedUserData));
+                    localStorage.setItem('loggedInUser', JSON.stringify(updatedUserData));
+                    sessionStorage.setItem('userData', JSON.stringify(updatedUserData));
+                    
+                    // Reload user data to update navbar
+                    if (typeof checkLoginStatus === 'function') {
+                        checkLoginStatus();
+                    }
+                    
+                    // Close modal
+                    closeProfileModal();
+                    
+                    if (passwordChanged) {
+                        showNotification('Password changed successfully! For security reasons, please log in again with your new password.', 'success');
+                        setTimeout(() => {
+                            localStorage.removeItem('loggedInUser');
+                            sessionStorage.removeItem('userData');
+                            window.location.href = 'login.html';
+                        }, 2000);
+                    } else {
+                        showNotification('Profile updated successfully!', 'success');
+                    }
+                } else {
+                    if (data.errors) {
+                        Object.keys(data.errors).forEach(field => {
+                            const errorMsg = data.errors[field];
+                            
+                            // Handle password error specifically - show inline below the field
+                            if (field === 'password' && errorMsg.includes('incorrect')) {
+                                const errorEl = document.getElementById('profilePassword-incorrect');
+                                if (errorEl) {
+                                    errorEl.style.display = 'block';
+                                    const passwordInput = document.getElementById('profilePassword');
+                                    if (passwordInput) {
+                                        markProfileError(passwordInput);
+                                        const formGroup = passwordInput.closest('.form-group');
+                                        if (formGroup) {
+                                            formGroup.classList.add('error');
+                                        }
+                                    }
+                                }
+                            } else {
+                                // For other errors, show notification
+                                showNotification(errorMsg, 'error');
+                            }
+                        });
+                    } else {
+                        showNotification(data.message || 'Failed to update profile. Please try again.', 'error');
+                    }
+                    
+                    if (updateBtn) {
+                        updateBtn.disabled = false;
+                        updateBtn.textContent = 'Save Changes';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error updating profile:', error);
+                showNotification('An error occurred while updating your profile. Please try again.', 'error');
+                
+                if (updateBtn) {
+                    updateBtn.disabled = false;
+                    updateBtn.textContent = 'Save Changes';
+                }
+            });
+        }
+        
+        // Get scrollbar width
+        function getScrollbarWidth() {
+            const outer = document.createElement('div');
+            outer.style.visibility = 'hidden';
+            outer.style.overflow = 'scroll';
+            outer.style.msOverflowStyle = 'scrollbar';
+            outer.style.width = '100px';
+            outer.style.position = 'absolute';
+            outer.style.top = '-9999px';
+            document.body.appendChild(outer);
+            const inner = document.createElement('div');
+            inner.style.width = '100%';
+            outer.appendChild(inner);
+            const scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
+            outer.parentNode.removeChild(outer);
+            return scrollbarWidth;
+        }
+        
+        // Prevent body scroll while keeping scrollbar space (no layout shift)
+        function lockBodyScroll() {
+            // Calculate scrollbar width and add padding BEFORE hiding overflow
+            const scrollbarWidth = getScrollbarWidth();
+            const scrollY = window.scrollY;
+            
+            // Add padding to preserve scrollbar space
+            document.body.style.paddingRight = scrollbarWidth + 'px';
+            // Hide overflow (scrollbar disappears but space remains)
+            document.body.style.overflow = 'hidden';
+            
+            // Store values for restoration
+            document.body.dataset.scrollY = scrollY;
+            document.body.dataset.scrollbarWidth = scrollbarWidth;
+        }
+        
+        // Restore body scroll
+        function unlockBodyScroll() {
+            const scrollY = document.body.dataset.scrollY || 0;
+            
+            // Remove padding and restore overflow
+            document.body.style.paddingRight = '';
+            document.body.style.overflow = '';
+            
+            // Clean up stored values
+            delete document.body.dataset.scrollY;
+            delete document.body.dataset.scrollbarWidth;
+            
+            // Restore scroll position
+            window.scrollTo(0, parseInt(scrollY) || 0);
+        }
+        
+        // Open Settings Modal
+        function openSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            if (!modal) return;
+            
+            // Lock body scroll but keep scrollbar visible
+            lockBodyScroll();
+            
+            modal.style.display = 'flex';
+        }
+        
+        // Close Settings Modal
+        function closeSettingsModal(event) {
+            if (event && event.target.id !== 'settingsModal' && !event.target.closest('.address-modal')) return;
+            const modal = document.getElementById('settingsModal');
+            if (modal) {
+                modal.style.display = 'none';
+                // Unlock body scroll
+                unlockBodyScroll();
+            }
+        }
+        
+        // Make functions globally available
+        window.openSettingsModal = openSettingsModal;
+        window.closeSettingsModal = closeSettingsModal;
+        
+        // Show Logout Confirmation Modal
+        function showLogoutConfirmModal() {
+            const modal = document.getElementById('logoutConfirmModal');
+            const confirmBtn = document.getElementById('logoutConfirmBtn');
+            const cancelBtn = document.getElementById('logoutCancelBtn');
+            
+            if (!modal) return;
+            
+            // Lock body scroll but keep scrollbar visible
+            lockBodyScroll();
+            
+            modal.style.display = 'flex';
+            
+            // Remove existing event listeners
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+            
+            // Add new event listeners
+            newConfirmBtn.addEventListener('click', function confirmHandler() {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+                performLogout();
+                newConfirmBtn.removeEventListener('click', confirmHandler);
+            });
+            
+            newCancelBtn.addEventListener('click', function cancelHandler() {
+                modal.style.display = 'none';
+                unlockBodyScroll();
+                newCancelBtn.removeEventListener('click', cancelHandler);
+            });
+        }
+        
+        // Perform Logout
+        function performLogout() {
+            fetch('api/logout.php')
+                .then(response => response.json())
+                .then(data => {
+                    // Clear user session data
+                    localStorage.removeItem('loggedInUser');
+                    sessionStorage.removeItem('userData');
+                    
+                    // Reload page to update navbar
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Logout error:', error);
+                    // Still clear local data and reload
+                    localStorage.removeItem('loggedInUser');
+                    sessionStorage.removeItem('userData');
+                    window.location.reload();
+                });
+        }
+        
+        // Logout
+        function logout() {
+            showLogoutConfirmModal();
+        }
+        
+        // Check login status on page load
+        checkLoginStatus();
+    </script>
+    
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutConfirmModal" class="logout-confirm-modal" style="display: none;">
+        <div class="logout-confirm-content">
+            <div class="logout-confirm-icon-wrapper">
+                <div class="logout-confirm-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+            </div>
+            <div class="logout-confirm-body">
+                <h3>Confirm Logout</h3>
+                <p id="logoutConfirmMessage">Are you sure you want to logout?</p>
+            </div>
+            <div class="logout-confirm-footer">
+                <button type="button" class="btn-logout-cancel" id="logoutCancelBtn">Cancel</button>
+                <button type="button" class="btn-logout-confirm" id="logoutConfirmBtn">Logout</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal" onclick="closeProfileModal(event)" style="display: none;">
+        <div class="address-modal" onclick="event.stopPropagation()" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>Profile</h2>
+            </div>
+            <div class="modal-body">
+                <form id="profileForm" onsubmit="saveProfile(event)" novalidate>
+                    <div class="profile-section" style="margin-bottom: 2rem;">
+                        <h5 style="color: #1a4a6b; font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem;">Account Information</h5>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profileUsername">Username</label>
+                                <input type="text" id="profileUsername" name="username" placeholder="Choose a username" autocomplete="off" readonly style="background: #f8f9fa; cursor: not-allowed;">
+                                <small style="color: #64748b; font-size: 0.85rem;">Username cannot be changed</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileEmail">Email</label>
+                                <input type="email" id="profileEmail" name="email" placeholder="Enter your email" autocomplete="off" required>
+                                <div class="error-message" id="profileEmail-error" style="display: none;">Email is required.</div>
+                                <div class="error-message" id="profileEmail-format-error" style="display: none;">Please enter a valid email.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-section" style="margin-bottom: 2rem;">
+                        <h5 style="color: #1a4a6b; font-weight: 600; margin-bottom: 1rem; font-size: 1.1rem;">Personal Information</h5>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profileFirstName">First Name</label>
+                                <input type="text" id="profileFirstName" name="firstName" placeholder="Enter your first name" autocomplete="off" required>
+                                <div class="error-message" id="profileFirstName-error" style="display: none;">First Name is required.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileLastName">Last Name</label>
+                                <input type="text" id="profileLastName" name="lastName" placeholder="Enter your last name" autocomplete="off" required>
+                                <div class="error-message" id="profileLastName-error" style="display: none;">Last Name is required.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profileGender">Gender</label>
+                                <select id="profileGender" name="gender" autocomplete="off" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                                <div class="error-message" id="profileGender-error" style="display: none;">Please select an item in the list</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileBirthday">Birthday</label>
+                                <input type="date" id="profileBirthday" name="birthday" autocomplete="off" required>
+                                <div class="error-message" id="profileBirthday-error" style="display: none;">Date of birth is required.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-section" style="margin-bottom: 2rem;">
+                        <h5 style="color: #1a4a6b; font-weight: 600; margin-bottom: 0.5rem; font-size: 1.1rem;">Change Password</h5>
+                        <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem; font-style: italic;">
+                            Leave these fields blank if you don't want to change your password.
+                        </p>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profilePassword">Current Password</label>
+                                <div style="position: relative;">
+                                    <input type="password" id="profilePassword" name="password" placeholder="Enter your current password" autocomplete="off" minlength="8">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility('profilePassword', this.querySelector('i'))" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; padding: 8px 12px;">
+                                        <i class="fas fa-eye" id="iconProfilePassword"></i>
+                                    </button>
+                                </div>
+                                <div class="error-message" id="profilePassword-required" style="display: none;">Password is required.</div>
+                                <div class="error-message" id="profilePassword-min" style="display: none;">Password must be at least 8 characters.</div>
+                                <div class="error-message" id="profilePassword-incorrect" style="display: none;">Current password is incorrect.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileNewPassword">New Password</label>
+                                <div style="position: relative;">
+                                    <input type="password" id="profileNewPassword" name="newPassword" placeholder="Enter your new password" autocomplete="off" minlength="8">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility('profileNewPassword', this.querySelector('i'))" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; padding: 8px 12px;">
+                                        <i class="fas fa-eye" id="iconProfileNewPassword"></i>
+                                    </button>
+                                </div>
+                                <div class="error-message" id="profileNewPassword-required" style="display: none;">Password is required.</div>
+                                <div class="error-message" id="profileNewPassword-min" style="display: none;">Password must be at least 8 characters.</div>
+                                <div class="error-message" id="profileNewPassword-same" style="display: none;">You've already used this password before.</div>
+                                
+                                <label for="profileConfirmPassword" style="margin-top: 1rem;">Confirm New Password</label>
+                                <div style="position: relative;">
+                                    <input type="password" id="profileConfirmPassword" name="confirmPassword" placeholder="Confirm your new password" autocomplete="off" minlength="8">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordVisibility('profileConfirmPassword', this.querySelector('i'))" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; padding: 8px 12px;">
+                                        <i class="fas fa-eye" id="iconProfileConfirmPassword"></i>
+                                    </button>
+                                </div>
+                                <div class="error-message" id="profileConfirmPassword-required" style="display: none;">Password is required.</div>
+                                <div class="error-message" id="profileConfirmPassword-min" style="display: none;">Password must be at least 8 characters.</div>
+                                <div class="error-message" id="profileConfirmPassword-same" style="display: none;">You've already used this password before.</div>
+                                <div class="error-message" id="profileConfirmPassword-mismatch" style="display: none;">Passwords do not match.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancel" onclick="closeProfileModal(event)">Cancel</button>
+                        <button type="submit" class="btn-submit" id="updateProfileBtn" disabled>Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal" onclick="closeSettingsModal(event)" style="display: none;">
+        <div class="address-modal" onclick="event.stopPropagation()" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Settings</h2>
+            </div>
+            <div class="modal-body">
+                <p style="color: #64748b; text-align: center; padding: 2rem 0;">Settings page coming soon...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeSettingsModal(event)">Close</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

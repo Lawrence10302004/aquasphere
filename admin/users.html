@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - AquaSphere Admin</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Inter, system-ui, Segoe UI, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 250px;
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 100%);
+            color: white;
+            padding-top: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .sidebar-brand {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-brand img {
+            height: 50px;
+            width: auto;
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-brand h4 {
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-left: 4px solid white;
+        }
+        
+        .sidebar-menu a i {
+            width: 25px;
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+        
+        .page-header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a4a6b;
+            margin: 0;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .content-card h5 {
+            font-weight: 600;
+            color: #1a4a6b;
+            margin-bottom: 20px;
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-bar input {
+            flex: 1;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            padding: 10px 15px;
+        }
+        
+        .search-bar input:focus {
+            border-color: #256892;
+            box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25);
+            outline: none;
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #1a4a6b;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .badge {
+            padding: 6px 12px;
+            font-weight: 500;
+        }
+        
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 0.875rem;
+        }
+        
+        .btn-edit {
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            border: none;
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background: linear-gradient(135deg, #1e4f73, #256892);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .btn-delete {
+            background: #ef4444;
+            border: none;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background: #dc2626;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .search-highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        .pagination {
+            margin-top: 20px;
+        }
+        
+        .pagination .page-link {
+            color: #256892;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            border-color: #256892;
+            color: white;
+        }
+        
+        /* Modal Styles */
+        .modal-header {
+            background: linear-gradient(135deg, #256892, #1e4f73);
+            color: white;
+        }
+        
+        .modal-header .btn-close {
+            filter: invert(1);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #1a4a6b;
+            margin-bottom: 8px;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            padding: 10px 15px;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #256892;
+            box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25);
+        }
+        
+        .form-control[readonly] {
+            background: #f8fafc;
+            cursor: not-allowed;
+        }
+
+        /* Delete confirmation modal */
+        .confirm-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .confirm-card {
+            background: linear-gradient(135deg, #256892 0%, #1e4f73 100%);
+            border-radius: 18px;
+            padding: 2px;
+            max-width: 420px;
+            width: 92%;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.30), 0 0 0 1px rgba(255,255,255,0.25);
+            position: relative;
+            animation: modalScaleIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .confirm-inner {
+            background: #f8fbff;
+            border-radius: 16px;
+            padding: 18px 20px 16px;
+        }
+        .confirm-header {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        .confirm-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #fef2f2, #ffe4e6);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #be123c;
+            box-shadow: 0 10px 24px rgba(190, 18, 60, 0.22);
+            font-size: 1.15rem;
+        }
+        .confirm-title {
+            margin: 0;
+            font-weight: 800;
+            color: #0f172a;
+            font-size: 1.05rem;
+        }
+        .confirm-body {
+            color: #475569;
+            line-height: 1.6;
+            margin: 6px 0 14px;
+            position: relative;
+            z-index: 1;
+        }
+        .confirm-username {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #e0f2fe;
+            color: #075985;
+            font-weight: 700;
+        }
+        .confirm-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        .btn-confirm-secondary {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #0f172a;
+            border-radius: 10px;
+            padding: 10px 16px;
+            transition: all 0.2s ease;
+        }
+        .btn-confirm-danger {
+            background: linear-gradient(135deg, #f43f5e, #e11d48);
+            border: none;
+            color: #fff;
+            border-radius: 10px;
+            padding: 10px 16px;
+            box-shadow: 0 12px 30px rgba(225,29,72,0.35);
+            transition: all 0.2s ease;
+        }
+        .btn-confirm-secondary:hover {
+            background: #e2e8f0;
+        }
+        .btn-confirm-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 34px rgba(225,29,72,0.45);
+        }
+
+        /* Inline error banners (match profile page style) */
+        .field-error {
+            display: block;
+            margin-top: 6px;
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fecdd3;
+            border-left: 4px solid #f87171;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .field-error i {
+            margin-right: 6px;
+            color: #dc2626;
+        }
+
+        /* Suspended reason hover */
+        .reason-note {
+            margin-left: 6px;
+            color: #475569;
+            cursor: pointer;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .reason-note i {
+            font-size: 0.9rem;
+        }
+        .reason-tooltip {
+            display: none;
+            position: absolute;
+            top: 110%;
+            left: 0;
+            z-index: 10;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 10px 12px;
+            border-radius: 10px;
+            min-width: 180px;
+            max-width: 260px;
+            white-space: normal;
+            word-break: break-word;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            border: 1px solid #1e293b;
+        }
+        .reason-tooltip::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 12px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #0f172a;
+        }
+        .reason-note.active .reason-tooltip {
+            display: block;
+        }
+
+        /* Center notice */
+        #centerNoticeOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.35);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(2px);
+        }
+        #centerNoticeCard {
+            background: #ffffff;
+            padding: 24px 26px;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+            min-width: 280px;
+            max-width: 340px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .center-icon {
+            position: relative;
+            width: 74px;
+            height: 74px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #e0f2fe, #bfdbfe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 4px 10px rgba(255,255,255,0.7), 0 10px 24px rgba(14,165,233,0.25);
+        }
+        .center-icon i {
+            color: #1e4f73;
+            font-size: 1.8rem;
+            z-index: 1;
+        }
+        .center-ring {
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 3px solid rgba(14, 165, 233, 0.2);
+            border-top-color: #256892;
+            border-right-color: #256892;
+            animation: spin 1s linear infinite;
+        }
+        #centerNoticeMessage {
+            color: #0f172a;
+            font-weight: 800;
+            font-size: 1.05rem;
+            margin: 0;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <img src="../systemlogo.png" alt="AquaSphere Logo">
+            <h4>AquaSphere Admin</h4>
+        </div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="dashboard.html">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="users.html" class="active">
+                    <i class="fas fa-users"></i>
+                    User Management
+                </a>
+            </li>
+            <li>
+                <a href="orders.html">
+                    <i class="fas fa-shopping-cart"></i>
+                    Order Management
+                </a>
+            </li>
+            <li>
+                <a href="products.html">
+                    <i class="fas fa-box"></i>
+                    Product Management
+                </a>
+            </li>
+            <li>
+                <a href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    System Settings
+                </a>
+            </li>
+            <li>
+                <a href="../api/logout.php?redirect=index.html">
+                    <i class="fas fa-home"></i>
+                    Back to Site
+                </a>
+            </li>
+            <li>
+                <a href="../api/logout.php">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1><i class="fas fa-users me-2"></i>User Management</h1>
+            <div>
+                <span class="badge bg-primary" id="totalUsersCount">0 Users</span>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <div class="search-bar">
+                <input type="text" class="form-control" id="searchInput" placeholder="Search by username, email, or name..." autocomplete="off">
+                <button class="btn btn-primary" onclick="loadUsers()">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Role</th>
+                            <th>Joined</th>
+                            <th>Last Login</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="10" class="text-center text-muted">Loading users...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <nav aria-label="Users pagination">
+                <ul class="pagination justify-content-center" id="pagination">
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Center Notice -->
+    <div id="centerNoticeOverlay">
+        <div id="centerNoticeCard">
+            <div class="center-icon">
+                <span class="center-ring"></span>
+                <i class="fas fa-clipboard-check"></i>
+            </div>
+            <p id="centerNoticeMessage">Processing...</p>
+        </div>
+    </div>
+
+    <!-- Suspension Modal -->
+    <div class="confirm-overlay" id="suspendOverlay" onclick="handleSuspendOverlayClick(event)">
+        <div class="confirm-card">
+            <div class="confirm-inner">
+                <div class="confirm-header">
+                    <div class="confirm-icon">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <div>
+                        <p class="confirm-title mb-1" id="suspendTitle">Suspend User</p>
+                        <small class="text-muted" id="suspendSubtitle">The user will be unable to log in until suspension is lifted.</small>
+                    </div>
+                </div>
+                <div class="confirm-body">
+                    <div class="mb-2">
+                        <strong id="suspendUsername">User</strong>
+                    </div>
+                    <div class="mb-3" id="suspendReasonGroup">
+                        <label for="suspendReason" class="form-label">Suspension Reason</label>
+                        <textarea class="form-control" id="suspendReason" rows="3" placeholder="Provide the reason for suspension"></textarea>
+                        <div class="invalid-feedback d-block" id="suspendReasonError" style="display:none;"></div>
+                    </div>
+                    <div class="alert alert-info py-2 px-3" id="suspendedInfo" style="display:none;">
+                        This account is currently suspended. You can lift the suspension to allow login again.
+                    </div>
+                </div>
+                <div class="confirm-actions">
+                    <button type="button" class="btn btn-confirm-secondary" onclick="closeSuspendModal()">Cancel</button>
+                    <button type="button" class="btn btn-confirm-danger" id="suspendConfirmBtn">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-edit me-2"></i>Edit User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editUserForm" novalidate autocomplete="off">
+                        <input type="hidden" id="editUserId">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="editUsername" class="form-label">Username (read-only)</label>
+                                <input type="text" class="form-control" id="editUsername" readonly autocomplete="off">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="editEmail" required autocomplete="off">
+                                <div class="invalid-feedback d-block" id="editEmailError" style="display:none;"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editFirstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="editFirstName" required autocomplete="off">
+                                <div class="invalid-feedback d-block" id="editFirstNameError" style="display:none;"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editLastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="editLastName" required autocomplete="off">
+                                <div class="invalid-feedback d-block" id="editLastNameError" style="display:none;"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editGender" class="form-label">Gender</label>
+                                <select class="form-select" id="editGender" required autocomplete="off">
+                                    <option value="" disabled selected hidden></option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                                <div class="invalid-feedback d-block" id="editGenderError" style="display:none;"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editDateOfBirth" class="form-label">Birthday</label>
+                        <input type="date" class="form-control" id="editDateOfBirth" autocomplete="off">
+                        <div class="invalid-feedback d-block" id="editDateOfBirthError" style="display:none;"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editNewPassword" class="form-label">New Password (optional)</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="editNewPassword" placeholder="Leave blank to keep current password" autocomplete="new-password">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('editNewPassword', this)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="invalid-feedback d-block" id="editNewPasswordError" style="display:none;"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editConfirmPassword" class="form-label">Confirm New Password</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="editConfirmPassword" placeholder="Re-enter new password" autocomplete="new-password">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('editConfirmPassword', this)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="invalid-feedback d-block" id="editConfirmPasswordError" style="display:none;"></div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check mt-2">
+                                    <input class="form-check-input" type="checkbox" id="editIsAdmin">
+                                    <label class="form-check-label" for="editIsAdmin">
+                                        Admin User
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveChangesBtn" onclick="saveUser()" disabled>
+                        <i class="fas fa-save me-2"></i>Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        let currentPage = 1;
+        let currentSearch = '';
+        let originalUserData = null;
+        
+        // Function to highlight matching text
+        function highlightText(text, searchTerm) {
+            if (!searchTerm || !text) return escapeHtml(text);
+            const escapedText = escapeHtml(text);
+            const regex = new RegExp(`(${escapeRegex(searchTerm)})`, 'gi');
+            return escapedText.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+        
+        // Escape special regex characters
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        
+        // Load users
+        function loadUsers(page = 1) {
+            currentPage = page;
+            currentSearch = document.getElementById('searchInput').value;
+            
+            const url = `../api/admin/get_users.php?page=${page}&limit=10${currentSearch ? '&search=' + encodeURIComponent(currentSearch) : ''}`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayUsers(data.users);
+                        displayPagination(data.pagination);
+                        document.getElementById('totalUsersCount').textContent = `${data.pagination.total} Users`;
+                    } else {
+                        showNotification(data.message || 'Failed to load users', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading users:', error);
+                    showNotification('Failed to load users', 'error');
+                });
+        }
+        
+        // Display users
+        function displayUsers(users) {
+            const tbody = document.getElementById('usersTableBody');
+            
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted">No users found</td></tr>';
+                return;
+            }
+            
+            // Sort users: exact matches first
+            const searchTerm = currentSearch.toLowerCase().trim();
+            if (searchTerm) {
+                users.sort((a, b) => {
+                    const aUsername = (a.username || '').toLowerCase();
+                    const bUsername = (b.username || '').toLowerCase();
+                    const aExactMatch = aUsername === searchTerm;
+                    const bExactMatch = bUsername === searchTerm;
+                    
+                    if (aExactMatch && !bExactMatch) return -1;
+                    if (!aExactMatch && bExactMatch) return 1;
+                    return 0;
+                });
+            }
+            
+            tbody.innerHTML = users.map(user => {
+                const isSuspended = parseInt(user.suspended || 0) === 1;
+                const statusBadge = isSuspended
+                    ? `<span class="badge bg-danger">Suspended</span>
+                        <span class="reason-note" onclick="toggleReasonTooltip('reason-${user.id}')">
+                            <i class="fas fa-sticky-note"></i>
+                            <span class="reason-tooltip" id="reason-${user.id}">${escapeHtml(user.suspension_reason || 'No reason provided')}</span>
+                        </span>`
+                    : '<span class="badge bg-success">Active</span>';
+                
+                const reasonParam = encodeURIComponent(user.suspension_reason || '');
+                const emailParam = encodeURIComponent(user.email || '');
+                const actionBtn = user.is_admin == 1 ? '' : `
+                    <button class="btn ${isSuspended ? 'btn-success' : 'btn-delete'} btn-sm" onclick="showSuspendModal(${user.id}, '${escapeHtml(user.username)}', ${isSuspended ? 1 : 0}, '${reasonParam}', '${emailParam}')">
+                        <i class="fas ${isSuspended ? 'fa-unlock' : 'fa-ban'}"></i> ${isSuspended ? 'Lift Suspension' : 'Suspend'}
+                    </button>`;
+
+                return `
+                <tr>
+                    <td>${user.id}</td>
+                    <td><strong>${highlightText(user.username, searchTerm)}</strong></td>
+                    <td>${highlightText(user.email || 'N/A', searchTerm)}</td>
+                    <td>${highlightText((user.first_name || '') + ' ' + (user.last_name || '') || 'N/A', searchTerm)}</td>
+                    <td>${formatGender(user.gender)}</td>
+                    <td>
+                        ${user.is_admin == 1 
+                            ? '<span class="badge bg-danger">Admin</span>' 
+                            : '<span class="badge bg-secondary">User</span>'}
+                    </td>
+                    <td>${formatDate(user.created_at)}</td>
+                    <td>${user.last_login ? formatDate(user.last_login) : 'Never'}</td>
+                    <td>${statusBadge}</td>
+                    <td>
+                        ${actionBtn}
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+        
+        // Display pagination
+        function displayPagination(pagination) {
+            const paginationEl = document.getElementById('pagination');
+            const totalPages = pagination.total_pages;
+            
+            if (totalPages <= 1) {
+                paginationEl.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            
+            // Previous button
+            html += `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="loadUsers(${currentPage - 1}); return false;">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            `;
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="loadUsers(${i}); return false;">${i}</a>
+                        </li>
+                    `;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                }
+            }
+            
+            // Next button
+            html += `
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="loadUsers(${currentPage + 1}); return false;">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            `;
+            
+            paginationEl.innerHTML = html;
+        }
+        
+        function getCurrentFormData() {
+            return {
+                email: document.getElementById('editEmail').value.trim(),
+                first_name: document.getElementById('editFirstName').value.trim(),
+                last_name: document.getElementById('editLastName').value.trim(),
+                gender: (document.getElementById('editGender').value || '').toLowerCase(),
+                date_of_birth: document.getElementById('editDateOfBirth').value,
+                is_admin: document.getElementById('editIsAdmin').checked ? 1 : 0,
+                new_password: document.getElementById('editNewPassword').value.trim(),
+                confirm_password: document.getElementById('editConfirmPassword').value.trim()
+            };
+        }
+
+        function hasFormChanges() {
+            if (!originalUserData) return false;
+            const current = getCurrentFormData();
+            const trackedFields = ['email','first_name','last_name','gender','date_of_birth','is_admin'];
+            const baseChanged = trackedFields.some(key => current[key] !== originalUserData[key]);
+            const passwordChanged = !!(current.new_password || current.confirm_password);
+            return baseChanged || passwordChanged;
+        }
+
+        function runLiveValidation(showErrors = true) {
+            const fieldsToValidate = ['editEmail','editFirstName','editLastName','editGender','editDateOfBirth','editNewPassword','editConfirmPassword'];
+            let hasError = false;
+
+            fieldsToValidate.forEach(id => {
+                const fieldHasError = validateField(id, showErrors);
+                if (fieldHasError) hasError = true;
+            });
+
+            return hasError;
+        }
+
+        function validateField(fieldId, showError = true) {
+            if (showError) {
+                hideFieldError(fieldId);
+            }
+            const value = (document.getElementById(fieldId)?.value || '').trim();
+            let message = '';
+            const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
+            const nameSanitizeRegex = /[^A-Za-zÀ-ÖØ-öø-ÿ' -]/g;
+
+            const inputEl = document.getElementById(fieldId);
+            if (inputEl && (fieldId === 'editFirstName' || fieldId === 'editLastName')) {
+                const before = inputEl.value;
+                const start = inputEl.selectionStart;
+                const end = inputEl.selectionEnd;
+                inputEl.value = before.replace(nameSanitizeRegex, '');
+                const delta = before.length - inputEl.value.length;
+                if (delta !== 0 && start !== null && end !== null) {
+                    const pos = Math.max(start - delta, 0);
+                    inputEl.setSelectionRange(pos, pos);
+                }
+            }
+
+            switch (fieldId) {
+                case 'editEmail':
+                    if (!value) message = 'Email is required.';
+                    else if (!isValidEmail(value)) message = 'Please enter a valid email.';
+                    break;
+                case 'editFirstName':
+                    if (!value) message = 'First Name is required.';
+                    else if (!nameRegex.test(value)) message = 'Only letters, spaces, apostrophes, and hyphens are allowed.';
+                    break;
+                case 'editLastName':
+                    if (!value) message = 'Last Name is required.';
+                    else if (!nameRegex.test(value)) message = 'Only letters, spaces, apostrophes, and hyphens are allowed.';
+                    break;
+                case 'editGender':
+                    if (!value) message = 'Gender is required.';
+                    break;
+                case 'editDateOfBirth':
+                    if (!value) message = 'Birthday is required.';
+                    else if (!isAtLeast18(value)) message = 'User must be at least 18 years old.';
+                    break;
+                case 'editNewPassword':
+                    if (value && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]).{8,}$/.test(value)) {
+                        message = 'Min 8 chars with upper, lower, number, special.';
+                    }
+                    break;
+                case 'editConfirmPassword': {
+                    const newPassword = document.getElementById('editNewPassword').value.trim();
+                    if (newPassword && !value) {
+                        message = 'Please confirm the new password.';
+                    } else if ((newPassword || value) && newPassword !== value) {
+                        message = 'Passwords do not match.';
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+
+            if (message && showError) {
+                showFieldError(fieldId, message);
+            }
+
+            return Boolean(message);
+        }
+
+        function isAtLeast18(dateStr) {
+            const dob = new Date(dateStr);
+            if (isNaN(dob.getTime())) return false;
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const m = today.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            return age >= 18;
+        }
+
+        function hideFieldError(fieldId) {
+            const input = document.getElementById(fieldId);
+            const errorEl = document.getElementById(`${fieldId}Error`);
+            if (input) input.classList.remove('is-invalid');
+            if (errorEl) {
+                errorEl.textContent = '';
+                errorEl.classList.remove('field-error');
+                errorEl.style.display = 'none';
+            }
+        }
+
+        function setSaveButtonState() {
+            const btn = document.getElementById('saveChangesBtn');
+            if (!btn) return;
+            const hasErrors = runLiveValidation(false);
+            const hasChanges = hasFormChanges();
+            btn.disabled = hasErrors || !hasChanges;
+            btn.classList.toggle('disabled', btn.disabled);
+        }
+        
+        // Edit user
+        async function editUser(userId) {
+            // Fetch user details
+            const response = await fetch(`../api/admin/get_users.php?page=1&limit=1000`);
+            const data = await response.json();
+            
+            if (!data.success) {
+                showNotification('Failed to load user details', 'error');
+                return;
+            }
+            
+            const user = data.users.find(u => u.id == userId);
+            if (!user) {
+                showNotification('User not found', 'error');
+                return;
+            }
+            
+            clearFieldErrors();
+            
+            // Populate form
+            document.getElementById('editUserId').value = user.id;
+            document.getElementById('editUsername').value = user.username || '';
+            document.getElementById('editFirstName').value = user.first_name || '';
+            document.getElementById('editLastName').value = user.last_name || '';
+            document.getElementById('editEmail').value = user.email || '';
+            document.getElementById('editGender').value = (user.gender || '').toLowerCase();
+            document.getElementById('editDateOfBirth').value = user.date_of_birth || '';
+            // Set max birthday to 18 years ago
+            const dobInput = document.getElementById('editDateOfBirth');
+            if (dobInput) {
+                const today = new Date();
+                const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+                dobInput.max = maxDate.toISOString().split('T')[0];
+            }
+            document.getElementById('editIsAdmin').checked = user.is_admin == 1;
+            document.getElementById('editNewPassword').value = '';
+            document.getElementById('editConfirmPassword').value = '';
+            originalUserData = getCurrentFormData();
+            setSaveButtonState();
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+            modal.show();
+        }
+        
+        // Save user
+        async function saveUser() {
+            const hasErrors = runLiveValidation(true);
+            if (hasErrors) {
+                setSaveButtonState();
+                return;
+            }
+
+            if (!hasFormChanges()) {
+                showNotification('No changes detected to save.', 'error');
+                setSaveButtonState();
+                return;
+            }
+
+            const userId = document.getElementById('editUserId').value;
+            const newPassword = document.getElementById('editNewPassword').value.trim();
+            const email = document.getElementById('editEmail').value.trim();
+            const firstName = document.getElementById('editFirstName').value.trim();
+            const lastName = document.getElementById('editLastName').value.trim();
+            const gender = (document.getElementById('editGender').value || '').toLowerCase();
+            const dateOfBirth = document.getElementById('editDateOfBirth').value;
+            
+            const data = {
+                user_id: parseInt(userId),
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                gender: gender,
+                date_of_birth: dateOfBirth,
+                is_admin: document.getElementById('editIsAdmin').checked ? 1 : 0,
+                new_password: newPassword
+            };
+            
+            try {
+                const response = await fetch('../api/admin/update_user.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('User updated successfully', 'success');
+                    bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
+                    loadUsers(currentPage);
+                } else {
+                    if (result.message && result.message.toLowerCase().includes('email')) {
+                        showFieldError('editEmail', result.message);
+                    } else {
+                        showNotification(result.message || 'Failed to update user', 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating user:', error);
+                showNotification('Failed to update user', 'error');
+            }
+        }
+        
+        // Suspend / Unsuspend user
+        let pendingSuspendUserId = null;
+        let pendingSuspendUsername = '';
+        let pendingSuspendEmail = '';
+        let pendingAction = 'suspend';
+        
+        function showSuspendModal(userId, username, isSuspended = 0, reason = '', email = '') {
+            pendingSuspendUserId = userId;
+            pendingSuspendUsername = username;
+            pendingSuspendEmail = decodeURIComponent(email || '');
+            pendingAction = isSuspended ? 'unsuspend' : 'suspend';
+            const decodedReason = decodeURIComponent(reason || '');
+            
+            const overlay = document.getElementById('suspendOverlay');
+            const title = document.getElementById('suspendTitle');
+            const subtitle = document.getElementById('suspendSubtitle');
+            const usernameEl = document.getElementById('suspendUsername');
+            const reasonGroup = document.getElementById('suspendReasonGroup');
+            const reasonInput = document.getElementById('suspendReason');
+            const reasonError = document.getElementById('suspendReasonError');
+            const suspendedInfo = document.getElementById('suspendedInfo');
+            const confirmBtn = document.getElementById('suspendConfirmBtn');
+            
+            if (title) title.textContent = isSuspended ? 'Lift Suspension' : 'Suspend User';
+            if (subtitle) subtitle.textContent = isSuspended 
+                ? 'Allow the user to log in again.'
+                : 'The user will be unable to log in until suspension is lifted.';
+            if (usernameEl) usernameEl.textContent = username ? `@${username}` : 'User';
+            if (reasonGroup) reasonGroup.style.display = isSuspended ? 'none' : 'block';
+            if (reasonInput) {
+                reasonInput.value = isSuspended ? '' : decodedReason;
+                reasonInput.focus();
+            }
+            if (reasonError) reasonError.style.display = 'none';
+            if (suspendedInfo) suspendedInfo.style.display = isSuspended ? 'block' : 'none';
+            if (confirmBtn) {
+                confirmBtn.textContent = isSuspended ? 'Lift Suspension' : 'Suspend User';
+                confirmBtn.classList.toggle('btn-confirm-danger', !isSuspended);
+                confirmBtn.classList.toggle('btn-success', isSuspended);
+                confirmBtn.onclick = () => performSuspend();
+            }
+            
+            if (overlay) overlay.style.display = 'flex';
+        }
+        
+        function closeSuspendModal(resetState = true) {
+            const overlay = document.getElementById('suspendOverlay');
+            if (overlay) overlay.style.display = 'none';
+            if (resetState) {
+                pendingSuspendUserId = null;
+                pendingSuspendUsername = '';
+                pendingAction = 'suspend';
+            }
+        }
+        
+        function handleSuspendOverlayClick(event) {
+            if (event.target.id === 'suspendOverlay') {
+                closeSuspendModal();
+            }
+        }
+        
+        async function performSuspend() {
+            if (!pendingSuspendUserId) return;
+            const reasonInput = document.getElementById('suspendReason');
+            const reasonError = document.getElementById('suspendReasonError');
+            const reason = reasonInput ? reasonInput.value.trim() : '';
+            
+            if (pendingAction === 'suspend' && reason === '') {
+                if (reasonError) {
+                    reasonError.textContent = 'Please provide a suspension reason.';
+                    reasonError.style.display = 'block';
+                }
+                return;
+            }
+            
+            if (reasonError) reasonError.style.display = 'none';
+            
+            try {
+                // Hide modal immediately to avoid lingering UI but keep state for API payload
+                closeSuspendModal(false);
+                showCenterNotice('Processing...');
+                const response = await fetch('../api/admin/suspend_user.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: pendingSuspendUserId,
+                        action: pendingAction,
+                        reason: reason
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showCenterNotice(result.message || 'Updated successfully', 1200);
+                    loadUsers(currentPage);
+                } else {
+                    hideCenterNotice();
+                    showNotification(result.message || 'Failed to update', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating suspension:', error);
+                hideCenterNotice();
+                showNotification('Failed to update suspension', 'error');
+            } finally {
+                pendingSuspendUserId = null;
+                pendingSuspendUsername = '';
+                pendingAction = 'suspend';
+            }
+        }
+        
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const normalized = dateString.match(/Z|[\\+\\-]\\d\\d:?\\d\\d$/) ? dateString : `${dateString}Z`;
+            const date = new Date(normalized);
+            if (isNaN(date)) return 'N/A';
+            return date.toLocaleString('en-PH', {
+                timeZone: 'Asia/Manila',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+        
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function formatGender(gender) {
+            if (!gender) return 'N/A';
+            const value = gender.toString().toLowerCase();
+            if (value === 'male') return 'Male';
+            if (value === 'female') return 'Female';
+            return gender;
+        }
+        
+        function togglePasswordVisibility(inputId, buttonEl) {
+            const input = document.getElementById(inputId);
+            if (!input || !buttonEl) return;
+            const icon = buttonEl.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                if (icon) {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            } else {
+                input.type = 'password';
+                if (icon) {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            }
+        }
+
+        function toggleReasonTooltip(id) {
+            document.querySelectorAll('.reason-note').forEach(note => {
+                if (note.querySelector('.reason-tooltip')?.id !== id) {
+                    note.classList.remove('active');
+                }
+            });
+            const tooltip = document.getElementById(id);
+            if (!tooltip) return;
+            const parent = tooltip.parentElement;
+            if (parent.classList.contains('active')) {
+                parent.classList.remove('active');
+            } else {
+                parent.classList.add('active');
+            }
+        }
+        
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+        
+        function showFieldError(fieldId, message) {
+            const input = document.getElementById(fieldId);
+            const errorEl = document.getElementById(`${fieldId}Error`);
+            if (input) input.classList.add('is-invalid');
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.add('field-error');
+                errorEl.style.display = 'block';
+                if (!errorEl.querySelector('i')) {
+                    const icon = document.createElement('i');
+                    icon.className = 'fas fa-exclamation-triangle me-2';
+                    errorEl.prepend(icon);
+                }
+            }
+        }
+        
+        function clearFieldErrors() {
+            const fields = ['editEmail','editFirstName','editLastName','editGender','editDateOfBirth','editNewPassword','editConfirmPassword'];
+            fields.forEach(id => hideFieldError(id));
+        }
+        
+        // Show notification (top-right)
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            // Use alert-info (blue) for success notifications instead of alert-success (green)
+            notification.className = `alert alert-${type === 'success' ? 'info' : 'danger'}`;
+            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px;';
+            
+            const icon = document.createElement('i');
+            icon.className = `fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2`;
+            
+            const text = document.createElement('span');
+            text.textContent = message;
+            
+            notification.appendChild(icon);
+            notification.appendChild(text);
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Center notice with spinner
+        let centerNoticeTimer = null;
+        function showCenterNotice(message, duration = 0) {
+            const overlay = document.getElementById('centerNoticeOverlay');
+            const msgEl = document.getElementById('centerNoticeMessage');
+            if (!overlay || !msgEl) return;
+            msgEl.textContent = message || 'Processing...';
+            overlay.style.display = 'flex';
+            if (centerNoticeTimer) clearTimeout(centerNoticeTimer);
+            if (duration > 0) {
+                centerNoticeTimer = setTimeout(hideCenterNotice, duration);
+            }
+        }
+        function hideCenterNotice() {
+            const overlay = document.getElementById('centerNoticeOverlay');
+            if (overlay) overlay.style.display = 'none';
+            if (centerNoticeTimer) clearTimeout(centerNoticeTimer);
+        }
+        
+        // Search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                loadUsers(1);
+            }
+        });
+        
+        // Live validation and change tracking for the modal form
+        function handleFieldChange(fieldId) {
+            validateField(fieldId, true);
+            // Keep password confirmation in sync while typing
+            if (fieldId === 'editNewPassword' || fieldId === 'editConfirmPassword') {
+                const otherId = fieldId === 'editNewPassword' ? 'editConfirmPassword' : 'editNewPassword';
+                validateField(otherId, true);
+            }
+            setSaveButtonState();
+        }
+
+        ['editEmail','editFirstName','editLastName','editGender','editDateOfBirth','editNewPassword','editConfirmPassword','editIsAdmin'].forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener('input', () => handleFieldChange(id));
+            el.addEventListener('blur', () => handleFieldChange(id));
+        });
+
+        // Auto-search on input with debounce
+        let searchTimer = null;
+        document.getElementById('searchInput').addEventListener('input', function() {
+            if (searchTimer) clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                loadUsers(1);
+            }, 400);
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUsers();
+        });
+    </script>
+</body>
+</html>
+
+
