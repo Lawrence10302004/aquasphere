@@ -1005,18 +1005,22 @@
                 }
                 
                 if (fieldName === 'password') {
+                    // Check if this is admin login - admin can bypass strong password validation
+                    const usernameField = document.getElementById('username');
+                    const isAdmin = usernameField && usernameField.value.trim().toLowerCase() === 'aquasphereph@gmail.com';
+                    
                     if (value.length < 8) {
                         showError(fieldName, 'Min 8 chars with upper, lower, number, special.');
                         return false;
-                    } else {
-                        // Require strong password for all users
+                    } else if (!isAdmin) {
+                        // Require strong password for non-admin users
                         const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-\.\/:;<=>?@\[\]^_`{|}~]).{8,}$/;
                         if (!strongPasswordRegex.test(value)) {
                             showError(fieldName, 'Min 8 chars with upper, lower, number, special.');
                             return false;
                         }
                     }
-                    // Valid strong password - allow
+                    // Admin or valid strong password - allow
                     hideError(fieldName);
                     markSuccess(fieldName);
                 }
@@ -1526,6 +1530,8 @@
                 
                 function validatePasswordInput() {
                     const password = passwordEl.value;
+                    const username = usernameEl ? usernameEl.value.trim().toLowerCase() : '';
+                    const isAdmin = username === 'aquasphereph@gmail.com';
                     const errorDiv = document.getElementById('password-error');
                     
                     if (!password) {
@@ -1542,8 +1548,8 @@
                         }
                         passwordEl.classList.add('error');
                         passwordEl.classList.remove('success');
-                    } else if (!strongPasswordRegex.test(password)) {
-                        // Require strong password for all users
+                    } else if (!isAdmin && !strongPasswordRegex.test(password)) {
+                        // Require strong password for non-admin users
                         if (errorDiv) {
                             errorDiv.textContent = 'Min 8 chars with upper, lower, number, special.';
                             errorDiv.style.display = 'block';
