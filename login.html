@@ -1078,18 +1078,17 @@
                 if (field) {
                     field.addEventListener('blur', () => validateField(fieldName));
                     field.addEventListener('input', () => {
+                        // Always validate on input to show errors in real-time
                         validateField(fieldName);
-                        // Clear authentication error when user starts typing
-                        // Remove error class from fields when user starts typing
-                        const usernameField = document.getElementById('username');
-                        const passwordField = document.getElementById('password');
-                        if (usernameField) usernameField.classList.remove('error');
-                        if (passwordField) passwordField.classList.remove('error');
                         
                         // If username field changes, re-validate password to check for admin bypass
                         if (fieldName === 'username') {
                             validateField('password');
                         }
+                    });
+                    // Also validate on focus to show errors immediately when user clicks on field
+                    field.addEventListener('focus', () => {
+                        validateField(fieldName);
                     });
                 }
             });
@@ -1549,69 +1548,8 @@
                 });
             }
             
-            // Real-time password validation on login form
-            const passwordEl = document.getElementById('password');
-            const usernameEl = document.getElementById('username');
-            if (passwordEl) {
-                const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-\.\/:;<=>?@\[\]^_`{|}~]).{8,}$/;
-                
-                function validatePasswordInput() {
-                    const password = passwordEl.value;
-                    const username = usernameEl ? usernameEl.value.trim().toLowerCase() : '';
-                    const isAdmin = username === 'aquasphereph@gmail.com';
-                    const errorDiv = document.getElementById('password-error');
-                    
-                    // Admin bypass - no validation required, just clear any errors
-                    if (isAdmin) {
-                        if (errorDiv) errorDiv.style.display = 'none';
-                        passwordEl.classList.remove('error');
-                        passwordEl.classList.add('success');
-                        setTimeout(() => {
-                            passwordEl.classList.remove('success');
-                        }, 3000);
-                        return;
-                    }
-                    
-                    // Regular user validation
-                    if (!password) {
-                        if (errorDiv) {
-                            errorDiv.textContent = 'Password is required.';
-                            errorDiv.style.display = 'block';
-                        }
-                        passwordEl.classList.add('error');
-                        passwordEl.classList.remove('success');
-                    } else if (password.length < 8) {
-                        if (errorDiv) {
-                            errorDiv.textContent = 'Min 8 chars with upper, lower, number, special.';
-                            errorDiv.style.display = 'block';
-                        }
-                        passwordEl.classList.add('error');
-                        passwordEl.classList.remove('success');
-                    } else if (!strongPasswordRegex.test(password)) {
-                        // Require strong password for non-admin users
-                        if (errorDiv) {
-                            errorDiv.textContent = 'Min 8 chars with upper, lower, number, special.';
-                            errorDiv.style.display = 'block';
-                        }
-                        passwordEl.classList.add('error');
-                        passwordEl.classList.remove('success');
-                    } else {
-                        if (errorDiv) errorDiv.style.display = 'none';
-                        passwordEl.classList.remove('error');
-                        passwordEl.classList.add('success');
-                        setTimeout(() => {
-                            passwordEl.classList.remove('success');
-                        }, 3000);
-                    }
-                }
-                
-                passwordEl.addEventListener('input', validatePasswordInput);
-                
-                // Also re-validate password when username changes (in case user switches to/from admin)
-                if (usernameEl) {
-                    usernameEl.addEventListener('input', validatePasswordInput);
-                }
-            }
+            // Password validation is handled by the main validateField function
+            // No separate validation needed here - it's already set up in the event listeners above
             
             // New Password Form Handler
             const newPasswordForm = document.getElementById('newPasswordForm');
