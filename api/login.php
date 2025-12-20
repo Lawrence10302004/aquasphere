@@ -28,34 +28,7 @@ $username = assert_safe_string($_POST['username'] ?? '', 'username', 64);
 $password = $_POST['password'] ?? '';
 $remember_me = isset($_POST['remember_me']) ? 1 : 0;
 
-// Special admin login check (BEFORE requiring database)
-if ($username === 'admin' && $password === 'admin123') {
-    // Start session for admin
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-    $_SESSION['user_id'] = 0; // Special admin ID
-    $_SESSION['username'] = 'admin';
-    $_SESSION['is_admin'] = 1;
-    
-    // Set remember me cookie if checked
-    if ($remember_me) {
-        $cookie_value = base64_encode('admin:' . hash('sha256', 'admin123'));
-        setcookie('aquasphere_remember', $cookie_value, time() + (86400 * 30), '/'); // 30 days
-    }
-    
-    // Clear any output buffer before sending JSON
-    ob_clean();
-    echo json_encode([
-        'success' => true, 
-        'message' => 'Admin login successful!',
-        'redirect' => 'admin/dashboard.html'
-    ]);
-    ob_end_flush();
-    exit;
-}
-
-// Now require database for regular users
+// Require database for all users (including admin)
 try {
     require_once 'database.php';
     
