@@ -245,20 +245,28 @@
 }
         
         
-        /* Match login error styling */
+        /* Match registration error styling */
         .custom-error {
-            background-color: #fee;
-            color: #c33;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 13px;
-            margin-top: 8px;
+            color: #e11d48;
+            font-size: 0.8rem;
+            margin-top: 6px;
+            font-weight: 600;
             display: none;
-            border-left: 3px solid #dc3545;
-            font-weight: 500;
+            padding-left: 4px;
         }
-        .form-group.error .custom-error {
-            display: block;
+
+        .form-control.error, .form-select.error, .custom-input.error {
+            border-color: #fb7185;
+        }
+
+        .form-control.error:focus, .custom-input.error:focus {
+            box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1);
+        }
+
+        /* Success state for valid inputs */
+        .form-control.success, .custom-input.success {
+            border-color: #256892;
+            background-color: #f0f9ff;
         }
         
         @keyframes errorSlideIn {
@@ -1654,7 +1662,9 @@
                                     <i class="fas fa-at input-icon"></i>
                                     <input type="text" id="profileUsername" class="custom-input" placeholder="Choose a username" required>
                                 </div>
-                                <small class="text-muted" style="font-size: 0.75rem;">Usernames must be 4-64 characters.</small>
+                                <div class="custom-error" id="profileUsername-error" style="display: none;">Username is required.</div>
+                                <div class="custom-error" id="profileUsername-length-error" style="display: none;">Username must be between 4 and 64 characters long.</div>
+                                <div class="custom-error" id="profileUsername-unique-error" style="display: none;">Username already exists.</div>
                             </div>
                             <div class="form-group">
                                 <label for="profileEmail">Email Address</label>
@@ -1662,6 +1672,9 @@
                                     <i class="fas fa-envelope input-icon"></i>
                                     <input type="email" id="profileEmail" class="custom-input" placeholder="Enter your email" required>
                                 </div>
+                                <div class="custom-error" id="profileEmail-error" style="display: none;">Email is required.</div>
+                                <div class="custom-error" id="profileEmail-format-error" style="display: none;">Please enter a valid email.</div>
+                                <div class="custom-error" id="profileEmail-exists-error" style="display: none;">Email already exists.</div>
                             </div>
                         </div>
                     </div>
@@ -1716,6 +1729,8 @@
                                     <i class="fas fa-key input-icon"></i>
                                     <input type="password" id="profileNewPassword" class="custom-input" placeholder="New Password">
                                 </div>
+                                <div class="custom-error" id="profileNewPassword-error" style="display: none;">Password is required.</div>
+                                <div class="custom-error" id="profileNewPassword-format-error" style="display: none;">Min 8 chars with upper, lower, number, special.</div>
                             </div>
                             <div class="form-group">
                                 <label>Confirm New Password</label>
@@ -1723,6 +1738,8 @@
                                     <i class="fas fa-check-double input-icon"></i>
                                     <input type="password" id="profileConfirmPassword" class="custom-input" placeholder="Confirm Password">
                                 </div>
+                                <div class="custom-error" id="profileConfirmPassword-error" style="display: none;">Password confirmation is required.</div>
+                                <div class="custom-error" id="profileConfirmPassword-match-error" style="display: none;">Passwords do not match.</div>
                             </div>
                         </div>
                     </div>
@@ -1911,7 +1928,7 @@
         }
         
         function hideProfileErrors(idBase) {
-            const errors = ['error', 'format-error', 'required', 'min', 'same', 'mismatch', 'incorrect', 'length-error', 'unique-error'];
+            const errors = ['error', 'format-error', 'required', 'min', 'same', 'mismatch', 'match-error', 'incorrect', 'length-error', 'unique-error', 'exists-error'];
             errors.forEach(suffix => {
                 const errEl = document.getElementById(idBase + '-' + suffix);
                 if (errEl) errEl.style.display = 'none';
@@ -1943,7 +1960,10 @@
             
             if (!v) {
                 const err = document.getElementById('profileUsername-error');
-                if (err) err.style.display = 'block';
+                if (err) {
+                    err.textContent = 'Username is required.';
+                    err.style.display = 'block';
+                }
                 markProfileError(input);
                 const group = input?.closest('.form-group');
                 if (group) group.classList.add('error');
@@ -1952,7 +1972,10 @@
             
             if (v.length < 4 || v.length > 64) {
                 const err = document.getElementById('profileUsername-length-error');
-                if (err) err.style.display = 'block';
+                if (err) {
+                    err.textContent = 'Username must be between 4 and 64 characters long.';
+                    err.style.display = 'block';
+                }
                 markProfileError(input);
                 const group = input?.closest('.form-group');
                 if (group) group.classList.add('error');
@@ -1986,15 +2009,25 @@
             
             if (!v) {
                 const errEl = document.getElementById('profileEmail-error');
-                if (errEl) errEl.style.display = 'block';
+                if (errEl) {
+                    errEl.textContent = 'Email is required.';
+                    errEl.style.display = 'block';
+                }
                 markProfileError(emailInput);
+                const group = emailInput?.closest('.form-group');
+                if (group) group.classList.add('error');
                 return false;
             }
             
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
                 const errEl = document.getElementById('profileEmail-format-error');
-                if (errEl) errEl.style.display = 'block';
+                if (errEl) {
+                    errEl.textContent = 'Please enter a valid email.';
+                    errEl.style.display = 'block';
+                }
                 markProfileError(emailInput);
+                const group = emailInput?.closest('.form-group');
+                if (group) group.classList.add('error');
                 return false;
             }
             
@@ -2227,10 +2260,16 @@
             const requireNow = anyPasswordFilled();
             
             if (!v) {
-                if (requireNow) {
-                    const req = document.getElementById(idBase + '-required');
-                    if (req) req.style.display = 'block';
+                if (requireNow && idBase !== 'profilePassword') {
+                    // Only show required error for new password and confirm password, not current
+                    const req = document.getElementById(idBase + '-error');
+                    if (req) {
+                        req.textContent = idBase === 'profileConfirmPassword' ? 'Password confirmation is required.' : 'Password is required.';
+                        req.style.display = 'block';
+                    }
                     markProfileError(el);
+                    const group = el?.closest('.form-group');
+                    if (group) group.classList.add('error');
                     return false;
                 } else {
                     markProfileClear(el);
@@ -2245,16 +2284,15 @@
                 return true;
             }
             if (!isStrong) {
-                const min = document.getElementById(idBase + '-min');
-                if (min) {
-                    min.textContent = 'Min 8 chars with upper, lower, number, special.';
-                    min.style.display = 'block';
+                const formatErr = document.getElementById(idBase + '-format-error');
+                if (formatErr) {
+                    formatErr.textContent = 'Min 8 chars with upper, lower, number, special.';
+                    formatErr.style.display = 'block';
                 }
                 markProfileError(el);
+                const group = el?.closest('.form-group');
+                if (group) group.classList.add('error');
                 return false;
-            } else {
-                const min = document.getElementById(idBase + '-min');
-                if (min) min.textContent = 'Password must be at least 8 characters.';
             }
             
             markProfileClear(el);
@@ -2294,10 +2332,15 @@
                 if (same) same.style.display = 'none';
             }
             
-            const mismatchEl = document.getElementById('profileConfirmPassword-mismatch');
+            const mismatchEl = document.getElementById('profileConfirmPassword-match-error');
             if (requireNow && newv && conf && newv !== conf) {
-                if (mismatchEl) mismatchEl.style.display = 'block';
+                if (mismatchEl) {
+                    mismatchEl.textContent = 'Passwords do not match.';
+                    mismatchEl.style.display = 'block';
+                }
                 markProfileError(confirmEl);
+                const group = confirmEl?.closest('.form-group');
+                if (group) group.classList.add('error');
                 ok = false;
             } else {
                 if (mismatchEl) mismatchEl.style.display = 'none';
@@ -2418,6 +2461,9 @@
                         }, 150);
                     }
                 });
+                usernameInput.addEventListener('focus', () => {
+                    validateProfileUsername();
+                });
                 usernameInput.addEventListener('blur', async () => {
                     validateProfileUsername();
                     const v = usernameInput.value.trim();
@@ -2434,6 +2480,9 @@
                     // Update button state immediately
                     checkProfileRequiredFields();
                     // The debounced check in validateProfileEmail will call checkProfileRequiredFields when complete
+                });
+                emailInput.addEventListener('focus', () => {
+                    validateProfileEmail();
                 });
                 emailInput.addEventListener('blur', async () => {
                     validateProfileEmail();
@@ -2502,6 +2551,9 @@
                     validatePasswordSameAsCurrent();
                     checkProfileRequiredFields();
                 });
+                newPasswordInput.addEventListener('focus', () => {
+                    validateProfilePassword(newPasswordInput, 'profileNewPassword');
+                });
                 newPasswordInput.addEventListener('blur', () => {
                     validateProfilePassword(newPasswordInput, 'profileNewPassword');
                     validatePasswordSameAsCurrent();
@@ -2514,6 +2566,9 @@
                     validateProfilePassword(confirmPasswordInput, 'profileConfirmPassword');
                     validatePasswordSameAsCurrent();
                     checkProfileRequiredFields();
+                });
+                confirmPasswordInput.addEventListener('focus', () => {
+                    validateProfilePassword(confirmPasswordInput, 'profileConfirmPassword');
                 });
                 confirmPasswordInput.addEventListener('blur', () => {
                     validateProfilePassword(confirmPasswordInput, 'profileConfirmPassword');
