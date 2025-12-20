@@ -202,23 +202,7 @@
     box-shadow: 0 0 0 4px rgba(59, 127, 184, 0.15);
 }
 
-/* Error State (Matching your image) */
-.form-group.error input {
-    border-color: #ef4444;
-    background: #fffcfc;
-}
-
-.error-message {
-    font-size: 0.75rem;
-    color: #ef4444;
-    margin-top: 4px;
-}
-
-/* Success State */
-.form-group input.success {
-    border-color: #10b981;
-    background: #f0fdf4;
-}
+/* Error and Success states are handled by .custom-input.error and .custom-input.success styles above */
 
 /* --- Buttons --- */
 #updateProfileBtn {
@@ -310,22 +294,7 @@
             transform: translateY(-1px);
         }
         
-        .form-group.error input:focus,
-        .form-group.error select:focus {
-            border-color: #ef4444;
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12), 0 4px 12px rgba(239, 68, 68, 0.15);
-        }
-        
-        .form-group input:hover,
-        .form-group select:hover {
-            border-color: #cbd5e1;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-        
-        .form-group.error input:hover,
-        .form-group.error select:hover {
-            border-color: #f87171;
-        }
+        /* Error and focus states are handled by .custom-input.error styles above */
         
         .form-group.full-width {
             grid-column: 1 / -1;
@@ -1120,25 +1089,7 @@
             box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25);
         }
         
-        /* Match login validation bar design */
-        .form-group .error-message,
-        .custom-error {
-            background-color: #fee;
-            color: #c33;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 13px;
-            margin-top: 8px;
-            display: none;
-            border-left: 3px solid #dc3545;
-            font-weight: 500;
-        }
-        .form-group .error-message + .error-message {
-            margin-top: 8px;
-        }
-        .form-group.error .error-message {
-            display: block;
-        }
+        /* Remove conflicting error styles - using .custom-error styling from above */
         
         .label-section {
             display: flex;
@@ -1550,27 +1501,7 @@
             transform: translateY(-2px);
         }
 
-        /* Error State */
-        .form-group.error .custom-input {
-            border-color: #ef4444 !important;
-            background: #fffcfc !important;
-        }
-
-        .form-group.error .custom-input:focus {
-            border-color: #ef4444 !important;
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
-        }
-
-        .error-message {
-            font-size: 0.75rem;
-            color: #ef4444;
-            margin-top: 0.3rem;
-            display: none;
-        }
-
-        .form-group.error .error-message {
-            display: block;
-        }
+        /* Error states are handled by .custom-input.error styles above */
 
         /* Success State */
         .form-group input.success {
